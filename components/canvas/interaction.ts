@@ -53,8 +53,6 @@ let initialPinchDistance = null;
 // let lastZoom = cameraZoom;
 
 export function handlePinch(event) {
-	event.preventDefault();
-
 	let touch1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
 	let touch2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
 
@@ -70,12 +68,10 @@ export function handlePinch(event) {
 
 const MAX_ZOOM = 10;
 const MIN_ZOOM = 0.01;
-const PAN_SENSITIVITY = 0.7;
-const ZOOM_SENSITIVITY = 0.005;
+const PAN_SENSITIVITY = 0.8;
+const ZOOM_SENSITIVITY = 0.008;
 
 export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, view) {
-	event.preventDefault();
-
 	if (String(event.deltaY).length < 5) {
 		// Pan
 		view.x -= (event.deltaX * PAN_SENSITIVITY) / view.scale;
@@ -87,26 +83,33 @@ export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, view) {
 		if (view.scale - delta_scale > MAX_ZOOM) return;
 		view.scale -= delta_scale;
 
-		const position = DOMToCanvas(event, canvas, view);
-
-		view.x += position.x * delta_scale;
-		view.y += position.y * delta_scale;
+		// const position = DOMToCanvas(event, canvas, view);
+		// view.x += position.x * delta_scale;
+		// view.y += position.y * delta_scale;
 	}
 }
+
+// function DOMToCanvas(position, canvas, view) {
+// 	const bounds = canvas.getBoundingClientRect();
+// 	return {
+// 		x: ((position.x - bounds.x) * window.devicePixelRatio) / view.scale - view.x,
+// 		y: ((position.y - bounds.y) * window.devicePixelRatio) / view.scale - view.y,
+// 	};
+// }
 
 function DOMToCanvas(position, canvas, view) {
 	const bounds = canvas.getBoundingClientRect();
 	return {
-		x: ((position.x - bounds.x) * window.devicePixelRatio + view.x) / view.scale,
-		y: ((position.y - bounds.y) * window.devicePixelRatio + view.y) / view.scale,
+		x: ((position.x - bounds.x) * window.devicePixelRatio - view.x) / view.scale,
+		y: ((position.y - bounds.y) * window.devicePixelRatio - view.y) / view.scale,
 	};
 }
 
 function CanvasToDOM(position, canvas, view) {
 	const bounds = canvas.getBoundingClientRect();
 	return {
-		x: (position.x * view.scale - view.x) / window.devicePixelRatio + bounds.x,
-		y: (position.y * view.scale - view.y) / window.devicePixelRatio + bounds.y,
+		x: ((position.x + view.x) * view.scale) / window.devicePixelRatio + bounds.x,
+		y: ((position.y + view.y) * view.scale) / window.devicePixelRatio + bounds.y,
 	};
 }
 
@@ -116,11 +119,52 @@ export function onDoubleClick(view) {
 	view.scale = 1;
 }
 
-export function onMouseMove(event, elements, canvas, view) {
+export function onMouseMove(event, elements, canvas, view, context, redraw) {
 	const position = DOMToCanvas(event, canvas, view);
-	const target = elements.reverse().find((element) => {
-		return collide(position, element);
-	});
 
-	console.log(target);
+	elements.forEach((element) => (element.hover = false));
+	const target = [...elements].reverse().find((element) => element.collide(position));
+	canvas.style.cursor = target ? 'grab' : 'default';
+
+	if (target) target.hover = true;
+	redraw(context);
+}
+
+export function onMouseDown(event, elements, canvas, view, context, redraw) {
+	let last_position = DOMToCanvas(event, canvas, view);
+
+	if (!event.shiftKey) {
+		elements.forEach((element) => (element.selected = false));
+	}
+	const target = [...elements].reverse().find((element) => element.collide(last_position));
+
+	if (!target) return;
+
+	canvas.style.cursor = 'grabbing';
+
+	target.selected = true;
+
+	const selection = elements.filter((element) => element.selected);
+
+	const move = (move_event) => {
+		const move_position = DOMToCanvas(move_event, canvas, view);
+		const delta_x = move_position.x - last_position.x;
+		const delta_y = move_position.y - last_position.y;
+
+		selection.forEach((element) => {
+			element.x += delta_x;
+			element.y += delta_y;
+		});
+		last_position = move_position;
+
+		redraw(context);
+	};
+	canvas.addEventListener('mousemove', move);
+	canvas.addEventListener(
+		'mouseup',
+		() => {
+			canvas.removeEventListener('mousemove', move);
+		},
+		{ once: true }
+	);
 }

@@ -13,7 +13,7 @@ export default function getPage() {
 		{
 			id: '3457',
 			type: 'group',
-			children: [
+			elements: [
 				{
 					type: 'circle',
 					x: 100,
