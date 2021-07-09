@@ -4,7 +4,6 @@ import { initCanvas, initElement } from './canvas/init';
 
 const Canvas = (props) => {
 	let { elements, ...rest } = props;
-	// const canvas_ref = useCanvas(draw);
 	const canvas_ref = useRef(null);
 
 	const view = {
@@ -22,7 +21,15 @@ const Canvas = (props) => {
 		context.scale(view.scale, view.scale);
 
 		elements.forEach((element) => {
-			element.draw(context, view);
+			element.draw(context);
+		});
+
+		elements.forEach((element) => {
+			if (element.hover && !element.selected) element.outline(context, view);
+		});
+
+		elements.forEach((element) => {
+			if (element.selected) element.highlight(context, view);
 		});
 	};
 
