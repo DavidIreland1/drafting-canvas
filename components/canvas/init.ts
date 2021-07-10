@@ -1,10 +1,6 @@
-import { onWheel, onDoubleClick, onMouseMove, onMouseDown } from './interaction';
+import { onWheel, onDoubleClick, hover, select } from './interaction';
 
-import Ellipse from './elements/ellipse';
-import Circle from './elements/circle';
-import Group from './elements/group';
-
-export function initCanvas(canvas, context, view, redraw, elements) {
+export function initCanvas(canvas, context, view, redraw, store, reducers) {
 	resizeCanvas(canvas);
 
 	canvas.addEventListener('wheel', (event: WheelEvent) => {
@@ -16,18 +12,17 @@ export function initCanvas(canvas, context, view, redraw, elements) {
 	canvas.addEventListener('dblclick', (event) => {
 		event.preventDefault();
 		onDoubleClick(view);
-		redraw(context);
 	});
 
 	canvas.style.cursor = 'default';
 	canvas.addEventListener('mousemove', (event) => {
 		event.preventDefault();
-		onMouseMove(event, elements, canvas, view, context, redraw);
+		hover(event, store.getState()[0].elements, canvas, view, store, reducers);
 	});
 
 	canvas.addEventListener('mousedown', (event) => {
 		event.preventDefault();
-		onMouseDown(event, elements, canvas, view, context, redraw);
+		select(event, store.getState()[0].elements, canvas, view, store, reducers);
 	});
 
 	window.addEventListener('resize', () => {
@@ -42,8 +37,6 @@ export function resizeCanvas(canvas): boolean {
 	const { width, height } = canvas.getBoundingClientRect();
 
 	if (canvas.width !== width || canvas.height !== height) {
-		// window.devicePixelRatio = 1;
-
 		const ratio = window.devicePixelRatio;
 		canvas.width = width * ratio;
 		canvas.height = height * ratio;
@@ -51,15 +44,4 @@ export function resizeCanvas(canvas): boolean {
 	}
 
 	return false;
-}
-
-export function initElement(element: any) {
-	switch (element.type) {
-		case 'ellipse':
-			return new Ellipse(element);
-		case 'circle':
-			return new Circle(element);
-		case 'group':
-			return new Group(element);
-	}
 }

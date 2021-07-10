@@ -1,3 +1,5 @@
+import { collide, collideEdit } from './shapes/shapes';
+
 const MAX_ZOOM = 10;
 const MIN_ZOOM = 0.01;
 const PAN_SENSITIVITY = 0.8;
@@ -51,57 +53,79 @@ export function onDoubleClick(view) {
 	view.scale = 1;
 }
 
-export function onMouseMove(event, elements, canvas, view, context, redraw) {
-	if (!(canvas.style.cursor === 'grab' || canvas.style.cursor === 'default')) return;
+export function hover(event, elements, canvas, view, store, reducers) {
+	if (!['grab', 'default', 'nw-resize'].includes(canvas.style.cursor)) return;
 
 	const position = DOMToCanvas(event, canvas, view);
 
 	const hovering = elements.find((element) => element.hover);
 
 	if (hovering) {
-		if (!hovering.collide(position)) {
-			hovering.hover = false;
+		if (!collide(hovering, position)) {
+			store.dispatch(reducers.unhover({ id: hovering.id }));
 			canvas.style.cursor = 'default';
-			redraw(context);
 		}
 		return;
 	}
 
-	const target = [...elements].reverse().find((element) => element.collide(position));
+	const selected = elements.find((element) => element.selected);
+	if (selected) {
+		if (!collideEdit(selected, position, view)) {
+			store.dispatch(reducers.unhover({ id: selected.id }));
+			canvas.style.cursor = 'default';
+			return;
+		}
+	}
+
+	const edit = [...elements.filter((element) => element.selected)].reverse().find((element) => collideEdit(element, position, view));
+
+	if (edit) {
+		canvas.style.cursor = 'nw-resize';
+		return;
+	}
+
+	const target = [...elements].reverse().find((element) => collide(element, position));
 
 	if (!target) return;
 	canvas.style.cursor = 'grab';
-	target.hover = true;
-	redraw(context);
+	store.dispatch(reducers.hover({ id: target.id }));
 }
 
-export function onMouseDown(event, elements, canvas, view, context, redraw) {
+export function select(event, elements, canvas, view, store, reducers) {
 	if (event.button !== 0) return;
 	let last_position = DOMToCanvas(event, canvas, view);
 
 	if (!event.shiftKey) {
-		elements.forEach((element) => (element.selected = false));
+		store.dispatch(reducers.unselect());
 	}
-	const target = [...elements].reverse().find((element) => element.collide(last_position));
+
+	let target;
+	let action;
+
+	target = [...elements.filter((element) => element.selected)].reverse().find((element) => collideEdit(element, last_position, view));
+
+	if (target) {
+		action = reducers.resize;
+	} else {
+		target = [...elements].reverse().find((element) => collide(element, last_position));
+
+		if (target) {
+			action = reducers.move;
+		}
+	}
 
 	if (!target) return;
 
 	canvas.style.cursor = 'grabbing';
 
-	target.selected = true;
-	redraw(context);
-
-	const selection = elements.filter((element) => element.selected);
+	store.dispatch(reducers.select({ id: target.id }));
 
 	const move = (move_event) => {
-		const move_position = DOMToCanvas(move_event, canvas, view);
-		const delta_x = move_position.x - last_position.x;
-		const delta_y = move_position.y - last_position.y;
+		const position = DOMToCanvas(move_event, canvas, view);
 
-		selection.forEach((element) => element.move(delta_x, delta_y));
-		last_position = move_position;
+		store.dispatch(action({ position, last_position }));
 
-		redraw(context);
+		last_position = position;
 	};
 	canvas.addEventListener('mousemove', move);
 	canvas.addEventListener(
