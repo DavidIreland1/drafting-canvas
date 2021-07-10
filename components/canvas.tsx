@@ -1,7 +1,10 @@
 import { useRef, useEffect } from 'react';
 
 import { initCanvas } from './canvas/init';
-import { draw, highlight, outline } from './canvas/shapes/shapes';
+import Elements from './canvas/elements/elements';
+
+import Defaults from './defaults';
+const { line_width, box_size, highlight_color } = Defaults;
 
 const Canvas = (props) => {
 	let { store, reducers, ...rest } = props;
@@ -12,7 +15,7 @@ const Canvas = (props) => {
 		y: 0,
 		scale: 1,
 	};
-	let elements = store.getState()[0].elements;
+	let elements = store.getState().elements;
 
 	const redraw = (context: CanvasRenderingContext2D) => {
 		context.resetTransform();
@@ -20,15 +23,15 @@ const Canvas = (props) => {
 		context.translate(view.x, view.y);
 		context.scale(view.scale, view.scale);
 		elements.forEach((element) => {
-			draw(element, context);
+			Elements[element.type].draw(element, context);
 		});
 
 		elements.forEach((element) => {
-			if (element.hover && !element.selected) outline(element, context, view);
+			if (element.hover && !element.selected) Elements[element.type].outline(element, context, highlight_color, (line_width * 2) / view.scale);
 		});
 
 		elements.forEach((element) => {
-			if (element.selected) highlight(element, context, view);
+			if (element.selected) Elements[element.type].highlight(element, context, highlight_color, line_width / view.scale, box_size / view.scale);
 		});
 	};
 
@@ -42,7 +45,7 @@ const Canvas = (props) => {
 		initCanvas(canvas, context, view, redraw, store, reducers);
 
 		store.subscribe(() => {
-			elements = store.getState()[0].elements;
+			elements = store.getState().elements;
 			redraw(context);
 		});
 	}, []);

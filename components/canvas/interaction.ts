@@ -1,20 +1,18 @@
-import { collide, collideEdit } from './shapes/shapes';
+import Elements from './elements/elements';
 
-const MAX_ZOOM = 10;
-const MIN_ZOOM = 0.01;
-const PAN_SENSITIVITY = 0.8;
-const ZOOM_SENSITIVITY = 0.008;
+import Defaults from './../defaults';
+const { max_zoom, min_zoom, pan_sensitivity, zoom_sensitivity } = Defaults;
 
 export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, view) {
 	if (String(event.deltaY).length < 5) {
 		// Pan
-		view.x -= (event.deltaX * PAN_SENSITIVITY) / view.scale;
-		view.y -= (event.deltaY * PAN_SENSITIVITY) / view.scale;
+		view.x -= event.deltaX * pan_sensitivity; // view.scale;
+		view.y -= event.deltaY * pan_sensitivity; // view.scale;
 	} else {
 		// Zoom
-		const delta_scale = event.deltaY * ZOOM_SENSITIVITY * view.scale;
-		if (view.scale - delta_scale < MIN_ZOOM) return;
-		if (view.scale - delta_scale > MAX_ZOOM) return;
+		const delta_scale = event.deltaY * zoom_sensitivity * view.scale;
+		if (view.scale - delta_scale < min_zoom) return;
+		if (view.scale - delta_scale > max_zoom) return;
 		view.scale -= delta_scale;
 
 		const position = DOMToCanvas(event, canvas, view);
@@ -61,7 +59,7 @@ export function hover(event, elements, canvas, view, store, reducers) {
 	const hovering = elements.find((element) => element.hover);
 
 	if (hovering) {
-		if (!collide(hovering, position)) {
+		if (!Elements[hovering.type].collide(hovering, position)) {
 			store.dispatch(reducers.unhover({ id: hovering.id }));
 			canvas.style.cursor = 'default';
 		}
@@ -70,21 +68,21 @@ export function hover(event, elements, canvas, view, store, reducers) {
 
 	const selected = elements.find((element) => element.selected);
 	if (selected) {
-		if (!collideEdit(selected, position, view)) {
+		if (!Elements[selected.type].collide(selected, position, view)) {
 			store.dispatch(reducers.unhover({ id: selected.id }));
 			canvas.style.cursor = 'default';
 			return;
 		}
 	}
 
-	const edit = [...elements.filter((element) => element.selected)].reverse().find((element) => collideEdit(element, position, view));
+	const edit = [...elements.filter((element) => element.selected)].reverse().find((element) => Elements[element.type].collideEdit(element, position, view));
 
 	if (edit) {
 		canvas.style.cursor = 'nw-resize';
 		return;
 	}
 
-	const target = [...elements].reverse().find((element) => collide(element, position));
+	const target = [...elements].reverse().find((element) => Elements[element.type].collide(element, position));
 
 	if (!target) return;
 	canvas.style.cursor = 'grab';
@@ -99,20 +97,7 @@ export function select(event, elements, canvas, view, store, reducers) {
 		store.dispatch(reducers.unselect());
 	}
 
-	let target;
-	let action;
-
-	target = [...elements.filter((element) => element.selected)].reverse().find((element) => collideEdit(element, last_position, view));
-
-	if (target) {
-		action = reducers.resize;
-	} else {
-		target = [...elements].reverse().find((element) => collide(element, last_position));
-
-		if (target) {
-			action = reducers.move;
-		}
-	}
+	const { target, action } = getElementAt(elements, last_position, view, reducers);
 
 	if (!target) return;
 
@@ -136,6 +121,16 @@ export function select(event, elements, canvas, view, store, reducers) {
 		},
 		{ once: true }
 	);
+}
+
+function getElementAt(elements, last_position, view, reducers) {
+	const edit_element = [...elements.filter((element) => element.selected)].reverse().find((element) => Elements[element.type].collideEdit(element, last_position, view));
+	if (edit_element) return { target: edit_element, action: reducers.resize };
+
+	const target = [...elements].reverse().find((element) => Elements[element.type].collide(element, last_position));
+	if (target) return { target: target, action: reducers.move };
+
+	return { target: undefined, action: undefined };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

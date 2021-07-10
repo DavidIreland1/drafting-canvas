@@ -6,7 +6,7 @@ import Toolbar from '../components/toolbar';
 import getPages from './../hooks/get-page';
 
 import { createSlice, configureStore } from '@reduxjs/toolkit';
-import { move, resize } from '../components/canvas/shapes/shapes';
+import Elements from '../components/canvas/elements/elements';
 
 export default function Home(): JSX.Element {
 	let pages = getPages();
@@ -17,31 +17,23 @@ export default function Home(): JSX.Element {
 		reducers: {
 			move: (state, props) => {
 				const { position, last_position } = props.payload;
-				state[0].elements
-					.filter((element) => element.selected)
-					.forEach((element) => {
-						move(element, position, last_position);
-					});
+				state.elements.filter((element) => element.selected).forEach((element) => Elements[element.type].move(element, position, last_position));
 			},
 			select: (state, props) => {
-				state[0].elements.find((element) => element.id === props.payload.id).selected = true;
+				state.elements.find((element) => element.id === props.payload.id).selected = true;
 			},
 			unselect: (state) => {
-				state[0].elements.forEach((element) => (element.selected = false));
+				state.elements.forEach((element) => (element.selected = false));
 			},
 			hover: (state, props) => {
-				state[0].elements.find((element) => element.id === props.payload.id).hover = true;
+				state.elements.find((element) => element.id === props.payload.id).hover = true;
 			},
 			unhover: (state, props) => {
-				state[0].elements.find((element) => element.id === props.payload.id).hover = false;
+				state.elements.find((element) => element.id === props.payload.id).hover = false;
 			},
 			resize: (state, props) => {
 				const { position, last_position } = props.payload;
-				state[0].elements
-					.filter((element) => element.selected)
-					.forEach((element) => {
-						resize(element, position, last_position);
-					});
+				state.elements.filter((element) => element.selected).forEach((element) => Elements[element.type].resize(element, position, last_position));
 			},
 		},
 	});

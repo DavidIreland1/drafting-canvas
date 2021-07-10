@@ -17,17 +17,23 @@ export function initCanvas(canvas, context, view, redraw, store, reducers) {
 	canvas.style.cursor = 'default';
 	canvas.addEventListener('mousemove', (event) => {
 		event.preventDefault();
-		hover(event, store.getState()[0].elements, canvas, view, store, reducers);
+		hover(event, store.getState().elements, canvas, view, store, reducers);
 	});
 
 	canvas.addEventListener('mousedown', (event) => {
 		event.preventDefault();
-		select(event, store.getState()[0].elements, canvas, view, store, reducers);
+		select(event, store.getState().elements, canvas, view, store, reducers);
 	});
 
 	window.addEventListener('resize', () => {
 		resizeCanvas(canvas);
 		redraw(context);
+	});
+
+	document.addEventListener('keydown', (event) => {
+		if (event.metaKey || event.ctrlKey) {
+			shortCuts(event);
+		}
 	});
 
 	redraw(context);
@@ -44,4 +50,15 @@ export function resizeCanvas(canvas): boolean {
 	}
 
 	return false;
+}
+
+function shortCuts(event) {
+	switch (event.key) {
+		case 'c':
+			console.log('copy');
+			break;
+		case 'v':
+			console.log('paste');
+			break;
+	}
 }
