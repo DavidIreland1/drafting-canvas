@@ -3,7 +3,17 @@ import Elements from './elements';
 
 export default class Group extends Element {
 	static draw(group, context) {
+		const center = this.center(group);
+
+		context.translate(center.x, center.y);
+		context.rotate(group.rotation);
+		context.translate(-center.x, -center.y);
+
 		group.elements.forEach((element) => Elements[element.type].draw(element, context));
+
+		context.translate(center.x, center.y);
+		context.rotate(-group.rotation);
+		context.translate(-center.x, -center.y);
 	}
 
 	static bound(group) {
@@ -28,5 +38,11 @@ export default class Group extends Element {
 	static collide(group, position: { x: number; y: number }): boolean {
 		const target = group.elements.find((element) => Elements[element.type].collide(element, position));
 		return target ? true : false;
+	}
+
+	static resize(group, position, last_position, direction_x, direction_y) {
+		group.elements.forEach((element) => {
+			Elements[element.type].resize(element, position, last_position, direction_x, direction_y);
+		});
 	}
 }

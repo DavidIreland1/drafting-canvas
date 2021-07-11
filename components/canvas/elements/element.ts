@@ -6,7 +6,7 @@ export default class Element {
 		return;
 	}
 
-	static resize(element, position, last_position): void {
+	static resize(element, position, last_position, direction_x, direction_y): void {
 		return;
 	}
 
@@ -22,15 +22,35 @@ export default class Element {
 		this.outline(element, context, color, line_width);
 
 		const bounds = this.bound(element);
+		const center = this.center(element);
+
+		context.translate(center.x, center.y);
+		context.rotate(element.rotation);
+
 		context.strokeStyle = color;
 		context.lineWidth = line_width;
 		context.beginPath();
-		context.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+		context.rect(-bounds.width / 2, -bounds.height / 2, bounds.width, bounds.height);
 		context.stroke();
 
-		this.boxes(bounds, color, line_width, box_size).forEach((square) => {
-			this.drawSquare(square, context);
-		});
+		if (bounds.width + bounds.height > box_size * 4) {
+			bounds.x = -bounds.width / 2;
+			bounds.y = -bounds.height / 2;
+			this.boxes(element.id, bounds, box_size).forEach((square) => {
+				this.drawSquare(square, context, color, line_width);
+			});
+		}
+
+		context.rotate(-element.rotation);
+		context.translate(-center.x, -center.y);
+	}
+
+	static center(element) {
+		const bounds = this.bound(element);
+		return {
+			x: bounds.x + bounds.width / 2,
+			y: bounds.y + bounds.height / 2,
+		};
 	}
 
 	static bound(element): { x: number; y: number; width: number; height: number } {
@@ -47,76 +67,87 @@ export default class Element {
 		element.y += position.y - last_position.y;
 	}
 
-	static collideEdit(element, position, view): boolean {
+	static collideResize(element, position, box_size): boolean {
 		const bounds = this.bound(element);
-		const size = 8 / view.scale;
-		const line = 1 / view.scale;
 
-		return !!this.boxes(bounds, '', line, size).find((box) => this.collideBox(box, position));
+		position = this.rotatePoint(position, this.center(element), -element.rotation);
+
+		return !!this.boxes(element.id, bounds, box_size).find((box) => this.collideBox(box, position));
+	}
+
+	static rotatePoint(position, center, rotation) {
+		const sin = Math.sin(rotation);
+		const cos = Math.cos(rotation);
+		const x = position.x - center.x;
+		const y = position.y - center.y;
+
+		return {
+			x: x * cos - y * sin + center.x,
+			y: y * cos + x * sin + center.y,
+		};
+	}
+
+	static collideRotate(element, position, box_size): boolean {
+		const bounds = this.bound(element);
+		bounds.x -= box_size;
+		bounds.y -= box_size;
+		bounds.width += box_size * 2;
+		bounds.height += box_size * 2;
+
+		position = this.rotatePoint(position, this.center(element), -element.rotation);
+
+		return !!this.boxes(element.id, bounds, box_size * 2).find((box) => this.collideBox(box, position));
+	}
+
+	static rotate(element, theta) {
+		element.rotation += theta;
 	}
 
 	static collideBox(box, position) {
 		return box.x < position.x && position.x < box.x + box.width && box.y < position.y && position.y < box.y + box.width;
 	}
 
-	static drawSquare(square, context) {
-		context.fillStyle = square.color;
+	static drawSquare(square, context: CanvasRenderingContext2D, color, line_width) {
+		context.fillStyle = 'white';
+
 		context.beginPath();
 		context.rect(square.x, square.y, square.width, square.height);
 		context.fill();
 
-		if (square.border) {
-			context.strokeStyle = square.border.color;
-			context.lineWisth = square.border.width;
-			context.stroke();
-		}
+		context.strokeStyle = color;
+		context.lineWidth = line_width;
+		context.stroke();
 	}
 
-	static boxes(bounds, color, line_width, box_size) {
+	static boxes(id, bounds, box_size) {
 		return [
 			{
+				id: id,
 				x: bounds.x - box_size,
 				y: bounds.y - box_size,
 				width: box_size * 2,
 				height: box_size * 2,
-				color: 'white',
-				border: {
-					color: color,
-					width: line_width,
-				},
 			},
 			{
+				id: id,
 				x: bounds.x + bounds.width - box_size,
 				y: bounds.y - box_size,
 				width: box_size * 2,
 				height: box_size * 2,
-				color: 'white',
-				border: {
-					color: color,
-					width: line_width,
-				},
 			},
 			{
+				id: id,
 				x: bounds.x - box_size,
 				y: bounds.y + bounds.height - box_size,
 				width: box_size * 2,
 				height: box_size * 2,
-				color: 'white',
-				border: {
-					color: color,
-					width: line_width,
-				},
 			},
 			{
+				id: id,
 				x: bounds.x + bounds.width - box_size,
 				y: bounds.y + bounds.height - box_size,
 				width: box_size * 2,
 				height: box_size * 2,
-				color: 'white',
-				border: {
-					color: color,
-					width: line_width,
-				},
 			},
 		];
 	}

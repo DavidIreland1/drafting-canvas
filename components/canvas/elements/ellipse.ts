@@ -17,7 +17,15 @@ export default class Ellipse extends Element {
 	}
 
 	static collide(ellipse, position) {
+		position = this.rotatePoint(position, this.center(ellipse), -ellipse.rotation);
 		return (ellipse.x - position.x) ** 2 / ellipse.radius_x ** 2 + (ellipse.y - position.y) ** 2 / ellipse.radius_y ** 2 < 1;
+	}
+
+	static center(ellipse) {
+		return {
+			x: ellipse.x,
+			y: ellipse.y,
+		};
 	}
 
 	static bound(ellipse): { x: number; y: number; width: number; height: number } {
@@ -29,18 +37,15 @@ export default class Ellipse extends Element {
 		};
 	}
 
-	static resize(ellipse, position, last_position) {
+	static resize(ellipse, position, last_position, direction_x, direction_y) {
 		const delta_x = (position.x - last_position.x) / 2;
 		const delta_y = (position.y - last_position.y) / 2;
 
 		ellipse.x += delta_x;
 		ellipse.y += delta_y;
 
-		const x_direction = Math.sign(last_position.x + delta_x - ellipse.x);
-		const y_direction = Math.sign(last_position.y + delta_y - ellipse.y);
-
-		ellipse.radius_x += x_direction * delta_x;
-		ellipse.radius_y += y_direction * delta_y;
+		ellipse.radius_x += direction_x * delta_x;
+		ellipse.radius_y += direction_y * delta_y;
 
 		ellipse.radius_x = Math.abs(ellipse.radius_x);
 		ellipse.radius_y = Math.abs(ellipse.radius_y);

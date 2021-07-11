@@ -1,33 +1,57 @@
-import { onWheel, onDoubleClick, hover, select } from './interaction';
+import { onWheel, hover, select } from './interaction';
 
-export function initCanvas(canvas, context, view, redraw, store, reducers) {
-	resizeCanvas(canvas);
-
+export function initCanvas(canvas, id, store, actions) {
 	canvas.addEventListener('wheel', (event: WheelEvent) => {
 		event.preventDefault();
-		onWheel(event, canvas, view);
-		redraw(context);
+		const view = store.getState().views.find((view) => view.id === id);
+		onWheel(event, canvas, view, store, actions);
 	});
 
 	canvas.addEventListener('dblclick', (event) => {
 		event.preventDefault();
-		onDoubleClick(view);
+		const view = store.getState().views.find((view) => view.id === id);
+		store.dispatch(
+			actions.view({
+				id: id,
+				delta_x: -view.x,
+				delta_y: -view.y,
+				delta_scale: 1 - view.scale,
+			})
+		);
 	});
 
-	canvas.style.cursor = 'default';
 	canvas.addEventListener('mousemove', (event) => {
-		event.preventDefault();
-		hover(event, store.getState().elements, canvas, view, store, reducers);
+		const { elements, views } = store.getState();
+		hover(
+			event,
+			elements,
+			canvas,
+			views.find((view) => view.id === id),
+			store,
+			actions
+		);
+	});
+
+	canvas.addEventListener('mouseout', () => {
+		store.dispatch(actions.cursor({ id: id, type: 'none' }));
+	});
+
+	canvas.addEventListener('mouseover', () => {
+		store.dispatch(actions.cursor({ id: id, type: 'select' }));
 	});
 
 	canvas.addEventListener('mousedown', (event) => {
+		if (event.button !== 0) return;
 		event.preventDefault();
-		select(event, store.getState().elements, canvas, view, store, reducers);
-	});
-
-	window.addEventListener('resize', () => {
-		resizeCanvas(canvas);
-		redraw(context);
+		const { elements, views } = store.getState();
+		select(
+			event,
+			elements,
+			canvas,
+			views.find((view) => view.id === id),
+			store,
+			actions
+		);
 	});
 
 	document.addEventListener('keydown', (event) => {
@@ -35,21 +59,6 @@ export function initCanvas(canvas, context, view, redraw, store, reducers) {
 			shortCuts(event);
 		}
 	});
-
-	redraw(context);
-}
-
-export function resizeCanvas(canvas): boolean {
-	const { width, height } = canvas.getBoundingClientRect();
-
-	if (canvas.width !== width || canvas.height !== height) {
-		const ratio = window.devicePixelRatio;
-		canvas.width = width * ratio;
-		canvas.height = height * ratio;
-		return true;
-	}
-
-	return false;
 }
 
 function shortCuts(event) {
@@ -59,6 +68,10 @@ function shortCuts(event) {
 			break;
 		case 'v':
 			console.log('paste');
+			break;
+		case 's':
+			event.preventDefault();
+			console.log('save');
 			break;
 	}
 }

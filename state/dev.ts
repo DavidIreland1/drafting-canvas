@@ -1,26 +1,25 @@
-export default function getPages() {
-	// return {
-	// 	id: '123',
-	// 	label: 'test',
-	// 	elements: Array.apply(null, Array(20000)).map((element, i, array) => {
-	// 		const side = Math.round(Math.sqrt(array.length));
-	// 		return {
-	// 			id: '35674' + i,
-	// 			type: 'circle',
-	// 			selected: false,
-	// 			hover: false,
-	// 			x: (2000 / side) * (i % side),
-	// 			y: (2000 / side) * Math.round(i / side),
-	// 			color: 'red',
-	// 			radius: 5,
-	// 			start_angle: 0,
-	// 			end_angle: 2 * Math.PI,
-	// 		};
-	// 	}),
-	// };
+export default function getPage() {
 	return {
 		id: '123',
 		label: 'First Page',
+		cursors: [
+			{
+				id: '123',
+				label: 'David',
+				x: 0,
+				y: 0,
+				rotation: 0,
+				type: 'none',
+			},
+		],
+		views: [
+			{
+				id: '123',
+				x: 0,
+				y: 0,
+				scale: 1,
+			},
+		],
 		elements: [
 			{
 				id: '35674',
@@ -29,16 +28,30 @@ export default function getPages() {
 				hover: false,
 				x: 100,
 				y: 100,
+				rotation: 0,
 				color: 'red',
 				radius: 60,
 				start_angle: 0,
 				end_angle: 2 * Math.PI,
 			},
 			{
+				id: '3567422',
+				type: 'rectangle',
+				selected: false,
+				hover: false,
+				x: 300,
+				y: 300,
+				rotation: 0,
+				color: 'red',
+				width: 60,
+				height: 120,
+			},
+			{
 				id: '3457',
 				type: 'group',
 				selected: false,
 				hover: false,
+				rotation: 0,
 				elements: [
 					{
 						type: 'ellipse',
@@ -119,7 +132,7 @@ export default function getPages() {
 				y: 800,
 				color: 'red',
 				radius_x: 60,
-				radius_y: 80,
+				radius_y: 120,
 				rotation: 0,
 				start_angle: 0,
 				end_angle: 2 * Math.PI,
