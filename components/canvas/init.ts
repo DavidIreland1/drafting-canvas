@@ -18,6 +18,7 @@ export function initCanvas(canvas, id, store, actions) {
 				delta_scale: 1 - view.scale,
 			})
 		);
+		// Add cursor movement
 	});
 
 	canvas.addEventListener('mousemove', (event) => {

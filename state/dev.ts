@@ -1,6 +1,6 @@
 export default function getPage() {
 	return {
-		id: '123',
+		id: 'page-id',
 		label: 'First Page',
 		cursors: [
 			{

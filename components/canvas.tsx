@@ -17,22 +17,22 @@ const Canvas = (props) => {
 	let view = views.find((view) => view.id === id);
 
 	const redraw = (context: CanvasRenderingContext2D) => {
-		// requestAnimationFrame(() => {
-		context.resetTransform();
-		context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-		context.translate(view.x, view.y);
-		context.scale(view.scale, view.scale);
-		elements.forEach((element) => {
-			Elements[element.type].draw(element, context);
+		requestAnimationFrame(() => {
+			context.resetTransform();
+			context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+			context.translate(view.x, view.y);
+			context.scale(view.scale, view.scale);
+			elements.forEach((element) => {
+				Elements[element.type].draw(element, context);
+			});
+			elements.forEach((element) => {
+				if (element.selected) Elements[element.type].highlight(element, context, highlight_color, line_width / view.scale, box_size / view.scale);
+				else if (element.hover) Elements[element.type].outline(element, context, highlight_color, (line_width * 2) / view.scale);
+			});
+			cursors.forEach((cursor) => {
+				Cursor.draw(cursor, context, view);
+			});
 		});
-		elements.forEach((element) => {
-			if (element.selected) Elements[element.type].highlight(element, context, highlight_color, line_width / view.scale, box_size / view.scale);
-			else if (element.hover) Elements[element.type].outline(element, context, highlight_color, (line_width * 2) / view.scale);
-		});
-		cursors.forEach((cursor) => {
-			Cursor.draw(cursor, context, view);
-		});
-		// });
 	};
 
 	useEffect(() => {

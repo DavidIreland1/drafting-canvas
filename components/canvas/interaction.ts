@@ -59,10 +59,20 @@ function CanvasToDOM(position, canvas, view) {
 export function hover(event, elements, canvas, view, store, actions) {
 	const position = DOMToCanvas(event, canvas, view);
 
-	const { action } = event.buttons > 0 ? { action: undefined } : getElementAt(elements, position, view);
-	// const { action } = getElementAt(elements, position, view);
+	const { target, action } = event.buttons > 0 ? { target: undefined, action: undefined } : getElementAt(elements, position, view);
 
-	store.dispatch(actions.cursor({ id: '123', x: position.x, y: position.y, rotation: 0, type: action }));
+	// const { target, action } = getElementAt(elements, position, view);
+
+	let rotation = 0;
+	if (target && ['resize', 'rotate'].includes(action)) {
+		const element = elements.find((element) => element.id === target.id);
+		const center = Elements[element.type].center(element);
+		// rotation = element.rotation;
+		rotation = Math.atan2(center.y - position.y, center.x - position.x);
+		// console.log(rotation);
+	}
+
+	store.dispatch(actions.cursor({ id: '123', ...position, rotation, type: action }));
 }
 
 export function select(event, elements, canvas, view, store, actions) {
