@@ -146,22 +146,22 @@ function getEventLocation(event) {
 let isDragging = false;
 let dragStart = { x: 0, y: 0 };
 
-export function onPointerDown(event, cameraZoom, cameraOffset) {
+export function touch(event, view) {
 	isDragging = true;
-	dragStart.x = getEventLocation(event).x / cameraZoom - cameraOffset.x;
-	dragStart.y = getEventLocation(event).y / cameraZoom - cameraOffset.y;
+	dragStart.x = getEventLocation(event).x / view.scale - view.x;
+	dragStart.y = getEventLocation(event).y / view.scale - view.y;
 }
 
-export function onPointerUp(even, cameraZoom) {
+export function release(event, view) {
 	isDragging = false;
 	initialPinchDistance = null;
-	// lastZoom = cameraZoom;
+	// lastZoom = view.scale;
 }
 
-export function onPointerMove(event, cameraZoom, cameraOffset) {
+export function touchMove(event, view) {
 	if (isDragging) {
-		cameraOffset.x = getEventLocation(event).x / cameraZoom - dragStart.x;
-		cameraOffset.y = getEventLocation(event).y / cameraZoom - dragStart.y;
+		view.x = getEventLocation(event).x / view.scale - dragStart.x;
+		view.y = getEventLocation(event).y / view.scale - dragStart.y;
 	}
 }
 
@@ -175,7 +175,7 @@ export function handleTouch(event, singleTouchHandler) {
 }
 
 let initialPinchDistance = null;
-// let lastZoom = cameraZoom;
+// let lastZoom = view.scale;
 
 export function handlePinch(event) {
 	let touch1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };

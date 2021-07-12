@@ -10,11 +10,6 @@ export default class Resize {
 		context.translate(-cursor.x, -cursor.y);
 
 		context.beginPath();
-		context.arc(cursor.x, cursor.y, 1, 0, 10);
-		context.fillStyle = 'black';
-		context.fill();
-
-		context.beginPath();
 		context.moveTo(cursor.x + head_length - body_length / 2, cursor.y - body_length + head_length);
 		context.lineTo(cursor.x - body_length / 2, cursor.y - body_length);
 		context.lineTo(cursor.x - head_length - body_length / 2, cursor.y - body_length + head_length);

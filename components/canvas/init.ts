@@ -7,8 +7,7 @@ export function initCanvas(canvas, id, store, actions) {
 		onWheel(event, canvas, view, store, actions);
 	});
 
-	canvas.addEventListener('dblclick', (event) => {
-		event.preventDefault();
+	canvas.addEventListener('dblclick', () => {
 		const view = store.getState().views.find((view) => view.id === id);
 		store.dispatch(
 			actions.view({
@@ -55,24 +54,38 @@ export function initCanvas(canvas, id, store, actions) {
 		);
 	});
 
+	canvas.addEventListener('mouseover', (event) => {
+		event.preventDefault();
+		store.dispatch(
+			actions.view({
+				id: '123',
+				delta_x: -event.deltaX,
+				delta_y: -event.deltaY,
+			})
+		);
+	});
+
 	document.addEventListener('keydown', (event) => {
 		if (event.metaKey || event.ctrlKey) {
-			shortCuts(event);
+			if (shortCuts(event)) {
+				event.preventDefault();
+			}
 		}
 	});
 }
 
-function shortCuts(event) {
+function shortCuts(event): boolean {
 	switch (event.key) {
 		case 'c':
 			console.log('copy');
-			break;
+			return true;
 		case 'v':
 			console.log('paste');
-			break;
+			return true;
 		case 's':
 			event.preventDefault();
 			console.log('save');
-			break;
+			return true;
 	}
+	return false;
 }

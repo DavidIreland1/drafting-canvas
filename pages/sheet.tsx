@@ -13,14 +13,15 @@ export default function Sheet() {
 	const name = 'David';
 
 	useEffect(() => {
-		const pages = JSON.parse(window.localStorage.getItem('state'));
-		// const pages = getPage();
+		// const pages = JSON.parse(window.localStorage.getItem('state'));
+		const pages = getPage();
 
-		store.dispatch(
-			slice.actions.overwrite({
-				state: pages,
-			})
-		);
+		if (pages)
+			store.dispatch(
+				slice.actions.overwrite({
+					state: pages,
+				})
+			);
 	}, []);
 
 	const pages = getPage();
