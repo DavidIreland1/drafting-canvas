@@ -5,12 +5,26 @@ import Toolbar from '../components/toolbar';
 
 import getPage from '../state/dev';
 
+import { createStore } from 'redux';
 import { createSlice, configureStore } from '@reduxjs/toolkit';
 import Elements from '../components/canvas/elements/elements';
+
+import scuttlebutt, { devToolsStateSanitizer } from 'redux-scuttlebutt';
+
+import Primus from './../node_modules/redux-scuttlebutt/lib/primus.js';
 
 export default function Sheet() {
 	const id = '123';
 	const name = 'David';
+
+	const initial_state = {
+		views: [{ id: id, x: 0, y: 0, scale: 1 }],
+		cursors: [
+			{ id: id, label: name, x: 0, y: 0, rotation: 0, type: 'none' },
+			{ id: '234', label: name, x: 100, y: 100, rotation: 0, type: 'none' },
+		],
+		elements: [],
+	};
 
 	useEffect(() => {
 		// const pages = JSON.parse(window.localStorage.getItem('state'));
@@ -28,7 +42,7 @@ export default function Sheet() {
 
 	const slice = createSlice({
 		name: 'counter',
-		initialState: { views: [{ id: id, x: 0, y: 0, scale: 1 }], cursors: [{ id: id, label: name, x: 0, y: 0, rotation: 0, type: 'none' }], elements: [] },
+		initialState: initial_state,
 		reducers: {
 			overwrite: (state, props) => {
 				const { views, cursors, elements } = props.payload.state;
@@ -101,25 +115,15 @@ export default function Sheet() {
 		},
 	});
 
-	const store = configureStore({
-		reducer: slice.reducer,
-	});
+	// const store = configureStore({
+	// 	reducer: slice.reducer,
+	// });
+	// const store = createStore(slice.reducer, initial_state);
+	const store = createStore(slice.reducer, initial_state, scuttlebutt({ primus: Primus }));
 
-	// console.log(store.getState());
-	// Can still subscribe to the store
 	store.subscribe(() => {
 		window.localStorage.setItem('state', JSON.stringify(store.getState()));
-
-		// console.log(window.localStorage.getItem('state'));
 	});
-
-	// Still pass action objects to `dispatch`, but they're created for us
-	// store.dispatch(move('hi'));
-	// // {value: 1}
-	// store.dispatch(incremented());
-	// // {value: 2}
-	// store.dispatch(decremented());
-	// {value: 1}
 
 	return (
 		<div id="cols">
