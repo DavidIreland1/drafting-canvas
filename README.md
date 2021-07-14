@@ -1,3 +1,3 @@
 ## OFF WHITE CANVAS
 
-Free online collaborative vector editor
+Collaborative design tool
