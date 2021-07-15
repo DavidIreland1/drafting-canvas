@@ -1,23 +1,25 @@
-import Elements from './elements/elements';
+import Elements from './../elements/elements';
 
-import Defaults from './../defaults';
-const { line_width, box_size, max_zoom, min_zoom, pan_sensitivity, zoom_sensitivity } = Defaults;
+import Settings from '../settings';
+const { line_width, box_size, max_zoom, min_zoom, pan_sensitivity, zoom_sensitivity } = Settings;
 
-export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, view, store, actions) {
+export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, views_store, cursors_store, actions) {
+	const view = views_store.getState().find((view) => view.id === user_id);
+
 	if (String(event.deltaY).length < 5) {
 		// Pan
-		store.dispatch(
+		views_store.dispatch(
 			actions.view({
-				id: '123',
+				id: user_id,
 				delta_x: -event.deltaX * pan_sensitivity,
 				delta_y: -event.deltaY * pan_sensitivity,
 			})
 		);
-		const cursor = store.getState().cursors.find((cursor) => '123' === cursor.id);
 
-		store.dispatch(
+		const cursor = cursors_store.getState().find((cursor) => user_id === cursor.id);
+		cursors_store.dispatch(
 			actions.cursor({
-				id: '123',
+				id: user_id,
 				x: cursor.x + (event.deltaX * pan_sensitivity) / view.scale,
 				y: cursor.y + (event.deltaY * pan_sensitivity) / view.scale,
 			})
@@ -29,9 +31,9 @@ export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, view, stor
 		if (view.scale - delta_scale > max_zoom) return;
 
 		const position = DOMToCanvas(event, canvas, view);
-		store.dispatch(
+		views_store.dispatch(
 			actions.view({
-				id: '123',
+				id: user_id,
 				delta_x: position.x * delta_scale,
 				delta_y: position.y * delta_scale,
 				delta_scale: -delta_scale,
@@ -81,7 +83,7 @@ export function select(event, elements, canvas, view, store, actions) {
 	const { target, action } = getElementAt(elements, last_position, view);
 
 	if (!event.shiftKey && (!target || (target && !target.selected))) {
-		store.dispatch(actions.unselect());
+		store.dispatch(actions.unselectAll());
 	}
 
 	if (!target) return;
@@ -133,15 +135,6 @@ function getEventLocation(event) {
 		return { x: event.clientX, y: event.clientY };
 	}
 }
-
-// function drawRect(x, y, width, height) {
-// 	ctx.fillRect(x, y, width, height);
-// }
-
-// function drawText(text, x, y, size, font) {
-// 	ctx.font = `${size}px ${font}`;
-// 	ctx.fillText(text, x, y);
-// }
 
 let isDragging = false;
 let dragStart = { x: 0, y: 0 };

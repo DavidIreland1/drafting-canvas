@@ -3,23 +3,10 @@ export default function getPage() {
 		id: 'page-id',
 		label: 'First Page',
 		cursors: [
-			{
-				id: '123',
-				label: 'David',
-				x: 0,
-				y: 0,
-				rotation: 0,
-				type: 'none',
-			},
+			{ id: '123', label: 'David', x: 0, y: 0, rotation: 0, type: 'none' },
+			{ id: '234', label: 'Irene', x: 100, y: 100, rotation: 0, type: 'select' },
 		],
-		views: [
-			{
-				id: '123',
-				x: 0,
-				y: 0,
-				scale: 1,
-			},
-		],
+		views: [{ id: '123', x: 0, y: 0, scale: 1 }],
 		elements: [
 			{
 				id: '35674',

@@ -1,15 +1,14 @@
 import { onWheel, hover, select } from './interaction';
 
-export function initCanvas(canvas, id, store, actions) {
+export function initCanvas(canvas, id, elements_store, views_store, cursors_store, actions) {
 	canvas.addEventListener('wheel', (event: WheelEvent) => {
 		event.preventDefault();
-		const view = store.getState().views.find((view) => view.id === id);
-		onWheel(event, canvas, view, store, actions);
+		onWheel(event, canvas, id, views_store, cursors_store, actions);
 	});
 
 	canvas.addEventListener('dblclick', () => {
-		const view = store.getState().views.find((view) => view.id === id);
-		store.dispatch(
+		const view = views_store.getState().find((view) => view.id === id);
+		views_store.dispatch(
 			actions.view({
 				id: id,
 				delta_x: -view.x,
@@ -21,42 +20,44 @@ export function initCanvas(canvas, id, store, actions) {
 	});
 
 	canvas.addEventListener('mousemove', (event) => {
-		const { elements, views } = store.getState();
+		const elements = elements_store.getState();
+		const views = views_store.getState();
 		hover(
 			event,
 			elements,
 			canvas,
 			views.find((view) => view.id === id),
-			store,
+			cursors_store,
 			actions
 		);
 	});
 
 	canvas.addEventListener('mouseout', () => {
-		store.dispatch(actions.cursor({ id: id, type: 'none' }));
+		cursors_store.dispatch(actions.cursor({ id: id, type: 'none' }));
 	});
 
 	canvas.addEventListener('mouseover', () => {
-		store.dispatch(actions.cursor({ id: id, type: 'select' }));
+		cursors_store.dispatch(actions.cursor({ id: id, type: 'select' }));
 	});
 
 	canvas.addEventListener('mousedown', (event) => {
 		if (event.button !== 0) return;
 		event.preventDefault();
-		const { elements, views } = store.getState();
+		const elements = elements_store.getState();
+		const views = views_store.getState();
 		select(
 			event,
 			elements,
 			canvas,
 			views.find((view) => view.id === id),
-			store,
+			elements_store,
 			actions
 		);
 	});
 
 	canvas.addEventListener('mouseover', (event) => {
 		event.preventDefault();
-		store.dispatch(
+		views_store.dispatch(
 			actions.view({
 				id: '123',
 				delta_x: -event.deltaX,

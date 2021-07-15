@@ -1,18 +1,27 @@
 import { useRef, useEffect } from 'react';
 
-import { initCanvas } from './canvas/init';
+import { initCanvas } from './init';
+import Elements from '../elements/elements';
+import Cursor from '../cursor';
+import Settings from '../settings';
 
-import Elements from './canvas/elements/elements';
-import Cursor from './cursor/cursor';
-
-import Defaults from './defaults';
-const { line_width, box_size, highlight_color } = Defaults;
+const { line_width, box_size, highlight_color } = Settings;
 
 const Canvas = (props) => {
 	let { id, store, actions, ...rest } = props;
 	const canvas_ref = useRef(null);
 
-	let { elements, cursors, views } = store.getState();
+	if (typeof store.subscribe === 'function') {
+		store = {
+			views: store,
+			cursors: store,
+			elements: store,
+		};
+	}
+
+	let views = store.views.getState();
+	let cursors = store.cursors.getState();
+	let elements = store.elements.getState();
 
 	let view = views.find((view) => view.id === id);
 
@@ -22,6 +31,7 @@ const Canvas = (props) => {
 			context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 			context.translate(view.x, view.y);
 			context.scale(view.scale, view.scale);
+
 			elements.forEach((element) => {
 				Elements[element.type].draw(element, context);
 			});
@@ -43,20 +53,24 @@ const Canvas = (props) => {
 		(window as any).context = context;
 
 		resizeCanvas(canvas);
-		initCanvas(canvas, id, store, actions);
-		// redraw(context);
+		initCanvas(canvas, id, store.elements, store.views, store.cursors, actions);
 
 		window.addEventListener('resize', () => {
 			resizeCanvas(canvas);
 			redraw(context);
 		});
 
-		store.subscribe(() => {
-			const state = store.getState();
-			elements = state.elements;
-			cursors = state.cursors;
-			views = state.views;
+		store.views.subscribe(() => {
+			views = store.views.getState();
 			view = views.find((view) => view.id === id);
+			redraw(context);
+		});
+		store.cursors.subscribe(() => {
+			cursors = store.cursors.getState();
+			redraw(context);
+		});
+		store.elements.subscribe(() => {
+			elements = store.elements.getState();
 			redraw(context);
 		});
 	}, []);

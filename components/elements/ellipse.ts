@@ -38,8 +38,15 @@ export default class Ellipse extends Element {
 	}
 
 	static resize(ellipse, position, last_position, direction_x, direction_y) {
-		const delta_x = (position.x - last_position.x) / 2;
-		const delta_y = (position.y - last_position.y) / 2;
+		// position = this.rotatePoint(position, last_position, -ellipse.rotation);
+
+		let delta_x = (position.x - last_position.x) / 2;
+		let delta_y = (position.y - last_position.y) / 2;
+
+		delta_x = delta_x * Math.sin(ellipse.rotation + Math.PI / 4);
+		delta_y = delta_y * Math.cos(ellipse.rotation + Math.PI / 4);
+
+		// console.log(delta_x, delta_y, ellipse.rotation);
 
 		ellipse.x += delta_x;
 		ellipse.y += delta_y;
@@ -50,4 +57,21 @@ export default class Ellipse extends Element {
 		ellipse.radius_x = Math.abs(ellipse.radius_x);
 		ellipse.radius_y = Math.abs(ellipse.radius_y);
 	}
+	// static resize(ellipse, position, last_position, direction_x, direction_y) {
+	// 	const delta_x = (position.x - last_position.x) / 2;
+	// 	const delta_y = (position.y - last_position.y) / 2;
+
+	// 	ellipse.x += delta_x;
+	// 	ellipse.y += delta_y;
+
+	// 	ellipse.radius_x += direction_x * delta_x;
+	// 	ellipse.radius_y += direction_y * delta_y;
+
+	// 	ellipse.radius_x = Math.abs(ellipse.radius_x);
+	// 	ellipse.radius_y = Math.abs(ellipse.radius_y);
+	// }
+}
+
+function clone(object) {
+	return JSON.parse(JSON.stringify(object));
 }
