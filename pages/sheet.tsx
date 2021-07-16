@@ -11,7 +11,7 @@ import reducers from './../reducers/reducers';
 
 import scuttlebutt from 'redux-scuttlebutt';
 
-// import Primus from './../node_modules/redux-scuttlebutt/lib/primus';
+import Primus from './../node_modules/redux-scuttlebutt/lib/primus';
 
 export default function Sheet() {
 	const id = '123';

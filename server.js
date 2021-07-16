@@ -11,12 +11,14 @@ const handle = app.getRequestHandler();
 const fs = require('fs');
 var os = require('os');
 
+const Dispatcher = require('./node_modules/redux-scuttlebutt/lib/dispatcher.js').default;
+
 const Primus = require('./node_modules/redux-scuttlebutt/lib/primus.js');
-const scuttlebutt = require('redux-scuttlebutt');
+const scuttlebutt = require('redux-scuttlebutt').default;
+const reducer = require('./reducers/reducer.js').default;
 
-// const reducers = require('./reducers/index.js');
-
-// console.log(reducers);
+const { createStore } = require('redux');
+const { createSlice } = require('@reduxjs/toolkit');
 
 app.prepare().then(() => {
 	const server = createServer((req, res) => {
@@ -32,187 +34,63 @@ app.prepare().then(() => {
 		} else {
 			handle(req, res, parsedUrl);
 		}
-	}).listen(3000, (err) => {
-		if (err) throw err;
+	}).listen(3000, () => {
 		console.log('> Ready on http://localhost:3000');
 	});
 
 	const { primusServer, store, dispatch, getState } = dispatcher(server);
 	// primusServer.save(__dirname + '/primus.js');
 
-	let max = 0;
-	store.subscribe(() => {
-		// if (max > 0) return;
-		max++;
-		// const state = store.getState();
-		const state = getState();
-		console.log(state.length, JSON.stringify(state).length);
-		fs.writeFile('store.json', JSON.stringify(state, null, '\t'), 'utf8', () => {});
+	// store.subscribe(() => {
+	// const state = store.getState();
+	// const state2 = getState();
+	// console.log(Math.round(process.memoryUsage().heapUsed / 10000000), JSON.stringify(state).length, JSON.stringify(state2).length);
+	// });
+
+	const dispatcher2 = new Dispatcher({});
+
+	const dispatcher3 = dispatcher2.wrapDispatch(clone.dispatch);
+
+	// Apply all changes
+	setTimeout(() => {
+		// const state = load('./store.json');
+		// state.forEach((action) => {
+		// 	dispatch(action);
+		// });
+		// const snapshot = load('./snapshot.json');
+		// dispatch({})
 	});
 
-	// setTimeout(() => {
-	// 	const state = require('./store.json');
-
-	// 	state.forEach((element) => {
-	// 		dispatch(element);
-	// 	});
-	// }, 4000);
+	// Get snapshot of current state
+	setInterval(() => {
+		updateSnapshot(getState());
+	}, 4000);
 });
 
-// And then, to read it...
-// myJson = require('./filename.json');
+const slice = createSlice({
+	name: 'counter',
+	initialState: [],
+	reducers: reducer,
+});
 
-const initialState = [
-	{
-		// meta: {},
-		type: 'counter/overwrite',
-		payload: {
-			state: {
-				views: [
-					{
-						id: '123',
-						x: 263.18552166205484,
-						y: 261.25855841557444,
-						scale: 0.531336927285965,
-					},
-				],
-				cursors: [
-					{
-						id: '123',
-						label: 'David',
-						x: 2468.2469088622424,
-						y: 330.10634604364077,
-						rotation: 0,
-						type: 'select',
-					},
-					{
-						id: '234',
-						label: 'Irene',
-						x: 100,
-						y: 100,
-						rotation: 0,
-						type: 'select',
-					},
-				],
-				elements: [
-					{
-						id: '35674',
-						type: 'circle',
-						selected: false,
-						hover: false,
-						x: 100,
-						y: 100,
-						rotation: 0,
-						color: 'red',
-						radius: 60,
-						start_angle: 0,
-						end_angle: 6.283185307179586,
-					},
-					{
-						id: '3567422',
-						type: 'rectangle',
-						selected: false,
-						hover: false,
-						x: 300,
-						y: 300,
-						rotation: 0,
-						color: 'red',
-						width: 60,
-						height: 120,
-					},
-					{
-						id: '3457',
-						type: 'group',
-						selected: false,
-						hover: false,
-						rotation: 0,
-						elements: [
-							{
-								type: 'ellipse',
-								selected: false,
-								hover: false,
-								x: 100,
-								y: 100,
-								color: 'black',
-								radius_x: 60,
-								radius_y: 80,
-								rotation: 0,
-								start_angle: 0,
-								end_angle: 6.283185307179586,
-							},
-							{
-								type: 'ellipse',
-								selected: false,
-								hover: false,
-								x: 200,
-								y: 200,
-								color: 'black',
-								radius_x: 60,
-								radius_y: 80,
-								rotation: 0,
-								start_angle: 0,
-								end_angle: 6.283185307179586,
-							},
-						],
-					},
-					{
-						id: '67484',
-						type: 'ellipse',
-						selected: false,
-						hover: false,
-						x: 1500,
-						y: 1500,
-						color: 'red',
-						radius_x: 60,
-						radius_y: 80,
-						rotation: 0,
-						start_angle: 0,
-						end_angle: 6.283185307179586,
-					},
-					{
-						id: '4678',
-						type: 'ellipse',
-						selected: false,
-						hover: false,
-						x: 739.2250888817405,
-						y: 692.7766378950408,
-						color: 'red',
-						radius_x: 60,
-						radius_y: 80,
-						rotation: 0,
-						start_angle: 0,
-						end_angle: 6.283185307179586,
-					},
-					{
-						id: '3567',
-						type: 'ellipse',
-						selected: false,
-						hover: false,
-						x: 1500,
-						y: 100,
-						color: 'red',
-						radius_x: 60,
-						radius_y: 80,
-						rotation: 0,
-						start_angle: 0,
-						end_angle: 6.283185307179586,
-					},
-					{
-						id: '8764',
-						type: 'ellipse',
-						selected: false,
-						hover: false,
-						x: 524,
-						y: 1200,
-						color: 'red',
-						radius_x: 60,
-						radius_y: 120,
-						rotation: 0,
-						start_angle: 0,
-						end_angle: 6.283185307179586,
-					},
-				],
-			},
-		},
-	},
-];
+const clone = createStore(slice.reducer, []);
+
+function updateSnapshot(actions) {
+	actions.forEach((action) => {
+		if (!action.type.startsWith('counter')) return;
+		const type = action.type.split('/').pop();
+		clone.dispatch(slice.actions[type](action.payload));
+	});
+}
+
+clone.subscribe(() => {
+	save('snapshot.json', clone.getState());
+});
+
+function save(name, data) {
+	fs.writeFile(name, JSON.stringify(data, null, '\t'), 'utf8', () => {});
+}
+
+function load(name) {
+	return require(name);
+}
