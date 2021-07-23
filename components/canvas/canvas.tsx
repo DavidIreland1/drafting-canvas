@@ -1,59 +1,65 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 
 import { initCanvas } from './init';
 import Elements from '../elements/elements';
 import Cursor from '../cursor';
 import Settings from '../settings';
+import Grid from './grid';
 
 const { line_width, box_size, highlight_color } = Settings;
 
-const Canvas = (props) => {
-	let { id, store, actions, ...rest } = props;
+const Canvas = ({ user_id, store, actions, ...rest }) => {
 	const canvas_ref = useRef(null);
 
-	if (typeof store.subscribe === 'function') {
-		store = {
-			views: store,
-			cursors: store,
-			elements: store,
-		};
-	}
-
-	let views = store.views.getState();
 	let cursors = store.cursors.getState();
 	let elements = store.elements.getState();
 
-	let view = views.find((view) => view.id === id);
+	let user_view = store.views.getState().find((view) => view.id === user_id);
 
-	const redraw = (context: CanvasRenderingContext2D) => {
+	let [frames, setFrameRate] = useState([]);
+
+	const auto_draw = false;
+
+	let redraw_auto = (context: CanvasRenderingContext2D) => {
 		requestAnimationFrame(() => {
 			context.resetTransform();
 			context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-			context.translate(view.x, view.y);
-			context.scale(view.scale, view.scale);
+			if (Settings.grid_enabled) Grid.draw(context, user_view);
+			context.translate(user_view.x, user_view.y);
+			context.scale(user_view.scale, user_view.scale);
 
 			elements.forEach((element) => {
 				Elements[element.type].draw(element, context);
 			});
 			elements.forEach((element) => {
-				if (element.selected) Elements[element.type].highlight(element, context, highlight_color, line_width / view.scale, box_size / view.scale);
-				else if (element.hover) Elements[element.type].outline(element, context, highlight_color, (line_width * 2) / view.scale);
+				if (element.selected) Elements[element.type].highlight(element, context, highlight_color, line_width / user_view.scale, box_size / user_view.scale);
+				else if (element.hover) Elements[element.type].outline(element, context, highlight_color, (line_width * 2) / user_view.scale);
 			});
 			cursors.forEach((cursor) => {
-				Cursor.draw(cursor, context, view);
+				Cursor.draw(cursor, context, user_view);
 			});
+
+			frames = frames.concat([frames.length]);
+			setTimeout(() => {
+				frames = frames.slice(1);
+				setFrameRate(frames);
+			}, 1000);
+
+			if (auto_draw) redraw_auto(context);
 		});
 	};
 
+	const redraw = auto_draw ? (contet) => {} : redraw_auto;
+
 	useEffect(() => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
-		const context: CanvasRenderingContext2D = canvas.getContext('2d');
+		const context: CanvasRenderingContext2D = canvas.getContext('2d', { alpha: false });
 
 		(window as any).canvas = canvas;
 		(window as any).context = context;
 
 		resizeCanvas(canvas);
-		initCanvas(canvas, id, store.elements, store.views, store.cursors, actions);
+		initCanvas(canvas, user_id, store.elements, store.views, store.cursors, actions);
 
 		window.addEventListener('resize', () => {
 			resizeCanvas(canvas);
@@ -61,9 +67,8 @@ const Canvas = (props) => {
 		});
 
 		store.views.subscribe(() => {
-			views = store.views.getState();
-			view = views.find((view) => view.id === id);
-			redraw(context);
+			user_view = store.views.getState().find((view) => view.id === user_id);
+			// redraw(context);
 		});
 		store.cursors.subscribe(() => {
 			cursors = store.cursors.getState();
@@ -71,13 +76,15 @@ const Canvas = (props) => {
 		});
 		store.elements.subscribe(() => {
 			elements = store.elements.getState();
-			redraw(context);
+			// redraw(context);
 		});
+		if (auto_draw) redraw_auto(context);
 	}, []);
 
 	return (
 		<div>
 			<canvas ref={canvas_ref} {...rest} />
+			<div id="frame_rate">{frames[frames.length - 1] || 0}</div>
 
 			<style jsx>{`
 				canvas {
@@ -85,6 +92,13 @@ const Canvas = (props) => {
 					height: 100%;
 					background: var(--off-white);
 					cursor: none;
+				}
+				#frame_rate {
+					position: absolute;
+					left: 50%;
+					bottom: 0;
+					width: min-content;
+					padding: 20px;
 				}
 			`}</style>
 		</div>

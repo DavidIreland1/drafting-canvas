@@ -6,12 +6,12 @@ module.exports = {
 	},
 	output: {
 		path: __dirname + "/reducers/",
-		filename: "reducer.js",
+		filename: "reducers.js",
 		library: "reducer",
 		libraryTarget: "umd",
 	},
 	optimization: {
-		minimize: false,
+		minimize: true,
 	},
 	resolve: {
 		extensions: [".ts", ".tsx", ".js"],

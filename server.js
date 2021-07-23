@@ -15,7 +15,7 @@ const Dispatcher = require('./node_modules/redux-scuttlebutt/lib/dispatcher.js')
 
 const Primus = require('./node_modules/redux-scuttlebutt/lib/primus.js');
 const scuttlebutt = require('redux-scuttlebutt').default;
-const reducer = require('./reducers/reducer.js').default;
+const reducer = require('./reducers/reducers.js').default;
 
 const { createStore } = require('redux');
 const { createSlice } = require('@reduxjs/toolkit');
@@ -57,13 +57,11 @@ app.prepare().then(() => {
 		// state.forEach((action) => {
 		// 	dispatch(action);
 		// });
-		// const snapshot = load('./snapshot.json');
-		// dispatch({})
 	});
 
 	// Get snapshot of current state
 	setInterval(() => {
-		updateSnapshot(getState());
+		// updateSnapshot(getState());
 	}, 4000);
 });
 
@@ -83,9 +81,9 @@ function updateSnapshot(actions) {
 	});
 }
 
-clone.subscribe(() => {
-	save('snapshot.json', clone.getState());
-});
+// clone.subscribe(() => {
+// 	save('snapshot.json', clone.getState());
+// });
 
 function save(name, data) {
 	fs.writeFile(name, JSON.stringify(data, null, '\t'), 'utf8', () => {});

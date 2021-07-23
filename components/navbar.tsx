@@ -1,10 +1,8 @@
-import Image from 'next/image';
-
 export default function Navbar() {
 	return (
 		<div>
 			<div id="nav">
-				<img src="/images/canvas.svg" />
+				<img src="/images/offwhite.svg" />
 				<div id="title">OFF WHITE CANVAS</div>
 			</div>
 
@@ -20,7 +18,7 @@ export default function Navbar() {
 				img {
 					height: var(--nav-height);
 					width: var(--nav-height);
-					padding: 10px;
+					padding: 2px;
 				}
 				#title {
 					height: var(--nav-height);

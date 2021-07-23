@@ -1,6 +1,7 @@
 import Elements from './../elements/elements';
 
 import Settings from '../settings';
+
 const { line_width, box_size, max_zoom, min_zoom, pan_sensitivity, zoom_sensitivity } = Settings;
 
 export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, views_store, cursors_store, actions) {
@@ -63,8 +64,6 @@ export function hover(event, elements, canvas, view, store, actions) {
 
 	const { target, action } = event.buttons > 0 ? { target: undefined, action: undefined } : getElementAt(elements, position, view);
 
-	// const { target, action } = getElementAt(elements, position, view);
-
 	let rotation = 0;
 	if (target && ['resize', 'rotate'].includes(action)) {
 		const element = elements.find((element) => element.id === target.id);
@@ -74,7 +73,7 @@ export function hover(event, elements, canvas, view, store, actions) {
 		// console.log(rotation);
 	}
 
-	store.dispatch(actions.cursor({ id: '123', ...position, rotation, type: action }));
+	store.dispatch(actions.cursor({ id: Settings.user_id, ...position, rotation, type: action }));
 }
 
 export function select(event, elements, canvas, view, store, actions) {

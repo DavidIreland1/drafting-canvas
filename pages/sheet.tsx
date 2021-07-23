@@ -1,46 +1,18 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { Provider } from 'react-redux';
 
 import Canvas from '../components/canvas/canvas';
 import Toolbar from '../components/toolbar';
+import Structure from '../components/structure';
+import Properties from '../components/properties';
 import getPage from '../state/dev';
 
-import { createStore } from 'redux';
-import { createSlice } from '@reduxjs/toolkit';
+import Settings from './../components/settings';
 
-import reducers from './../reducers/reducers';
-
-import scuttlebutt from 'redux-scuttlebutt';
-
-import Primus from './../node_modules/redux-scuttlebutt/lib/primus';
+import stores from '../redux/stores';
+import actions from '../reducers/actions';
 
 export default function Sheet() {
-	const id = '123';
-	const name = 'David';
-
-	let initial_state = {
-		views: [{ id: id, x: 0, y: 0, scale: 1 }],
-		cursors: [
-			{ id: id, label: name, x: 0, y: 0, rotation: 0, type: 'none' },
-			{ id: '234', label: 'Irene', x: 100, y: 100, rotation: 0, type: 'none' },
-		],
-		elements: [],
-	};
-	// initial_state = getPage();
-
-	const slice = createSlice({
-		name: 'counter',
-		initialState: [],
-		reducers: reducers,
-	});
-
-	// const store = createStore(slice.reducer, initial_state, typeof Primus !== 'undefined' ? scuttlebutt({ primus: Primus }) : undefined);
-
-	const stores = {
-		views: createStore(slice.reducer, initial_state.views),
-		cursors: createStore(slice.reducer, initial_state.cursors),
-		elements: createStore(slice.reducer, initial_state.elements, typeof Primus !== 'undefined' ? scuttlebutt({ primus: Primus }) : undefined),
-	};
-
 	stores.elements.subscribe(() => {
 		window.localStorage.setItem('elements', JSON.stringify(stores.elements.getState()));
 	});
@@ -49,23 +21,28 @@ export default function Sheet() {
 		window.addEventListener('keydown', (event) => {
 			if (event.metaKey && event.key === 'b') {
 				let pages = getPage();
-				stores.elements.dispatch(slice.actions.overwrite({ state: pages.elements }));
+				stores.elements.dispatch(actions.overwrite({ state: pages.elements }));
 			}
 		});
 	}, []);
 
 	return (
-		<div id="cols">
-			<Toolbar />
-			<Canvas id={id} store={stores} actions={slice.actions} />
+		<Provider store={stores.elements as any}>
+			<div id="cols">
+				<Toolbar />
+				<Structure id={Settings.user_id} store={stores.elements} actions={actions} />
+				<Canvas user_id={Settings.user_id} store={stores} actions={actions} />
+				<Properties store={stores.elements} actions={actions} />
 
-			<style jsx>{`
-				#cols {
-					display: grid;
-					grid-auto-flow: column;
-					grid-template-columns: min-content;
-				}
-			`}</style>
-		</div>
+				<style jsx>{`
+					#cols {
+						position: relative;
+						display: grid;
+						grid-auto-flow: column;
+						grid-template-columns: min-content auto;
+					}
+				`}</style>
+			</div>
+		</Provider>
 	);
 }

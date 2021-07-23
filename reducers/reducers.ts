@@ -14,6 +14,7 @@ export default {
 	},
 	cursor: (state, props) => {
 		const { id, x, y, rotation, type } = props.payload;
+
 		const cursor = state.find((cursor) => id === cursor.id);
 		if (x) cursor.x = x;
 		if (y) cursor.y = y;
@@ -28,11 +29,15 @@ export default {
 		const element = state.find((element) => element.id === props.payload.id);
 		if (element) element.selected = true;
 	},
-	unselectAll: (state) => {
-		state.forEach((element) => (element.selected = false));
+	unselect: (state, props) => {
+		const element = state.find((element) => element.id === props.payload.id);
+		if (element) element.selected = false;
 	},
 	selectAll: (state) => {
 		state.forEach((element) => (element.selected = true));
+	},
+	unselectAll: (state) => {
+		state.forEach((element) => (element.selected = false));
 	},
 	hover: (state, props) => {
 		state.find((element) => element.id === props.payload.id).hover = true;
@@ -67,7 +72,9 @@ export default {
 
 		selected.forEach((element) => Elements[element.type].rotate(element, rotation));
 
-		const cursor = state.find((cursor) => '123' === cursor.id);
-		cursor.rotation += rotation;
+		// Cursor is now in a different store
+
+		// const cursor = state.find((cursor) => id === cursor.id);
+		// cursor.rotation += rotation;
 	},
 };

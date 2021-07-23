@@ -10,6 +10,7 @@ export default function getPage() {
 		elements: [
 			{
 				id: '35674',
+				label: 'Circle',
 				type: 'circle',
 				selected: false,
 				hover: false,
@@ -23,6 +24,7 @@ export default function getPage() {
 			},
 			{
 				id: '3567422',
+				label: 'Rectangle',
 				type: 'rectangle',
 				selected: false,
 				hover: false,
@@ -35,12 +37,15 @@ export default function getPage() {
 			},
 			{
 				id: '3457',
+				label: 'Group',
 				type: 'group',
 				selected: false,
 				hover: false,
 				rotation: 0,
 				elements: [
 					{
+						id: '456546',
+						label: 'Ellipse',
 						type: 'ellipse',
 						selected: false,
 						hover: false,
@@ -54,6 +59,8 @@ export default function getPage() {
 						end_angle: 2 * Math.PI,
 					},
 					{
+						id: '2342342',
+						label: 'Ellipse',
 						type: 'ellipse',
 						selected: false,
 						hover: false,
@@ -66,10 +73,51 @@ export default function getPage() {
 						start_angle: 0,
 						end_angle: 2 * Math.PI,
 					},
+					{
+						id: '34543534',
+						label: 'Group',
+						type: 'group',
+						selected: false,
+						hover: false,
+						rotation: 0,
+						elements: [
+							{
+								id: '23423245',
+								label: 'Ellipse',
+								type: 'ellipse',
+								selected: false,
+								hover: false,
+								x: 350,
+								y: 250,
+								color: 'green',
+								radius_x: 60,
+								radius_y: 80,
+								rotation: 0,
+								start_angle: 0,
+								end_angle: 2 * Math.PI,
+							},
+							{
+								id: '634523',
+								label: 'Ellipse',
+								type: 'ellipse',
+								selected: false,
+								hover: false,
+								x: 350,
+								y: 350,
+								color: 'green',
+								radius_x: 60,
+								radius_y: 80,
+								rotation: 0,
+								start_angle: 0,
+								end_angle: 2 * Math.PI,
+							},
+						],
+					},
 				],
 			},
 			{
 				id: '67484',
+				label: 'Ellipse',
 				type: 'ellipse',
 				selected: false,
 				hover: false,
@@ -84,6 +132,7 @@ export default function getPage() {
 			},
 			{
 				id: '4678',
+				label: 'Ellipse',
 				type: 'ellipse',
 				selected: false,
 				hover: false,
@@ -98,6 +147,7 @@ export default function getPage() {
 			},
 			{
 				id: '3567',
+				label: 'Ellipse',
 				type: 'ellipse',
 				selected: false,
 				hover: false,
@@ -112,6 +162,7 @@ export default function getPage() {
 			},
 			{
 				id: '8764',
+				label: 'Ellipse',
 				type: 'ellipse',
 				selected: false,
 				hover: false,
