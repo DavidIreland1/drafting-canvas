@@ -29,6 +29,13 @@ export default class Group extends Element {
 		};
 	}
 
+	static highlight(group, context: CanvasRenderingContext2D, color: string, line_width: number, box_size: number): void {
+		if (group.selected) super.highlight(group, context, color, line_width, box_size);
+		group.elements.forEach((element) => {
+			if (element.selected || element.type === 'group') Elements[element.type].highlight(element, context, color, line_width, box_size);
+		});
+	}
+
 	static move(group, position, last_position) {
 		group.elements.forEach((element) => {
 			Elements[element.type].move(element, position, last_position);

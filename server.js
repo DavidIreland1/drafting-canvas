@@ -1,5 +1,6 @@
 // server.js
 const dispatcher = require('redux-scuttlebutt/lib/server').default;
+
 const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
@@ -11,11 +12,11 @@ const handle = app.getRequestHandler();
 const fs = require('fs');
 var os = require('os');
 
-const Dispatcher = require('./node_modules/redux-scuttlebutt/lib/dispatcher.js').default;
+// const Dispatcher = require('./node_modules/redux-scuttlebutt/lib/dispatcher.js').default;
 
-const Primus = require('./node_modules/redux-scuttlebutt/lib/primus.js');
+// const Primus = require('./node_modules/redux-scuttlebutt/lib/primus.js');
 const scuttlebutt = require('redux-scuttlebutt').default;
-const reducer = require('./reducers/reducers.js').default;
+const reducer = require('./reducers/reducers.min.js').default;
 
 const { createStore } = require('redux');
 const { createSlice } = require('@reduxjs/toolkit');
@@ -39,6 +40,7 @@ app.prepare().then(() => {
 	});
 
 	const { primusServer, store, dispatch, getState } = dispatcher(server);
+	// dispatcher(server);
 	// primusServer.save(__dirname + '/primus.js');
 
 	// store.subscribe(() => {
@@ -47,9 +49,8 @@ app.prepare().then(() => {
 	// console.log(Math.round(process.memoryUsage().heapUsed / 10000000), JSON.stringify(state).length, JSON.stringify(state2).length);
 	// });
 
-	const dispatcher2 = new Dispatcher({});
-
-	const dispatcher3 = dispatcher2.wrapDispatch(clone.dispatch);
+	// const dispatcher2 = new Dispatcher({});
+	// const dispatcher3 = dispatcher2.wrapDispatch(clone.dispatch);
 
 	// Apply all changes
 	setTimeout(() => {

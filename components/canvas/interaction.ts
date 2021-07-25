@@ -1,15 +1,16 @@
-import Elements from './../elements/elements';
+import Elements, { flatten } from './../elements/elements';
 
 import Settings from '../settings';
 
 const { line_width, box_size, max_zoom, min_zoom, pan_sensitivity, zoom_sensitivity } = Settings;
 
-export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, views_store, cursors_store, actions) {
-	const view = views_store.getState().find((view) => view.id === user_id);
+export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, store, actions) {
+	const state = store.getState();
+	const view = state.views.find((view) => view.id === user_id);
 
 	if (String(event.deltaY).length < 5) {
 		// Pan
-		views_store.dispatch(
+		store.dispatch(
 			actions.view({
 				id: user_id,
 				delta_x: -event.deltaX * pan_sensitivity,
@@ -17,8 +18,8 @@ export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, v
 			})
 		);
 
-		const cursor = cursors_store.getState().find((cursor) => user_id === cursor.id);
-		cursors_store.dispatch(
+		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
+		store.dispatch(
 			actions.cursor({
 				id: user_id,
 				x: cursor.x + (event.deltaX * pan_sensitivity) / view.scale,
@@ -32,7 +33,7 @@ export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, v
 		if (view.scale - delta_scale > max_zoom) return;
 
 		const position = DOMToCanvas(event, canvas, view);
-		views_store.dispatch(
+		store.dispatch(
 			actions.view({
 				id: user_id,
 				delta_x: position.x * delta_scale,
@@ -59,21 +60,24 @@ function CanvasToDOM(position, canvas, view) {
 	};
 }
 
+let last_draw = Date.now();
 export function hover(event, elements, canvas, view, store, actions) {
 	const position = DOMToCanvas(event, canvas, view);
 
+	elements = flatten(elements);
 	const { target, action } = event.buttons > 0 ? { target: undefined, action: undefined } : getElementAt(elements, position, view);
 
 	let rotation = 0;
 	if (target && ['resize', 'rotate'].includes(action)) {
 		const element = elements.find((element) => element.id === target.id);
 		const center = Elements[element.type].center(element);
-		// rotation = element.rotation;
 		rotation = Math.atan2(center.y - position.y, center.x - position.x);
-		// console.log(rotation);
 	}
-
-	store.dispatch(actions.cursor({ id: Settings.user_id, ...position, rotation, type: action }));
+	const now = Date.now();
+	if (now > last_draw + 1000 / 65) {
+		store.dispatch(actions.cursor({ id: Settings.user_id, ...position, rotation, type: action }));
+		last_draw = now;
+	}
 }
 
 export function select(event, elements, canvas, view, store, actions) {
@@ -92,7 +96,7 @@ export function select(event, elements, canvas, view, store, actions) {
 	const move = (move_event) => {
 		const position = DOMToCanvas(move_event, canvas, view);
 
-		store.dispatch(actions[action]({ id: target.id, position, last_position }));
+		store.dispatch(actions[action]({ user_id: Settings.user_id, id: target.id, position, last_position }));
 
 		last_position = position;
 	};
@@ -107,6 +111,8 @@ export function select(event, elements, canvas, view, store, actions) {
 }
 
 function getElementAt(elements, last_position, view) {
+	elements = flatten(elements);
+
 	const selected = [...elements.filter((element) => element.selected)].reverse();
 
 	const resize = selected.find((element) => Elements[element.type].collideResize(element, last_position, box_size / view.scale));
@@ -114,6 +120,10 @@ function getElementAt(elements, last_position, view) {
 
 	const rotate = selected.find((element) => Elements[element.type].collideRotate(element, last_position, box_size / view.scale));
 	if (rotate) return { target: rotate, action: 'rotate' };
+
+	const highlighed = selected.find((element) => Elements[element.type].collideHighlight(element, last_position));
+	// const highlighed = selected.find((element) => Elements[element.type].collide(element, last_position));
+	if (highlighed) return { target: highlighed, action: 'move' };
 
 	const target = [...elements].reverse().find((element) => Elements[element.type].collide(element, last_position));
 	if (target) return { target: target, action: 'move' };

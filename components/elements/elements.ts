@@ -9,3 +9,7 @@ export default {
 	group: Group,
 	rectangle: Rectangle,
 };
+
+export function flatten(elements) {
+	return elements.reduce((all, element) => all.concat(element.type === 'group' ? flatten(element.elements) : [], [element]), []);
+}

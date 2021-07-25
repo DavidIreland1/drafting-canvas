@@ -1,21 +1,21 @@
-import stores from './../redux/stores';
+import store from '../redux/store';
 import actions from './../reducers/actions';
 
 export default function Element(props) {
 	const { element, indentation } = props;
 
-	const select = () => {
-		console.log(element.id);
+	const select = (event) => {
+		if (!event.shiftKey) store.dispatch(actions.unselectAll());
 
 		if (element.selected) {
-			stores.elements.dispatch(actions.unselect({ id: element.id }));
+			store.dispatch(actions.unselect({ id: element.id }));
 		} else {
-			stores.elements.dispatch(actions.select({ id: element.id }));
+			store.dispatch(actions.select({ id: element.id }));
 		}
 	};
 
 	return (
-		<div id="element">
+		<div id="element" className={element.selected ? 'highlighted' : ''}>
 			<div id="label" className={element.selected ? 'selected' : ''} style={{ paddingLeft: indentation + 'px' }} onClick={select}>
 				{element.label}
 			</div>
@@ -34,7 +34,10 @@ export default function Element(props) {
 					border: 1px solid transparent;
 				}
 				.selected {
-					background: #9a9ad0 !important;
+					background: #9a9ad0;
+				}
+				.highlighted > #elements {
+					background: #c5c5f9;
 				}
 
 				#label {

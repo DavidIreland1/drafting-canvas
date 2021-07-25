@@ -67,14 +67,6 @@ export default class Element {
 		element.y += position.y - last_position.y;
 	}
 
-	static collideResize(element, position, box_size): boolean {
-		const bounds = this.bound(element);
-
-		position = this.rotatePoint(position, this.center(element), -element.rotation);
-
-		return !!this.boxes(element.id, bounds, box_size).find((box) => this.collideBox(box, position));
-	}
-
 	static rotatePoint(position, center, rotation) {
 		const sin = Math.sin(rotation);
 		const cos = Math.cos(rotation);
@@ -87,6 +79,14 @@ export default class Element {
 		};
 	}
 
+	static collideResize(element, position, box_size): boolean {
+		const bounds = this.bound(element);
+
+		position = this.rotatePoint(position, this.center(element), -element.rotation);
+
+		return !!this.boxes(element.id, bounds, box_size).find((box) => this.collideBox(box, position));
+	}
+
 	static collideRotate(element, position, box_size): boolean {
 		const bounds = this.bound(element);
 		bounds.x -= box_size;
@@ -97,6 +97,11 @@ export default class Element {
 		position = this.rotatePoint(position, this.center(element), -element.rotation);
 
 		return !!this.boxes(element.id, bounds, box_size * 2).find((box) => this.collideBox(box, position));
+	}
+
+	static collideHighlight(element, position) {
+		position = this.rotatePoint(position, this.center(element), -element.rotation);
+		return this.collideBox(this.bound(element), position);
 	}
 
 	static rotate(element, theta) {

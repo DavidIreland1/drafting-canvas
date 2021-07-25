@@ -5,10 +5,10 @@ import Element from './element';
 export default function Structure(props) {
 	const { user_id, store, actions } = props;
 
-	const [elements, setElements] = useState(store.getState());
+	const [elements, setElements] = useState(store.getState().elements);
 
 	store.subscribe(() => {
-		setElements(store.getState());
+		setElements(store.getState().elements);
 	});
 
 	const container_ref = useRef(null);

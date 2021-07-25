@@ -6,7 +6,7 @@ module.exports = {
 	},
 	output: {
 		path: __dirname + "/reducers/",
-		filename: "reducers.js",
+		filename: "reducers.min.js",
 		library: "reducer",
 		libraryTarget: "umd",
 	},
