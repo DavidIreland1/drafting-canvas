@@ -21,7 +21,13 @@ let initial_state = {
 	elements: [],
 };
 
-initial_state = getPage();
+// initial_state = getPage();
+
+// export default function initStore(initial_state) {
+// 	console.log('create store');
+// 	return createStore(slice.reducer, initial_state, typeof Primus !== 'undefined' ? scuttlebutt({ primus: Primus }) : undefined);
+// }
 
 export default createStore(slice.reducer, initial_state, typeof Primus !== 'undefined' ? scuttlebutt({ primus: Primus }) : undefined);
+
 // export default createStore(slice.reducer, initial_state);

@@ -1,8 +1,5 @@
-import store from '../redux/store';
-import actions from './../reducers/actions';
-
 export default function Element(props) {
-	const { element, indentation } = props;
+	const { store, actions, element, indentation } = props;
 
 	const select = (event) => {
 		if (!event.shiftKey) store.dispatch(actions.unselectAll());
@@ -23,7 +20,7 @@ export default function Element(props) {
 			{element.type === 'group' ? (
 				<div id="elements">
 					{element.elements.map((child) => (
-						<Element key={child.id} element={child} indentation={indentation + 20}></Element>
+						<Element key={child.id} element={child} indentation={indentation + 15} store={store} actions={actions}></Element>
 					))}
 				</div>
 			) : undefined}
@@ -32,19 +29,25 @@ export default function Element(props) {
 					width: 100%;
 					box-sizing: border-box;
 					border: 1px solid transparent;
+					color: var(--text-color);
 				}
-				.selected {
-					background: #9a9ad0;
-				}
-				.highlighted > #elements {
-					background: #c5c5f9;
+
+				#elements {
+					// border-left: 3px solid white;
+					// padding-left: 5px;
 				}
 
 				#label {
 					padding: 8px 0 8px 0;
 				}
 				#label:hover {
-					background: #84888e;
+					background: var(--hover);
+				}
+				#label.selected {
+					background: var(--selected);
+				}
+				.highlighted > #elements {
+					background: #56565b;
 				}
 			`}</style>
 		</div>

@@ -65,7 +65,7 @@ export function hover(event, elements, canvas, view, store, actions) {
 	const position = DOMToCanvas(event, canvas, view);
 
 	elements = flatten(elements);
-	const { target, action } = event.buttons > 0 ? { target: undefined, action: undefined } : getElementAt(elements, position, view);
+	const { target, action } = event.buttons > 0 ? { target: undefined, action: 'select' } : getElementAt(elements, position, view);
 
 	let rotation = 0;
 	if (target && ['resize', 'rotate'].includes(action)) {
@@ -73,6 +73,8 @@ export function hover(event, elements, canvas, view, store, actions) {
 		const center = Elements[element.type].center(element);
 		rotation = Math.atan2(center.y - position.y, center.x - position.x);
 	}
+
+	// Reduce max action rate or frame rate
 	const now = Date.now();
 	if (now > last_draw + 1000 / 65) {
 		store.dispatch(actions.cursor({ id: Settings.user_id, ...position, rotation, type: action }));
@@ -125,7 +127,7 @@ function getElementAt(elements, last_position, view) {
 	// const highlighed = selected.find((element) => Elements[element.type].collide(element, last_position));
 	if (highlighed) return { target: highlighed, action: 'move' };
 
-	const target = [...elements].reverse().find((element) => Elements[element.type].collide(element, last_position));
+	const target = elements.reverse().find((element) => Elements[element.type].collide(element, last_position));
 	if (target) return { target: target, action: 'move' };
 
 	return { target: undefined, action: 'select' };

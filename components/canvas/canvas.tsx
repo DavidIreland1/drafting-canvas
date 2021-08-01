@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 
-import { initCanvas } from './init';
+import { initCanvas } from './init-canvas';
 import Elements from '../elements/elements';
 import Cursor from '../cursor';
 import Settings from '../settings';
@@ -13,7 +13,6 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 	let cursors = store.getState().cursors;
 	let elements = store.getState().elements;
-
 	let user_view = store.getState().views.find((view) => view.id === user_id);
 
 	let [frames, setFrameRate] = useState([]);
@@ -28,18 +27,15 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 			context.translate(user_view.x, user_view.y);
 			context.scale(user_view.scale, user_view.scale);
 
-			elements.forEach((element) => {
+			[...elements].reverse().forEach((element) => {
 				Elements[element.type].draw(element, context);
 			});
 			elements.forEach((element) => {
 				if (element.selected || element.type === 'group') Elements[element.type].highlight(element, context, highlight_color, line_width / user_view.scale, box_size / user_view.scale);
 				else if (element.hover) Elements[element.type].outline(element, context, highlight_color, (line_width * 2) / user_view.scale);
 			});
-			cursors
-				.filter((cursor) => cursor.id !== user_id)
-				.forEach((cursor) => {
-					Cursor.draw(cursor, context, user_view);
-				});
+
+			cursors.filter((cursor) => cursor.id !== user_id).forEach((cursor) => Cursor.draw(cursor, context, user_view));
 
 			Cursor.draw(
 				cursors.find((cursor) => cursor.id === user_id),
@@ -57,7 +53,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 		});
 	};
 
-	const redraw = auto_draw ? (contet) => {} : redraw_auto;
+	const redraw = auto_draw ? (contet) => true : redraw_auto;
 
 	useEffect(() => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
@@ -76,9 +72,10 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 		let last_draw = Date.now();
 		store.subscribe(() => {
-			user_view = store.getState().views.find((view) => view.id === user_id);
-			cursors = store.getState().cursors;
-			elements = store.getState().elements;
+			const state = store.getState();
+			user_view = state.views.find((view) => view.id === user_id);
+			cursors = state.cursors;
+			elements = state.elements;
 
 			const now = Date.now();
 			if (now > last_draw + 1000 / 65) {
@@ -88,11 +85,11 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 		});
 
 		redraw_auto(context);
-	}, []);
+	}, ['hot']);
 
 	return (
 		<div>
-			<canvas ref={canvas_ref} {...rest} />
+			<canvas ref={canvas_ref} {...rest} tabIndex={1} />
 			<div id="frame_rate">{frames[frames.length - 1] || 0}</div>
 
 			<style jsx>{`
@@ -101,6 +98,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 					height: 100%;
 					background: var(--off-white);
 					cursor: none;
+					outline: none;
 				}
 				#frame_rate {
 					position: absolute;

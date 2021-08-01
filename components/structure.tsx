@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Element from './element';
 
 export default function Structure(props) {
-	const { user_id, store, actions } = props;
+	const { store, actions } = props;
 
 	const [elements, setElements] = useState(store.getState().elements);
 
@@ -28,7 +28,7 @@ export default function Structure(props) {
 		<div id="container" ref={container_ref}>
 			<div id="elements">
 				{elements.map((element) => (
-					<Element key={element.id} element={element} indentation={20}></Element>
+					<Element key={element.id} element={element} indentation={10} store={store} actions={actions}></Element>
 				))}
 			</div>
 
@@ -38,7 +38,7 @@ export default function Structure(props) {
 				#container {
 					position: relative;
 					width: 15vw;
-					background: #b9bdc3;
+					background: var(--panel);
 					position: absolute;
 					display: grid;
 					height: 100%;

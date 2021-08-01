@@ -1,9 +1,17 @@
 import { onWheel, hover, select } from './interaction';
 
-export function initCanvas(canvas, id, store, actions) {
+export function initCanvas(canvas: HTMLCanvasElement, id, store, actions) {
 	canvas.addEventListener('wheel', (event: WheelEvent) => {
 		event.preventDefault();
 		onWheel(event, canvas, id, store, actions);
+	});
+
+	canvas.focus(); // Needed for react?
+	canvas.addEventListener('keydown', (event: KeyboardEvent) => {
+		if (event.key === 'Delete' || event.key === 'Backspace') {
+			event.preventDefault();
+			store.dispatch(actions.deleteSelected());
+		}
 	});
 
 	canvas.addEventListener('dblclick', () => {
@@ -33,10 +41,12 @@ export function initCanvas(canvas, id, store, actions) {
 	});
 
 	canvas.addEventListener('mouseout', () => {
+		console.log('mouse out');
 		store.dispatch(actions.cursor({ id: id, type: 'none' }));
 	});
 
 	canvas.addEventListener('mouseover', () => {
+		canvas.focus(); // Needed for react?
 		store.dispatch(actions.cursor({ id: id, type: 'select' }));
 	});
 
@@ -52,17 +62,6 @@ export function initCanvas(canvas, id, store, actions) {
 			views.find((view) => view.id === id),
 			store,
 			actions
-		);
-	});
-
-	canvas.addEventListener('mouseover', (event) => {
-		event.preventDefault();
-		store.dispatch(
-			actions.view({
-				id: '123',
-				delta_x: -event.deltaX,
-				delta_y: -event.deltaY,
-			})
 		);
 	});
 

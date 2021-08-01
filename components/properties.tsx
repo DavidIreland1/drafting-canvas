@@ -30,7 +30,7 @@ export default function Properties(props) {
 				#container {
 					position: relative;
 					width: 15vw;
-					background: #b9bdc3;
+					background: var(--panel);
 					position: absolute;
 					display: grid;
 					height: 100%;

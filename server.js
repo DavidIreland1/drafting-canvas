@@ -16,19 +16,23 @@ var os = require('os');
 
 // const Primus = require('./node_modules/redux-scuttlebutt/lib/primus.js');
 const scuttlebutt = require('redux-scuttlebutt').default;
-const reducer = require('./reducers/reducers.min.js').default;
+const reducers = require('./reducers/reducers.min.js').default;
 
 const { createStore } = require('redux');
 const { createSlice } = require('@reduxjs/toolkit');
 
 app.prepare().then(() => {
 	const server = createServer((req, res) => {
-		// Be sure to pass `true` as the second argument to `url.parse`.
-		// This tells it to parse the query portion of the URL.
+
 		const parsedUrl = parse(req.url, true);
 		const { pathname, query } = parsedUrl;
 
-		if (pathname === '/a') {
+		if (pathname.startsWith('/page/')) {
+			const page_id = pathname.split('/')[2]
+			res.setHeader('Content-Type', 'application/json');
+			res.end(JSON.stringify(load(page_id) || initial_state));
+
+		} else if (pathname === '/a') {
 			app.render(req, res, '/a', query);
 		} else if (pathname === '/b') {
 			app.render(req, res, '/b', query);
@@ -40,7 +44,7 @@ app.prepare().then(() => {
 	});
 
 	const { primusServer, store, dispatch, getState } = dispatcher(server);
-	// dispatcher(server);
+
 	// primusServer.save(__dirname + '/primus.js');
 
 	// store.subscribe(() => {
@@ -61,18 +65,18 @@ app.prepare().then(() => {
 	});
 
 	// Get snapshot of current state
-	setInterval(() => {
-		// updateSnapshot(getState());
-	}, 4000);
+	// setInterval(() => {
+	// 	updateSnapshot(getState());
+	// }, 4000);
 });
 
 const slice = createSlice({
 	name: 'counter',
-	initialState: [],
-	reducers: reducer,
+	initialState: {},
+	reducers: reducers,
 });
 
-const clone = createStore(slice.reducer, []);
+const clone = createStore(slice.reducer, {});
 
 function updateSnapshot(actions) {
 	actions.forEach((action) => {
@@ -80,6 +84,7 @@ function updateSnapshot(actions) {
 		const type = action.type.split('/').pop();
 		clone.dispatch(slice.actions[type](action.payload));
 	});
+	save('test.json', clone.getState());
 }
 
 // clone.subscribe(() => {
@@ -91,5 +96,18 @@ function save(name, data) {
 }
 
 function load(name) {
-	return require(name);
+	try {
+		return JSON.parse(fs.readFileSync('./database/' + name + '.json'));
+	} catch (error) {
+		return undefined;
+	}
+}
+
+const initial_state = {
+	views: [{ id: '123', x: 0, y: 0, scale: 1 }],
+	cursors: [
+		{ id: '123', label: 'Davis', x: 0, y: 0, rotation: 0, type: 'none' },
+		{ id: '234', label: 'Irene', x: 100, y: 100, rotation: 0, type: 'none' },
+	],
+	elements: [],
 }

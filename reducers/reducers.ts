@@ -1,10 +1,15 @@
-import Elements, { flatten } from '../components/elements/elements';
+import Elements, { flatten, forEachElement } from '../components/elements/elements';
 
 export default {
 	overwrite: (state, props) => {
 		state.cursors = props.payload.state.cursors;
 		state.views = props.payload.state.views;
 		state.elements = props.payload.state.elements;
+	},
+	addUser: (state, props) => {
+		const { user_id, label } = props.payload;
+		state.views.push({ id: user_id, label: label, x: 0, y: 0, scale: 1 });
+		state.cursors.push({ id: user_id, label: label, x: 0, y: 0, rotation: 0, type: 'none' });
 	},
 	view: (state, props) => {
 		const { id, delta_x, delta_y, delta_scale } = props.payload;
@@ -41,6 +46,11 @@ export default {
 	unselectAll: (state) => {
 		flatten(state.elements).forEach((element) => (element.selected = false));
 	},
+	deleteSelected: (state) => {
+		forEachElement(state.elements, (element, i, elements) => {
+			if (element.selected === true) elements.splice(i, 1);
+		});
+	},
 	hover: (state, props) => {
 		state.elements.find((element) => element.id === props.payload.id).hover = true;
 	},
@@ -66,7 +76,7 @@ export default {
 
 		const selected = state.elements.filter((element) => element.selected);
 
-		const target = state.elements.find((element) => id === element.id);
+		const target = flatten(state.elements).find((element) => id === element.id);
 
 		const center = Elements[target.type].center(target);
 
