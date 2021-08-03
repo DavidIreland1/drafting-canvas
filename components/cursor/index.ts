@@ -7,6 +7,7 @@ import None from './none';
 const Cursors = {
 	select: Select,
 	move: Select,
+	stretch: Select,
 	resize: Resize,
 	rotate: Rotate,
 	none: None,

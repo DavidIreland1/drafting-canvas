@@ -56,6 +56,7 @@ export default function Navbar() {
 					height: var(--nav-height);
 					background: var(--nav-background);
 					color: var(--text-color);
+					border-bottom: 1px solid var(--selected);
 				}
 				img {
 					height: var(--nav-height);

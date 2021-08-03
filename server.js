@@ -12,6 +12,12 @@ const handle = app.getRequestHandler();
 const fs = require('fs');
 var os = require('os');
 
+// var log = console.log;
+// console.log = function () {
+// 	log.apply(console, arguments);
+// 	console.trace();
+// };
+
 // const Dispatcher = require('./node_modules/redux-scuttlebutt/lib/dispatcher.js').default;
 
 // const Primus = require('./node_modules/redux-scuttlebutt/lib/primus.js');
@@ -23,15 +29,13 @@ const { createSlice } = require('@reduxjs/toolkit');
 
 app.prepare().then(() => {
 	const server = createServer((req, res) => {
-
 		const parsedUrl = parse(req.url, true);
 		const { pathname, query } = parsedUrl;
 
 		if (pathname.startsWith('/page/')) {
-			const page_id = pathname.split('/')[2]
+			const page_id = pathname.split('/')[2];
 			res.setHeader('Content-Type', 'application/json');
 			res.end(JSON.stringify(load(page_id) || initial_state));
-
 		} else if (pathname === '/a') {
 			app.render(req, res, '/a', query);
 		} else if (pathname === '/b') {
@@ -43,7 +47,7 @@ app.prepare().then(() => {
 		console.log('> Ready on http://localhost:3000');
 	});
 
-	const { primusServer, store, dispatch, getState } = dispatcher(server);
+	// const { primusServer, store, dispatch, getState } = dispatcher(server);
 
 	// primusServer.save(__dirname + '/primus.js');
 
@@ -65,9 +69,9 @@ app.prepare().then(() => {
 	});
 
 	// Get snapshot of current state
-	// setInterval(() => {
-	// 	updateSnapshot(getState());
-	// }, 4000);
+	setInterval(() => {
+		// updateSnapshot(getState());
+	}, 4000);
 });
 
 const slice = createSlice({
@@ -84,7 +88,7 @@ function updateSnapshot(actions) {
 		const type = action.type.split('/').pop();
 		clone.dispatch(slice.actions[type](action.payload));
 	});
-	save('test.json', clone.getState());
+	save('./database/222.json', clone.getState());
 }
 
 // clone.subscribe(() => {
@@ -110,4 +114,4 @@ const initial_state = {
 		{ id: '234', label: 'Irene', x: 100, y: 100, rotation: 0, type: 'none' },
 	],
 	elements: [],
-}
+};

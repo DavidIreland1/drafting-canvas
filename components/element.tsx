@@ -7,7 +7,7 @@ export default function Element(props) {
 		if (element.selected) {
 			store.dispatch(actions.unselect({ id: element.id }));
 		} else {
-			store.dispatch(actions.select({ id: element.id }));
+			store.dispatch(actions.select({ select: [element.id] }));
 		}
 	};
 
@@ -28,7 +28,7 @@ export default function Element(props) {
 				#element {
 					width: 100%;
 					box-sizing: border-box;
-					border: 1px solid transparent;
+					// border: 1px solid transparent;
 					color: var(--text-color);
 				}
 

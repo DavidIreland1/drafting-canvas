@@ -1,6 +1,6 @@
 import { onWheel, hover, select } from './interaction';
 
-export function initCanvas(canvas: HTMLCanvasElement, id, store, actions) {
+export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active) {
 	canvas.addEventListener('wheel', (event: WheelEvent) => {
 		event.preventDefault();
 		onWheel(event, canvas, id, store, actions);
@@ -28,16 +28,7 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions) {
 	});
 
 	canvas.addEventListener('mousemove', (event) => {
-		const elements = store.getState().elements;
-		const views = store.getState().views;
-		hover(
-			event,
-			elements,
-			canvas,
-			views.find((view) => view.id === id),
-			store,
-			actions
-		);
+		hover(event, canvas, store, actions, id, active);
 	});
 
 	canvas.addEventListener('mouseout', () => {
@@ -53,16 +44,7 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions) {
 	canvas.addEventListener('mousedown', (event) => {
 		if (event.button !== 0) return;
 		event.preventDefault();
-		const elements = store.getState().elements;
-		const views = store.getState().views;
-		select(
-			event,
-			elements,
-			canvas,
-			views.find((view) => view.id === id),
-			store,
-			actions
-		);
+		select(event, canvas, id, store, actions, active);
 	});
 
 	document.addEventListener('keydown', (event) => {

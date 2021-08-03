@@ -1,8 +1,8 @@
 // import Defaults from './../../defaults';
-// const { line_width, box_size, highlight_color } = Defaults;
+// const { line, box_size, highlight_color } = Defaults;
 
 export default class Element {
-	static draw(element, context): void {
+	static draw(element, context, cursor): boolean {
 		return;
 	}
 
@@ -14,35 +14,82 @@ export default class Element {
 		return false;
 	}
 
-	static outline(element, context: CanvasRenderingContext2D, color: string, line_width: number): void {
+	static outline(element, context: CanvasRenderingContext2D, color: string, line: number): void {
 		return;
 	}
 
-	static highlight(element, context: CanvasRenderingContext2D, color: string, line_width: number, box_size: number): void {
-		this.outline(element, context, color, line_width);
+	static highlight(element, context, cursor, highlight, line, box) {
+		let action = undefined;
+		if (this.drawBound(element, context, cursor, highlight, line)) action = 'stretch';
+		if (this.drawRotate(element, context, cursor, box)) action = 'rotate';
+		if (this.drawResize(element, context, cursor, highlight, line, box)) action = 'resize';
+		return action ? { action: action, element: element } : undefined;
+	}
 
+	static drawBound(element, context: CanvasRenderingContext2D, cursor, color: string, line: number): boolean {
+		const bounds = this.bound(element);
+		const center = this.center(element);
+
+		context.translate(center.x, center.y);
+		context.rotate(element.rotation);
+		context.strokeStyle = color;
+		context.lineWidth = line * 10;
+		context.beginPath();
+		context.rect(-bounds.width / 2, -bounds.height / 2, bounds.width, bounds.height);
+		const hov = context.isPointInStroke(cursor.x, cursor.y);
+		context.lineWidth = line;
+		context.stroke();
+		context.rotate(-element.rotation);
+		context.translate(-center.x, -center.y);
+
+		return hov;
+	}
+
+	static drawResize(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number): boolean {
 		const bounds = this.bound(element);
 		const center = this.center(element);
 
 		context.translate(center.x, center.y);
 		context.rotate(element.rotation);
 
-		context.strokeStyle = color;
-		context.lineWidth = line_width;
-		context.beginPath();
-		context.rect(-bounds.width / 2, -bounds.height / 2, bounds.width, bounds.height);
-		context.stroke();
-
 		if (bounds.width + bounds.height > box_size * 4) {
 			bounds.x = -bounds.width / 2;
 			bounds.y = -bounds.height / 2;
-			this.boxes(element.id, bounds, box_size).forEach((square) => {
-				this.drawSquare(square, context, color, line_width);
-			});
+			context.fillStyle = 'white';
+			context.strokeStyle = color;
+			context.lineWidth = line;
+
+			context.beginPath();
+			this.boxes(element.id, bounds, box_size).forEach((square) => context.rect(square.x, square.y, square.width, square.height));
+			context.fill();
+			context.stroke();
 		}
 
 		context.rotate(-element.rotation);
 		context.translate(-center.x, -center.y);
+
+		return context.isPointInPath(cursor.x, cursor.y);
+	}
+
+	static drawRotate(element, context: CanvasRenderingContext2D, cursor, box_size: number): boolean {
+		const bounds = this.bound(element);
+		const center = this.center(element);
+
+		context.translate(center.x, center.y);
+		context.rotate(element.rotation);
+
+		bounds.x = -bounds.width / 2 - box_size;
+		bounds.y = -bounds.height / 2 - box_size;
+		bounds.width += box_size * 2;
+		bounds.height += box_size * 2;
+
+		context.beginPath();
+		this.boxes(element.id, bounds, box_size * 2).forEach((square) => context.rect(square.x, square.y, square.width, square.height));
+
+		context.rotate(-element.rotation);
+		context.translate(-center.x, -center.y);
+
+		return context.isPointInPath(cursor.x, cursor.y);
 	}
 
 	static center(element) {
@@ -110,18 +157,6 @@ export default class Element {
 
 	static collideBox(box, position) {
 		return box.x < position.x && position.x < box.x + box.width && box.y < position.y && position.y < box.y + box.width;
-	}
-
-	static drawSquare(square, context: CanvasRenderingContext2D, color, line_width) {
-		context.fillStyle = 'white';
-
-		context.beginPath();
-		context.rect(square.x, square.y, square.width, square.height);
-		context.fill();
-
-		context.strokeStyle = color;
-		context.lineWidth = line_width;
-		context.stroke();
 	}
 
 	static boxes(id, bounds, box_size) {

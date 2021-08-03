@@ -43,6 +43,7 @@ export default function Structure(props) {
 					display: grid;
 					height: 100%;
 					left: var(--nav-height);
+					border-left: 1px solid var(--selected);
 				}
 				#elements {
 					overflow: hidden;

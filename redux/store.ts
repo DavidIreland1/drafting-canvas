@@ -12,14 +12,16 @@ import getPage from './../state/dev';
 let Primus;
 if (typeof window !== 'undefined') Primus = (window as any).Primus;
 
-let initial_state = {
-	views: [{ id: Settings.user_id, x: 0, y: 0, scale: 1 }],
-	cursors: [
-		{ id: Settings.user_id, label: Settings.user_name, x: 0, y: 0, rotation: 0, type: 'none' },
-		{ id: '234', label: 'Irene', x: 100, y: 100, rotation: 0, type: 'none' },
-	],
-	elements: [],
-};
+// let initial_state = {
+// 	views: [{ id: Settings.user_id, x: 0, y: 0, scale: 1 }],
+// 	cursors: [
+// 		{ id: Settings.user_id, label: Settings.user_name, x: 0, y: 0, rotation: 0, type: 'none' },
+// 		{ id: '234', label: 'Irene', x: 100, y: 100, rotation: 0, type: 'none' },
+// 	],
+// 	elements: [],
+// };
+
+import initial_state from './../state/initial';
 
 // initial_state = getPage();
 

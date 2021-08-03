@@ -8,17 +8,6 @@ import Settings from './../components/settings';
 import store from './../redux/store';
 
 export default function OffWhiteCanvas(): JSX.Element {
-	const initial_state = {
-		views: [{ id: Settings.user_id, x: 0, y: 0, scale: 1 }],
-		cursors: [
-			{ id: Settings.user_id, label: Settings.user_name, x: 0, y: 0, rotation: 0, type: 'none' },
-			{ id: '234', label: 'Irene', x: 100, y: 100, rotation: 0, type: 'none' },
-		],
-		elements: [],
-	};
-
-	// const store = initStore(initial_state);
-
 	return (
 		<div>
 			<Head>

@@ -1,11 +1,12 @@
 import Element from './element';
 
 export default class Circle extends Element {
-	static draw(circle, context) {
+	static draw(circle, context, cursor) {
 		context.fillStyle = circle.color;
 		context.beginPath();
 		context.arc(circle.x, circle.y, circle.radius, circle.start_angle, circle.end_angle, circle.counter_clockwise);
 		context.fill();
+		return context.isPointInPath(cursor.x, cursor.y);
 	}
 
 	static outline(circle, context, color, line_width): void {

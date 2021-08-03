@@ -2,18 +2,19 @@ import Element from './element';
 import Elements from './elements';
 
 export default class Group extends Element {
-	static draw(group, context) {
+	static draw(group, context, cursor) {
 		const center = this.center(group);
-
 		context.translate(center.x, center.y);
 		context.rotate(group.rotation);
 		context.translate(-center.x, -center.y);
 
-		group.elements.forEach((element) => Elements[element.type].draw(element, context));
+		const hovering = group.elements.filter((element) => Elements[element.type].draw(element, context, cursor));
 
 		context.translate(center.x, center.y);
 		context.rotate(-group.rotation);
 		context.translate(-center.x, -center.y);
+
+		return hovering.length > 0;
 	}
 
 	static bound(group) {
@@ -29,12 +30,29 @@ export default class Group extends Element {
 		};
 	}
 
-	static highlight(group, context: CanvasRenderingContext2D, color: string, line_width: number, box_size: number): void {
-		if (group.selected) super.highlight(group, context, color, line_width, box_size);
-		group.elements.forEach((element) => {
-			if (element.selected || element.type === 'group') Elements[element.type].highlight(element, context, color, line_width, box_size);
-		});
+	static outline(group, context, color, line_width): void {
+		const bounds = this.bound(group);
+		const center = this.center(group);
+		context.translate(center.x, center.y);
+		context.rotate(group.rotation);
+
+		context.strokeStyle = color;
+		context.lineWidth = line_width;
+		context.beginPath();
+		context.rect(-bounds.width / 2, -bounds.height / 2, bounds.width, bounds.height);
+		context.stroke();
+
+		context.rotate(-group.rotation);
+		context.translate(-center.x, -center.y);
 	}
+
+	// static highlight(group, context: CanvasRenderingContext2D, cursor, color: string, line_width: number, box_size: number): boolean {
+	// 	if (group.selected) super.highlight(group, context, cursor, color, line_width, box_size);
+	// 	// group.elements.forEach((element) => {
+	// 	// 	if (element.selected || element.type === 'group') Elements[element.type].highlight(element, context, color, line_width, box_size);
+	// 	// });
+	// 	return undefined;
+	// }
 
 	static move(group, position, last_position) {
 		group.elements.forEach((element) => {

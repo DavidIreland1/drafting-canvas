@@ -1,14 +1,14 @@
 import { useRef, useState } from 'react';
 
 export default function Properties(props) {
-	const { user_id, store, actions } = props;
+	// const { user_id, store, actions } = props;
 
-	const [elements, setElements] = useState(store.getState());
-	console.log();
+	// const [elements, setElements] = useState(store.getState());
+	// console.log();
 
-	store.subscribe(() => {
-		setElements(store.getState());
-	});
+	// store.subscribe(() => {
+	// 	setElements(store.getState());
+	// });
 
 	const container_ref = useRef(null);
 

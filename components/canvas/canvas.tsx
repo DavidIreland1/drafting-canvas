@@ -1,12 +1,12 @@
 import { useRef, useEffect, useState } from 'react';
 
 import { initCanvas } from './init-canvas';
-import Elements from '../elements/elements';
-import Cursor from '../cursor';
-import Settings from '../settings';
+import Elements, { flatten } from './../elements/elements';
+import Cursor from './../cursor';
+import Settings from './../settings';
 import Grid from './grid';
 
-const { line_width, box_size, highlight_color, user_id } = Settings;
+const { line_width, box_size, highlight } = Settings;
 
 const Canvas = ({ user_id, store, actions, ...rest }) => {
 	const canvas_ref = useRef(null);
@@ -14,34 +14,42 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 	let cursors = store.getState().cursors;
 	let elements = store.getState().elements;
 	let user_view = store.getState().views.find((view) => view.id === user_id);
+	let user_cursor = cursors.find((cursor) => cursor.id === user_id);
 
 	let [frames, setFrameRate] = useState([]);
 
 	const auto_draw = false;
 
+	const active = {
+		hover: [],
+		selected: [],
+		acting: [],
+	};
+
 	let redraw_auto = (context: CanvasRenderingContext2D) => {
 		requestAnimationFrame(() => {
+			if (!user_view || !user_cursor) return;
 			context.resetTransform();
 			context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 			if (Settings.grid_enabled) Grid.draw(context, user_view);
 			context.translate(user_view.x, user_view.y);
 			context.scale(user_view.scale, user_view.scale);
 
-			[...elements].reverse().forEach((element) => {
-				Elements[element.type].draw(element, context);
-			});
-			elements.forEach((element) => {
-				if (element.selected || element.type === 'group') Elements[element.type].highlight(element, context, highlight_color, line_width / user_view.scale, box_size / user_view.scale);
-				else if (element.hover) Elements[element.type].outline(element, context, highlight_color, (line_width * 2) / user_view.scale);
-			});
+			const line = line_width / user_view.scale;
+			const box = box_size / user_view.scale;
+			const cursor = transformPoint(user_cursor, context.getTransform());
+
+			active.hover = [...elements]
+				.reverse()
+				.filter((element) => Elements[element.type].draw(element, context, cursor))
+				.reverse();
+
+			active.selected = flatten(elements).filter((element) => element.selected);
+
+			active.acting = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
 
 			cursors.filter((cursor) => cursor.id !== user_id).forEach((cursor) => Cursor.draw(cursor, context, user_view));
-
-			Cursor.draw(
-				cursors.find((cursor) => cursor.id === user_id),
-				context,
-				user_view
-			);
+			Cursor.draw(user_cursor, context, user_view);
 
 			frames = frames.concat([frames.length]);
 			setTimeout(() => {
@@ -63,7 +71,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 		(window as any).context = context;
 
 		resizeCanvas(canvas);
-		initCanvas(canvas, user_id, store, actions);
+		initCanvas(canvas, user_id, store, actions, active);
 
 		window.addEventListener('resize', () => {
 			resizeCanvas(canvas);
@@ -72,20 +80,21 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 		let last_draw = Date.now();
 		store.subscribe(() => {
+			const now = Date.now();
+			if (now < last_draw + 1000 / 65) return; // Frame limit
+			last_draw = now;
+
 			const state = store.getState();
 			user_view = state.views.find((view) => view.id === user_id);
+			user_cursor = cursors.find((cursor) => cursor.id === user_id);
 			cursors = state.cursors;
 			elements = state.elements;
 
-			const now = Date.now();
-			if (now > last_draw + 1000 / 65) {
-				redraw(context);
-				last_draw = now;
-			}
+			redraw(context);
 		});
 
 		redraw_auto(context);
-	}, ['hot']);
+	}, []);
 
 	return (
 		<div>
@@ -118,7 +127,7 @@ export function resizeCanvas(canvas): boolean {
 	const { width, height } = canvas.getBoundingClientRect();
 
 	if (canvas.width !== width || canvas.height !== height) {
-		// (window as any).devicePixelRatio = 1;s
+		// (window as any).devicePixelRatio = 1;
 		const ratio = window.devicePixelRatio;
 		canvas.width = width * ratio;
 		canvas.height = height * ratio;
@@ -126,4 +135,11 @@ export function resizeCanvas(canvas): boolean {
 	}
 
 	return false;
+}
+
+function transformPoint(point, transform) {
+	return {
+		x: transform.a * point.x + transform.c * point.y + transform.e,
+		y: transform.b * point.x + transform.d * point.y + transform.f,
+	};
 }

@@ -10,20 +10,15 @@ export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, s
 
 	if (String(event.deltaY).length < 5) {
 		// Pan
+		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
 		store.dispatch(
 			actions.view({
 				id: user_id,
 				delta_x: -event.deltaX * pan_sensitivity,
 				delta_y: -event.deltaY * pan_sensitivity,
-			})
-		);
 
-		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
-		store.dispatch(
-			actions.cursor({
-				id: user_id,
-				x: cursor.x + (event.deltaX * pan_sensitivity) / view.scale,
-				y: cursor.y + (event.deltaY * pan_sensitivity) / view.scale,
+				cursor_x: cursor.x + (event.deltaX * pan_sensitivity) / view.scale,
+				cursor_y: cursor.y + (event.deltaY * pan_sensitivity) / view.scale,
 			})
 		);
 	} else {
@@ -44,7 +39,7 @@ export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, s
 	}
 }
 
-function DOMToCanvas(position, canvas, view) {
+export function DOMToCanvas(position, canvas, view) {
 	const bounds = canvas.getBoundingClientRect();
 	return {
 		x: ((position.x - bounds.x) * window.devicePixelRatio - view.x) / view.scale,
@@ -52,7 +47,7 @@ function DOMToCanvas(position, canvas, view) {
 	};
 }
 
-function CanvasToDOM(position, canvas, view) {
+export function CanvasToDOM(position, canvas, view) {
 	const bounds = canvas.getBoundingClientRect();
 	return {
 		x: ((position.x + view.x) * view.scale) / window.devicePixelRatio + bounds.x,
@@ -61,77 +56,85 @@ function CanvasToDOM(position, canvas, view) {
 }
 
 let last_draw = Date.now();
-export function hover(event, elements, canvas, view, store, actions) {
+export function hover(event, canvas, store, actions, id, active) {
+	const view = store.getState().views.find((view) => view.id === id);
+
+	if (!view) return;
 	const position = DOMToCanvas(event, canvas, view);
 
-	elements = flatten(elements);
-	const { target, action } = event.buttons > 0 ? { target: undefined, action: 'select' } : getElementAt(elements, position, view);
+	const target = active.acting.length ? active.acting[0].element : undefined;
+	let action = active.acting.length ? active.acting[0].action : 'select';
 
 	let rotation = 0;
 	if (target && ['resize', 'rotate'].includes(action)) {
-		const element = elements.find((element) => element.id === target.id);
-		const center = Elements[element.type].center(element);
+		const center = Elements[target.type].center(target);
 		rotation = Math.atan2(center.y - position.y, center.x - position.x);
 	}
 
+	if (event.buttons > 0) action = undefined;
 	// Reduce max action rate or frame rate
-	const now = Date.now();
-	if (now > last_draw + 1000 / 65) {
-		store.dispatch(actions.cursor({ id: Settings.user_id, ...position, rotation, type: action }));
-		last_draw = now;
-	}
+	// const now = Date.now();
+	// if (now > last_draw + 1000 / 65) {
+	store.dispatch(actions.cursor({ id: Settings.user_id, ...position, rotation, type: action }));
+	// 	last_draw = now;
+	// }
 }
 
-export function select(event, elements, canvas, view, store, actions) {
+export function select(event, canvas, id, store, actions, active) {
+	const state = store.getState();
+	const view = state.views.find((view) => view.id === id);
+
 	let last_position = DOMToCanvas(event, canvas, view);
 
-	const { target, action } = getElementAt(elements, last_position, view);
+	let action = 'move';
+	let target = active.hover[0];
 
-	if (!event.shiftKey && (!target || (target && !target.selected))) {
-		store.dispatch(actions.unselectAll());
+	if (active.acting.length) {
+		action = active.acting[0].action;
+		target = active.acting[0].element;
 	}
+
+	console.log(action);
 
 	if (!target) return;
 
-	store.dispatch(actions.select({ id: target.id }));
+	const select = event.shiftKey ? active.selected.map((element) => element.id).concat(target.id) : [target.id];
+
+	store.dispatch(actions.select({ select: select }));
 
 	const move = (move_event) => {
 		const position = DOMToCanvas(move_event, canvas, view);
-
 		store.dispatch(actions[action]({ user_id: Settings.user_id, id: target.id, position, last_position }));
-
 		last_position = position;
 	};
 	window.addEventListener('mousemove', move);
-	window.addEventListener(
-		'mouseup',
-		() => {
-			window.removeEventListener('mousemove', move);
-		},
-		{ once: true }
-	);
+
+	const release = () => {
+		window.removeEventListener('mousemove', move);
+	};
+	window.addEventListener('mouseup', release, { once: true });
 }
 
-function getElementAt(elements, last_position, view) {
-	elements = flatten(elements);
+// function getElementAt(elements, last_position, view) {
+// 	elements = flatten(elements);
 
-	const selected = [...elements.filter((element) => element.selected)].reverse();
+// 	const selected = [...elements.filter((element) => element.selected)].reverse();
 
-	const resize = selected.find((element) => Elements[element.type].collideResize(element, last_position, box_size / view.scale));
-	if (resize) return { target: resize, action: 'resize' };
+// 	const resize = selected.find((element) => Elements[element.type].collideResize(element, last_position, box_size / view.scale));
+// 	if (resize) return { target: resize, action: 'resize' };
 
-	const rotate = selected.find((element) => Elements[element.type].collideRotate(element, last_position, box_size / view.scale));
-	if (rotate) return { target: rotate, action: 'rotate' };
+// 	const rotate = selected.find((element) => Elements[element.type].collideRotate(element, last_position, box_size / view.scale));
+// 	if (rotate) return { target: rotate, action: 'rotate' };
 
-	const highlighed = selected.find((element) => Elements[element.type].collideHighlight(element, last_position));
-	// const highlighed = selected.find((element) => Elements[element.type].collide(element, last_position));
-	if (highlighed) return { target: highlighed, action: 'move' };
+// 	const highlighed = selected.find((element) => Elements[element.type].collideHighlight(element, last_position));
+// 	// const highlighed = selected.find((element) => Elements[element.type].collide(element, last_position));
+// 	if (highlighed) return { target: highlighed, action: 'move' };
 
-	const target = elements.reverse().find((element) => Elements[element.type].collide(element, last_position));
-	if (target) return { target: target, action: 'move' };
+// 	const target = elements.reverse().find((element) => Elements[element.type].collide(element, last_position));
+// 	if (target) return { target: target, action: 'move' };
 
-	return { target: undefined, action: 'select' };
-}
+// 	return { target: undefined, action: 'select' };
+// }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////

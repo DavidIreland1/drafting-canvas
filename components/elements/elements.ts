@@ -16,7 +16,6 @@ export function flatten(elements) {
 
 export function forEachElement(elements, callback) {
 	elements.forEach((element, index, array) => {
-		console.log(element);
 		callback(element, index, array);
 		if (element.type === 'group') {
 			forEachElement(element.elements, callback);
