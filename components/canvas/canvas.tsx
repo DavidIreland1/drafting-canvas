@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 
 import { initCanvas } from './init-canvas';
 import Elements, { flatten } from './../elements/elements';
-import Cursor from './../cursor';
+import Cursor from '../cursor/cursor';
 import Settings from './../settings';
 import Grid from './grid';
 
@@ -16,19 +16,22 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 	let user_view = store.getState().views.find((view) => view.id === user_id);
 	let user_cursor = cursors.find((cursor) => cursor.id === user_id);
 
-	let [frames, setFrameRate] = useState([]);
+	let [frames, setFrameRate] = useState(0);
+
+	let last_frame = Date.now();
 
 	const auto_draw = false;
 
 	const active = {
-		hover: [],
+		hovering: [],
 		selected: [],
-		acting: [],
+		altering: [],
 	};
 
 	let redraw_auto = (context: CanvasRenderingContext2D) => {
+		if (!user_view || !user_cursor) return setTimeout(() => redraw_auto(context), 500);
+
 		requestAnimationFrame(() => {
-			if (!user_view || !user_cursor) return;
 			context.resetTransform();
 			context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 			if (Settings.grid_enabled) Grid.draw(context, user_view);
@@ -39,23 +42,22 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 			const box = box_size / user_view.scale;
 			const cursor = transformPoint(user_cursor, context.getTransform());
 
-			active.hover = [...elements]
+			active.hovering = [...elements]
 				.reverse()
 				.filter((element) => Elements[element.type].draw(element, context, cursor))
 				.reverse();
 
+			active.hovering.slice(0, 1).forEach((element) => (element.selected ? undefined : Elements[element.type].outline(element, context, highlight, line * 2)));
+
 			active.selected = flatten(elements).filter((element) => element.selected);
 
-			active.acting = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
+			active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
 
-			cursors.filter((cursor) => cursor.id !== user_id).forEach((cursor) => Cursor.draw(cursor, context, user_view));
-			Cursor.draw(user_cursor, context, user_view);
+			[...cursors].sort((c1, c2) => (c1.id !== user_id ? -1 : 1)).forEach((cursor) => Cursor.draw(cursor, context, user_view));
 
-			frames = frames.concat([frames.length]);
-			setTimeout(() => {
-				frames = frames.slice(1);
-				setFrameRate(frames);
-			}, 1000);
+			const now = Date.now();
+			setFrameRate(Math.round(Math.round(1000 / (now - last_frame))));
+			last_frame = now;
 
 			if (auto_draw) redraw_auto(context);
 		});
@@ -78,12 +80,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 			redraw(context);
 		});
 
-		let last_draw = Date.now();
 		store.subscribe(() => {
-			const now = Date.now();
-			if (now < last_draw + 1000 / 65) return; // Frame limit
-			last_draw = now;
-
 			const state = store.getState();
 			user_view = state.views.find((view) => view.id === user_id);
 			user_cursor = cursors.find((cursor) => cursor.id === user_id);
@@ -96,10 +93,17 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 		redraw_auto(context);
 	}, []);
 
+	const svg = `
+		<svg xmlns="http://www.w3.org/2000/svg"  width='24' height='24' version="1.1" viewBox="0 0 100 100" stroke="white" stroke-width="4" >
+			<path d="M 2 0 l 0 70 l 23 -15 l 32 -3 L 2 0" style="filter: drop-shadow( 2px 3px 2px)" />
+		</svg>
+	`;
+	const cursor = `url("data:image/svg+xml,${encodeURIComponent(svg)}") 0 0, auto;`;
+
 	return (
 		<div>
 			<canvas ref={canvas_ref} {...rest} tabIndex={1} />
-			<div id="frame_rate">{frames[frames.length - 1] || 0}</div>
+			<div id="frame_rate">{frames || 0}</div>
 
 			<style jsx>{`
 				canvas {
@@ -108,6 +112,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 					background: var(--off-white);
 					cursor: none;
 					outline: none;
+					cursor: ${cursor};
 				}
 				#frame_rate {
 					position: absolute;

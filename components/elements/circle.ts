@@ -4,7 +4,7 @@ export default class Circle extends Element {
 	static draw(circle, context, cursor) {
 		context.fillStyle = circle.color;
 		context.beginPath();
-		context.arc(circle.x, circle.y, circle.radius, circle.start_angle, circle.end_angle, circle.counter_clockwise);
+		context.arc(circle.x, circle.y, Math.abs(circle.radius), circle.start_angle, circle.end_angle, circle.counter_clockwise);
 		context.fill();
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
@@ -17,10 +17,6 @@ export default class Circle extends Element {
 		context.stroke();
 	}
 
-	static collide(circle, position) {
-		return (circle.x - position.x) ** 2 + (circle.y - position.y) ** 2 < circle.radius ** 2;
-	}
-
 	static bound(circle): { x: number; y: number; width: number; height: number } {
 		return {
 			x: circle.x - circle.radius,
@@ -30,20 +26,24 @@ export default class Circle extends Element {
 		};
 	}
 
-	static resize(ellipse, position, last_position) {
-		const delta_x = (position.x - last_position.x) / 2;
-		const delta_y = (position.y - last_position.y) / 2;
+	static resize(ellipse, position, last_position): void {
+		const center = this.center(ellipse);
 
-		const delta = (delta_x + delta_y) / 2;
+		const oposite = {
+			x: center.x - (last_position.x - center.x),
+			y: center.y - (last_position.y - center.y),
+		};
 
-		ellipse.x += delta;
-		ellipse.y += delta;
+		const new_center = {
+			x: (oposite.x + position.x) / 2,
+			y: (oposite.y + position.y) / 2,
+		};
 
-		const x_direction = Math.sign(last_position.x + delta - ellipse.x);
-		const y_direction = Math.sign(last_position.y + delta - ellipse.y);
+		const new_oposite = this.rotatePoint(oposite, new_center, -ellipse.rotation);
+		const new_poistion = this.rotatePoint(position, new_center, -ellipse.rotation);
 
-		ellipse.radius += x_direction * delta;
-
-		ellipse.radius = Math.abs(ellipse.radius);
+		ellipse.x = new_center.x;
+		ellipse.y = new_center.y;
+		ellipse.radius = Math.max(new_poistion.x - new_oposite.x, new_poistion.y - new_oposite.y) / 2;
 	}
 }

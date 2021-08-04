@@ -62,16 +62,25 @@ export function hover(event, canvas, store, actions, id, active) {
 	if (!view) return;
 	const position = DOMToCanvas(event, canvas, view);
 
-	const target = active.acting.length ? active.acting[0].element : undefined;
-	let action = active.acting.length ? active.acting[0].action : 'select';
+	const target = active.altering.length ? active.altering[0].element : undefined;
+	let action = active.altering.length ? active.altering[0].action : 'select';
 
 	let rotation = 0;
 	if (target && ['resize', 'rotate'].includes(action)) {
 		const center = Elements[target.type].center(target);
 		rotation = Math.atan2(center.y - position.y, center.x - position.x);
+	} else if (target && action === 'stretch') {
+		const center = Elements[target.type].center(target);
+		rotation = Math.atan2(center.y - position.y, center.x - position.x);
+
+		let sign = -1;
+		if (Math.abs(rotation) < Math.PI / 4 || Math.abs(rotation) > (3 * Math.PI) / 4) {
+			sign = 1;
+		}
+		rotation = target.rotation + (Math.PI / 4) * sign - Math.PI / 4;
 	}
 
-	if (event.buttons > 0) action = undefined;
+	if (event.buttons) action = undefined;
 	// Reduce max action rate or frame rate
 	// const now = Date.now();
 	// if (now > last_draw + 1000 / 65) {
@@ -87,16 +96,14 @@ export function select(event, canvas, id, store, actions, active) {
 	let last_position = DOMToCanvas(event, canvas, view);
 
 	let action = 'move';
-	let target = active.hover[0];
+	let target = active.hovering[0];
 
-	if (active.acting.length) {
-		action = active.acting[0].action;
-		target = active.acting[0].element;
+	if (active.altering.length) {
+		action = active.altering[0].action;
+		target = active.altering[0].element;
 	}
 
-	console.log(action);
-
-	if (!target) return;
+	if (!target) return event.shiftKey ? undefined : store.dispatch(actions.select({ select: [] }));
 
 	const select = event.shiftKey ? active.selected.map((element) => element.id).concat(target.id) : [target.id];
 
@@ -114,27 +121,6 @@ export function select(event, canvas, id, store, actions, active) {
 	};
 	window.addEventListener('mouseup', release, { once: true });
 }
-
-// function getElementAt(elements, last_position, view) {
-// 	elements = flatten(elements);
-
-// 	const selected = [...elements.filter((element) => element.selected)].reverse();
-
-// 	const resize = selected.find((element) => Elements[element.type].collideResize(element, last_position, box_size / view.scale));
-// 	if (resize) return { target: resize, action: 'resize' };
-
-// 	const rotate = selected.find((element) => Elements[element.type].collideRotate(element, last_position, box_size / view.scale));
-// 	if (rotate) return { target: rotate, action: 'rotate' };
-
-// 	const highlighed = selected.find((element) => Elements[element.type].collideHighlight(element, last_position));
-// 	// const highlighed = selected.find((element) => Elements[element.type].collide(element, last_position));
-// 	if (highlighed) return { target: highlighed, action: 'move' };
-
-// 	const target = elements.reverse().find((element) => Elements[element.type].collide(element, last_position));
-// 	if (target) return { target: target, action: 'move' };
-
-// 	return { target: undefined, action: 'select' };
-// }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////

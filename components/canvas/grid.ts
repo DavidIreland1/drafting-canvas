@@ -24,8 +24,7 @@ export default class Grid {
 			context.lineTo(right, _y);
 		}
 
-		context.strokeStyle = `rgba(136, 136, 136, ${view.scale - Settings.grid_min_scale})`;
-		// context.lineWidth = Math.round(Settings.grid_line_width / view.scale);
+		context.strokeStyle = `rgba(136, 136, 136, ${0.3 * (view.scale - Settings.grid_min_scale)})`;
 		context.lineWidth = Settings.grid_line_width / view.scale;
 		context.stroke();
 	}

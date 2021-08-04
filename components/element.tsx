@@ -7,6 +7,7 @@ export default function Element(props) {
 		if (element.selected) {
 			store.dispatch(actions.unselect({ id: element.id }));
 		} else {
+			console.log(element.id);
 			store.dispatch(actions.select({ select: [element.id] }));
 		}
 	};
@@ -35,10 +36,13 @@ export default function Element(props) {
 				#elements {
 					// border-left: 3px solid white;
 					// padding-left: 5px;
+					border-radius: 5px;
 				}
 
 				#label {
-					padding: 8px 0 8px 0;
+					border-radius: 5px;
+					padding: 6px 0 6px 0;
+					box-sizing: border-box;
 				}
 				#label:hover {
 					background: var(--hover);

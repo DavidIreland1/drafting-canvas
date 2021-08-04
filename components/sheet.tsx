@@ -11,6 +11,7 @@ import Settings from './settings';
 
 import initStore from '../redux/store';
 import actions from '../reducers/actions';
+import { Provider } from 'react-redux';
 
 export default function Sheet({ store }) {
 	const router = useRouter();
@@ -42,10 +43,12 @@ export default function Sheet({ store }) {
 
 	return (
 		<div id="cols">
-			<Toolbar />
-			<Structure store={store} actions={actions} />
-			<Canvas user_id={Settings.user_id} store={store} actions={actions} />
-			<Properties store={store} actions={actions} />
+			<Provider store={store}>
+				<Toolbar />
+				<Structure store={store} actions={actions} />
+				<Canvas user_id={Settings.user_id} store={store} actions={actions} />
+				<Properties store={store} actions={actions} />
+			</Provider>
 
 			<style jsx>{`
 				#cols {

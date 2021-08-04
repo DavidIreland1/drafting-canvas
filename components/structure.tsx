@@ -13,13 +13,12 @@ export default function Structure(props) {
 
 	const container_ref = useRef(null);
 
-	const resize = () => {
+	const [width, setWidth] = useState('15vw');
+	const resize = (event) => {
+		event.preventDefault();
 		const container = container_ref.current;
 		const offset = container.getBoundingClientRect().left;
-		const move = (move_event) => {
-			container.style.width = move_event.clientX - offset + 'px';
-		};
-
+		const move = (move_event) => setWidth(move_event.clientX - offset + 'px');
 		window.addEventListener('mousemove', move);
 		window.addEventListener('mouseup', () => window.removeEventListener('mousemove', move), { once: true });
 	};
@@ -37,7 +36,7 @@ export default function Structure(props) {
 			<style jsx>{`
 				#container {
 					position: relative;
-					width: 15vw;
+					width: ${width};
 					background: var(--panel);
 					position: absolute;
 					display: grid;
@@ -47,6 +46,7 @@ export default function Structure(props) {
 				}
 				#elements {
 					overflow: hidden;
+					margin: 0 5px;
 				}
 				#handle {
 					position: absolute;

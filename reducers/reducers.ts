@@ -23,7 +23,6 @@ export default {
 		if (cursor_y) cursor.y = cursor_y;
 	},
 	cursor: (state, props) => {
-		console.warn('hel');
 		const { id, x, y, rotation, type } = props.payload;
 		const cursor = state.cursors.find((cursor) => id === cursor.id);
 		if (!cursor) return;
@@ -31,6 +30,20 @@ export default {
 		if (y) cursor.y = y;
 		if (rotation) cursor.rotation = rotation;
 		if (type) cursor.type = type;
+	},
+	property: (state, props) => {
+		const { x, y, width, height, rotation, border_radius } = props.payload;
+		console.log(x, y);
+		flatten(state.elements)
+			.filter((element) => element.selected)
+			.forEach((element) => {
+				if (x) element.x = x;
+				if (y) element.y = y;
+				if (width) element.width = width;
+				if (height) element.width = height;
+				if (rotation) element.rotation = rotation;
+				if (border_radius) element.border_radius = border_radius;
+			});
 	},
 	move: (state, props) => {
 		const { position, last_position } = props.payload;
@@ -67,14 +80,7 @@ export default {
 
 		const selected = state.elements.filter((element) => element.selected);
 
-		const target = state.elements.find((element) => id === element.id);
-
-		const center = Elements[target.type].center(target);
-
-		const direction_x = Math.sign(last_position.x - center.x);
-		const direction_y = Math.sign(last_position.y - center.y);
-
-		selected.forEach((element) => Elements[element.type].resize(element, position, last_position, direction_x, direction_y));
+		selected.forEach((element) => Elements[element.type].resize(element, position, last_position));
 	},
 	rotate: (state, props) => {
 		const { user_id, id, position, last_position } = props.payload;
@@ -91,5 +97,12 @@ export default {
 
 		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
 		cursor.rotation += rotation;
+	},
+	stretch: (state, props) => {
+		const { id, position, last_position } = props.payload;
+
+		const selected = state.elements.filter((element) => element.selected);
+
+		selected.forEach((element) => Elements[element.type].stretch(element, position, last_position));
 	},
 };

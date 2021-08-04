@@ -60,14 +60,9 @@ export default class Group extends Element {
 		});
 	}
 
-	static collide(group, position: { x: number; y: number }): boolean {
-		const target = group.elements.find((element) => Elements[element.type].collide(element, position));
-		return target ? true : false;
-	}
-
-	static resize(group, position, last_position, direction_x, direction_y) {
+	static resize(group, position, last_position) {
 		group.elements.forEach((element) => {
-			Elements[element.type].resize(element, position, last_position, direction_x, direction_y);
+			Elements[element.type].resize(element, position, last_position);
 		});
 	}
 }

@@ -4,7 +4,7 @@ export default class Ellipse extends Element {
 	static draw(ellipse, context: CanvasRenderingContext2D, cursor) {
 		context.fillStyle = ellipse.color;
 		context.beginPath();
-		context.ellipse(ellipse.x, ellipse.y, ellipse.radius_x, ellipse.radius_y, ellipse.rotation, ellipse.start_angle, ellipse.end_angle, ellipse.counter_clockwise);
+		context.ellipse(ellipse.x, ellipse.y, Math.abs(ellipse.radius_x), Math.abs(ellipse.radius_y), ellipse.rotation, ellipse.start_angle, ellipse.end_angle, ellipse.counter_clockwise);
 		context.fill();
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
@@ -13,13 +13,8 @@ export default class Ellipse extends Element {
 		context.strokeStyle = color;
 		context.lineWidth = line_width;
 		context.beginPath();
-		context.ellipse(ellipse.x, ellipse.y, ellipse.radius_x, ellipse.radius_y, ellipse.rotation, ellipse.start_angle, ellipse.end_angle, ellipse.counter_clockwise);
+		context.ellipse(ellipse.x, ellipse.y, Math.abs(ellipse.radius_x), Math.abs(ellipse.radius_y), ellipse.rotation, ellipse.start_angle, ellipse.end_angle, ellipse.counter_clockwise);
 		context.stroke();
-	}
-
-	static collide(ellipse, position) {
-		position = this.rotatePoint(position, this.center(ellipse), -ellipse.rotation);
-		return (ellipse.x - position.x) ** 2 / ellipse.radius_x ** 2 + (ellipse.y - position.y) ** 2 / ellipse.radius_y ** 2 < 1;
 	}
 
 	static center(ellipse) {
@@ -38,41 +33,25 @@ export default class Ellipse extends Element {
 		};
 	}
 
-	static resize(ellipse, position, last_position, direction_x, direction_y) {
-		// position = this.rotatePoint(position, last_position, -ellipse.rotation);
+	static resize(ellipse, position, last_position): void {
+		const center = this.center(ellipse);
 
-		let delta_x = (position.x - last_position.x) / 2;
-		let delta_y = (position.y - last_position.y) / 2;
+		const oposite = {
+			x: center.x - (last_position.x - center.x),
+			y: center.y - (last_position.y - center.y),
+		};
 
-		delta_x = delta_x * Math.sin(ellipse.rotation + Math.PI / 4);
-		delta_y = delta_y * Math.cos(ellipse.rotation + Math.PI / 4);
+		const new_center = {
+			x: (oposite.x + position.x) / 2,
+			y: (oposite.y + position.y) / 2,
+		};
 
-		// console.log(delta_x, delta_y, ellipse.rotation);
+		const new_oposite = this.rotatePoint(oposite, new_center, -ellipse.rotation);
+		const new_poistion = this.rotatePoint(position, new_center, -ellipse.rotation);
 
-		ellipse.x += delta_x;
-		ellipse.y += delta_y;
-
-		ellipse.radius_x += direction_x * delta_x;
-		ellipse.radius_y += direction_y * delta_y;
-
-		ellipse.radius_x = Math.abs(ellipse.radius_x);
-		ellipse.radius_y = Math.abs(ellipse.radius_y);
+		ellipse.x = new_center.x;
+		ellipse.y = new_center.y;
+		ellipse.radius_x = (new_poistion.x - new_oposite.x) / 2;
+		ellipse.radius_y = (new_poistion.y - new_oposite.y) / 2;
 	}
-	// static resize(ellipse, position, last_position, direction_x, direction_y) {
-	// 	const delta_x = (position.x - last_position.x) / 2;
-	// 	const delta_y = (position.y - last_position.y) / 2;
-
-	// 	ellipse.x += delta_x;
-	// 	ellipse.y += delta_y;
-
-	// 	ellipse.radius_x += direction_x * delta_x;
-	// 	ellipse.radius_y += direction_y * delta_y;
-
-	// 	ellipse.radius_x = Math.abs(ellipse.radius_x);
-	// 	ellipse.radius_y = Math.abs(ellipse.radius_y);
-	// }
-}
-
-function clone(object) {
-	return JSON.parse(JSON.stringify(object));
 }

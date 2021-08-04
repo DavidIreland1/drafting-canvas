@@ -30,6 +30,9 @@ import initial_state from './../state/initial';
 // 	return createStore(slice.reducer, initial_state, typeof Primus !== 'undefined' ? scuttlebutt({ primus: Primus }) : undefined);
 // }
 
-export default createStore(slice.reducer, initial_state, typeof Primus !== 'undefined' ? scuttlebutt({ primus: Primus }) : undefined);
+const store = createStore(slice.reducer, initial_state, typeof Primus !== 'undefined' ? scuttlebutt({ primus: Primus }) : undefined);
+export default store;
 
 // export default createStore(slice.reducer, initial_state);
+
+export type RootState = ReturnType<typeof store.getState>;

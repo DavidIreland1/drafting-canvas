@@ -32,7 +32,6 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active
 	});
 
 	canvas.addEventListener('mouseout', () => {
-		console.log('mouse out');
 		store.dispatch(actions.cursor({ id: id, type: 'none' }));
 	});
 

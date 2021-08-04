@@ -6,12 +6,12 @@ export default class Element {
 		return;
 	}
 
-	static resize(element, position, last_position, direction_x, direction_y): void {
+	static resize(element, position, last_position): void {
 		return;
 	}
 
-	static collide(element, position): boolean {
-		return false;
+	static stretch(element, position, last_position): void {
+		return;
 	}
 
 	static outline(element, context: CanvasRenderingContext2D, color: string, line: number): void {
@@ -19,6 +19,7 @@ export default class Element {
 	}
 
 	static highlight(element, context, cursor, highlight, line, box) {
+		this.outline(element, context, highlight, line);
 		let action = undefined;
 		if (this.drawBound(element, context, cursor, highlight, line)) action = 'stretch';
 		if (this.drawRotate(element, context, cursor, box)) action = 'rotate';
@@ -52,7 +53,7 @@ export default class Element {
 		context.translate(center.x, center.y);
 		context.rotate(element.rotation);
 
-		if (bounds.width + bounds.height > box_size * 4) {
+		if (Math.abs(bounds.width) + Math.abs(bounds.height) > box_size * 4) {
 			bounds.x = -bounds.width / 2;
 			bounds.y = -bounds.height / 2;
 			context.fillStyle = 'white';
@@ -78,14 +79,15 @@ export default class Element {
 		context.translate(center.x, center.y);
 		context.rotate(element.rotation);
 
-		bounds.x = -bounds.width / 2 - box_size;
-		bounds.y = -bounds.height / 2 - box_size;
-		bounds.width += box_size * 2;
-		bounds.height += box_size * 2;
+		bounds.x = -bounds.width / 2 - Math.sign(bounds.width) * box_size;
+		bounds.y = -bounds.height / 2 - Math.sign(bounds.height) * box_size;
+		bounds.width += Math.sign(bounds.width) * box_size * 2;
+		bounds.height += Math.sign(bounds.height) * box_size * 2;
 
 		context.beginPath();
 		this.boxes(element.id, bounds, box_size * 2).forEach((square) => context.rect(square.x, square.y, square.width, square.height));
-
+		// context.fillStyle = 'yellow';
+		// context.fill();
 		context.rotate(-element.rotation);
 		context.translate(-center.x, -center.y);
 
@@ -112,51 +114,20 @@ export default class Element {
 	static move(element, position, last_position) {
 		element.x += position.x - last_position.x;
 		element.y += position.y - last_position.y;
+
+		// element.x = Math.round(element.x * 100) / 100;
+		// element.y = Math.round(element.y * 100) / 100;
 	}
 
 	static rotatePoint(position, center, rotation) {
-		const sin = Math.sin(rotation);
-		const cos = Math.cos(rotation);
-		const x = position.x - center.x;
-		const y = position.y - center.y;
-
 		return {
-			x: x * cos - y * sin + center.x,
-			y: y * cos + x * sin + center.y,
+			x: (position.x - center.x) * Math.cos(rotation) - (position.y - center.y) * Math.sin(rotation) + center.x,
+			y: (position.x - center.x) * Math.sin(rotation) + (position.y - center.y) * Math.cos(rotation) + center.y,
 		};
-	}
-
-	static collideResize(element, position, box_size): boolean {
-		const bounds = this.bound(element);
-
-		position = this.rotatePoint(position, this.center(element), -element.rotation);
-
-		return !!this.boxes(element.id, bounds, box_size).find((box) => this.collideBox(box, position));
-	}
-
-	static collideRotate(element, position, box_size): boolean {
-		const bounds = this.bound(element);
-		bounds.x -= box_size;
-		bounds.y -= box_size;
-		bounds.width += box_size * 2;
-		bounds.height += box_size * 2;
-
-		position = this.rotatePoint(position, this.center(element), -element.rotation);
-
-		return !!this.boxes(element.id, bounds, box_size * 2).find((box) => this.collideBox(box, position));
-	}
-
-	static collideHighlight(element, position) {
-		position = this.rotatePoint(position, this.center(element), -element.rotation);
-		return this.collideBox(this.bound(element), position);
 	}
 
 	static rotate(element, theta) {
 		element.rotation += theta;
-	}
-
-	static collideBox(box, position) {
-		return box.x < position.x && position.x < box.x + box.width && box.y < position.y && position.y < box.y + box.width;
 	}
 
 	static boxes(id, bounds, box_size) {
