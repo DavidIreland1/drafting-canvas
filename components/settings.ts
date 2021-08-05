@@ -11,7 +11,7 @@ export default {
 	pan_sensitivity: 1.2,
 	zoom_sensitivity: 0.01,
 
-	grid_enabled: true,
+	grid_enabled: false,
 	grid_step: 10,
 	grid_line_width: 2,
 	grid_min_scale: 0.8,

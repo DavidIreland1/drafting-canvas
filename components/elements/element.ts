@@ -34,9 +34,9 @@ export default class Element {
 		context.translate(center.x, center.y);
 		context.rotate(element.rotation);
 		context.strokeStyle = color;
-		context.lineWidth = line * 10;
 		context.beginPath();
 		context.rect(-bounds.width / 2, -bounds.height / 2, bounds.width, bounds.height);
+		context.lineWidth = line * 2;
 		const hov = context.isPointInStroke(cursor.x, cursor.y);
 		context.lineWidth = line;
 		context.stroke();

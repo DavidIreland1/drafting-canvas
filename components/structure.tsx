@@ -1,37 +1,71 @@
 import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Element from './element';
+import { flatten } from './elements/elements';
 
-export default function Structure(props) {
-	const { store, actions } = props;
-
+export default function Structure({ store, actions }) {
 	const [elements, setElements] = useState(store.getState().elements);
+	const [key, setKey] = useState(Math.random());
 
 	store.subscribe(() => {
 		setElements(store.getState().elements);
 	});
 
-	const container_ref = useRef(null);
+	const structure_ref = useRef(null);
 
 	const [width, setWidth] = useState('15vw');
+
 	const resize = (event) => {
 		event.preventDefault();
-		const container = container_ref.current;
-		const offset = container.getBoundingClientRect().left;
+		event.target.setPointerCapture(event.pointerId);
+		const structure = structure_ref.current;
+		const offset = structure.parentElement.getBoundingClientRect().left;
 		const move = (move_event) => setWidth(move_event.clientX - offset + 'px');
-		window.addEventListener('mousemove', move);
-		window.addEventListener('mouseup', () => window.removeEventListener('mousemove', move), { once: true });
+		event.target.addEventListener('pointermove', move);
+		const end = () => {
+			event.target.releasePointerCapture(event.pointerId);
+			event.target.removeEventListener('pointermove', move);
+		};
+		event.target.addEventListener('pointerup', end, { once: true });
 	};
 
+	const restructure = () => {
+		const structure = structure_ref.current;
+		console.log('hella');
+
+		const new_structure = [];
+		recurse(structure, new_structure, clone(flatten(elements)));
+
+		// console.log(new_structure);
+		setKey(Math.random());
+		store.dispatch(actions.overwrite({ state: { elements: new_structure } }));
+	};
+
+	const recurse = (dom_element, structure, elements) => {
+		Array.from(dom_element.children).forEach((child: HTMLElement) => {
+			const id = child.getAttribute('element-id');
+			// console.log(child);
+			const element = elements.find((element) => element.id === id);
+
+			if (element.type === 'group') element.elements = [];
+			structure.push(element);
+			if (child.querySelector('#elements')) {
+				recurse(child.querySelector('#elements'), element.elements, elements);
+			}
+		});
+	};
+
+	const clone = (data) => JSON.parse(JSON.stringify(data));
+
 	return (
-		<div id="container" ref={container_ref}>
-			<div id="elements">
+		<div id="container" key={key}>
+			<div id="structure" ref={structure_ref} onDragOver={(event) => event.preventDefault()}>
 				{elements.map((element) => (
-					<Element key={element.id} element={element} indentation={10} store={store} actions={actions}></Element>
+					<Element key={element.id} element={element} indentation={10} store={store} actions={actions} restructure={restructure} />
 				))}
 			</div>
 
-			<div id="handle" onMouseDown={resize}></div>
+			<div id="handle" onPointerDown={resize}></div>
 
 			<style jsx>{`
 				#container {
@@ -44,7 +78,7 @@ export default function Structure(props) {
 					left: var(--nav-height);
 					border-left: 1px solid var(--selected);
 				}
-				#elements {
+				#structure {
 					overflow: hidden;
 					margin: 0 5px;
 				}

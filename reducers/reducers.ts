@@ -2,9 +2,9 @@ import Elements, { flatten, forEachElement } from '../components/elements/elemen
 
 export default {
 	overwrite: (state, props) => {
-		state.cursors = props.payload.state.cursors;
-		state.views = props.payload.state.views;
-		state.elements = props.payload.state.elements;
+		Object.entries(props.payload.state).forEach(([key, value]) => {
+			state[key] = value;
+		});
 	},
 	addUser: (state, props) => {
 		const { user_id, label } = props.payload;
@@ -32,17 +32,21 @@ export default {
 		if (type) cursor.type = type;
 	},
 	property: (state, props) => {
-		const { x, y, width, height, rotation, border_radius } = props.payload;
-		console.log(x, y);
 		flatten(state.elements)
 			.filter((element) => element.selected)
 			.forEach((element) => {
-				if (x) element.x = x;
-				if (y) element.y = y;
-				if (width) element.width = width;
-				if (height) element.width = height;
-				if (rotation) element.rotation = rotation;
-				if (border_radius) element.border_radius = border_radius;
+				Object.entries(props.payload).forEach(([key, value]) => {
+					element[key] = round(value, 2);
+				});
+			});
+	},
+	propertyRelative: (state, props) => {
+		flatten(state.elements)
+			.filter((element) => element.selected)
+			.forEach((element) => {
+				Object.entries(props.payload).forEach(([key, value]) => {
+					element[key] += round(value, 2);
+				});
 			});
 	},
 	move: (state, props) => {
@@ -106,3 +110,5 @@ export default {
 		selected.forEach((element) => Elements[element.type].stretch(element, position, last_position));
 	},
 };
+
+const round = (number, decimals) => Math.round(number * 10 ** decimals) / 10 ** decimals;

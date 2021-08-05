@@ -15,48 +15,80 @@ export default function Properties(props) {
 
 	const selected = useSelector((state: RootState) => state.elements.filter((element) => element.selected));
 
-	const [width, setWidth] = useState('15vw');
+	const [width, setWidth] = useState('max(20vw, 200px)');
 	const resize = (event) => {
 		event.preventDefault();
+		event.target.setPointerCapture(event.pointerId);
 		const move = (move_event) => setWidth(window.innerWidth - move_event.clientX + 'px');
-		window.addEventListener('mousemove', move);
-		window.addEventListener('mouseup', () => window.removeEventListener('mousemove', move), { once: true });
+		event.target.addEventListener('pointermove', move);
+		const end = () => {
+			event.target.releasePointerCapture(event.pointerId);
+			event.target.removeEventListener('pointermove', move);
+		};
+		event.target.addEventListener('pointerup', end, { once: true });
 	};
 
-	const updateX = (event) => {
-		store.dispatch(actions.property({ x: event.target.value }));
+	const updateProperty = (event) => {
+		event.target.style.minWidth = Math.max(event.target.value.length + 2, 5) + 'ch';
+		if (!Number.isNaN(event.target.value) || event.target.value === '') store.dispatch(actions.property({ [event.target.parentNode.id]: Number(event.target.value) }));
+	};
+
+	const dragProperty = (down_event) => {
+		down_event.preventDefault();
+		down_event.target.setPointerCapture(down_event.pointerId);
+
+		const input = down_event.target.nextElementSibling;
+		input.focus();
+		let last_event = down_event;
+		const move = (move_event) => {
+			move_event.preventDefault();
+			const delta_x = move_event.clientX - last_event.clientX;
+
+			store.dispatch(actions.propertyRelative({ [down_event.target.parentNode.id]: (delta_x * (input.step || 1)) / (input.getAttribute('data-scale') || 1) }));
+			last_event = move_event;
+		};
+		down_event.target.addEventListener('pointermove', move);
+		const end = () => {
+			down_event.target.releasePointerCapture(down_event.pointerId);
+			down_event.target.removeEventListener('pointermove', move);
+		};
+		down_event.target.addEventListener('pointerup', end, { once: true });
 	};
 
 	return (
 		<div id="container">
-			<div id="handle" onMouseDown={resize}></div>
+			<div id="handle" onPointerDown={resize}></div>
 
 			{selected.length ? (
 				<div id="properties">
-					<div className="row">
-						<label>X</label>
-						<input type="number" value={selected[0].x} onChange={updateX} />
+					<div id="x" className="row">
+						<label onPointerDown={dragProperty}>X</label>
+						<input type="number" value={selected[0].x} onChange={updateProperty} />
 					</div>
-					<div className="row">
-						<label>Y</label>
-						<input type="number" value={selected[0].y} onChange={(event) => store.dispatch(actions.property({ y: event.target.value }))} />
+					<div id="y" className="row">
+						<label onPointerDown={dragProperty}>Y</label>
+						<input type="number" value={selected[0].y} onChange={updateProperty} />
 					</div>
-					{/* <div className="row">
-						<label>W</label>
-						<input type="number" value={selected[0].width} onChange={(event) => store.dispatch(actions.property({ width: event.target.value }))} />
+					<div id="width" className="row">
+						<label onPointerDown={dragProperty}>W</label>
+						<input type="number" value={selected[0].width} onChange={updateProperty} />
 					</div>
-					<div className="row">
-						<label>H</label>
-						<input type="number" value={selected[0].height} onChange={(event) => store.dispatch(actions.property({ height: event.target.value }))} />
+					<div id="height" className="row">
+						<label onPointerDown={dragProperty}>H</label>
+						<input type="number" value={selected[0].height} onChange={updateProperty} />
 					</div>
-					<div className="row">
-						<label style={{ fontSize: '30px', lineHeight: '12px', padding: '0 5px 0 7px' }}>⊾</label>
-						<input type="number" value={selected[0].rotation} onChange={(event) => store.dispatch(actions.property({ rotation: event.target.value }))} />
+					<div id="rotation" className="row">
+						<label onPointerDown={dragProperty} style={{ fontSize: '30px', lineHeight: '12px', padding: '0 5px 0 7px' }}>
+							⊾
+						</label>
+						<input step="0.01" data-scale={57.2958} type="number" value={selected[0].rotation * 57.2958} onChange={updateProperty} />
 					</div>
-					<div className="row">
-						<label style={{ fontSize: '24px', lineHeight: '10px', padding: '0px 8px 0px 0px' }}>╭</label>
-						<input type="number" value={selected[0].border_raduis} onChange={(event) => store.dispatch(actions.property({ border_raduis: event.target.value }))} />
-					</div> */}
+					<div id="border_raduis" className="row">
+						<label onPointerDown={dragProperty} style={{ fontSize: '24px', lineHeight: '10px', padding: '0px 8px 0px 0px' }}>
+							╭
+						</label>
+						<input type="number" value={selected[0].border_raduis} onChange={updateProperty} />
+					</div>
 				</div>
 			) : (
 				''
@@ -66,17 +98,15 @@ export default function Properties(props) {
 				#properties {
 					display: grid;
 					grid-template-columns: 1fr 1fr;
-					grid-gap: 10px;
+					grid-gap: 5px;
 					height: min-content;
+					width: min-content;
 					padding: 20px 0;
-					width: 80%;
-					max-width: 400px;
-					margin: 0 auto;
+					margin: 0 auto 0 auto;
 				}
 				.row {
 					display: grid;
 					grid-template-columns: auto 1fr;
-					grid-gap: 10px;
 					padding: 5px 0;
 					border-bottom: 1px solid transparent;
 				}
@@ -90,14 +120,16 @@ export default function Properties(props) {
 				label {
 					padding: 0 10px;
 					font-size: 16px;
+					cursor: ew-resize;
 				}
 				input {
 					background: transparent;
 					border: none;
 					width: 100%;
-					min-width: 50px;
+					min-width: 5ch;
 					color: var(--text-color);
 					font-size: 16px;
+					text-align: right;
 				}
 
 				input:focus {

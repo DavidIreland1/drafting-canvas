@@ -1,27 +1,46 @@
-export default function Element(props) {
-	const { store, actions, element, indentation } = props;
-
+export default function Element({ store, actions, element, indentation, restructure }) {
 	const select = (event) => {
 		if (!event.shiftKey) store.dispatch(actions.unselectAll());
 
 		if (element.selected) {
 			store.dispatch(actions.unselect({ id: element.id }));
 		} else {
-			console.log(element.id);
 			store.dispatch(actions.select({ select: [element.id] }));
 		}
 	};
 
+	const drag = (event) => {
+		// event.target.setPointerCapture(event.pointerId);
+		const element = event.nativeEvent.composedPath().find((element) => element.id === 'element');
+
+		requestAnimationFrame(() => {
+			element.classList.add('blank');
+		});
+		const move = (move_event) => {
+			const hover = document.elementFromPoint(move_event.clientX, move_event.clientY).parentElement;
+			if (hover.id === 'element') hover.parentElement.insertBefore(element, hover);
+			// if (hover.id === 'structure') hover.appendChild(element);
+			// hover.classList.add('selected');
+		};
+		event.target.addEventListener('drag', move);
+		const end = () => {
+			element.classList.remove('blank');
+			event.target.removeEventListener('drag', move);
+			restructure();
+		};
+		event.target.addEventListener('dragend', end, { once: true });
+	};
+
 	return (
-		<div id="element" className={element.selected ? 'highlighted' : ''}>
+		<div id="element" element-id={element.id} draggable="true" onDragStart={drag} className={element.selected ? 'highlighted' : '' + element.type === 'group' ? ' group' : ''}>
 			<div id="label" className={element.selected ? 'selected' : ''} style={{ paddingLeft: indentation + 'px' }} onClick={select}>
 				{element.label}
 			</div>
 
 			{element.type === 'group' ? (
-				<div id="elements">
+				<div id="elements" onDragOver={(event) => event.preventDefault()}>
 					{element.elements.map((child) => (
-						<Element key={child.id} element={child} indentation={indentation + 15} store={store} actions={actions}></Element>
+						<Element key={child.id} element={child} indentation={indentation + 15} store={store} actions={actions} restructure={restructure} />
 					))}
 				</div>
 			) : undefined}
@@ -33,14 +52,24 @@ export default function Element(props) {
 					color: var(--text-color);
 				}
 
+				#element.group {
+					border-left: 3px solid white;
+				}
+				#element:active {
+					cursor: default !important; //not working
+					// background: red;
+				}
+				#element.blank > * {
+					visibility: collapse;
+				}
 				#elements {
 					// border-left: 3px solid white;
 					// padding-left: 5px;
-					border-radius: 5px;
+					// border-radius: 5px;
 				}
 
 				#label {
-					border-radius: 5px;
+					// border-radius: 5px;
 					padding: 6px 0 6px 0;
 					box-sizing: border-box;
 				}
