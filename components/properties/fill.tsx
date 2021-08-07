@@ -7,6 +7,10 @@ export default function Dimensions({ selected, store, actions, width }) {
 		store.dispatch(actions.addFill({ color: 'blue' }));
 	}
 
+	function removeFill() {
+		store.dispatch(actions.addFill({ color: 'blue' }));
+	}
+
 	const [picker, setPicker] = useState(null);
 
 	function selectColor(event, color) {
@@ -18,8 +22,18 @@ export default function Dimensions({ selected, store, actions, width }) {
 			<div key={i} className="fill">
 				<div className="color" onClick={(event) => selectColor(event, fill.color)} style={{ background: fill.color }} />
 				{fill.color}
+
+				<div className="plus" onClick={removeFill}>
+					<svg viewBox="0 0 10 10" stroke="white" strokeWidth="1">
+						<line x1="0" y1="5" x2="10" y2="5" />
+					</svg>
+				</div>
 			</div>
 		);
+	}
+
+	function dedup(selected) {
+		return [...new Set(selected.map((element) => element.fill).flat())];
 	}
 
 	return (
@@ -34,7 +48,7 @@ export default function Dimensions({ selected, store, actions, width }) {
 				</div>
 			</div>
 
-			{selected[0].fill.map(toFill)}
+			{dedup(selected).map(toFill)}
 
 			{picker}
 
@@ -48,8 +62,22 @@ export default function Dimensions({ selected, store, actions, width }) {
 				.fill {
 					padding: 10px 20px;
 					display: grid;
-					grid-template-columns: min-content 1fr;
+					grid-template-columns: min-content 1fr max-content;
 					gap: 10px;
+				}
+				.plus {
+					width: 1em;
+					height: 1em;
+					margin: auto;
+					padding: 6px;
+					border-radius: 6px;
+				}
+				.plus > svg,
+					width: 1em;
+					height: 1em;
+				}
+				.plus:hover {
+					background: var(--hover);
 				}
 			`}</style>
 

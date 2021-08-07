@@ -74,11 +74,13 @@ export default function Structure({ store, actions }) {
 					position: absolute;
 					display: grid;
 					height: 100%;
+					overflow-y: auto;
 					left: var(--nav-height);
 					border-left: 1px solid var(--selected);
 				}
 				#structure {
-					overflow: hidden;
+					overflow-x: hidden;
+					overflow-y: auto;
 				}
 				#handle {
 					position: absolute;

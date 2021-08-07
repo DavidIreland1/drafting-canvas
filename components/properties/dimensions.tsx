@@ -105,7 +105,7 @@ export default function Dimensions({ selected, store, actions, width }) {
 					border: none;
 					max-width: calc(${width} / 2 - 20px);
 					width: max(calc(${width} / 6), 5ch);
-					min-width: 100%;
+					min-width: max(100%, 4ch);
 					color: var(--text-color);
 					font-size: 16px;
 					text-align: right;

@@ -10,14 +10,14 @@ export default function Element({ store, actions, element, indentation, restruct
 	};
 
 	const drag = (event) => {
-		// event.target.setPointerCapture(event.pointerId);
 		const element = event.nativeEvent.composedPath().find((element) => element.id === 'element');
-
+		event.dataTransfer.effectAllowed = 'move';
 		requestAnimationFrame(() => {
 			element.classList.add('blank');
 		});
 		const move = (move_event) => {
 			let hover = document.elementFromPoint(move_event.clientX, move_event.clientY);
+			if (hover === element || hover === element.nextSibling) return;
 			if (hover.id === 'elements') return hover.appendChild(element);
 			if (hover.id === 'structure') hover.appendChild(element);
 			hover = hover.parentElement;
@@ -50,8 +50,8 @@ export default function Element({ store, actions, element, indentation, restruct
 					width: 100%;
 					box-sizing: border-box;
 					color: var(--text-color);
+					margin-left: 2px;
 				}
-
 				#element.group {
 					border-left: 3px solid var(--selected);
 				}
@@ -60,6 +60,7 @@ export default function Element({ store, actions, element, indentation, restruct
 				}
 				#element.blank > * {
 					visibility: collapse;
+					border: none;
 				}
 				#elements {
 					padding-bottom: 5px;

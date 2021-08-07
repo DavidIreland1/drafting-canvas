@@ -100,6 +100,7 @@ function save(name, data) {
 }
 
 function load(name) {
+	if (name.startsWith('test-')) return loadTest(Number(name.slice(5)));
 	try {
 		return JSON.parse(fs.readFileSync('./database/' + name + '.json'));
 	} catch (error) {
@@ -115,3 +116,34 @@ const initial_state = {
 	],
 	elements: [],
 };
+
+
+function loadTest(n) {
+	return {
+		id: 'test-' + n,
+		label: 'Test Page ' + n,
+		views: [{ id: '123', x: 0, y: 0, scale: 1 }],
+		cursors: [
+			{ id: '123', label: 'Davis', x: 0, y: 0, rotation: 0, type: 'none' },
+			{ id: '234', label: 'Irene', x: 100, y: 100, rotation: 0, type: 'none' },
+		],
+		elements: Array(n).fill().map((element, i, array) => {
+			const side = Math.round(Math.sqrt(array.length));
+			return {
+				id: '35674' + i,
+				type: 'circle',
+				label: 'circle',
+				selected: false,
+				hover: false,
+				x: (n / side) * (i % side),
+				y: (n / side) * Math.round(i / side),
+				fill: [{color: 'red'}],
+				rotation: 0,
+				radius: 5,
+				start_angle: 0,
+				end_angle: 2 * Math.PI,
+			};
+		})
+	};
+}
+
