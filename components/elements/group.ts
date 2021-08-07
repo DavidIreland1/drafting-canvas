@@ -8,7 +8,7 @@ export default class Group extends Element {
 		context.rotate(group.rotation);
 		context.translate(-center.x, -center.y);
 
-		const hovering = group.elements.filter((element) => Elements[element.type].draw(element, context, cursor));
+		const hovering = [...group.elements].reverse().filter((element) => Elements[element.type].draw(element, context, cursor));
 
 		context.translate(center.x, center.y);
 		context.rotate(-group.rotation);

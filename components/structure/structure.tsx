@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import Element from './element';
-import { flatten } from './elements/elements';
+import { flatten } from '../elements/elements';
 
 export default function Structure({ store, actions }) {
 	const [elements, setElements] = useState(store.getState().elements);
@@ -80,7 +79,6 @@ export default function Structure({ store, actions }) {
 				}
 				#structure {
 					overflow: hidden;
-					margin: 0 5px;
 				}
 				#handle {
 					position: absolute;

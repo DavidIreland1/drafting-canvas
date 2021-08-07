@@ -1,4 +1,4 @@
-import Elements, { flatten, forEachElement } from '../components/elements/elements';
+import Elements, { flatten, forEachElement, selected } from '../components/elements/elements';
 
 export default {
 	overwrite: (state, props) => {
@@ -31,29 +31,35 @@ export default {
 		if (rotation) cursor.rotation = rotation;
 		if (type) cursor.type = type;
 	},
-	property: (state, props) => {
-		flatten(state.elements)
-			.filter((element) => element.selected)
-			.forEach((element) => {
-				Object.entries(props.payload).forEach(([key, value]) => {
-					element[key] = round(value, 2);
-				});
+	addFill: (state, props) => {
+		selected(state.elements).forEach((element) => {
+			element.fill.push(props.payload);
+		});
+	},
+	setColor: (state, props) => {
+		selected(state.elements).forEach((element) => {
+			element.fill.forEach((fill) => {
+				if (fill.color === props.payload.from) fill.color = props.payload.to;
 			});
+		});
+	},
+	property: (state, props) => {
+		selected(state.elements).forEach((element) => {
+			Object.entries(props.payload).forEach(([key, value]) => {
+				element[key] = round(value, 2);
+			});
+		});
 	},
 	propertyRelative: (state, props) => {
-		flatten(state.elements)
-			.filter((element) => element.selected)
-			.forEach((element) => {
-				Object.entries(props.payload).forEach(([key, value]) => {
-					element[key] += round(value, 2);
-				});
+		selected(state.elements).forEach((element) => {
+			Object.entries(props.payload).forEach(([key, value]) => {
+				element[key] += round(value, 2);
 			});
+		});
 	},
 	move: (state, props) => {
 		const { position, last_position } = props.payload;
-		flatten(state.elements)
-			.filter((element) => element.selected)
-			.forEach((element) => Elements[element.type].move(element, position, last_position));
+		selected(state.elements).forEach((element) => Elements[element.type].move(element, position, last_position));
 	},
 	select: (state, props) => {
 		flatten(state.elements).forEach((element) => (element.selected = props.payload.select.includes(element.id)));

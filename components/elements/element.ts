@@ -6,6 +6,20 @@ export default class Element {
 		return;
 	}
 
+	static fill(element, context) {
+		element.fill.forEach((fill) => {
+			context.fillStyle = fill.color;
+			context.fill();
+		});
+	}
+
+	static stroke(element, context) {
+		element.fill.forEach((fill) => {
+			context.fillStyle = fill.color;
+			context.fill();
+		});
+	}
+
 	static resize(element, position, last_position): void {
 		return;
 	}

@@ -2,10 +2,10 @@ import Element from './element';
 
 export default class Circle extends Element {
 	static draw(circle, context, cursor) {
-		context.fillStyle = circle.color;
 		context.beginPath();
 		context.arc(circle.x, circle.y, Math.abs(circle.radius), circle.start_angle, circle.end_angle, circle.counter_clockwise);
-		context.fill();
+		this.fill(circle, context);
+		this.stroke(circle, context);
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
 

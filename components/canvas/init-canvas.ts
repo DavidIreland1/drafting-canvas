@@ -15,6 +15,8 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active
 	});
 
 	canvas.addEventListener('dblclick', () => {
+		if (active.hovering.length) return;
+
 		const view = store.getState().views.find((view) => view.id === id);
 		store.dispatch(
 			actions.view({
@@ -66,6 +68,11 @@ function shortCuts(event): boolean {
 		case 's':
 			event.preventDefault();
 			console.log('save');
+			return true;
+
+		case 't':
+			event.preventDefault();
+			console.log('tab');
 			return true;
 	}
 	return false;

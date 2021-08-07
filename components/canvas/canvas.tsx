@@ -47,6 +47,9 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 				.filter((element) => Elements[element.type].draw(element, context, cursor))
 				.reverse();
 
+			active.hovering = active.hovering.sort((element1) => (element1.selected ? -1 : 1));
+
+			// Outline hovering
 			active.hovering.slice(0, 1).forEach((element) => (element.selected ? undefined : Elements[element.type].outline(element, context, highlight, line * 2)));
 
 			active.selected = flatten(elements).filter((element) => element.selected);

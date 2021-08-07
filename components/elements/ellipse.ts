@@ -2,10 +2,10 @@ import Element from './element';
 
 export default class Ellipse extends Element {
 	static draw(ellipse, context: CanvasRenderingContext2D, cursor) {
-		context.fillStyle = ellipse.color;
 		context.beginPath();
 		context.ellipse(ellipse.x, ellipse.y, Math.abs(ellipse.radius_x), Math.abs(ellipse.radius_y), ellipse.rotation, ellipse.start_angle, ellipse.end_angle, ellipse.counter_clockwise);
-		context.fill();
+		this.fill(ellipse, context);
+		this.stroke(ellipse, context);
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
 

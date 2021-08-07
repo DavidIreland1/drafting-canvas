@@ -22,3 +22,7 @@ export function forEachElement(elements, callback) {
 		}
 	});
 }
+
+export function selected(elements) {
+	return flatten(elements).filter((element) => element.selected);
+}

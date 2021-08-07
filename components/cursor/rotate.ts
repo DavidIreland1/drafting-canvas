@@ -1,6 +1,6 @@
 export default class Resize {
 	static draw(cursor, context, view) {
-		const head_length = 7;
+		const head_length = 5;
 		const body_length = 15;
 		const rotation = Math.PI / 8;
 

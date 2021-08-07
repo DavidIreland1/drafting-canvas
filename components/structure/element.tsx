@@ -17,10 +17,11 @@ export default function Element({ store, actions, element, indentation, restruct
 			element.classList.add('blank');
 		});
 		const move = (move_event) => {
-			const hover = document.elementFromPoint(move_event.clientX, move_event.clientY).parentElement;
-			if (hover.id === 'element') hover.parentElement.insertBefore(element, hover);
-			// if (hover.id === 'structure') hover.appendChild(element);
-			// hover.classList.add('selected');
+			let hover = document.elementFromPoint(move_event.clientX, move_event.clientY);
+			if (hover.id === 'elements') return hover.appendChild(element);
+			if (hover.id === 'structure') hover.appendChild(element);
+			hover = hover.parentElement;
+			if (hover.id === 'element') return hover.parentElement.insertBefore(element, hover);
 		};
 		event.target.addEventListener('drag', move);
 		const end = () => {
@@ -32,7 +33,7 @@ export default function Element({ store, actions, element, indentation, restruct
 	};
 
 	return (
-		<div id="element" element-id={element.id} draggable="true" onDragStart={drag} className={element.selected ? 'highlighted' : '' + element.type === 'group' ? ' group' : ''}>
+		<div id="element" element-id={element.id} draggable="true" onDragStart={drag} className={(element.selected ? 'highlighted' : '') + (element.type === 'group' ? ' group' : '')}>
 			<div id="label" className={element.selected ? 'selected' : ''} style={{ paddingLeft: indentation + 'px' }} onClick={select}>
 				{element.label}
 			</div>
@@ -48,28 +49,23 @@ export default function Element({ store, actions, element, indentation, restruct
 				#element {
 					width: 100%;
 					box-sizing: border-box;
-					// border: 1px solid transparent;
 					color: var(--text-color);
 				}
 
 				#element.group {
-					border-left: 3px solid white;
+					border-left: 3px solid var(--selected);
 				}
 				#element:active {
 					cursor: default !important; //not working
-					// background: red;
 				}
 				#element.blank > * {
 					visibility: collapse;
 				}
 				#elements {
-					// border-left: 3px solid white;
-					// padding-left: 5px;
-					// border-radius: 5px;
+					padding-bottom: 5px;
 				}
 
 				#label {
-					// border-radius: 5px;
 					padding: 6px 0 6px 0;
 					box-sizing: border-box;
 				}

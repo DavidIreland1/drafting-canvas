@@ -3,13 +3,12 @@ import { useRouter } from 'next/router';
 
 import Canvas from './canvas/canvas';
 import Toolbar from './toolbar';
-import Structure from './structure';
-import Properties from './properties';
+import Structure from './structure/structure';
+import Properties from './properties/properties';
 import getPage from '../state/dev';
 
 import Settings from './settings';
 
-import initStore from '../redux/store';
 import actions from '../reducers/actions';
 import { Provider } from 'react-redux';
 

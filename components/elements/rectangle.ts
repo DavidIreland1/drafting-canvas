@@ -9,7 +9,10 @@ export default class Rectangle extends Element {
 		context.rotate(rectangle.rotation);
 		context.beginPath();
 		context.rect(-rectangle.width / 2, -rectangle.height / 2, rectangle.width, rectangle.height);
-		context.fill();
+
+		this.fill(rectangle, context);
+		this.stroke(rectangle, context);
+
 		context.rotate(-rectangle.rotation);
 		context.translate(-center.x, -center.y);
 		return context.isPointInPath(cursor.x, cursor.y);

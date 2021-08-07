@@ -33,7 +33,7 @@ export default function Navbar() {
 		<div>
 			<div id="nav">
 				<img src="/images/offwhite.svg" />
-				<div id="title">OFF WHITE CANVAS</div>
+				<div id="title">RADIUS</div>
 
 				<div id="tabs">
 					{tabs.map((tab) => (
