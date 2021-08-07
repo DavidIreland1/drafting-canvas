@@ -38,21 +38,29 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 			context.translate(user_view.x, user_view.y);
 			context.scale(user_view.scale, user_view.scale);
 
+			const screen = boundScreen(context, user_view);
+
+			const onScreen = elements.filter((element) => Elements[element.type].onScreen(element, screen));
+
 			const line = line_width / user_view.scale;
 			const box = box_size / user_view.scale;
 			const cursor = transformPoint(user_cursor, context.getTransform());
 
-			active.hovering = [...elements]
-				.reverse()
-				.filter((element) => Elements[element.type].draw(element, context, cursor))
-				.reverse();
+			active.selected = flatten(onScreen).filter((element) => element.selected);
+
+			active.hovering = active.selected
+				.filter((element) => Elements[element.type].insideBound(element, context, cursor))
+				.concat(
+					[...onScreen]
+						.reverse()
+						.filter((element) => Elements[element.type].draw(element, context, cursor))
+						.reverse()
+				);
 
 			active.hovering = active.hovering.sort((element1) => (element1.selected ? -1 : 1));
 
 			// Outline hovering
 			active.hovering.slice(0, 1).forEach((element) => (element.selected ? undefined : Elements[element.type].outline(element, context, highlight, line * 2)));
-
-			active.selected = flatten(elements).filter((element) => element.selected);
 
 			active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
 
@@ -89,7 +97,6 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 			user_cursor = cursors.find((cursor) => cursor.id === user_id);
 			cursors = state.cursors;
 			elements = state.elements;
-
 			redraw(context);
 		});
 
@@ -149,5 +156,14 @@ function transformPoint(point, transform) {
 	return {
 		x: transform.a * point.x + transform.c * point.y + transform.e,
 		y: transform.b * point.x + transform.d * point.y + transform.f,
+	};
+}
+
+function boundScreen(context, view) {
+	return {
+		x1: -view.x / view.scale,
+		y1: -view.y / view.scale,
+		x2: -view.x / view.scale + context.canvas.width / view.scale,
+		y2: -view.y / view.scale + context.canvas.height / view.scale,
 	};
 }

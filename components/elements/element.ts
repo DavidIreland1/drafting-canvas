@@ -32,6 +32,11 @@ export default class Element {
 		return;
 	}
 
+	static onScreen(element, screen) {
+		const bounds = this.positiveBound(element);
+		return !(bounds.x > screen.x2 || bounds.y > screen.y2 || bounds.x + bounds.width < screen.x1 || bounds.y + bounds.height < screen.y1);
+	}
+
 	static highlight(element, context, cursor, highlight, line, box) {
 		this.outline(element, context, highlight, line);
 		let action = undefined;
@@ -39,6 +44,20 @@ export default class Element {
 		if (this.drawRotate(element, context, cursor, box)) action = 'rotate';
 		if (this.drawResize(element, context, cursor, highlight, line, box)) action = 'resize';
 		return action ? { action: action, element: element } : undefined;
+	}
+
+	static insideBound(element, context: CanvasRenderingContext2D, cursor): boolean {
+		const bounds = this.bound(element);
+		const center = this.center(element);
+
+		context.translate(center.x, center.y);
+		context.rotate(element.rotation);
+		context.beginPath();
+		context.rect(-bounds.width / 2, -bounds.height / 2, bounds.width, bounds.height);
+		context.rotate(-element.rotation);
+		context.translate(-center.x, -center.y);
+
+		return context.isPointInPath(cursor.x, cursor.y);
 	}
 
 	static drawBound(element, context: CanvasRenderingContext2D, cursor, color: string, line: number): boolean {
@@ -100,8 +119,6 @@ export default class Element {
 
 		context.beginPath();
 		this.boxes(element.id, bounds, box_size * 2).forEach((square) => context.rect(square.x, square.y, square.width, square.height));
-		// context.fillStyle = 'yellow';
-		// context.fill();
 		context.rotate(-element.rotation);
 		context.translate(-center.x, -center.y);
 
@@ -122,6 +139,26 @@ export default class Element {
 			y: element.y,
 			width: element.width,
 			height: element.height,
+		};
+	}
+
+	static getFill(element) {
+		return element.fill;
+	}
+
+	static setFill(element, colors) {
+		element.fill.forEach((fill) => {
+			if (fill.color === colors.from) fill.color = colors.to;
+		});
+	}
+
+	static positiveBound(element): { x: number; y: number; width: number; height: number } {
+		const bounds = this.bound(element);
+		return {
+			x: Math.min(bounds.x, bounds.x + bounds.width),
+			y: Math.min(bounds.y, bounds.y + bounds.height),
+			width: Math.abs(bounds.width),
+			height: Math.abs(bounds.height),
 		};
 	}
 

@@ -38,9 +38,7 @@ export default {
 	},
 	setColor: (state, props) => {
 		selected(state.elements).forEach((element) => {
-			element.fill.forEach((fill) => {
-				if (fill.color === props.payload.from) fill.color = props.payload.to;
-			});
+			Elements[element.type].setFill(element, props.payload);
 		});
 	},
 	property: (state, props) => {
@@ -62,6 +60,10 @@ export default {
 		selected(state.elements).forEach((element) => Elements[element.type].move(element, position, last_position));
 	},
 	select: (state, props) => {
+		const element = flatten(state.elements).find((element) => element.id === props.payload.id);
+		if (element) element.selected = true;
+	},
+	selectOnly: (state, props) => {
 		flatten(state.elements).forEach((element) => (element.selected = props.payload.select.includes(element.id)));
 	},
 	unselect: (state, props) => {

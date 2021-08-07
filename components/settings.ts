@@ -4,7 +4,7 @@ export default {
 
 	line_width: 2,
 	box_size: 8,
-	highlight: '#4c4cff',
+	highlight: '#1a83ee',
 
 	max_zoom: 10,
 	min_zoom: 0.0001,

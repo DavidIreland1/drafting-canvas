@@ -89,7 +89,7 @@ export function hover(event, canvas, store, actions, id, active) {
 	// }
 }
 
-export function select(event, canvas, id, store, actions, active) {
+export function select(down_event, canvas, id, store, actions, active) {
 	const state = store.getState();
 	const view = state.views.find((view) => view.id === id);
 
@@ -103,11 +103,15 @@ export function select(event, canvas, id, store, actions, active) {
 		target = active.altering[0].element;
 	}
 
-	if (!target) return event.shiftKey ? undefined : store.dispatch(actions.select({ select: [] }));
+	if (!target) return down_event.shiftKey ? undefined : store.dispatch(actions.unselectAll());
 
-	const select = event.shiftKey ? active.selected.map((element) => element.id).concat(target.id) : [target.id];
+	const was_selected = target.selected;
 
-	store.dispatch(actions.select({ select: select }));
+	if (down_event.shiftKey) {
+		store.dispatch(actions.select({ id: target.id }));
+	} else {
+		store.dispatch(actions.selectOnly({ select: [target.id] }));
+	}
 
 	const move = (move_event) => {
 		const position = DOMToCanvas(move_event, canvas, view);
@@ -116,7 +120,12 @@ export function select(event, canvas, id, store, actions, active) {
 	};
 	window.addEventListener('mousemove', move);
 
-	const release = () => {
+	const release = (up_event) => {
+		if (down_event.clientX === up_event.clientX && down_event.clientY === up_event.clientY) {
+			if (was_selected) {
+				store.dispatch(actions.unselect({ id: target.id }));
+			}
+		}
 		window.removeEventListener('mousemove', move);
 	};
 	window.addEventListener('mouseup', release, { once: true });

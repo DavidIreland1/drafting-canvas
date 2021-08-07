@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import Picker from './picker';
+import Elements from './../elements/elements';
 
-export default function Dimensions({ selected, store, actions, width }) {
-	if (!selected[0].fill) return <div />;
+export default function Fill({ selected, store, actions, width }) {
 	function addFill() {
 		store.dispatch(actions.addFill({ color: 'blue' }));
 	}
@@ -33,7 +33,7 @@ export default function Dimensions({ selected, store, actions, width }) {
 	}
 
 	function dedup(selected) {
-		return [...new Set(selected.map((element) => element.fill).flat())];
+		return [...new Set(selected.map((element) => Elements[element.type].getFill(element)).flat())];
 	}
 
 	return (

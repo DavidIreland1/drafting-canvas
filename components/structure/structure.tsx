@@ -19,7 +19,7 @@ export default function Structure({ store, actions }) {
 		event.target.setPointerCapture(event.pointerId);
 		const structure = structure_ref.current;
 		const offset = structure.parentElement.getBoundingClientRect().left;
-		const move = (move_event) => setWidth(move_event.clientX - offset + 'px');
+		const move = (move_event) => setWidth(Math.max(move_event.clientX - offset, 0) + 'px');
 		event.target.addEventListener('pointermove', move);
 		const end = () => {
 			event.target.releasePointerCapture(event.pointerId);

@@ -1,11 +1,11 @@
 export default function Element({ store, actions, element, indentation, restructure }) {
 	const select = (event) => {
-		if (!event.shiftKey) store.dispatch(actions.unselectAll());
-
 		if (element.selected) {
 			store.dispatch(actions.unselect({ id: element.id }));
+		} else if (event.shiftKey) {
+			store.dispatch(actions.select({ id: element.id }));
 		} else {
-			store.dispatch(actions.select({ select: [element.id] }));
+			store.dispatch(actions.selectOnly({ select: [element.id] }));
 		}
 	};
 

@@ -54,14 +54,44 @@ export default class Group extends Element {
 	// 	return undefined;
 	// }
 
+	static getFill(group) {
+		return group.elements.map((element) => Elements[element.type].getFill(element)).flat();
+	}
+
+	static setFill(group, colors) {
+		group.elements.map((element) => Elements[element.type].setFill(element, colors));
+	}
+
 	static move(group, position, last_position) {
-		group.elements.forEach((element) => {
-			Elements[element.type].move(element, position, last_position);
-		});
+		group.elements
+			.filter((element) => !element.selected)
+			.forEach((element) => {
+				Elements[element.type].move(element, position, last_position);
+			});
 	}
 
 	static resize(group, position, last_position) {
+		// const group_center = this.center(group);
+		// const oposite = {
+		// 	x: group_center.x - (position.x - group_center.x),
+		// 	y: group_center.y - (position.y - group_center.y),
+		// };
+		// const last_oposite = {
+		// 	x: group_center.x - (last_position.x - group_center.x),
+		// 	y: group_center.y - (last_position.y - group_center.y),
+		// };
+
 		group.elements.forEach((element) => {
+			// const center = Elements[element.type].center(element);
+			// const position = {
+			// 	x: center.x - (oposite.x - center.x),
+			// 	y: center.y - (oposite.y - center.y),
+			// };
+			// const last_position = {
+			// 	x: center.x - (last_oposite.x - center.x),
+			// 	y: center.y - (last_oposite.y - center.y),
+			// };
+
 			Elements[element.type].resize(element, position, last_position);
 		});
 	}

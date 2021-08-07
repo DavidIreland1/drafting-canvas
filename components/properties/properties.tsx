@@ -10,7 +10,7 @@ export default function Properties({ store, actions }) {
 	function resize(event) {
 		event.preventDefault();
 		event.target.setPointerCapture(event.pointerId);
-		const move = (move_event) => setWidth(window.innerWidth - move_event.clientX + 'px');
+		const move = (move_event) => setWidth(Math.max(window.innerWidth - move_event.clientX, 0) + 'px');
 		event.target.addEventListener('pointermove', move);
 		const end = () => {
 			event.target.releasePointerCapture(event.pointerId);
@@ -20,6 +20,8 @@ export default function Properties({ store, actions }) {
 	}
 
 	const selected = useSelector((state: RootState) => state.elements.filter((element) => element.selected));
+
+	// console.log(selected);
 
 	const styles = (
 		<style>{`

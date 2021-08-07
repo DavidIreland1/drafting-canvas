@@ -17,11 +17,9 @@ export default function Sheet({ store }) {
 
 	useEffect(() => {
 		const { page } = router.query;
-		// const page = location.href.split('/').pop();
 		fetch(`./page/${page}`).then(async (res) => {
 			const state = await res.json();
 			store.dispatch(actions.overwrite({ state: state }));
-			// store.dispatch(actions.addUser({ user_id: '312', label: 'dad' }));
 		});
 	}, [router.query.page]);
 

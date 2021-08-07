@@ -136,7 +136,7 @@ function loadTest(n) {
 				selected: false,
 				hover: false,
 				x: (n / side) * (i % side),
-				y: (n / side) * Math.round(i / side),
+				y: (n / side) * Math.floor(i / side),
 				fill: [{color: 'red'}],
 				rotation: 0,
 				radius: 5,
