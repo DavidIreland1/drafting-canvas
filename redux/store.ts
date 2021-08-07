@@ -15,7 +15,16 @@ if (typeof window !== 'undefined') Primus = (window as any).Primus;
 import { modification_types } from '../reducers/modifications/modifications';
 import { interaction_types } from '../reducers/modifications/interactions';
 
-const store = createStore(undoable(slice.reducer, { filter: filterActions, groupBy: groupActions }) as any, initial_state, typeof Primus !== 'undefined' ? scuttlebutt({ primus: Primus }) : undefined);
+const store = createStore(
+	undoable(slice.reducer, { filter: filterActions, groupBy: groupActions }) as any,
+	initial_state,
+	typeof Primus !== 'undefined'
+		? scuttlebutt({
+				primus: Primus,
+				// uri: 'http://localhost:3000',
+		  })
+		: undefined
+);
 
 export default store;
 

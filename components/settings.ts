@@ -1,6 +1,13 @@
+import Adjective from './../utils/adjectives';
+import Animal from './../utils/animals';
+import Color from './../utils/colors';
+
+const id = String(Math.random());
+console.log(Adjective + ' ' + Animal, id);
 export default {
-	user_id: '123',
-	user_name: 'David',
+	user_id: id,
+	user_name: Adjective + ' ' + Animal,
+	user_color: Color,
 
 	line_width: 2,
 	box_size: 8,

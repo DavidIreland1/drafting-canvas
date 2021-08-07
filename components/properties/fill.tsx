@@ -14,7 +14,11 @@ export default function Fill({ selected, store, actions, width }) {
 	const [picker, setPicker] = useState(null);
 
 	function selectColor(event, color) {
-		setPicker(<Picker store={store} actions={actions} from={color} event={event} />);
+		setPicker(<Picker store={store} actions={actions} from={color} event={event} remove={removePicker} />);
+	}
+
+	function removePicker() {
+		setPicker(null);
 	}
 
 	function toFill(fill, i) {
@@ -94,7 +98,7 @@ export default function Fill({ selected, store, actions, width }) {
 					padding: 6px;
 					border-radius: 6px;
 				}
-				.plus > svg,
+				.plus > svg {
 					width: 1em;
 					height: 1em;
 				}

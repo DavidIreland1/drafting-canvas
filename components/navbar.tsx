@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-export default function Navbar() {
+export default function Navbar({ store, actions }) {
 	const router = useRouter();
 	const { page } = router.query;
 
@@ -34,34 +34,26 @@ export default function Navbar() {
 
 	function newTab() {
 		const id = `${tabs.length + 1}${tabs.length + 1}${tabs.length + 1}`;
-		setTabs(
-			tabs.concat([
-				{
-					id: id,
-					label: `page ${tabs.length + 1}`,
-				},
-			])
-		);
+		setTabs(tabs.concat([{ id: id, label: `page ${tabs.length + 1}` }]));
 		router.push(id);
 	}
 
 	const drag = (event) => {
-		const page = event.target;
+		const tab = event.target;
 
-		console.log(page);
 		requestAnimationFrame(() => {
-			page.classList.add('blank');
+			tab.classList.add('blank');
 		});
 		const move = (move_event) => {
 			const hover = document.elementFromPoint(move_event.clientX, move_event.clientY);
-			if (hover === page || hover === page.nextSibling) return;
-			if (hover.tagName === 'A') return hover.parentElement.insertBefore(page, hover);
-			if (hover.id === 'plus') return hover.previousElementSibling.append(page);
-			if (hover.id === 'nav') return hover.children[2].append(page);
+			if (hover === tab || hover === tab.nextSibling) return;
+			if (hover.tagName === 'A') return hover.parentElement.insertBefore(tab, hover);
+			if (hover.id === 'plus') return hover.previousElementSibling.append(tab);
+			if (hover.id === 'nav') return hover.children[2].append(tab);
 		};
 		event.target.addEventListener('drag', move);
 		const end = () => {
-			page.classList.remove('blank');
+			tab.classList.remove('blank');
 			event.target.removeEventListener('drag', move);
 			// restructure();
 		};

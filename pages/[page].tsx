@@ -6,6 +6,7 @@ import Sheet from './../components/sheet';
 import Settings from './../components/settings';
 
 import store from './../redux/store';
+import actions from '../redux/slice';
 
 export default function OffWhiteCanvas(): JSX.Element {
 	return (
@@ -17,8 +18,8 @@ export default function OffWhiteCanvas(): JSX.Element {
 			</Head>
 
 			<main>
-				<Navbar />
-				<Sheet store={store} />
+				<Navbar store={store} actions={actions} />
+				<Sheet store={store} actions={actions} />
 			</main>
 			<style jsx>{`
 				main {
@@ -49,7 +50,7 @@ export default function OffWhiteCanvas(): JSX.Element {
 					--title-color: #ffffff;
 					--text-color: #ffffff;
 
-					--off-white: #f1f1f1;
+					--off-white: #a1a1a1;
 
 					--accent: #ea7661;
 					--hover: #34343a;

@@ -9,17 +9,28 @@ import getPage from '../state/dev';
 
 import Settings from './settings';
 
-import actions from '../redux/slice';
 import { Provider } from 'react-redux';
 
-export default function Sheet({ store }) {
+export default function Sheet({ store, actions }) {
 	const router = useRouter();
 
 	useEffect(() => {
 		const { page } = router.query;
+		if (!page) return;
+
 		fetch(`./page/${page}`).then(async (res) => {
 			const state = await res.json();
-			store.dispatch(actions.overwrite({ state: state }));
+			// store.dispatch(actions.overwrite({ state: state }));
+			store.dispatch(actions.overwrite({ state: { elements: state.elements } }));
+			store.dispatch(actions.addUser({ user_id: Settings.user_id, label: Settings.user_name, color: Settings.user_color }));
+		});
+
+		window.addEventListener('beforeunload', async () => {
+			store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
+
+			console.log('gff');
+			await new Promise((res) => setTimeout(res, 3000));
+			console.log('bye');
 		});
 	}, [router.query.page]);
 

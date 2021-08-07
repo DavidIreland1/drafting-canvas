@@ -1,7 +1,8 @@
-export default function Picker({ store, actions, from, event }) {
+export default function Picker({ store, actions, from, event, remove }) {
 	function setColor(event) {
 		if (!event.target.classList.contains('color')) return;
 		store.dispatch(actions.setColor({ from: from, to: event.target.style.background }));
+		remove();
 	}
 
 	return (

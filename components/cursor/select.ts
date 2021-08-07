@@ -22,16 +22,9 @@ export default class Select {
 		context.lineWidth = 3;
 		context.stroke();
 
-		context.fillStyle = cursor.color;
 		context.shadowColor = 'transparent';
+		context.fillStyle = cursor.color;
 		context.fill();
-
-		context.font = '25px Arial';
-		const width = context.measureText(cursor.label);
-
-		context.fillRect(cursor.x + 15, cursor.y + 35, width.width + 10, 35);
-		context.fillStyle = 'white';
-		context.fillText(cursor.label, cursor.x + 20, cursor.y + 60);
 
 		context.translate(cursor.x, cursor.y);
 		context.scale(view.scale, view.scale);

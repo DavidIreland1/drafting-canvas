@@ -12,6 +12,12 @@ const handle = app.getRequestHandler();
 const fs = require('fs');
 var os = require('os');
 
+const initial_state = {
+	cursors: [],
+	views: [],
+	elements: [],
+};
+
 // var log = console.log;
 // console.log = function () {
 // 	log.apply(console, arguments);
@@ -47,7 +53,7 @@ app.prepare().then(() => {
 		console.log('> Ready on http://localhost:3000');
 	});
 
-	// const { primusServer, store, dispatch, getState } = dispatcher(server);
+	const { primusServer, store, dispatch, getState } = dispatcher(server);
 
 	// primusServer.save(__dirname + '/primus.js');
 
@@ -76,7 +82,7 @@ app.prepare().then(() => {
 
 const slice = createSlice({
 	name: 'counter',
-	initialState: {},
+	initialState: initial_state,
 	reducers: reducers,
 });
 
@@ -108,14 +114,6 @@ function load(name) {
 	}
 }
 
-const initial_state = {
-	views: [{ id: '123', x: 0, y: 0, scale: 1 }],
-	cursors: [
-		{ id: '123', label: 'Davis', x: 0, y: 0, rotation: 0, type: 'none' },
-		{ id: '234', label: 'Irene', x: 100, y: 100, rotation: 0, type: 'none' },
-	],
-	elements: [],
-};
 
 
 function loadTest(n) {

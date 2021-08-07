@@ -1,7 +1,7 @@
 import Elements from './../elements/elements';
 import Settings from '../settings';
 
-const { line_width, box_size, max_zoom, min_zoom, pan_sensitivity, zoom_sensitivity } = Settings;
+const { max_zoom, min_zoom, pan_sensitivity, zoom_sensitivity } = Settings;
 
 export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, store, actions) {
 	const state = store.getState().present;
@@ -10,6 +10,8 @@ export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, s
 	if (String(event.deltaY).length < 5) {
 		// Pan
 		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
+
+		if (!cursor) console.log(state.cursors, user_id);
 		store.dispatch(
 			actions.view({
 				id: user_id,
@@ -92,7 +94,7 @@ export function select(down_event, canvas, id, store, actions, active) {
 	const state = store.getState().present;
 	const view = state.views.find((view) => view.id === id);
 
-	let last_position = DOMToCanvas(event, canvas, view);
+	let last_position = DOMToCanvas(down_event, canvas, view);
 
 	let action = 'move';
 	let target = active.hovering[0];
