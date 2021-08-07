@@ -1,11 +1,10 @@
-import Elements, { flatten } from './../elements/elements';
-
+import Elements from './../elements/elements';
 import Settings from '../settings';
 
 const { line_width, box_size, max_zoom, min_zoom, pan_sensitivity, zoom_sensitivity } = Settings;
 
 export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, store, actions) {
-	const state = store.getState();
+	const state = store.getState().present;
 	const view = state.views.find((view) => view.id === user_id);
 
 	if (String(event.deltaY).length < 5) {
@@ -57,7 +56,7 @@ export function CanvasToDOM(position, canvas, view) {
 
 let last_draw = Date.now();
 export function hover(event, canvas, store, actions, id, active) {
-	const view = store.getState().views.find((view) => view.id === id);
+	const view = store.getState().present.views.find((view) => view.id === id);
 
 	if (!view) return;
 	const position = DOMToCanvas(event, canvas, view);
@@ -90,7 +89,7 @@ export function hover(event, canvas, store, actions, id, active) {
 }
 
 export function select(down_event, canvas, id, store, actions, active) {
-	const state = store.getState();
+	const state = store.getState().present;
 	const view = state.views.find((view) => view.id === id);
 
 	let last_position = DOMToCanvas(event, canvas, view);

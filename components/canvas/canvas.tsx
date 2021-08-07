@@ -11,9 +11,11 @@ const { line_width, box_size, highlight } = Settings;
 const Canvas = ({ user_id, store, actions, ...rest }) => {
 	const canvas_ref = useRef(null);
 
-	let cursors = store.getState().cursors;
-	let elements = store.getState().elements;
-	let user_view = store.getState().views.find((view) => view.id === user_id);
+	const state = store.getState().present;
+
+	let cursors = state.cursors;
+	let elements = state.elements;
+	let user_view = state.views.find((view) => view.id === user_id);
 	let user_cursor = cursors.find((cursor) => cursor.id === user_id);
 
 	let [frames, setFrameRate] = useState(0);
@@ -92,7 +94,9 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 		});
 
 		store.subscribe(() => {
-			const state = store.getState();
+			// if (Math.random() > 0.95) console.log(JSON.stringify(store.getState()));
+			const state = store.getState().present;
+
 			user_view = state.views.find((view) => view.id === user_id);
 			user_cursor = cursors.find((cursor) => cursor.id === user_id);
 			cursors = state.cursors;

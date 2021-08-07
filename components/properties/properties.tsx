@@ -19,7 +19,7 @@ export default function Properties({ store, actions }) {
 		event.target.addEventListener('pointerup', end, { once: true });
 	}
 
-	const selected = useSelector((state: RootState) => state.elements.filter((element) => element.selected));
+	const selected = useSelector((state: RootState) => (state as any).present.elements.filter((element) => element.selected));
 
 	// console.log(selected);
 

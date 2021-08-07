@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import reducers from './reducers';
-import initial_state from './../state/initial';
+import reducers from '../reducers/reducers';
+import initial_state from '../state/initial';
 
 export const slice = createSlice({
 	name: 'counter',

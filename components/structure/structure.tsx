@@ -3,11 +3,11 @@ import Element from './element';
 import { flatten } from '../elements/elements';
 
 export default function Structure({ store, actions }) {
-	const [elements, setElements] = useState(store.getState().elements);
+	const [elements, setElements] = useState(store.getState().present.elements);
 	const [key, setKey] = useState(Math.random());
 
 	store.subscribe(() => {
-		setElements(store.getState().elements);
+		setElements(store.getState().present.elements);
 	});
 
 	const structure_ref = useRef(null);

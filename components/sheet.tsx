@@ -9,7 +9,7 @@ import getPage from '../state/dev';
 
 import Settings from './settings';
 
-import actions from '../reducers/actions';
+import actions from '../redux/slice';
 import { Provider } from 'react-redux';
 
 export default function Sheet({ store }) {

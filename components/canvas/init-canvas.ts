@@ -1,3 +1,4 @@
+import { ActionCreators } from 'redux-undo';
 import { onWheel, hover, select } from './interaction';
 
 export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active) {
@@ -50,17 +51,25 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active
 
 	document.addEventListener('keydown', (event) => {
 		if (event.metaKey || event.ctrlKey) {
-			if (shortCuts(event)) {
+			if (shortCuts(event, store)) {
 				event.preventDefault();
 			}
 		}
 	});
 }
 
-function shortCuts(event): boolean {
+function shortCuts(event, store): boolean {
 	switch (event.key) {
-		case 'c':
-			console.log('copy');
+		// case 'c':
+		// 	console.log('copy');
+		// 	return true;
+
+		case 'z':
+			if (store.getState().past.length > 1) store.dispatch(ActionCreators.undo());
+			return true;
+
+		case 'y':
+			store.dispatch(ActionCreators.redo());
 			return true;
 		case 'v':
 			console.log('paste');
@@ -68,11 +77,6 @@ function shortCuts(event): boolean {
 		case 's':
 			event.preventDefault();
 			console.log('save');
-			return true;
-
-		case 't':
-			event.preventDefault();
-			console.log('tab');
 			return true;
 	}
 	return false;
