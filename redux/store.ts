@@ -21,7 +21,7 @@ const store = createStore(
 	typeof Primus !== 'undefined'
 		? scuttlebutt({
 				primus: Primus,
-				// uri: 'http://localhost:3000',
+				uri: 'http://localhost:3000/111',
 		  })
 		: undefined
 );

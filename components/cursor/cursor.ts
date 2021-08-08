@@ -2,7 +2,7 @@ import Select from './select';
 import Stretch from './stretch';
 import Resize from './resize';
 import Rotate from './rotate';
-import None from './none';
+import Create from './create';
 
 import Settings from './../settings';
 
@@ -12,15 +12,25 @@ const Cursors = {
 	stretch: Stretch,
 	resize: Resize,
 	rotate: Rotate,
-	none: None,
+
+	rectangle: Create,
+	line: Create,
+	ellipse: Create,
 };
 
 export default class Cursor {
 	static draw(cursor, context, view) {
-		if (cursor.id === Settings.user_id) return Cursors[cursor.type].draw(cursor, context, view);
+		if (cursor.id === Settings.user_id) {
+			if (cursor.type === 'select') {
+				context.canvas.style.cursor = '';
+			} else {
+				context.canvas.style.cursor = 'none';
+				Cursors[cursor.type].draw(cursor, context, view);
+			}
+			return;
+		}
 
 		Select.draw(cursor, context, view);
-		context.canvas.style.cursor = 'none';
 		drawLabel(cursor, context, view);
 	}
 }

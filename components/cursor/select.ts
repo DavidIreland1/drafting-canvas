@@ -2,11 +2,10 @@ import Settings from './../settings';
 
 export default class Select {
 	static draw(cursor, context: CanvasRenderingContext2D, view) {
-		if (cursor.id === Settings.user_id) return (context.canvas.style.cursor = '');
-
 		context.translate(cursor.x, cursor.y);
 		context.scale(1 / view.scale, 1 / view.scale);
 		context.translate(-cursor.x, -cursor.y);
+
 		context.beginPath();
 		context.moveTo(cursor.x, cursor.y);
 		context.lineTo(cursor.x, cursor.y + 34);

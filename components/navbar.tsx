@@ -41,9 +41,7 @@ export default function Navbar({ store, actions }) {
 	const drag = (event) => {
 		const tab = event.target;
 
-		requestAnimationFrame(() => {
-			tab.classList.add('blank');
-		});
+		requestAnimationFrame(() => tab.classList.add('blank'));
 		const move = (move_event) => {
 			const hover = document.elementFromPoint(move_event.clientX, move_event.clientY);
 			if (hover === tab || hover === tab.nextSibling) return;

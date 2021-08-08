@@ -13,7 +13,7 @@ export default class Circle extends Element {
 		context.strokeStyle = color;
 		context.lineWidth = line_width;
 		context.beginPath();
-		context.arc(circle.x, circle.y, circle.radius, circle.start_angle, circle.end_angle);
+		context.arc(circle.x, circle.y, Math.abs(circle.radius), circle.start_angle, circle.end_angle);
 		context.stroke();
 	}
 

@@ -7,6 +7,7 @@ import Fill from './fill';
 
 export default function Properties({ store, actions }) {
 	const [width, setWidth] = useState('max(20vw, 200px)');
+
 	function resize(event) {
 		event.preventDefault();
 		event.target.setPointerCapture(event.pointerId);
@@ -20,8 +21,6 @@ export default function Properties({ store, actions }) {
 	}
 
 	const selected = useSelector((state: RootState) => (state as any).present.elements.filter((element) => element.selected));
-
-	// console.log(selected);
 
 	const styles = (
 		<style>{`

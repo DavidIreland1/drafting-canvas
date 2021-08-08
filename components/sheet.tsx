@@ -49,7 +49,7 @@ export default function Sheet({ store, actions }) {
 	return (
 		<div id="cols">
 			<Provider store={store}>
-				<Toolbar />
+				<Toolbar store={store} actions={actions} />
 				<Structure store={store} actions={actions} />
 				<Canvas user_id={Settings.user_id} store={store} actions={actions} />
 				<Properties store={store} actions={actions} />

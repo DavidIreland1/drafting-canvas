@@ -59,9 +59,12 @@ export function CanvasToDOM(position, canvas, view) {
 let last_draw = Date.now();
 export function hover(event, canvas, store, actions, id, active) {
 	const view = store.getState().present.views.find((view) => view.id === id);
+	const cursor = store.getState().present.cursors.find((view) => view.id === id);
 
 	if (!view) return;
 	const position = DOMToCanvas(event, canvas, view);
+
+	if (cursor.mode === 'create') return store.dispatch(actions.cursor({ id: Settings.user_id, ...position }));
 
 	const target = active.altering.length ? active.altering[0].element : undefined;
 	let action = active.altering.length ? active.altering[0].action : 'select';
@@ -85,7 +88,7 @@ export function hover(event, canvas, store, actions, id, active) {
 	// Reduce max action rate or frame rate
 	// const now = Date.now();
 	// if (now > last_draw + 1000 / 65) {
-	store.dispatch(actions.cursor({ id: Settings.user_id, ...position, rotation, type: action }));
+	store.dispatch(actions.cursor({ id: Settings.user_id, ...position, rotation, type: action, visible: true }));
 	// 	last_draw = now;
 	// }
 }
@@ -137,59 +140,59 @@ export function select(down_event, canvas, id, store, actions, active) {
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// Gets the relevant location from a mouse or single touch event
-function getEventLocation(event) {
-	if (event.touches && event.touches.length == 1) {
-		return { x: event.touches[0].clientX, y: event.touches[0].clientY };
-	} else if (event.clientX && event.clientY) {
-		return { x: event.clientX, y: event.clientY };
-	}
-}
+// // Gets the relevant location from a mouse or single touch event
+// function getEventLocation(event) {
+// 	if (event.touches && event.touches.length == 1) {
+// 		return { x: event.touches[0].clientX, y: event.touches[0].clientY };
+// 	} else if (event.clientX && event.clientY) {
+// 		return { x: event.clientX, y: event.clientY };
+// 	}
+// }
 
-let isDragging = false;
-let dragStart = { x: 0, y: 0 };
+// let isDragging = false;
+// let dragStart = { x: 0, y: 0 };
 
-export function touch(event, view) {
-	isDragging = true;
-	dragStart.x = getEventLocation(event).x / view.scale - view.x;
-	dragStart.y = getEventLocation(event).y / view.scale - view.y;
-}
+// export function touch(event, view) {
+// 	isDragging = true;
+// 	dragStart.x = getEventLocation(event).x / view.scale - view.x;
+// 	dragStart.y = getEventLocation(event).y / view.scale - view.y;
+// }
 
-export function release(event, view) {
-	isDragging = false;
-	initialPinchDistance = null;
-	// lastZoom = view.scale;
-}
+// export function release(event, view) {
+// 	isDragging = false;
+// 	initialPinchDistance = null;
+// 	// lastZoom = view.scale;
+// }
 
-export function touchMove(event, view) {
-	if (isDragging) {
-		view.x = getEventLocation(event).x / view.scale - dragStart.x;
-		view.y = getEventLocation(event).y / view.scale - dragStart.y;
-	}
-}
+// export function touchMove(event, view) {
+// 	if (isDragging) {
+// 		view.x = getEventLocation(event).x / view.scale - dragStart.x;
+// 		view.y = getEventLocation(event).y / view.scale - dragStart.y;
+// 	}
+// }
 
-export function handleTouch(event, singleTouchHandler) {
-	if (event.touches.length == 1) {
-		singleTouchHandler(event);
-	} else if (event.type == 'touchmove' && event.touches.length == 2) {
-		isDragging = false;
-		handlePinch(event);
-	}
-}
+// export function handleTouch(event, singleTouchHandler) {
+// 	if (event.touches.length == 1) {
+// 		singleTouchHandler(event);
+// 	} else if (event.type == 'touchmove' && event.touches.length == 2) {
+// 		isDragging = false;
+// 		handlePinch(event);
+// 	}
+// }
 
-let initialPinchDistance = null;
-// let lastZoom = view.scale;
+// let initialPinchDistance = null;
+// // let lastZoom = view.scale;
 
-export function handlePinch(event) {
-	let touch1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
-	let touch2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
+// export function handlePinch(event) {
+// 	let touch1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+// 	let touch2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
 
-	// This is distance squared, but no need for an expensive sqrt as it's only used in ratio
-	let currentDistance = (touch1.x - touch2.x) ** 2 + (touch1.y - touch2.y) ** 2;
+// 	// This is distance squared, but no need for an expensive sqrt as it's only used in ratio
+// 	let currentDistance = (touch1.x - touch2.x) ** 2 + (touch1.y - touch2.y) ** 2;
 
-	if (initialPinchDistance == null) {
-		initialPinchDistance = currentDistance;
-	} else {
-		// adjustZoom(null, currentDistance / initialPinchDistance);
-	}
-}
+// 	if (initialPinchDistance == null) {
+// 		initialPinchDistance = currentDistance;
+// 	} else {
+// 		// adjustZoom(null, currentDistance / initialPinchDistance);
+// 	}
+// }

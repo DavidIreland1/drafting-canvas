@@ -31,7 +31,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 	};
 
 	let redraw_auto = (context: CanvasRenderingContext2D) => {
-		if (!user_view || !user_cursor) return setTimeout(() => redraw_auto(context), 500);
+		if (!user_view || !user_cursor) return auto_draw && setTimeout(() => redraw_auto(context), 500);
 
 		requestAnimationFrame(() => {
 			context.resetTransform();
@@ -66,10 +66,13 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 			active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
 
-			[...cursors].sort((c1, c2) => (c1.id !== user_id ? -1 : 1)).forEach((cursor) => Cursor.draw(cursor, context, user_view));
+			[...cursors]
+				.filter((cursor) => cursor.visible)
+				.sort((cursor) => (cursor.id !== user_id ? -1 : 1))
+				.forEach((cursor) => Cursor.draw(cursor, context, user_view));
 
 			const now = Date.now();
-			setFrameRate(Math.round(Math.round(1000 / (now - last_frame))));
+			setFrameRate(Math.round(1000 / (now - last_frame)));
 			last_frame = now;
 
 			if (auto_draw) redraw_auto(context);
@@ -80,7 +83,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 	useEffect(() => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
-		const context: CanvasRenderingContext2D = canvas.getContext('2d', { alpha: false });
+		const context: CanvasRenderingContext2D = canvas.getContext('2d'); //, { alpha: false } makes it black but more efficient?
 
 		(window as any).canvas = canvas;
 		(window as any).context = context;
@@ -98,7 +101,8 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 			const state = store.getState().present;
 
 			user_view = state.views.find((view) => view.id === user_id);
-			user_cursor = cursors.find((cursor) => cursor.id === user_id);
+			user_cursor = state.cursors.find((cursor) => cursor.id === user_id);
+
 			cursors = state.cursors;
 			elements = state.elements;
 			redraw(context);

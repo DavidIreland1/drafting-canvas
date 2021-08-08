@@ -35,12 +35,12 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active
 	});
 
 	canvas.addEventListener('mouseout', () => {
-		store.dispatch(actions.cursor({ id: id, type: 'none' }));
+		store.dispatch(actions.cursor({ id: id, visible: false }));
 	});
 
 	canvas.addEventListener('mouseover', () => {
 		canvas.focus(); // Needed for react?
-		store.dispatch(actions.cursor({ id: id, type: 'select' }));
+		store.dispatch(actions.cursor({ id: id, visible: true }));
 	});
 
 	canvas.addEventListener('mousedown', (event) => {

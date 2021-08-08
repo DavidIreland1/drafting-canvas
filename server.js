@@ -53,7 +53,7 @@ app.prepare().then(() => {
 		console.log('> Ready on http://localhost:3000');
 	});
 
-	const { primusServer, store, dispatch, getState } = dispatcher(server);
+	// const { primusServer, store, dispatch, getState } = dispatcher(server);
 
 	// primusServer.save(__dirname + '/primus.js');
 
@@ -114,8 +114,6 @@ function load(name) {
 	}
 }
 
-
-
 function loadTest(n) {
 	return {
 		id: 'test-' + n,
@@ -125,23 +123,24 @@ function loadTest(n) {
 			{ id: '123', label: 'Davis', x: 0, y: 0, rotation: 0, type: 'none' },
 			{ id: '234', label: 'Irene', x: 100, y: 100, rotation: 0, type: 'none' },
 		],
-		elements: Array(n).fill().map((element, i, array) => {
-			const side = Math.round(Math.sqrt(array.length));
-			return {
-				id: '35674' + i,
-				type: 'circle',
-				label: 'circle',
-				selected: false,
-				hover: false,
-				x: (n / side) * (i % side),
-				y: (n / side) * Math.floor(i / side),
-				fill: [{color: 'red'}],
-				rotation: 0,
-				radius: 5,
-				start_angle: 0,
-				end_angle: 2 * Math.PI,
-			};
-		})
+		elements: Array(n)
+			.fill()
+			.map((element, i, array) => {
+				const side = Math.round(Math.sqrt(array.length));
+				return {
+					id: '35674' + i,
+					type: 'circle',
+					label: 'circle',
+					selected: false,
+					hover: false,
+					x: (n / side) * (i % side),
+					y: (n / side) * Math.floor(i / side),
+					fill: [{ color: 'red' }],
+					rotation: 0,
+					radius: 5,
+					start_angle: 0,
+					end_angle: 2 * Math.PI,
+				};
+			}),
 	};
 }
-
