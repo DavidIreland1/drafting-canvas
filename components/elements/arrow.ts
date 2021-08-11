@@ -1,47 +1,45 @@
-import Element from './element';
+import Line from './line';
 
-export default class Line extends Element {
-	static draw(line, context: CanvasRenderingContext2D, cursor) {
-		const theta = Math.atan2(line.y2 - line.y1, line.x2 - line.x1);
+export default class Arrow extends Line {
+	static create(id, position) {
+		return Object.assign(super.create(id, position), {
+			label: 'Arrow',
+			type: 'arrow',
+		});
+	}
+
+	static draw(arrow, context: CanvasRenderingContext2D, cursor) {
+		const theta = Math.atan2(arrow.y2 - arrow.y1, arrow.x2 - arrow.x1);
 		context.beginPath();
-		context.moveTo(line.x1, line.y1);
-		context.lineTo(line.x2 - line.head_length * Math.cos(theta) * Math.cos(line.head_angle), line.y2 - line.head_length * Math.sin(theta) * Math.cos(line.head_angle));
+		context.moveTo(arrow.x1, arrow.y1);
+		context.lineTo(arrow.x2 - arrow.head_length * Math.cos(theta) * Math.cos(arrow.head_angle), arrow.y2 - arrow.head_length * Math.sin(theta) * Math.cos(arrow.head_angle));
 		context.stroke();
 
-		context.moveTo(line.x2, line.y2);
-		context.lineTo(line.x2 - line.head_length * Math.cos(theta - line.head_angle), line.y2 - line.head_length * Math.sin(theta - line.head_angle));
-		context.lineTo(line.x2 - line.head_length * Math.cos(theta + line.head_angle), line.y2 - line.head_length * Math.sin(theta + line.head_angle));
+		context.moveTo(arrow.x2, arrow.y2);
+		context.lineTo(arrow.x2 - arrow.head_length * Math.cos(theta - arrow.head_angle), arrow.y2 - arrow.head_length * Math.sin(theta - arrow.head_angle));
+		context.lineTo(arrow.x2 - arrow.head_length * Math.cos(theta + arrow.head_angle), arrow.y2 - arrow.head_length * Math.sin(theta + arrow.head_angle));
 		context.fill();
 
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
 
-	static outline(line, context, color, line_width): void {
+	static outarrow(arrow, context, color, arrow_width): void {
 		context.strokeStyle = color;
-		context.lineWidth = line_width;
+		context.arrowWidth = arrow_width;
 
-		const theta = Math.atan2(line.y2 - line.y1, line.x2 - line.x1);
+		const theta = Math.atan2(arrow.y2 - arrow.y1, arrow.x2 - arrow.x1);
 		context.beginPath();
-		context.moveTo(line.x1, line.y1);
-		context.lineTo(line.x2 - line.head_length * Math.cos(theta) * Math.cos(line.head_angle), line.y2 - line.head_length * Math.sin(theta) * Math.cos(line.head_angle));
+		context.moveTo(arrow.x1, arrow.y1);
+		context.lineTo(arrow.x2 - arrow.head_length * Math.cos(theta) * Math.cos(arrow.head_angle), arrow.y2 - arrow.head_length * Math.sin(theta) * Math.cos(arrow.head_angle));
 		context.stroke();
 
-		context.moveTo(line.x2, line.y2);
-		context.lineTo(line.x2 - line.head_length * Math.cos(theta - line.head_angle), line.y2 - line.head_length * Math.sin(theta - line.head_angle));
-		context.lineTo(line.x2 - line.head_length * Math.cos(theta + line.head_angle), line.y2 - line.head_length * Math.sin(theta + line.head_angle));
+		context.moveTo(arrow.x2, arrow.y2);
+		context.lineTo(arrow.x2 - arrow.head_length * Math.cos(theta - arrow.head_angle), arrow.y2 - arrow.head_length * Math.sin(theta - arrow.head_angle));
+		context.lineTo(arrow.x2 - arrow.head_length * Math.cos(theta + arrow.head_angle), arrow.y2 - arrow.head_length * Math.sin(theta + arrow.head_angle));
 		context.fill();
 	}
 
-	static bound(line): { x: number; y: number; width: number; height: number } {
-		return {
-			x: Math.min(line.x1, line.x2),
-			y: Math.min(line.y1, line.y2),
-			width: Math.max(line.x1, line.x2),
-			height: Math.max(line.y1, line.y2),
-		};
-	}
+	static resize(arrow, position, last_position): void {}
 
-	static resize(line, position, last_position): void {}
-
-	static stretch(line, position, last_position): void {}
+	static stretch(arrow, position, last_position): void {}
 }

@@ -1,11 +1,14 @@
 import Elements from './../elements/elements';
 import Settings from '../settings';
+import { generateID } from './../../utils/utils';
 
 const { max_zoom, min_zoom, pan_sensitivity, zoom_sensitivity } = Settings;
 
 export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, store, actions) {
 	const state = store.getState().present;
 	const view = state.views.find((view) => view.id === user_id);
+
+	// console.log(event.which, event.button, event.buttons);
 
 	if (String(event.deltaY).length < 5) {
 		// Pan
@@ -96,9 +99,18 @@ export function hover(event, canvas, store, actions, id, active) {
 export function select(down_event, canvas, id, store, actions, active) {
 	const state = store.getState().present;
 	const view = state.views.find((view) => view.id === id);
+	const cursor = state.cursors.find((cursor) => cursor.id === id);
 
 	let last_position = DOMToCanvas(down_event, canvas, view);
 
+	if (cursor.mode === 'create') {
+		create(down_event, last_position, canvas, store, actions, active, view, cursor);
+	} else {
+		edit(down_event, last_position, canvas, store, actions, active, view);
+	}
+}
+
+function edit(down_event, last_position, canvas, store, actions, active, view) {
 	let action = 'move';
 	let target = active.hovering[0];
 
@@ -135,6 +147,24 @@ export function select(down_event, canvas, id, store, actions, active) {
 	window.addEventListener('mouseup', release, { once: true });
 }
 
+function create(down_event, last_position, canvas, store, actions, active, view, cursor) {
+	const id = generateID();
+
+	store.dispatch(actions.createElement({ user_id: Settings.user_id, id: id, type: cursor.type, position: last_position }));
+
+	const action = 'resize';
+	const move = (move_event) => {
+		const position = DOMToCanvas(move_event, canvas, view);
+		store.dispatch(actions[action]({ user_id: Settings.user_id, id: id, position, last_position }));
+		last_position = position;
+	};
+	window.addEventListener('mousemove', move);
+
+	const release = () => {
+		window.removeEventListener('mousemove', move);
+	};
+	window.addEventListener('mouseup', release, { once: true });
+}
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////

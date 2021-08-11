@@ -42,22 +42,23 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 			const screen = boundScreen(context, user_view);
 
-			const onScreen = elements.filter((element) => Elements[element.type].onScreen(element, screen));
+			const on_screen = elements.filter((element) => element.visible).filter((element) => Elements[element.type].onScreen(element, screen));
 
 			const line = line_width / user_view.scale;
 			const box = box_size / user_view.scale;
 			const cursor = transformPoint(user_cursor, context.getTransform());
 
-			active.selected = flatten(onScreen).filter((element) => element.selected);
+			active.selected = flatten(on_screen).filter((element) => element.selected);
 
 			active.hovering = active.selected
 				.filter((element) => Elements[element.type].insideBound(element, context, cursor))
 				.concat(
-					[...onScreen]
+					[...on_screen]
 						.reverse()
 						.filter((element) => Elements[element.type].draw(element, context, cursor))
 						.reverse()
-				);
+				)
+				.filter((element) => !element.locked);
 
 			active.hovering = active.hovering.sort((element1) => (element1.selected ? -1 : 1));
 
@@ -66,7 +67,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 			active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
 
-			[...cursors]
+			cursors
 				.filter((cursor) => cursor.visible)
 				.sort((cursor) => (cursor.id !== user_id ? -1 : 1))
 				.forEach((cursor) => Cursor.draw(cursor, context, user_view));
@@ -83,7 +84,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 	useEffect(() => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
-		const context: CanvasRenderingContext2D = canvas.getContext('2d'); //, { alpha: false } makes it black but more efficient?
+		const context: CanvasRenderingContext2D = canvas.getContext('2d'); //, { alpha: false } makes it flash black but is more efficient?
 
 		(window as any).canvas = canvas;
 		(window as any).context = context;
@@ -102,6 +103,8 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 			user_view = state.views.find((view) => view.id === user_id);
 			user_cursor = state.cursors.find((cursor) => cursor.id === user_id);
+
+			if (user_view && user_view.centered === false) store.dispatch(actions.centerView({ id: user_id, x: canvas.width / 2, y: canvas.height / 2 }));
 
 			cursors = state.cursors;
 			elements = state.elements;
@@ -150,7 +153,7 @@ export function resizeCanvas(canvas): boolean {
 	const { width, height } = canvas.getBoundingClientRect();
 
 	if (canvas.width !== width || canvas.height !== height) {
-		// (window as any).devicePixelRatio = 1;
+		(window as any).devicePixelRatio = 2; // This should not be needed
 		const ratio = window.devicePixelRatio;
 		canvas.width = width * ratio;
 		canvas.height = height * ratio;

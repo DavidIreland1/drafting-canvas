@@ -65,7 +65,7 @@ export default function Navbar({ store, actions }) {
 				}
 				svg {
 					width: 100%;
-					height: calc(var(--nav-height) - 12px)
+					height: calc(var(--nav-height) - 14px)
 					cursor: pointer;
 					fill: none;
 					stroke: var(--text-color);

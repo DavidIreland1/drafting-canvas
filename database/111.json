@@ -14,22 +14,28 @@
 			"y": 100,
 			"rotation": 0,
 			"radius": 60,
+			"fill": [{ "color": "green" }],
+			"stroke": [{ "width": 2, "color": "red" }],
 			"start_angle": 0,
 			"end_angle": 6.283185307179586,
-			"fill": [{ "color": "green" }]
+			"visible": true,
+			"locked": false
 		},
 		{
 			"id": "3567422",
 			"label": "Rectangle",
 			"type": "rectangle",
-			"selected": false,
+			"selected": true,
 			"hover": false,
 			"x": 300,
 			"y": 300,
 			"rotation": 0,
 			"fill": [{ "color": "blue" }],
+			"stroke": [{ "width": 2, "color": "green" }],
 			"width": 60,
-			"height": 120
+			"height": 120,
+			"visible": true,
+			"locked": false
 		},
 		{
 			"id": "3457",
@@ -38,6 +44,8 @@
 			"selected": false,
 			"hover": false,
 			"rotation": 0,
+			"visible": true,
+			"locked": false,
 			"elements": [
 				{
 					"id": "456546",
@@ -48,11 +56,14 @@
 					"x": 100,
 					"y": 100,
 					"fill": [{ "color": "orange" }],
+					"stroke": [{ "width": 2, "color": "blue" }],
 					"radius_x": 60,
 					"radius_y": 80,
 					"rotation": 0,
 					"start_angle": 0,
-					"end_angle": 6.283185307179586
+					"end_angle": 6.283185307179586,
+					"visible": true,
+					"locked": false
 				},
 				{
 					"id": "2342342",
@@ -63,11 +74,14 @@
 					"x": 200,
 					"y": 200,
 					"fill": [{ "color": "red" }],
+					"stroke": [{ "width": 2, "color": "orange" }],
 					"radius_x": 60,
 					"radius_y": 80,
 					"rotation": 0,
 					"start_angle": 0,
-					"end_angle": 6.283185307179586
+					"end_angle": 6.283185307179586,
+					"visible": true,
+					"locked": false
 				},
 				{
 					"id": "34543534",
@@ -75,6 +89,8 @@
 					"type": "group",
 					"selected": false,
 					"hover": false,
+					"visible": true,
+					"locked": false,
 					"rotation": 0,
 					"elements": [
 						{
@@ -86,11 +102,14 @@
 							"x": 350,
 							"y": 250,
 							"fill": [{ "color": "yellow" }],
+							"stroke": [{ "width": 2, "color": "red" }],
 							"radius_x": 60,
 							"radius_y": 80,
 							"rotation": 0,
 							"start_angle": 0,
-							"end_angle": 6.283185307179586
+							"end_angle": 6.283185307179586,
+							"visible": true,
+							"locked": false
 						},
 						{
 							"id": "634523",
@@ -101,11 +120,14 @@
 							"x": 350,
 							"y": 350,
 							"fill": [{ "color": "grey" }],
+							"stroke": [{ "width": 2, "color": "yellow" }],
 							"radius_x": 60,
 							"radius_y": 80,
 							"rotation": 0,
 							"start_angle": 0,
-							"end_angle": 6.283185307179586
+							"end_angle": 6.283185307179586,
+							"visible": true,
+							"locked": false
 						}
 					]
 				}
@@ -120,11 +142,29 @@
 			"x": 1500,
 			"y": 1500,
 			"fill": [{ "color": "black" }],
+			"stroke": [{ "width": 2, "color": "grey" }],
 			"radius_x": 60,
 			"radius_y": 80,
 			"rotation": 0,
 			"start_angle": 0,
-			"end_angle": 6.283185307179586
+			"end_angle": 6.283185307179586,
+			"visible": true,
+			"locked": false
+		},
+		{
+			"id": "6573567",
+			"label": "Line",
+			"type": "line",
+			"selected": false,
+			"hover": false,
+			"x1": 600,
+			"y1": 600,
+			"x2": 800,
+			"y2": 800,
+			"fill": [],
+			"stroke": [{ "width": 9, "color": "red" }],
+			"visible": true,
+			"locked": false
 		},
 		{
 			"id": "4678",
@@ -135,11 +175,14 @@
 			"x": 100,
 			"y": 1500,
 			"fill": [{ "color": "pink" }],
+			"stroke": [{ "width": 2, "color": "black" }],
 			"radius_x": 60,
 			"radius_y": 80,
 			"rotation": 0,
 			"start_angle": 0,
-			"end_angle": 6.283185307179586
+			"end_angle": 6.283185307179586,
+			"visible": true,
+			"locked": false
 		},
 		{
 			"id": "3567",
@@ -150,11 +193,14 @@
 			"x": 1500,
 			"y": 100,
 			"fill": [{ "color": "brown" }],
+			"stroke": [{ "width": 2, "color": "pink" }],
 			"radius_x": 60,
 			"radius_y": 80,
 			"rotation": 0,
 			"start_angle": 0,
-			"end_angle": 6.283185307179586
+			"end_angle": 6.283185307179586,
+			"visible": true,
+			"locked": false
 		},
 		{
 			"id": "8764",
@@ -165,11 +211,14 @@
 			"x": 800,
 			"y": 800,
 			"fill": [{ "color": "purple" }],
+			"stroke": [{ "width": 2, "color": "brown" }],
 			"radius_x": 60,
 			"radius_y": 120,
 			"rotation": 0,
 			"start_angle": 0,
-			"end_angle": 6.283185307179586
+			"end_angle": 6.283185307179586,
+			"visible": true,
+			"locked": false
 		}
 	]
 }

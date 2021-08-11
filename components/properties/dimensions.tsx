@@ -1,3 +1,5 @@
+import Input from './input';
+
 export default function Dimensions({ selected, store, actions, width }) {
 	const updateProperty = (event) => {
 		event.target.style.width = `max(calc(${width} / 6), ${Math.max(event.target.value.length + 2, 5)}ch)`;
@@ -30,30 +32,18 @@ export default function Dimensions({ selected, store, actions, width }) {
 		<div id="property-container">
 			<h4 className="property-heading">DIMENSIONS</h4>
 			<div id="properties">
-				{selected[0].x !== undefined ? (
-					<div id="x" className="dimension">
-						<label onPointerDown={dragProperty}>X</label>
-						<input type="number" value={selected[0].x} onChange={updateProperty} />
-					</div>
-				) : null}
-				{selected[0].y !== undefined ? (
-					<div id="y" className="dimension">
-						<label onPointerDown={dragProperty}>Y</label>
-						<input type="number" value={selected[0].y} onChange={updateProperty} />
-					</div>
-				) : null}
-				{selected[0].width !== undefined ? (
-					<div id="width" className="dimension">
-						<label onPointerDown={dragProperty}>W</label>
-						<input type="number" value={selected[0].width} onChange={updateProperty} />
-					</div>
-				) : null}
-				{selected[0].height !== undefined ? (
-					<div id="height" className="dimension">
-						<label onPointerDown={dragProperty}>H</label>
-						<input type="number" value={selected[0].height} onChange={updateProperty} />
-					</div>
-				) : null}
+				<Input id="x" selected={selected} store={store} actions={actions} width={width} />
+				<Input id="y" selected={selected} store={store} actions={actions} width={width} />
+
+				<Input id="x1" selected={selected} store={store} actions={actions} width={width} />
+				<Input id="y1" selected={selected} store={store} actions={actions} width={width} />
+
+				<Input id="x2" selected={selected} store={store} actions={actions} width={width} />
+				<Input id="y2" selected={selected} store={store} actions={actions} width={width} />
+
+				<Input id="width" selected={selected} store={store} actions={actions} width={width} />
+				<Input id="height" selected={selected} store={store} actions={actions} width={width} />
+
 				{selected[0].rotation !== undefined ? (
 					<div id="rotation" className="dimension">
 						<label onPointerDown={dragProperty} style={{ fontSize: '30px', lineHeight: '12px', padding: '0 5px 0 7px' }}>

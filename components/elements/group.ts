@@ -2,13 +2,21 @@ import Element from './element';
 import Elements from './elements';
 
 export default class Group extends Element {
+	static create(id, position) {
+		return Object.assign(super.create(id, position), {});
+	}
+
 	static draw(group, context, cursor) {
 		const center = this.center(group);
 		context.translate(center.x, center.y);
 		context.rotate(group.rotation);
 		context.translate(-center.x, -center.y);
 
-		const hovering = [...group.elements].reverse().filter((element) => Elements[element.type].draw(element, context, cursor));
+		const hovering = group.elements
+			.filter((element) => element.visible)
+			.reverse()
+			.filter((element) => Elements[element.type].draw(element, context, cursor))
+			.filter((element) => !element.locked);
 
 		context.translate(center.x, center.y);
 		context.rotate(-group.rotation);
@@ -60,6 +68,14 @@ export default class Group extends Element {
 
 	static setFill(group, colors) {
 		group.elements.map((element) => Elements[element.type].setFill(element, colors));
+	}
+
+	static getStroke(group) {
+		return group.elements.map((element) => Elements[element.type].getStroke(element)).flat();
+	}
+
+	static setStroke(group, colors) {
+		group.elements.map((element) => Elements[element.type].setStroke(element, colors));
 	}
 
 	static move(group, position, last_position) {

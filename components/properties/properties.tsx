@@ -4,14 +4,15 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import Dimensions from './dimensions';
 import Fill from './fill';
+import Stroke from './stroke';
 
-export default function Properties({ store, actions }) {
+export default function Properties({ store, actions, setPicker }) {
 	const [width, setWidth] = useState('max(20vw, 200px)');
 
 	function resize(event) {
 		event.preventDefault();
 		event.target.setPointerCapture(event.pointerId);
-		const move = (move_event) => setWidth(Math.max(window.innerWidth - move_event.clientX, 0) + 'px');
+		const move = (move_event) => setWidth(Math.max(window.innerWidth - move_event.clientX, 3) + 'px');
 		event.target.addEventListener('pointermove', move);
 		const end = () => {
 			event.target.releasePointerCapture(event.pointerId);
@@ -42,11 +43,42 @@ export default function Properties({ store, actions }) {
 				<div>
 					<Dimensions selected={selected} store={store} actions={actions} width={width} />
 					<div className="divider" />
-					<Fill selected={selected} store={store} actions={actions} width={width} />
+					<Fill selected={selected} store={store} actions={actions} width={width} setPicker={setPicker} />
+					<div className="divider" />
+					<Stroke selected={selected} store={store} actions={actions} width={width} setPicker={setPicker} />
 				</div>
 			) : null}
 
 			{styles}
+
+			<style>{`
+				.property-color {
+					width: 1.5em;
+					height: 1.5em;
+					margin: auto;
+				}
+
+				.property-row {
+					padding: 0 0 0 20px;
+					display: grid;
+					grid-template-columns: max-content 1fr max-content;
+					gap: 10px;
+				}
+				.property-minus {
+					width: 1em;
+					height: 1em;
+					margin: auto;
+					padding: 6px;
+					border-radius: 6px;
+				}
+				.property-minus  svg,
+					width: 1em;
+					height: 1em;
+				}
+				.property-minus:hover {
+					background: var(--hover);
+				}
+			`}</style>
 
 			<style jsx>{`
 				#container {

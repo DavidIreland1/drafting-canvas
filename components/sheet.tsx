@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import Canvas from './canvas/canvas';
@@ -14,6 +14,8 @@ import { Provider } from 'react-redux';
 export default function Sheet({ store, actions }) {
 	const router = useRouter();
 
+	const [picker, setPicker] = useState(null);
+
 	useEffect(() => {
 		const { page } = router.query;
 		if (!page) return;
@@ -27,17 +29,14 @@ export default function Sheet({ store, actions }) {
 
 		window.addEventListener('beforeunload', async () => {
 			store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
-
-			console.log('gff');
-			await new Promise((res) => setTimeout(res, 3000));
-			console.log('bye');
 		});
 	}, [router.query.page]);
 
 	useEffect(() => {
 		window.addEventListener('keydown', (event) => {
 			if (event.metaKey && event.key === 'b') {
-				store.dispatch(actions.overwrite({ state: getPage() }));
+				window.location.reload();
+				// store.dispatch(actions.overwrite({ state: getPage() }));
 			}
 		});
 	}, []);
@@ -49,10 +48,11 @@ export default function Sheet({ store, actions }) {
 	return (
 		<div id="cols">
 			<Provider store={store}>
+				{picker}
 				<Toolbar store={store} actions={actions} />
 				<Structure store={store} actions={actions} />
 				<Canvas user_id={Settings.user_id} store={store} actions={actions} />
-				<Properties store={store} actions={actions} />
+				<Properties store={store} actions={actions} setPicker={setPicker} />
 			</Provider>
 
 			<style jsx>{`

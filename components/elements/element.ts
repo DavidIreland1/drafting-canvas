@@ -1,9 +1,20 @@
 // import Defaults from './../../defaults';
 // const { line, box_size, highlight_color } = Defaults;
-
 export default class Element {
+	static create(id, position): Object {
+		return {
+			id: id,
+			selected: true,
+			hover: false,
+			fill: [{ color: 'grey' }],
+			stroke: [],
+			visible: true,
+			locked: false,
+		};
+	}
+
 	static draw(element, context, cursor): boolean {
-		return;
+		return false;
 	}
 
 	static fill(element, context) {
@@ -14,9 +25,10 @@ export default class Element {
 	}
 
 	static stroke(element, context) {
-		element.fill.forEach((fill) => {
-			context.fillStyle = fill.color;
-			context.fill();
+		element.stroke.forEach((stroke) => {
+			context.lineWidth = stroke.width;
+			context.strokeStyle = stroke.color;
+			context.stroke();
 		});
 	}
 
@@ -152,6 +164,16 @@ export default class Element {
 		});
 	}
 
+	static getStroke(element) {
+		return element.stroke;
+	}
+
+	static setStroke(element, colors) {
+		element.stroke.forEach((stroke) => {
+			if (stroke.color === colors.from) stroke.color = stroke.to;
+		});
+	}
+
 	static positiveBound(element): { x: number; y: number; width: number; height: number } {
 		const bounds = this.bound(element);
 		return {
@@ -163,11 +185,8 @@ export default class Element {
 	}
 
 	static move(element, position, last_position) {
-		element.x += position.x - last_position.x;
-		element.y += position.y - last_position.y;
-
-		// element.x = Math.round(element.x * 100) / 100;
-		// element.y = Math.round(element.y * 100) / 100;
+		element.x = Math.round(element.x + position.x - last_position.x);
+		element.y = Math.round(element.y + position.y - last_position.y);
 	}
 
 	static rotatePoint(position, center, rotation) {
@@ -177,8 +196,11 @@ export default class Element {
 		};
 	}
 
-	static rotate(element, theta) {
-		element.rotation += theta;
+	static rotate(element, position, last_position) {
+		const center = this.center(element);
+		const rotation = Math.atan2(center.y - position.y, center.x - position.x) - Math.atan2(center.y - last_position.y, center.x - last_position.x);
+		element.rotation += rotation;
+		return rotation;
 	}
 
 	static boxes(id, bounds, box_size) {

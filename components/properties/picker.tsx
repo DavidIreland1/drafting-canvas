@@ -1,8 +1,8 @@
-export default function Picker({ store, actions, from, event, remove }) {
+export default function Picker({ store, actions, from, event, setPicker }) {
 	function setColor(event) {
 		if (!event.target.classList.contains('color')) return;
 		store.dispatch(actions.setColor({ from: from, to: event.target.style.background }));
-		remove();
+		setPicker(null);
 	}
 
 	return (
@@ -15,8 +15,10 @@ export default function Picker({ store, actions, from, event, remove }) {
 			<style jsx>{`
 				#container {
 					position: absolute;
-					top: ${event.clientX};
-					left: ${event.clientY};
+					z-index: 5;
+
+					top: ${event.clientY}px;
+					left: ${event.clientX}px;
 				}
 
 				.color {

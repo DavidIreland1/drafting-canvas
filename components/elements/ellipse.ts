@@ -1,6 +1,20 @@
 import Element from './element';
 
 export default class Ellipse extends Element {
+	static create(id, position) {
+		return Object.assign(super.create(id, position), {
+			label: 'Ellipse',
+			type: 'ellipse',
+			x: position.x,
+			y: position.y,
+			radius_x: 0,
+			radius_y: 0,
+			rotation: 0,
+			start_angle: 0,
+			end_angle: 6.283185307179586,
+		});
+	}
+
 	static draw(ellipse, context: CanvasRenderingContext2D, cursor) {
 		context.beginPath();
 		context.ellipse(ellipse.x, ellipse.y, Math.abs(ellipse.radius_x), Math.abs(ellipse.radius_y), ellipse.rotation, ellipse.start_angle, ellipse.end_angle, ellipse.counter_clockwise);
@@ -49,9 +63,9 @@ export default class Ellipse extends Element {
 		const new_oposite = this.rotatePoint(oposite, new_center, -ellipse.rotation);
 		const new_poistion = this.rotatePoint(position, new_center, -ellipse.rotation);
 
-		ellipse.x = new_center.x;
-		ellipse.y = new_center.y;
-		ellipse.radius_x = (new_poistion.x - new_oposite.x) / 2;
-		ellipse.radius_y = (new_poistion.y - new_oposite.y) / 2;
+		ellipse.x = Math.round(new_center.x);
+		ellipse.y = Math.round(new_center.y);
+		ellipse.radius_x = Math.round((new_poistion.x - new_oposite.x) / 2);
+		ellipse.radius_y = Math.round((new_poistion.y - new_oposite.y) / 2);
 	}
 }

@@ -2,12 +2,16 @@ import Circle from './circle';
 import Ellipse from './ellipse';
 import Group from './group';
 import Rectangle from './rectangle';
+import Line from './line';
+import Arrow from './arrow';
 
 export default {
 	circle: Circle,
 	ellipse: Ellipse,
 	group: Group,
 	rectangle: Rectangle,
+	line: Line,
+	arrow: Arrow,
 };
 
 export function flatten(elements) {

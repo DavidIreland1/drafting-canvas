@@ -19,7 +19,7 @@ export default function Structure({ store, actions }) {
 		event.target.setPointerCapture(event.pointerId);
 		const structure = structure_ref.current;
 		const offset = structure.parentElement.getBoundingClientRect().left;
-		const move = (move_event) => setWidth(Math.max(move_event.clientX - offset, 0) + 'px');
+		const move = (move_event) => setWidth(Math.max(move_event.clientX - offset, 3) + 'px');
 		event.target.addEventListener('pointermove', move);
 		const end = () => {
 			event.target.releasePointerCapture(event.pointerId);
@@ -30,12 +30,10 @@ export default function Structure({ store, actions }) {
 
 	const restructure = () => {
 		const structure = structure_ref.current;
-		console.log('hella');
 
 		const new_structure = [];
 		recurse(structure, new_structure, clone(flatten(elements)));
 
-		// console.log(new_structure);
 		setKey(Math.random());
 		store.dispatch(actions.overwrite({ state: { elements: new_structure } }));
 	};
@@ -43,7 +41,6 @@ export default function Structure({ store, actions }) {
 	const recurse = (dom_element, structure, elements) => {
 		Array.from(dom_element.children).forEach((child: HTMLElement) => {
 			const id = child.getAttribute('element-id');
-			// console.log(child);
 			const element = elements.find((element) => element.id === id);
 
 			if (element.type === 'group') element.elements = [];
@@ -75,6 +72,7 @@ export default function Structure({ store, actions }) {
 					display: grid;
 					height: 100%;
 					overflow-y: auto;
+					overflow-x: hidden;
 					left: var(--nav-height);
 					border-left: 1px solid var(--selected);
 				}

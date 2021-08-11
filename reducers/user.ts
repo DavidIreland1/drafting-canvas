@@ -1,8 +1,15 @@
 export default {
 	addUser: (state, props) => {
 		const { user_id, label, color } = props.payload;
-		state.views.push({ id: user_id, label: label, x: 0, y: 0, scale: 1 });
+		state.views.push({ id: user_id, label: label, x: 1000, y: 1000, scale: 1 });
 		state.cursors.push({ id: user_id, label: label, color: color, x: 0, y: 0, rotation: 0, type: 'select', mode: 'edit', visible: false });
+	},
+	centerView: (state, props) => {
+		const { id, x, y } = props.payload;
+		const view = state.views.find((view) => id === view.id);
+		view.x = x;
+		view.y = y;
+		view.centered = true;
 	},
 	removeUser: (state, props) => {
 		const { user_id } = props.payload;
@@ -27,6 +34,7 @@ export default {
 		// if (y) cursor.y = y;
 		// if (rotation) cursor.rotation = rotation;
 		// if (type) cursor.type = type;
+		// if (mode) cursor.mode = mode;
 		// if (visible) cursor.visible = visible;
 
 		Object.entries(props.payload).forEach(([key, value]) => {

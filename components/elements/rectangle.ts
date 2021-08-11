@@ -1,6 +1,18 @@
 import Element from './element';
 
 export default class Rectangle extends Element {
+	static create(id, position) {
+		return Object.assign(super.create(id, position), {
+			x: position.x,
+			y: position.y,
+			label: 'Rectangle',
+			type: 'rectangle',
+			rotation: 0,
+			width: 0,
+			height: 0,
+		});
+	}
+
 	static draw(rectangle, context: CanvasRenderingContext2D, cursor) {
 		const center = this.center(rectangle);
 
@@ -57,7 +69,9 @@ export default class Rectangle extends Element {
 		const new_oposite = this.rotatePoint(oposite, new_center, -rectangle.rotation);
 		const new_poistion = this.rotatePoint(position, new_center, -rectangle.rotation);
 
+		// rectangle.x = Math.round(new_oposite.x);
 		rectangle.x = new_oposite.x;
+		// rectangle.y = Math.round(new_oposite.y);
 		rectangle.y = new_oposite.y;
 		rectangle.width = new_poistion.x - new_oposite.x;
 		rectangle.height = new_poistion.y - new_oposite.y;

@@ -136,10 +136,12 @@ function loadTest(n) {
 					x: (n / side) * (i % side),
 					y: (n / side) * Math.floor(i / side),
 					fill: [{ color: 'red' }],
+					stroke: [{ width: 2, color: 'green' }],
 					rotation: 0,
 					radius: 5,
 					start_angle: 0,
 					end_angle: 2 * Math.PI,
+					visible: true,
 				};
 			}),
 	};

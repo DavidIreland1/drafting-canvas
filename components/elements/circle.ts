@@ -1,6 +1,19 @@
 import Element from './element';
 
 export default class Circle extends Element {
+	static create(id, position) {
+		return Object.assign(super.create(id, position), {
+			label: 'Circle',
+			type: 'circle',
+			x: position.x,
+			y: position.y,
+			radius: 0,
+			start_angle: 0,
+			end_angle: 6.283185307179586,
+			counter_clockwise: true,
+		});
+	}
+
 	static draw(circle, context, cursor) {
 		context.beginPath();
 		context.arc(circle.x, circle.y, Math.abs(circle.radius), circle.start_angle, circle.end_angle, circle.counter_clockwise);
@@ -42,8 +55,8 @@ export default class Circle extends Element {
 		const new_oposite = this.rotatePoint(oposite, new_center, -ellipse.rotation);
 		const new_poistion = this.rotatePoint(position, new_center, -ellipse.rotation);
 
-		ellipse.x = new_center.x;
-		ellipse.y = new_center.y;
-		ellipse.radius = Math.max(new_poistion.x - new_oposite.x, new_poistion.y - new_oposite.y) / 2;
+		ellipse.x = Math.round(new_center.x);
+		ellipse.y = Math.round(new_center.y);
+		ellipse.radius = Math.round(Math.max(new_poistion.x - new_oposite.x, new_poistion.y - new_oposite.y) / 2);
 	}
 }

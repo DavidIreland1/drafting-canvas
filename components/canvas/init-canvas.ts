@@ -1,5 +1,5 @@
-import { ActionCreators } from 'redux-undo';
 import { onWheel, hover, select } from './interaction';
+import { shortCuts } from './short-cuts';
 
 export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active) {
 	canvas.addEventListener('wheel', (event: WheelEvent) => {
@@ -18,12 +18,12 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active
 	canvas.addEventListener('dblclick', () => {
 		if (active.hovering.length) return;
 
-		const view = store.getState().views.find((view) => view.id === id);
+		const view = store.getState().present.views.find((view) => view.id === id);
 		store.dispatch(
 			actions.view({
 				id: id,
-				delta_x: -view.x,
-				delta_y: -view.y,
+				delta_x: canvas.width / 2 - view.x,
+				delta_y: canvas.height / 2 - view.y,
 				delta_scale: 1 - view.scale,
 			})
 		);
@@ -51,33 +51,9 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active
 
 	document.addEventListener('keydown', (event) => {
 		if (event.metaKey || event.ctrlKey) {
-			if (shortCuts(event, store)) {
+			if (shortCuts(event, store, actions)) {
 				event.preventDefault();
 			}
 		}
 	});
-}
-
-function shortCuts(event, store): boolean {
-	switch (event.key) {
-		// case 'c':
-		// 	console.log('copy');
-		// 	return true;
-
-		case 'z':
-			if (store.getState().past.length > 1) store.dispatch(ActionCreators.undo());
-			return true;
-
-		case 'y':
-			store.dispatch(ActionCreators.redo());
-			return true;
-		case 'v':
-			console.log('paste');
-			return true;
-		case 's':
-			event.preventDefault();
-			console.log('save');
-			return true;
-	}
-	return false;
 }
