@@ -88,6 +88,9 @@ export function hover(event, canvas, store, actions, id, active) {
 	}
 
 	if (event.buttons) action = undefined;
+
+	if (active.hovering.length) store.dispatch(actions.hoverOnly({ id: active.hovering[0].id }));
+
 	// Reduce max action rate or frame rate
 	// const now = Date.now();
 	// if (now > last_draw + 1000 / 65) {

@@ -63,7 +63,10 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 			active.hovering = active.hovering.sort((element1) => (element1.selected ? -1 : 1));
 
 			// Outline hovering
-			active.hovering.slice(0, 1).forEach((element) => (element.selected ? undefined : Elements[element.type].outline(element, context, highlight, line * 2)));
+			flatten(on_screen)
+				.filter((element) => element.hover && !element.selected)
+				.forEach((element) => Elements[element.type].outline(element, context, highlight, line * 2));
+			// active.hovering.slice(0, 1).forEach((element) => (element.selected ? undefined : Elements[element.type].outline(element, context, highlight, line * 2)));
 
 			active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
 
