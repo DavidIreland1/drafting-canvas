@@ -103,7 +103,7 @@ export default function Element({ store, actions, element, indentation, restruct
 				#label {
 					display: grid;
 					grid-template-columns: auto 18px 18px;
-					grid-gap: 10px;
+					grid-gap: 5px;
 					padding: 6px 8px 6px 0;
 					box-sizing: border-box;
 				}

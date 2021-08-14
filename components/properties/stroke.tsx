@@ -12,7 +12,7 @@ export default function Stroke({ selected, store, actions, width, setPicker }) {
 	}
 
 	function selectColor(event, color) {
-		setPicker(<Picker store={store} actions={actions} from={color} event={event} setPicker={setPicker} />);
+		setPicker(<Picker store={store} actions={actions} from_color={color} event={event} setPicker={setPicker} />);
 	}
 
 	function toStroke(stroke, i) {

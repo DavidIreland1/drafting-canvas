@@ -10,7 +10,7 @@ export default class Line extends Element {
 			label: 'Line',
 			type: 'line',
 			fill: [],
-			stroke: [{ width: 10, color: 'grey' }],
+			stroke: [{ id: id + '564', width: 10, color: 'grey' }],
 		});
 	}
 

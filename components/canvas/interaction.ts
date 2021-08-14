@@ -137,7 +137,7 @@ function edit(down_event, last_position, canvas, store, actions, active, view) {
 		store.dispatch(actions[action]({ user_id: Settings.user_id, id: target.id, position, last_position }));
 		last_position = position;
 	};
-	window.addEventListener('mousemove', move);
+	down_event.target.addEventListener('pointermove', move);
 
 	const release = (up_event) => {
 		if (down_event.clientX === up_event.clientX && down_event.clientY === up_event.clientY) {
@@ -145,9 +145,9 @@ function edit(down_event, last_position, canvas, store, actions, active, view) {
 				store.dispatch(actions.unselect({ id: target.id }));
 			}
 		}
-		window.removeEventListener('mousemove', move);
+		down_event.target.removeEventListener('pointermove', move);
 	};
-	window.addEventListener('mouseup', release, { once: true });
+	down_event.target.addEventListener('pointerup', release, { once: true });
 }
 
 function create(down_event, last_position, canvas, store, actions, active, view, cursor) {
@@ -161,19 +161,19 @@ function create(down_event, last_position, canvas, store, actions, active, view,
 		store.dispatch(actions[action]({ user_id: Settings.user_id, id: id, position, last_position }));
 		last_position = position;
 	};
-	window.addEventListener('mousemove', move);
+	window.addEventListener('pointermove', move);
 
 	const release = () => {
-		window.removeEventListener('mousemove', move);
+		window.removeEventListener('pointermove', move);
 	};
-	window.addEventListener('mouseup', release, { once: true });
+	window.addEventListener('pointerup', release, { once: true });
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// // Gets the relevant location from a mouse or single touch event
+// // Gets the relevant location from a pointer or single touch event
 // function getEventLocation(event) {
 // 	if (event.touches && event.touches.length == 1) {
 // 		return { x: event.touches[0].clientX, y: event.touches[0].clientY };

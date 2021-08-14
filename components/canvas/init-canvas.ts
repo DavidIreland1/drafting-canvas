@@ -19,6 +19,7 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active
 		if (active.hovering.length) return;
 
 		const view = store.getState().present.views.find((view) => view.id === id);
+
 		store.dispatch(
 			actions.view({
 				id: id,
@@ -30,22 +31,23 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active
 		// Add cursor movement
 	});
 
-	canvas.addEventListener('mousemove', (event) => {
+	canvas.addEventListener('pointermove', (event) => {
 		hover(event, canvas, store, actions, id, active);
 	});
 
-	canvas.addEventListener('mouseout', () => {
+	canvas.addEventListener('pointerout', () => {
 		store.dispatch(actions.cursor({ id: id, visible: false }));
 	});
 
-	canvas.addEventListener('mouseover', () => {
+	canvas.addEventListener('pointerover', () => {
 		canvas.focus(); // Needed for react?
 		store.dispatch(actions.cursor({ id: id, visible: true }));
 	});
 
-	canvas.addEventListener('mousedown', (event) => {
+	canvas.addEventListener('pointerdown', (event) => {
 		if (event.button !== 0) return;
 		event.preventDefault();
+		(event.target as any).setPointerCapture(event.pointerId);
 		select(event, canvas, id, store, actions, active);
 	});
 

@@ -6,7 +6,7 @@ export default class Element {
 			id: id,
 			selected: true,
 			hover: false,
-			fill: [{ color: 'grey' }],
+			fill: [{ id: id + '2123', color: 'grey' }],
 			stroke: [],
 			visible: true,
 			locked: false,

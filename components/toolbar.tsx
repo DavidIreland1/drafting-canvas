@@ -49,33 +49,27 @@ export default function Navbar({ store, actions }) {
 					background: #212123;
 				}
 				#bar {
-					height: 100%;
 					width: var(--nav-height);
 					color: var(--text-color);
-					padding: 6px;
+					padding: 5px;
 					box-sizing: border-box;
 					display: grid;
 					grid-gap: 10px;
 					height: fit-content;
 				}
-				img,
-				svg {
-					height: var(--nav-height);
-					width: var(--nav-height);
-				}
 				svg {
 					width: 100%;
-					height: calc(var(--nav-height) - 14px)
 					cursor: pointer;
 					fill: none;
 					stroke: var(--text-color);
 					padding: 2px;
+					box-sizing: border-box;
 					stroke-width: 5;
 					margin: auto;
 					border-radius: 4px;
 				}
 				svg.selected {
-					fill:  var(--text-color);
+					fill: var(--text-color);
 					background: var(--hover);
 				}
 				svg:hover {
