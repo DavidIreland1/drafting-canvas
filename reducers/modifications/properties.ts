@@ -7,6 +7,11 @@ export default {
 			element.fill.push(props.payload);
 		});
 	},
+	addStroke: (state, props) => {
+		selected(state.elements).forEach((element) => {
+			element.stroke.push(props.payload);
+		});
+	},
 	setColor: (state, props) => {
 		selected(state.elements).forEach((element) => {
 			Elements[element.type].setFill(element, props.payload);

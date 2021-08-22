@@ -17,10 +17,11 @@ export default class Ellipse extends Element {
 
 	static draw(ellipse, context: CanvasRenderingContext2D, cursor) {
 		context.beginPath();
-		context.ellipse(ellipse.x, ellipse.y, Math.abs(ellipse.radius_x), Math.abs(ellipse.radius_y), ellipse.rotation, ellipse.start_angle, ellipse.end_angle, ellipse.counter_clockwise);
-		this.fill(ellipse, context);
-		this.stroke(ellipse, context);
-		return context.isPointInPath(cursor.x, cursor.y);
+		const path = new Path2D();
+		path.ellipse(ellipse.x, ellipse.y, Math.abs(ellipse.radius_x), Math.abs(ellipse.radius_y), ellipse.rotation, ellipse.start_angle, ellipse.end_angle, ellipse.counter_clockwise);
+		this.fill(ellipse, context, path);
+		this.stroke(ellipse, context, path);
+		return context.isPointInPath(path, cursor.x, cursor.y);
 	}
 
 	static outline(ellipse, context, color, line_width): void {
@@ -63,9 +64,9 @@ export default class Ellipse extends Element {
 		const new_oposite = this.rotatePoint(oposite, new_center, -ellipse.rotation);
 		const new_poistion = this.rotatePoint(position, new_center, -ellipse.rotation);
 
-		ellipse.x = Math.round(new_center.x);
-		ellipse.y = Math.round(new_center.y);
-		ellipse.radius_x = Math.round((new_poistion.x - new_oposite.x) / 2);
-		ellipse.radius_y = Math.round((new_poistion.y - new_oposite.y) / 2);
+		ellipse.x = new_center.x;
+		ellipse.y = new_center.y;
+		ellipse.radius_x = (new_poistion.x - new_oposite.x) / 2;
+		ellipse.radius_y = (new_poistion.y - new_oposite.y) / 2;
 	}
 }

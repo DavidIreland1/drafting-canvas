@@ -1,26 +1,25 @@
-import { useState } from 'react';
 import Picker from './picker';
 import Elements from './../elements/elements';
+import { generateID } from '../../utils/utils';
 
 export default function Fill({ selected, store, actions, width, setPicker }) {
 	function addFill() {
-		store.dispatch(actions.addFill({ color: 'blue' }));
+		store.dispatch(actions.addFill({ id: generateID(), color: 'blue' }));
 	}
 
 	function removeFill() {
-		store.dispatch(actions.addFill({ color: 'blue' }));
+		store.dispatch(actions.addFill({ id: generateID(), color: 'blue' }));
 	}
 
-	function selectColor(event, color) {
-		setPicker(<Picker store={store} actions={actions} from_color={color} event={event} setPicker={setPicker} />);
+	function selectColor(event, color_id, color) {
+		setPicker(<Picker store={store} actions={actions} color_id={color_id} color={color} event={event} setPicker={setPicker} />);
 	}
 
-	function toFill(fill, i) {
+	function toFill(fill) {
 		return (
-			<div key={i} className="property-row">
-				<div className="property-color" onClick={(event) => selectColor(event, fill.color)} style={{ background: fill.color }} />
+			<div key={fill.id} className="property-row">
+				<div className="property-color" onClick={(event) => selectColor(event, fill.id, fill.color)} style={{ background: fill.color }} />
 				{fill.color}
-
 				<div className="property-minus" onClick={removeFill}>
 					<svg viewBox="0 0 10 10" stroke="white" strokeWidth="1">
 						<line x1="0" y1="5" x2="10" y2="5" />

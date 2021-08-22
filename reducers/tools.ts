@@ -4,12 +4,6 @@ export default {
 	hoverOnly: (state, props) => {
 		flatten(state.elements).forEach((element) => (element.hover = element.id === props.payload.id));
 	},
-	// hover: (state, props) => {
-	// 	state.elements.find((`element) => element.id === props.payload.id).hover = true;
-	// },
-	// unhover: (state, props) => {
-	// 	state.elements.find((element) => element.id === props.payload.id).hover = false;
-	// },
 	select: (state, props) => {
 		const element = flatten(state.elements).find((element) => element.id === props.payload.id);
 		if (element) element.selected = true;

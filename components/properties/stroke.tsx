@@ -1,26 +1,25 @@
-import { useState } from 'react';
 import Picker from './picker';
 import Elements from './../elements/elements';
+import { generateID } from '../../utils/utils';
 
 export default function Stroke({ selected, store, actions, width, setPicker }) {
 	function addStroke() {
-		store.dispatch(actions.addStroke({ width: 4, color: 'blue' }));
+		store.dispatch(actions.addStroke({ id: generateID(), width: 4, color: 'blue' }));
 	}
 
 	function removeStroke() {
-		store.dispatch(actions.addStroke({ color: 'blue' }));
+		store.dispatch(actions.addStroke({ id: generateID(), color: 'blue' }));
 	}
 
-	function selectColor(event, color) {
-		setPicker(<Picker store={store} actions={actions} from_color={color} event={event} setPicker={setPicker} />);
+	function selectColor(event, color_id, color) {
+		setPicker(<Picker store={store} actions={actions} color_id={color_id} color={color} event={event} setPicker={setPicker} />);
 	}
 
-	function toStroke(stroke, i) {
+	function toStroke(stroke) {
 		return (
-			<div key={i} className="property-row">
-				<div className="property-color" onClick={(event) => selectColor(event, stroke.color)} style={{ background: stroke.color }} />
+			<div key={stroke.id} className="property-row">
+				<div className="property-color" onClick={(event) => selectColor(event, stroke.id, stroke.color)} style={{ background: stroke.color }} />
 				{stroke.color}
-
 				<div className="property-minus" onClick={removeStroke}>
 					<svg viewBox="0 0 10 10" stroke="white" strokeWidth="1">
 						<line x1="0" y1="5" x2="10" y2="5" />

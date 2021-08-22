@@ -36,7 +36,6 @@ export default {
 		// if (type) cursor.type = type;
 		// if (mode) cursor.mode = mode;
 		// if (visible) cursor.visible = visible;
-
 		Object.entries(props.payload).forEach(([key, value]) => {
 			if (value !== undefined) cursor[key] = value;
 		});

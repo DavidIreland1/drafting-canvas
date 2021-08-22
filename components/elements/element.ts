@@ -17,18 +17,18 @@ export default class Element {
 		return false;
 	}
 
-	static fill(element, context) {
+	static fill(element, context, path) {
 		element.fill.forEach((fill) => {
 			context.fillStyle = fill.color;
-			context.fill();
+			context.fill(path);
 		});
 	}
 
-	static stroke(element, context) {
+	static stroke(element, context, path) {
 		element.stroke.forEach((stroke) => {
 			context.lineWidth = stroke.width;
 			context.strokeStyle = stroke.color;
-			context.stroke();
+			context.stroke(path);
 		});
 	}
 
@@ -158,9 +158,9 @@ export default class Element {
 		return element.fill;
 	}
 
-	static setFill(element, colors) {
+	static setFill(element, props) {
 		element.fill.forEach((fill) => {
-			if (fill.color === colors.from) fill.color = colors.to;
+			if (props.id === fill.color_id) fill.color = props.color;
 		});
 	}
 
@@ -168,9 +168,9 @@ export default class Element {
 		return element.stroke;
 	}
 
-	static setStroke(element, colors) {
+	static setStroke(element, props) {
 		element.stroke.forEach((stroke) => {
-			if (stroke.color === colors.from) stroke.color = stroke.to;
+			if (props.id === stroke.color_id) stroke.color = props.color;
 		});
 	}
 
@@ -185,8 +185,8 @@ export default class Element {
 	}
 
 	static move(element, position, last_position) {
-		element.x = Math.round(element.x + position.x - last_position.x);
-		element.y = Math.round(element.y + position.y - last_position.y);
+		element.x = element.x + position.x - last_position.x;
+		element.y = element.y + position.y - last_position.y;
 	}
 
 	static rotatePoint(position, center, rotation) {

@@ -16,10 +16,11 @@ export default class Circle extends Element {
 
 	static draw(circle, context, cursor) {
 		context.beginPath();
-		context.arc(circle.x, circle.y, Math.abs(circle.radius), circle.start_angle, circle.end_angle, circle.counter_clockwise);
-		this.fill(circle, context);
-		this.stroke(circle, context);
-		return context.isPointInPath(cursor.x, cursor.y);
+		const path = new Path2D();
+		path.arc(circle.x, circle.y, Math.abs(circle.radius), circle.start_angle, circle.end_angle, circle.counter_clockwise);
+		this.fill(circle, context, path);
+		this.stroke(circle, context, path);
+		return context.isPointInPath(path, cursor.x, cursor.y);
 	}
 
 	static outline(circle, context, color, line_width): void {
@@ -55,8 +56,8 @@ export default class Circle extends Element {
 		const new_oposite = this.rotatePoint(oposite, new_center, -ellipse.rotation);
 		const new_poistion = this.rotatePoint(position, new_center, -ellipse.rotation);
 
-		ellipse.x = Math.round(new_center.x);
-		ellipse.y = Math.round(new_center.y);
-		ellipse.radius = Math.round(Math.max(new_poistion.x - new_oposite.x, new_poistion.y - new_oposite.y) / 2);
+		ellipse.x = new_center.x;
+		ellipse.y = new_center.y;
+		ellipse.radius = Math.max(new_poistion.x - new_oposite.x, new_poistion.y - new_oposite.y) / 2;
 	}
 }

@@ -63,6 +63,7 @@ export default function Properties({ store, actions, setPicker }) {
 					display: grid;
 					grid-template-columns: max-content 1fr max-content;
 					gap: 10px;
+					line-height: 28px;
 				}
 				.property-minus {
 					width: 1em;

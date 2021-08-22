@@ -16,15 +16,19 @@ export default class Line extends Element {
 
 	static draw(line, context: CanvasRenderingContext2D, cursor) {
 		context.beginPath();
-		context.moveTo(line.x1, line.y1);
-		context.lineTo(line.x2, line.y2);
+		// context.moveTo(line.x1, line.y1);
+		// context.lineTo(line.x2, line.y2);
 
-		this.fill(line, context);
-		this.stroke(line, context);
+		const path = new Path2D();
+		path.moveTo(line.x1, line.y1);
+		path.lineTo(line.x2, line.y2);
+
+		this.fill(line, context, path);
+		this.stroke(line, context, path);
 
 		// context.lineWidth = line.stroke.reduce((max, stroke) => Math.max(max, stroke.width), 0);
 
-		return context.isPointInStroke(cursor.x, cursor.y);
+		return context.isPointInStroke(path, cursor.x, cursor.y);
 	}
 
 	static outline(line, context: CanvasRenderingContext2D, color, line_width) {
