@@ -4,15 +4,6 @@ import { useSelector } from 'react-redux';
 import Elements from './../elements/elements';
 
 export default function Picker({ store, actions, color_id, color, event, setPicker }) {
-	const base = useSelector((state) => {
-		const selected = (state as any).present.elements.filter((element) => element.selected);
-		return selected.map((element) => Elements[element.type].getFill(element).find((fill) => fill.id === color_id)).find((fill) => fill);
-	});
-
-	if (base === undefined) setPicker(null);
-
-	const HSBA = hslaToHsba(rgbaToHsla(hexToRgba(base.color)));
-
 	const [picker_position, setPickerPosition] = useState({ x: event.clientX - 350, y: event.clientY });
 	const dragPicker = (down_event) => {
 		if (down_event.target.id !== 'container') return;
@@ -31,6 +22,23 @@ export default function Picker({ store, actions, color_id, color, event, setPick
 			{ once: true }
 		);
 	};
+
+	const base = useSelector((state) => {
+		const selected = (state as any).present.elements.filter((element) => element.selected);
+
+		const fill_element = selected.map((element) => Elements[element.type].getFill(element).find((fill) => fill.id === color_id)).find((fill) => fill);
+		if (fill_element) return fill_element;
+
+		const stroke_element = selected.map((element) => Elements[element.type].getStroke(element).find((stroke) => stroke.id === color_id)).find((stroke) => stroke);
+		if (stroke_element) return stroke_element;
+	});
+
+	if (typeof base === 'undefined') {
+		// setPicker(null);
+		return null;
+	}
+
+	const HSBA = hslaToHsba(rgbaToHsla(colorToRgba(base.color)));
 
 	const drag = (down_event, id, callback) => {
 		down_event.preventDefault();
@@ -301,12 +309,31 @@ function rgbaToHsla([r, g, b, a]): [number, number, number, number] {
 	return [h, s, l, a];
 }
 
-function hexToRgba(hex): [number, number, number, number] {
-	if (hex === 'blue') return [0, 0, 1, 1];
-	const r = parseInt(hex.substr(1, 2), 16) / 255;
-	const g = parseInt(hex.substr(3, 2), 16) / 255;
-	const b = parseInt(hex.substr(5, 2), 16) / 255;
-	const a = hex.length > 7 ? parseInt(hex.substr(7, 2), 16) / 255 : 1;
+// function hexToRgba(hex): [number, number, number, number] {
+// 	if (hex === 'blue') return [0, 0, 1, 1];
+// 	const r = parseInt(hex.substr(1, 2), 16) / 255;
+// 	const g = parseInt(hex.substr(3, 2), 16) / 255;
+// 	const b = parseInt(hex.substr(5, 2), 16) / 255;
+// 	const a = hex.length > 7 ? parseInt(hex.substr(7, 2), 16) / 255 : 1;
 
-	return [r, g, b, a];
+// 	return [r, g, b, a];
+// }
+//: [number, number, number, number]
+function colorToRgba(color) {
+	const div = document.createElement('div');
+	div.style.background = color;
+	document.body.appendChild(div);
+	color = getComputedStyle(div).backgroundColor;
+	div.remove();
+
+	color = color
+		.split('(')[1]
+		.slice(0, -1)
+		.split(',')
+		.map(Number)
+		.map((color, i) => (i < 3 ? color / 255 : color));
+
+	if (color.length < 4) color.push(1);
+
+	return color;
 }
