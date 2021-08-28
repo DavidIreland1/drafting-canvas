@@ -1,0 +1,92 @@
+{
+  "_args": [
+    [
+      "redux-scuttlebutt@0.3.5",
+      "/Users/david.ireland/Documents/offwhitecanvas"
+    ]
+  ],
+  "_from": "redux-scuttlebutt@0.3.5",
+  "_id": "redux-scuttlebutt@0.3.5",
+  "_inBundle": false,
+  "_integrity": "sha1-UE7EmzNiQGj6D5wzYUw0SCeGcr8=",
+  "_location": "/redux-scuttlebutt",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "redux-scuttlebutt@0.3.5",
+    "name": "redux-scuttlebutt",
+    "escapedName": "redux-scuttlebutt",
+    "rawSpec": "0.3.5",
+    "saveSpec": null,
+    "fetchSpec": "0.3.5"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/redux-scuttlebutt/-/redux-scuttlebutt-0.3.5.tgz",
+  "_spec": "0.3.5",
+  "_where": "/Users/david.ireland/Documents/offwhitecanvas",
+  "bugs": {
+    "url": "https://github.com/grrowl/redux-scuttlebutt/issues"
+  },
+  "dependencies": {
+    "lodash": "^4.14.0",
+    "primus": "^6.0.5",
+    "scuttlebutt-vector": "^6.0.0",
+    "ws": "^1.1.1"
+  },
+  "description": "Redux distributed dispatcher",
+  "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-core": "^6.3.15",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-register": "^6.9.0",
+    "eslint-plugin-react": "^6.4.1",
+    "expect": "^1.6.0",
+    "express": "^4.13.3",
+    "sinon": "^1.17.6",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.0"
+  },
+  "engines": {
+    "node": ">=6.0"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "src"
+  ],
+  "homepage": "https://github.com/grrowl/redux-scuttlebutt",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "name": "redux-scuttlebutt",
+  "npmFileMap": [
+    {
+      "basePath": "/lib/",
+      "files": [
+        "*.js"
+      ]
+    }
+  ],
+  "npmName": "redux-scuttlebutt",
+  "peerDependencies": {
+    "primus": "^6.0.0",
+    "redux": "^3.5.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grrowl/redux-scuttlebutt.git"
+  },
+  "scripts": {
+    "build": "npm run build:commonjs # && npm run build:umd && npm run build:umd:min",
+    "build:commonjs": "BABEL_ENV=commonjs babel src --out-dir lib",
+    "build:umd": "BABEL_ENV=commonjs NODE_ENV=development webpack src/index.js dist/index.js",
+    "build:umd:min": "BABEL_ENV=commonjs NODE_ENV=production webpack src/index.js dist/index.min.js",
+    "test": "node test | tap-spec"
+  },
+  "version": "0.3.5"
+}

@@ -14,6 +14,7 @@
 		"fs": "*",
 		"next": "^10.0.0",
 		"primus": "^8.0.4",
+		"primus-rooms": "^3.4.1",
 		"react": "17.0.1",
 		"react-dom": "17.0.1",
 		"react-redux": "^7.2.4",

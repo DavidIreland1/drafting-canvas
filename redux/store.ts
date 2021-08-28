@@ -1,6 +1,10 @@
 import { createStore } from 'redux';
 import { slice } from './slice';
-import scuttlebutt from 'redux-scuttlebutt';
+// import scuttlebutt from 'redux-scuttlebutt';
+import scuttlebutt from './../redux-scuttlebutt/lib/index';
+
+console.log('hello');
+console.log(scuttlebutt);
 
 import undoable from 'redux-undo';
 

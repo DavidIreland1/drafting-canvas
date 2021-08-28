@@ -1,5 +1,5 @@
 // server.js
-const dispatcher = require('redux-scuttlebutt/lib/server').default;
+const dispatcher = require('./redux-scuttlebutt/lib/server').default;
 
 const { createServer } = require('http');
 const { parse } = require('url');
@@ -27,7 +27,7 @@ const initial_state = {
 // const Dispatcher = require('./node_modules/redux-scuttlebutt/lib/dispatcher.js').default;
 
 // const Primus = require('./node_modules/redux-scuttlebutt/lib/primus.js');
-const scuttlebutt = require('redux-scuttlebutt').default;
+// const scuttlebutt = require('redux-scuttlebutt').default;
 const reducers = require('./reducers/reducers.min.js').default;
 
 const { createStore } = require('redux');
@@ -53,7 +53,7 @@ app.prepare().then(() => {
 		console.log('> Ready on http://localhost:3000');
 	});
 
-	// const { primusServer, store, dispatch, getState } = dispatcher(server);
+	const { primusServer, store, dispatch, getState } = dispatcher(server);
 
 	// primusServer.save(__dirname + '/primus.js');
 
