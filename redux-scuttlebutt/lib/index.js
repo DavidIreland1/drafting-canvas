@@ -95,9 +95,13 @@ function connectStreams(primus, createStream) {
 		gossip = createStream();
 		gossip.pipe(primus);
 
-		// primus.write({ action: 'join', room: 'news' });
+		primus.write({ action: 'admin', room: 'news' });
 
 		primus.on('data', function message(data) {
+			if (data.action === 'admin') {
+				console.log(data);
+				return;
+			}
 			// console.log('[primus] <-', data)
 			if (DEBUG_DELAY) {
 				return setTimeout(() => gossip.write(data), DEBUG_DELAY);

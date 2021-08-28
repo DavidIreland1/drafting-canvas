@@ -101,14 +101,25 @@ exports.default = function scuttlebuttServer(server, options) {
 		onStatistic(spark.id, 'connect');
 
 		spark.on('data', function recv(data) {
-			console.log(data);
-			// if (room !== 'me') {
-			// 	return spark.join(room, () => console.log('joined room %s', room));
-			// }
+			if (data.action === 'admin') {
+				console.log(data);
+
+				spark.join(data.room, function () {
+					// send message to this client
+					spark.write({ action: 'admin', room: 'you joined room ' + data.room });
+
+					// send message to all clients except this one
+					spark
+						.room(data.room)
+						.except(spark.id)
+						.write({ action: 'admin', room: spark.id + ' joined room ' + data.room });
+				});
+			} else {
+				onStatistic(spark.id, 'recv');
+				stream.write(data);
+			}
 
 			// console.log('[io]', spark.id, '<-', data);
-			onStatistic(spark.id, 'recv');
-			stream.write(data);
 		});
 
 		stream.on('data', function (data) {
