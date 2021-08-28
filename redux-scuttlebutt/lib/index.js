@@ -23,7 +23,7 @@ export default function scuttlebutt(options) {
 		// is it more efficient to store previous states, or replay a bunch of
 		// previous actions? (until we have COMMIT checkpointing, the former)
 		const dispatcher = new Dispatcher(options.dispatcherOptions);
-		const scuttlebutt = connectGossip(dispatcher, options.uri, options.primusOptions, options.primus);
+		const scuttlebutt = connectGossip(dispatcher, options.uri, options.primusOptions, options.primus, options.room);
 
 		return (reducer, initialState, enhancer) => {
 			const store = createStore(
@@ -43,18 +43,18 @@ export default function scuttlebutt(options) {
 }
 
 // initialise network io
-function connectGossip(scuttlebutt, uri, primusOptions, Primus) {
+function connectGossip(scuttlebutt, uri, primusOptions, Primus, room) {
 	scuttlebutt.primus = Primus.connect(uri, primusOptions);
 
 	console.log('[io] connecting...');
 
-	connectStreams(scuttlebutt.primus, () => scuttlebutt.createStream());
+	connectStreams(scuttlebutt.primus, () => scuttlebutt.createStream(), room);
 
 	return scuttlebutt;
 }
 
 // the internet is a series of tubes
-function connectStreams(primus, createStream) {
+function connectStreams(primus, createStream, room) {
 	// would love to do this. it doesn't work:
 	// spark.pipe(docStream).pipe(spark)
 
@@ -95,7 +95,7 @@ function connectStreams(primus, createStream) {
 		gossip = createStream();
 		gossip.pipe(primus);
 
-		primus.write({ action: 'admin', room: 'news' });
+		primus.write({ action: 'admin', room: room });
 
 		primus.on('data', function message(data) {
 			if (data.action === 'admin') {

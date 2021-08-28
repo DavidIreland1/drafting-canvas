@@ -14,7 +14,12 @@ import undoable from 'redux-undo';
 import initial_state from './../state/initial';
 
 let Primus;
-if (typeof window !== 'undefined') Primus = (window as any).Primus;
+let room;
+
+if (typeof window !== 'undefined') {
+	Primus = (window as any).Primus;
+	room = location.pathname.split('/')[1];
+}
 
 import { modification_types } from '../reducers/modifications/modifications';
 import { interaction_types } from '../reducers/modifications/interactions';
@@ -25,7 +30,8 @@ const store = createStore(
 	typeof Primus !== 'undefined'
 		? scuttlebutt({
 				primus: Primus,
-				uri: 'http://localhost:3000/111',
+				uri: 'http://localhost:3000',
+				room: room,
 		  })
 		: undefined
 );
