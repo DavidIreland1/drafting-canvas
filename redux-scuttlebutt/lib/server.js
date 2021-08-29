@@ -13,7 +13,6 @@ const OUTFILE = process.env['OUTFILE'];
 const REMOTE_SB = process.env['REMOTE_SB'];
 
 const defaultOptions = {
-	connectRedux: connectRedux,
 	getStatistics: getStatistics,
 	primusOptions: {},
 	dispatcherOptions: {},
@@ -26,94 +25,39 @@ exports.default = function scuttlebuttServer(server, options) {
 	primus.plugin('rooms', Rooms);
 
 	const gossip = new Dispatcher(options.dispatcherOptions);
-	const onStatistic = options.getStatistics();
+	// const onStatistic = options.getStatistics();
 
 	// primus.save(__dirname + '/primus.js');
 	// connect dispatcher to redux
-	const { store, dispatch, getState } = options.connectRedux(gossip);
+	const { store, dispatch, getState } = connectRedux(gossip);
 
-	// read actions from file
-	if (INFILE) {
-		const gossipWriteSteam = gossip.createWriteStream();
-		fs.createReadStream(INFILE).pipe(gossipWriteSteam);
+	let room;
 
-		console.log('📼  Reading from ' + INFILE);
-	}
-
-	// stream actions to file -- this will include all actions in INFILE
-	if (OUTFILE) {
-		const gossipReadSteam = gossip.createReadStream();
-
-		// For some reason, we're not getting any 'sync' events from Dispatcher,
-		// so we'll listen for it in the datastream and write to disk after it
-		// <https://github.com/dominictarr/scuttlebutt#persistence>
-
-		gossipReadSteam.on('data', function (data) {
-			if (data === '"SYNC"\n') {
-				console.log('📼  Writing to ' + OUTFILE);
-				gossipReadSteam.pipe(fs.createWriteStream(OUTFILE));
-			}
-		});
-
-		// this doesn't fire.
-		gossip.on('sync', function () {
-			console.log('📼  [NATURAL SYNC] Writing to ' + OUTFILE);
-			gossipReadSteam.pipe(fs.createWriteStream(OUTFILE));
-		});
-
-		console.log('📼  Ready to write to ' + OUTFILE);
-	}
-
-	// connect to remote redux-scuttlebutt instance
-	if (REMOTE_SB) {
-		const remoteStream = gossip.createStream();
-		const remoteClient = new primus.Socket(REMOTE_SB);
-
-		console.log('💡  connecting to remote ' + REMOTE_SB);
-
-		remoteClient.pipe(remoteStream).pipe(remoteClient);
-
-		onStatistic('REMOTE_SB', 'connect');
-
-		remoteClient.on('data', function recv(data) {
-			// console.log('[io]', 'REMOTE_SB', '<-', data);
-			onStatistic('REMOTE_SB', 'recv');
-		});
-
-		remoteStream.on('data', function (data) {
-			// console.log('[io]', 'REMOTE_SB' || 'origin', '->', data);
-			onStatistic('REMOTE_SB', 'sent');
-		});
-
-		remoteStream.on('error', function (error) {
-			onStatistic('REMOTE_SB', 'error', error);
-			console.log('[io]', 'REMOTE_SB', 'ERROR:', error);
-			remoteClient.end('Disconnecting due to error', { reconnect: true });
-		});
-	}
+	let documents = {};
 
 	primus.on('connection', function (spark) {
 		const stream = gossip.createStream();
 
 		// This works console.log('[io] connection', spark.address, spark.id);
-		onStatistic(spark.id, 'connect');
+		// onStatistic(spark.id, 'connect');
 
 		spark.on('data', function recv(data) {
 			if (data.action === 'admin') {
 				console.log(data);
+				room = data.room;
 
-				spark.join(data.room, function () {
-					// send message to this client
-					spark.write({ action: 'admin', room: 'you joined room ' + data.room });
+				// spark.join(room, function () {
+				// 	// send message to this client
+				// 	spark.write({ action: 'admin', room: 'you joined room ' + data.room });
 
-					// send message to all clients except this one
-					spark
-						.room(data.room)
-						.except(spark.id)
-						.write({ action: 'admin', room: spark.id + ' joined room ' + data.room });
-				});
+				// 	// send message to all clients except this one
+				// 	spark
+				// 		.room(room)
+				// 		.except(spark.id)
+				// 		.write({ action: 'admin', room: spark.id + ' joined room ' + data.room });
+				// });
 			} else {
-				onStatistic(spark.id, 'recv');
+				// onStatistic(spark.id, 'recv');
 				stream.write(data);
 			}
 
@@ -122,12 +66,12 @@ exports.default = function scuttlebuttServer(server, options) {
 
 		stream.on('data', function (data) {
 			// console.log('[io]', spark.id || 'origin', '->', data);
-			onStatistic(spark.id, 'sent');
+			// onStatistic(spark.id, 'sent');
 			spark.write(data);
 		});
 
 		stream.on('error', function (error) {
-			onStatistic(spark.id, 'error', error);
+			// onStatistic(spark.id, 'error', error);
 			console.log('[io]', spark.id, 'ERROR:', error);
 			spark.end('Disconnecting due to error', { reconnect: true });
 		});
@@ -135,7 +79,7 @@ exports.default = function scuttlebuttServer(server, options) {
 
 	primus.on('disconnection', function (spark) {
 		// This works console.log('[io] disconnect', spark.address, spark.id);
-		onStatistic(spark.id, 'disconnect');
+		// onStatistic(spark.id, 'disconnect');
 		// in case you don't want to track zombie connections
 		// delete statistics[spark.id]
 	});
@@ -162,6 +106,24 @@ function connectRedux(gossip) {
 
 	return { store, dispatch, getState };
 }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+// giv me some space
 
 function getStatistics() {
 	const statistics = {};
@@ -214,30 +176,29 @@ function getStatistics() {
 		);
 	}, 10000); // max 6/minute
 
-	return () => {};
-	// return function (source, event, extra) {
-	// 	statisticsDirty = true;
-	// 	if (event === 'connect') {
-	// 		statistics[source] = {
-	// 			recv: 0,
-	// 			sent: 0,
-	// 			s: 'connected',
-	// 		};
-	// 	} else if (event === 'disconnect') {
-	// 		statistics[source] = {
-	// 			recv: 0,
-	// 			sent: 0,
-	// 			s: 'disconnected',
-	// 		};
-	// 	} else if (event === 'error') {
-	// 		statistics[source] = {
-	// 			recv: 0,
-	// 			sent: 0,
-	// 			s: 'error',
-	// 			err: extra,
-	// 		};
-	// 	} else if (event === 'recv' || event === 'sent') {
-	// 		statistics[source][event]++;
-	// 	}
-	// };
+	return function (source, event, extra) {
+		statisticsDirty = true;
+		if (event === 'connect') {
+			statistics[source] = {
+				recv: 0,
+				sent: 0,
+				s: 'connected',
+			};
+		} else if (event === 'disconnect') {
+			statistics[source] = {
+				recv: 0,
+				sent: 0,
+				s: 'disconnected',
+			};
+		} else if (event === 'error') {
+			statistics[source] = {
+				recv: 0,
+				sent: 0,
+				s: 'error',
+				err: extra,
+			};
+		} else if (event === 'recv' || event === 'sent') {
+			statistics[source][event]++;
+		}
+	};
 }

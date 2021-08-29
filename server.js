@@ -10,7 +10,7 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const fs = require('fs');
-var os = require('os');
+// var os = require('os');
 
 const initial_state = {
 	cursors: [],

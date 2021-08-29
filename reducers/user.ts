@@ -7,6 +7,7 @@ export default {
 	centerView: (state, props) => {
 		const { id, x, y } = props.payload;
 		const view = state.views.find((view) => id === view.id);
+		if (!view) return; // Not great
 		view.x = x;
 		view.y = y;
 		view.centered = true;
@@ -19,6 +20,7 @@ export default {
 	view: (state, props) => {
 		const { id, delta_x, delta_y, delta_scale, cursor_x, cursor_y } = props.payload;
 		const view = state.views.find((view) => id === view.id);
+		if (!view) return; // Not great
 		if (delta_x) view.x += delta_x;
 		if (delta_y) view.y += delta_y;
 		if (delta_scale) view.scale += delta_scale;
