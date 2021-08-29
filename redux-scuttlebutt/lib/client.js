@@ -98,7 +98,7 @@ function connectStreams(primus, createStream, room) {
 		primus.write({ action: 'admin', room: room });
 
 		primus.on('data', function message(data) {
-			console.log(JSON.parse(data));
+			// console.log(JSON.parse(data));
 			if (data.action === 'admin') {
 				console.log(data);
 				return;

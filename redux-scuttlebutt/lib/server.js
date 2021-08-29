@@ -18,62 +18,70 @@ const defaultOptions = {
 	dispatcherOptions: {},
 };
 
+let documents = {};
+function openDocument(options) {
+	const gossip = new Dispatcher(options.dispatcherOptions);
+
+	const { store, dispatch, getState } = connectRedux(gossip);
+
+	return {
+		gossip,
+		store,
+		dispatch,
+		getState,
+		streams: {},
+	};
+}
+
 exports.default = function scuttlebuttServer(server, options) {
 	options = Object.assign(defaultOptions, options);
 
 	const primus = new Primus(server, options.primusOptions);
 	primus.plugin('rooms', Rooms);
 
-	const gossip = new Dispatcher(options.dispatcherOptions);
 	// const onStatistic = options.getStatistics();
 
-	// primus.save(__dirname + '/primus.js');
-	// connect dispatcher to redux
-	const { store, dispatch, getState } = connectRedux(gossip);
-
-	let room;
-
-	let documents = {};
-
 	primus.on('connection', function (spark) {
-		const stream = gossip.createStream();
-
+		// const stream = gossip.createStream();
 		// This works console.log('[io] connection', spark.address, spark.id);
 		// onStatistic(spark.id, 'connect');
+		let room;
 
 		spark.on('data', function recv(data) {
 			if (data.action === 'admin') {
-				console.log(data);
 				room = data.room;
 
-				// spark.join(room, function () {
-				// 	// send message to this client
-				// 	spark.write({ action: 'admin', room: 'you joined room ' + data.room });
+				if (!documents[room]) {
+					documents[room] = openDocument(options);
+				}
 
-				// 	// send message to all clients except this one
-				// 	spark
-				// 		.room(room)
-				// 		.except(spark.id)
-				// 		.write({ action: 'admin', room: spark.id + ' joined room ' + data.room });
-				// });
+				documents[room].streams[spark.id] = documents[room].gossip.createStream();
+
+				documents[room].streams[spark.id].on('data', function (data) {
+					// spark.room(room).write(data);
+					spark.write(data);
+				});
+
+				documents[room].streams[spark.id].on('error', function (error) {
+					spark.leave(room);
+					console.log('[io]', spark.id, 'ERROR:', error);
+					spark.end('Disconnecting due to error', { reconnect: true });
+				});
+
+				spark.join(room, function () {
+					// send message to this client
+					// spark.write({ action: 'admin', room: 'you joined room ' + data.room });
+
+					// send message to all clients except this one
+					spark.room(room).write({ action: 'admin', room: spark.id + ' joined room ' + data.room });
+				});
 			} else {
 				// onStatistic(spark.id, 'recv');
-				stream.write(data);
+				// stream.write(data);
+				documents[room].streams[spark.id].write(data);
 			}
 
 			// console.log('[io]', spark.id, '<-', data);
-		});
-
-		stream.on('data', function (data) {
-			// console.log('[io]', spark.id || 'origin', '->', data);
-			// onStatistic(spark.id, 'sent');
-			spark.write(data);
-		});
-
-		stream.on('error', function (error) {
-			// onStatistic(spark.id, 'error', error);
-			console.log('[io]', spark.id, 'ERROR:', error);
-			spark.end('Disconnecting due to error', { reconnect: true });
 		});
 	});
 
@@ -84,7 +92,7 @@ exports.default = function scuttlebuttServer(server, options) {
 		// delete statistics[spark.id]
 	});
 
-	return { primus, store, dispatch, getState };
+	// return { primus, store, dispatch, getState };
 };
 
 function connectRedux(gossip) {

@@ -53,7 +53,7 @@ app.prepare().then(() => {
 		console.log('> Ready on http://localhost:3000');
 	});
 
-	const { primusServer, store, dispatch, getState } = dispatcher(server);
+	dispatcher(server);
 
 	// primusServer.save(__dirname + '/primus.js');
 
