@@ -19,10 +19,18 @@ const defaultOptions = {
 };
 
 let documents = {};
-function openDocument(options) {
+function openDocument(room, options) {
 	const gossip = new Dispatcher(options.dispatcherOptions);
 
-	const { store, dispatch, getState } = connectRedux(gossip);
+	const document_state = load(room);
+
+	const { store, dispatch, getState } = connectRedux(gossip, undefined);
+
+	if (document_state) {
+		document_state.forEach((action) => {
+			dispatch(action);
+		});
+	}
 
 	return {
 		gossip,
@@ -51,15 +59,20 @@ exports.default = function scuttlebuttServer(server, options) {
 			if (data.action === 'admin') {
 				room = data.room;
 
+				spark.join(room, function () {
+					spark.room(room).write({ action: 'admin', room: spark.id + ' joined room ' + data.room });
+				});
+
 				if (!documents[room]) {
-					documents[room] = openDocument(options);
+					documents[room] = openDocument(room, options);
 				}
 
+				// Each connection needs it's own stream
 				documents[room].streams[spark.id] = documents[room].gossip.createStream();
 
 				documents[room].streams[spark.id].on('data', function (data) {
 					// spark.room(room).write(data);
-					spark.write(data);
+					spark.write(data); // Might be sending this to all clients but line above breaks
 				});
 
 				documents[room].streams[spark.id].on('error', function (error) {
@@ -67,35 +80,39 @@ exports.default = function scuttlebuttServer(server, options) {
 					console.log('[io]', spark.id, 'ERROR:', error);
 					spark.end('Disconnecting due to error', { reconnect: true });
 				});
-
-				spark.join(room, function () {
-					// send message to this client
-					// spark.write({ action: 'admin', room: 'you joined room ' + data.room });
-
-					// send message to all clients except this one
-					spark.room(room).write({ action: 'admin', room: spark.id + ' joined room ' + data.room });
-				});
 			} else {
 				// onStatistic(spark.id, 'recv');
 				// stream.write(data);
-				documents[room].streams[spark.id].write(data);
+				documents[room].streams[spark.id].write(data); // send data out to stream
 			}
 
 			// console.log('[io]', spark.id, '<-', data);
 		});
-	});
 
-	primus.on('disconnection', function (spark) {
-		// This works console.log('[io] disconnect', spark.address, spark.id);
-		// onStatistic(spark.id, 'disconnect');
-		// in case you don't want to track zombie connections
-		// delete statistics[spark.id]
+		primus.on('disconnection', function (spark) {
+			if (!documents[room]) return;
+			if (documents[room].streams[spark.id]) delete documents[room].streams[spark.id];
+
+			const num_streams = Object.keys(documents[room].streams).length;
+			if (num_streams === 0) {
+				save(room, documents[room].getState());
+				delete documents[room];
+				console.log('save');
+			}
+
+			// console.log(, spark.id);
+
+			// This works console.log('[io] disconnect', spark.address, spark.id);
+			// onStatistic(spark.id, 'disconnect');
+			// in case you don't want to track zombie connections
+			// delete statistics[spark.id]
+		});
 	});
 
 	// return { primus, store, dispatch, getState };
 };
 
-function connectRedux(gossip) {
+function connectRedux(gossip, initial_state) {
 	const Redux = require('redux');
 
 	const reducer = function reducer() {
@@ -104,7 +121,7 @@ function connectRedux(gossip) {
 		return state.concat(action);
 	};
 
-	const store = Redux.createStore(gossip.wrapReducer(reducer), undefined);
+	const store = Redux.createStore(gossip.wrapReducer(reducer), initial_state);
 	const dispatch = gossip.wrapDispatch(store.dispatch);
 	const getState = gossip.wrapGetState(store.getState);
 
@@ -115,6 +132,17 @@ function connectRedux(gossip) {
 	return { store, dispatch, getState };
 }
 
+function save(name, data) {
+	fs.writeFile('./datastate/' + name + '.json', JSON.stringify(data, null, '\t'), 'utf8', () => {});
+}
+
+function load(name) {
+	try {
+		return JSON.parse(fs.readFileSync('./datastate/' + name + '.json'));
+	} catch (error) {
+		return undefined;
+	}
+}
 //
 //
 //

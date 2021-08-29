@@ -1,0 +1,2294 @@
+[
+	{
+		"type": "@@redux/INIT"
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -316.6875,
+			"y": -538.3203125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -316.6875,
+			"y": -543.203125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -318.640625,
+			"y": -552.8671875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -332.3828125,
+			"y": -583.9140625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -342.109375,
+			"y": -600.125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -366.0546875,
+			"y": -634.5078125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -434.34375,
+			"y": -711.0234375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -464.8359375,
+			"y": -735.03125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -501.5,
+			"y": -768.03125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -536.0078125,
+			"y": -795.640625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -565.9921875,
+			"y": -820.6953125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -583.390625,
+			"y": -835.5234375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -599.6171875,
+			"y": -846.671875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -609.3828125,
+			"y": -852.53125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -610.2890625,
+			"y": -852.53125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -643.4375,
+			"y": -860.8359375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -698.0859375,
+			"y": -874.5546875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"visible": false
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -214.1953125,
+			"y": -645.53125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -220.0234375,
+			"y": -662.3671875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -230.765625,
+			"y": -685.2265625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -245.4609375,
+			"y": -719.3671875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -269.21875,
+			"y": -771.4140625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -308.3046875,
+			"y": -854.2265625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -350.1875,
+			"y": -926.40625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -395.625,
+			"y": -990.03125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"visible": false
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/addUser",
+		"payload": {
+			"user_id": "870244457",
+			"label": "Flirting Squid",
+			"color": "hsl(90.0317150036719,91.91063938392806%,29.462712735565834%)"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -350.890625,
+			"y": -989.5,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -350.890625,
+			"y": -959.5859375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -352.40625,
+			"y": -929.3359375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -355.3046875,
+			"y": -901.8046875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -357.578125,
+			"y": -886.59375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -359.96875,
+			"y": -869.7265625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -363.0078125,
+			"y": -858.375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -364.6484375,
+			"y": -852.625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -365.3046875,
+			"y": -849.0390625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -365.8515625,
+			"y": -847.953125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -366.3984375,
+			"y": -846.8671875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -366.953125,
+			"y": -846.3203125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -368.6171875,
+			"y": -845.2265625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -369.171875,
+			"y": -845.2265625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -370.28125,
+			"y": -844.1328125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -373.546875,
+			"y": -840.234375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -376.0546875,
+			"y": -834.4921875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -377.578125,
+			"y": -832.2109375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -383.578125,
+			"y": -817.53125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -390.7265625,
+			"y": -800.6640625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -396.359375,
+			"y": -786.109375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -404.6953125,
+			"y": -770.6484375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -415.3515625,
+			"y": -756.453125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -418.28125,
+			"y": -752.5546875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -419.171875,
+			"y": -752.5546875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -421.4609375,
+			"y": -752.5546875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -431.4375,
+			"y": -749.3125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -439.734375,
+			"y": -744.6875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -449.453125,
+			"y": -738.8671875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -458.2421875,
+			"y": -733.0234375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -467.9609375,
+			"y": -728.171875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -481.1796875,
+			"y": -723.8515625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -487.6015625,
+			"y": -723.8515625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -488.046875,
+			"y": -723.8515625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -491.5234375,
+			"y": -723.8515625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -497.2265625,
+			"y": -722.1484375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -505.5859375,
+			"y": -719.4453125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -513.921875,
+			"y": -716.7578125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -520.796875,
+			"y": -714.1796875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -526.5625,
+			"y": -712.5546875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -530.1640625,
+			"y": -711.796875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -532.7890625,
+			"y": -711.796875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -532.7890625,
+			"y": -712.7578125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -532.03125,
+			"y": -715.046875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -526.8359375,
+			"y": -720.2578125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -519.0625,
+			"y": -727.078125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -512.5625,
+			"y": -732.6171875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -507.6953125,
+			"y": -736.7421875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -503.1328125,
+			"y": -739.7890625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -500.53125,
+			"y": -742.3984375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"visible": false
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -513.546875,
+			"y": -468.8046875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -514,
+			"y": -468.8046875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -530.8828125,
+			"y": -473.7890625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -549.90625,
+			"y": -482.4375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -602.21875,
+			"y": -505.84375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -712.7109375,
+			"y": -565.046875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"visible": false
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"type": "line",
+			"mode": "create"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -690.2421875,
+			"y": -692.2578125
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -572.4140625,
+			"y": -621.5234375
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -504.8828125,
+			"y": -577.3671875
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -469.4375,
+			"y": -552.734375
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -447,
+			"y": -537.359375
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -438.65625,
+			"y": -532.703125
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -436.8046875,
+			"y": -530.8515625
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -436.2578125,
+			"y": -529.7578125
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -436.71875,
+			"y": -529.7578125
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -440.3203125,
+			"y": -529.7578125
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -442.9296875,
+			"y": -531.0625
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -445.546875,
+			"y": -532.375
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -446.65625,
+			"y": -532.9296875
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -447.2109375,
+			"y": -533.484375
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/createElement",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"type": "line",
+			"position": {
+				"x": -447.2109375,
+				"y": -533.484375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -447.7265625,
+			"y": -533.484375
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/resize",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"position": {
+				"x": -447.7265625,
+				"y": -533.484375
+			},
+			"last_position": {
+				"x": -447.2109375,
+				"y": -533.484375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {
+			"id": "455689297"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -446.8203125,
+			"y": -533.484375,
+			"rotation": -2.269536032268828,
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/resize",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"position": {
+				"x": -446.8203125,
+				"y": -533.484375
+			},
+			"last_position": {
+				"x": -447.7265625,
+				"y": -533.484375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {
+			"id": "455689297"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -423.8046875,
+			"y": -533.484375,
+			"rotation": -2.2943067558229266,
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/resize",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"position": {
+				"x": -423.8046875,
+				"y": -533.484375
+			},
+			"last_position": {
+				"x": -446.8203125,
+				"y": -533.484375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -355.921875,
+			"y": -494.9921875,
+			"rotation": -2.3269759707118647,
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/resize",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"position": {
+				"x": -355.921875,
+				"y": -494.9921875
+			},
+			"last_position": {
+				"x": -423.8046875,
+				"y": -533.484375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -264.375,
+			"y": -424.609375,
+			"rotation": -2.31921455199717,
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/resize",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"position": {
+				"x": -264.375,
+				"y": -424.609375
+			},
+			"last_position": {
+				"x": -355.921875,
+				"y": -494.9921875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -158.0234375,
+			"y": -318.2578125,
+			"rotation": -2.2859882963280183,
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/resize",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"position": {
+				"x": -158.0234375,
+				"y": -318.2578125
+			},
+			"last_position": {
+				"x": -264.375,
+				"y": -424.609375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {
+			"id": "455689297"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -90.6328125,
+			"y": -243.828125,
+			"rotation": -2.2466720166230867,
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/resize",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"position": {
+				"x": -90.6328125,
+				"y": -243.828125
+			},
+			"last_position": {
+				"x": -158.0234375,
+				"y": -318.2578125
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {
+			"id": "455689297"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -46.3515625,
+			"y": -185.671875,
+			"rotation": -2.2100127077555576,
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/resize",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"position": {
+				"x": -46.3515625,
+				"y": -185.671875
+			},
+			"last_position": {
+				"x": -90.6328125,
+				"y": -243.828125
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -19.3203125,
+			"y": -153.2265625,
+			"rotation": -2.1894434281686546,
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/resize",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"position": {
+				"x": -19.3203125,
+				"y": -153.2265625
+			},
+			"last_position": {
+				"x": -46.3515625,
+				"y": -185.671875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {
+			"id": "455689297"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -1.4921875,
+			"y": -129.5625,
+			"rotation": -2.1820893338443286,
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/resize",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"position": {
+				"x": -1.4921875,
+				"y": -129.5625
+			},
+			"last_position": {
+				"x": -19.3203125,
+				"y": -153.2265625
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {
+			"id": "455689297"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": 2.9375,
+			"y": -123.3984375,
+			"rotation": -2.1717592399954255,
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/resize",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"position": {
+				"x": 2.9375,
+				"y": -123.3984375
+			},
+			"last_position": {
+				"x": -1.4921875,
+				"y": -129.5625
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {
+			"id": "455689297"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": 4.1328125,
+			"y": -121.546875,
+			"rotation": -2.1648782520505785,
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/resize",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"position": {
+				"x": 4.1328125,
+				"y": -121.546875
+			},
+			"last_position": {
+				"x": 2.9375,
+				"y": -123.3984375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {
+			"id": "455689297"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": 4.1328125,
+			"y": -121.0546875,
+			"rotation": -2.1664585123185907,
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/resize",
+		"payload": {
+			"user_id": "870244457",
+			"id": "455689297",
+			"position": {
+				"x": 4.1328125,
+				"y": -121.0546875
+			},
+			"last_position": {
+				"x": 4.1328125,
+				"y": -121.546875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": 4.1328125,
+			"y": -121.5,
+			"rotation": -2.168209216536782,
+			"type": "resize",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": 4.1328125,
+			"y": -131.3203125,
+			"rotation": -2.1824902233614996,
+			"type": "resize",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {
+			"id": "455689297"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": 4.1328125,
+			"y": -150.0390625,
+			"rotation": -2.2114175377250067,
+			"type": "resize",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": 4.1328125,
+			"y": -172.9296875,
+			"rotation": -2.25012352217881,
+			"type": "resize",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": 2.5625,
+			"y": -205.3046875,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -0.578125,
+			"y": -238.265625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -5.0625,
+			"y": -268.2109375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -7.3125,
+			"y": -283.2734375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -8.5078125,
+			"y": -298.1015625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -10.3515625,
+			"y": -306.4375,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -10.3515625,
+			"y": -310.0390625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -11.0078125,
+			"y": -311.90625,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -11.0078125,
+			"y": -313.0078125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/hoverOnly",
+		"payload": {}
+	},
+	{
+		"meta": {},
+		"type": "counter/cursor",
+		"payload": {
+			"id": "870244457",
+			"x": -11.5625,
+			"y": -313.0078125,
+			"rotation": 0,
+			"type": "select",
+			"visible": true
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/unselectAll"
+	},
+	{
+		"meta": {},
+		"type": "counter/removeUser",
+		"payload": {
+			"user_id": "870244457"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/removeUser",
+		"payload": {
+			"user_id": "870244457"
+		}
+	}
+]

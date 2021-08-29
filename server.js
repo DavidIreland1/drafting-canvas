@@ -42,10 +42,6 @@ app.prepare().then(() => {
 			const page_id = pathname.split('/')[2];
 			res.setHeader('Content-Type', 'application/json');
 			res.end(JSON.stringify(load(page_id) || initial_state));
-		} else if (pathname === '/a') {
-			app.render(req, res, '/a', query);
-		} else if (pathname === '/b') {
-			app.render(req, res, '/b', query);
 		} else {
 			handle(req, res, parsedUrl);
 		}
@@ -94,7 +90,7 @@ function updateSnapshot(actions) {
 		const type = action.type.split('/').pop();
 		clone.dispatch(slice.actions[type](action.payload));
 	});
-	save('./database/222.json', clone.getState());
+	save('222', clone.getState());
 }
 
 // clone.subscribe(() => {
@@ -102,7 +98,7 @@ function updateSnapshot(actions) {
 // });
 
 function save(name, data) {
-	fs.writeFile(name, JSON.stringify(data, null, '\t'), 'utf8', () => {});
+	fs.writeFile('./database/' + name + '.json', JSON.stringify(data, null, '\t'), 'utf8', () => {});
 }
 
 function load(name) {
