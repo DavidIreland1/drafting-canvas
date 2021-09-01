@@ -1,0 +1,53 @@
+[
+	{
+		"type": "@@redux/INIT"
+	},
+	{
+		"meta": {},
+		"type": "counter/addUser",
+		"payload": {
+			"user_id": "530097934",
+			"label": "Greedy Swallow",
+			"color": "hsl(330,50%,25%)"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/addUser",
+		"payload": {
+			"user_id": "530097934",
+			"label": "Greedy Swallow",
+			"color": "hsl(330,50%,25%)"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/addUser",
+		"payload": {
+			"user_id": "530097934",
+			"label": "Greedy Swallow",
+			"color": "hsl(330,50%,25%)"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/removeUser",
+		"payload": {
+			"user_id": "530097934"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/removeUser",
+		"payload": {
+			"user_id": "530097934"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/removeUser",
+		"payload": {
+			"user_id": "530097934"
+		}
+	}
+]

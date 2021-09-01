@@ -59,13 +59,9 @@ exports.default = function scuttlebuttServer(server, options) {
 			if (data.action === 'admin') {
 				room = data.room;
 
-				spark.join(room, function () {
-					spark.room(room).write({ action: 'admin', room: spark.id + ' joined room ' + data.room });
-				});
+				spark.join(room, () => spark.room(room).write({ action: 'admin', room: spark.id + ' joined room ' + data.room }));
 
-				if (!documents[room]) {
-					documents[room] = openDocument(room, options);
-				}
+				if (!documents[room]) documents[room] = openDocument(room, options);
 
 				// Each connection needs it's own stream
 				documents[room].streams[spark.id] = documents[room].gossip.createStream();
@@ -83,12 +79,15 @@ exports.default = function scuttlebuttServer(server, options) {
 			} else {
 				// onStatistic(spark.id, 'recv');
 				// stream.write(data);
-				documents[room].streams[spark.id].write(data); // send data out to stream
+
+				// Send data out to stream
+				documents[room].streams[spark.id].write(data);
 			}
 
 			// console.log('[io]', spark.id, '<-', data);
 		});
 
+		// Seems to be deleteing / saving too often
 		primus.on('disconnection', function (spark) {
 			if (!documents[room]) return;
 			if (documents[room].streams[spark.id]) delete documents[room].streams[spark.id];
@@ -97,7 +96,6 @@ exports.default = function scuttlebuttServer(server, options) {
 			if (num_streams === 0) {
 				save(room, documents[room].getState());
 				delete documents[room];
-				console.log('save');
 			}
 
 			// console.log(, spark.id);
@@ -118,6 +116,12 @@ function connectRedux(gossip, initial_state) {
 	const reducer = function reducer() {
 		const state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 		const action = arguments[1];
+
+		// Filter out the actions we don't want to save
+		if (action.type.endsWith('cursor') || action.type.endsWith('hoverOnly')) {
+			// console.log(action.type);
+			return state;
+		}
 		return state.concat(action);
 	};
 
