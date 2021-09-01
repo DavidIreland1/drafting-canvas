@@ -1,0 +1,12 @@
+[
+	{
+		"type": "@@redux/INIT"
+	},
+	{
+		"meta": {},
+		"type": "counter/removeUser",
+		"payload": {
+			"user_id": "24014631"
+		}
+	}
+]
