@@ -4,7 +4,7 @@ import reducers from '../reducers/reducers';
 import initial_state from '../state/initial';
 
 export const slice = createSlice({
-	name: 'counter',
+	name: 'action',
 	initialState: initial_state,
 	reducers: reducers,
 });

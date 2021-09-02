@@ -18,8 +18,8 @@ if (typeof window !== 'undefined') {
 	room = location.pathname.split('/')[1];
 }
 
-import { modification_types } from '../reducers/modifications/modifications';
-import { interaction_types } from '../reducers/modifications/interactions';
+import { modification_actions } from '../reducers/modifications/modifications';
+import { interaction_actions } from '../reducers/modifications/interactions';
 
 const store = createStore(
 	undoable(slice.reducer, { filter: filterActions, groupBy: groupActions }) as any,
@@ -39,14 +39,14 @@ export default store;
 export type RootState = ReturnType<typeof store.getState>;
 
 function filterActions(action) {
-	return modification_types.includes(action.type.slice(8));
+	return modification_actions.includes(action.type.slice(8));
 }
 
 let last_action = { type: '', time: Date.now() };
 
 function groupActions(action) {
 	const now = Date.now();
-	if (interaction_types.includes(action.type.slice(8)) && last_action.type === action.type && last_action.time > now - 500) {
+	if (interaction_actions.includes(action.type.slice(8)) && last_action.type === action.type && last_action.time > now - 500) {
 		last_action.time = now;
 		return action.type;
 	}

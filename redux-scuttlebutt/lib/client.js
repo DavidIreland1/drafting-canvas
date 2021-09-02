@@ -4,6 +4,8 @@ import { UPDATE_SNAPSHOT } from './constants';
 export { isGossipType } from './dispatcher';
 export { META_SOURCE, META_TIMESTAMP, REWIND_ACTION, UPDATE_ACTION, UPDATE_TIMESTAMP, UPDATE_SOURCE, UPDATE_SNAPSHOT } from './constants';
 
+import { tool_actions } from './../../reducers/tools';
+
 // Applies default options.
 const defaultOptions = {
 	uri: typeof window === 'object' && `${window.location.protocol}//${window.location.host}`,
@@ -94,13 +96,22 @@ function connectStreams(primus, createStream, room) {
 		// discard the old one (hopefullly .destroy()d on 'end')
 		gossip = createStream();
 		gossip.on('data', (data) => {
+
+			// Filter out local only 'tool' actions
+			const action = JSON.parse(data)
+			if (action.length && action[0].type) {
+				const type = action[0].type.split('action/')[1];
+				if (tool_actions.includes(type)) {
+					return;
+				}
+			}
+
 			primus.write(data);
 		});
 
 		primus.write({ action: 'join', room: room });
 
 		primus.on('data', (data) => {
-			console.log(JSON.parse(data));
 			if (data.action === 'info') {
 				console.log(data);
 				return;

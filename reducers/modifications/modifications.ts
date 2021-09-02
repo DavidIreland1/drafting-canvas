@@ -8,4 +8,4 @@ const modifications = {
 
 export default modifications;
 
-export const modification_types = Object.keys(modifications);
+export const modification_actions = Object.keys(modifications);

@@ -1,6 +1,8 @@
 import { flatten } from '../components/elements/elements';
 
-export default {
+
+
+const tools = {
 	hoverOnly: (state, props) => {
 		flatten(state.elements).forEach((element) => (element.hover = element.id === props.payload.id));
 	},
@@ -22,3 +24,8 @@ export default {
 		flatten(state.elements).forEach((element) => (element.selected = false));
 	},
 };
+
+
+export default tools;
+
+export const tool_actions = Object.keys(tools);

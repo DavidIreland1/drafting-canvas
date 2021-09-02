@@ -64,4 +64,4 @@ const interactions = {
 
 export default interactions;
 
-export const interaction_types = Object.keys(interactions);
+export const interaction_actions = Object.keys(interactions);
