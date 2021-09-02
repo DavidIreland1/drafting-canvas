@@ -10,7 +10,7 @@ export default function OffWhiteCanvas(): JSX.Element {
 	return (
 		<div>
 			<Head>
-				<title>Off White Canvas</title>
+				<title>Drafting Canvas</title>
 				<link rel="icon" href="/favicon.svg" />
 				<script src="/primus/primus.js"></script>
 			</Head>
