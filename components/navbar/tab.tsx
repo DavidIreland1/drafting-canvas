@@ -1,14 +1,20 @@
 import Link from 'next/link';
+import { useRef } from 'react';
+
 
 export default function Tab({ tab, url }) {
+
+	const tab_ref = useRef(null)
+	
 	const drag = (event) => {
-		const tab = event.target;
+		const tab = tab_ref.current;
 
 		requestAnimationFrame(() => tab.classList.add('blank'));
 		const move = (move_event) => {
 			const hover = document.elementFromPoint(move_event.clientX, move_event.clientY);
 			if (hover === tab || hover === tab.nextSibling) return;
-			if (hover.tagName === 'A') return hover.parentElement.insertBefore(tab, hover);
+			if (hover.tagName === 'A') return hover.parentElement.parentElement.insertBefore(tab, hover.parentElement);
+			if (hover.tagName === 'SVG') return hover.parentElement.parentElement.parentElement.insertBefore(tab, hover.parentElement.parentElement.parentElement);
 			if (hover.id === 'plus') return hover.previousElementSibling.append(tab);
 			if (hover.id === 'nav') return hover.children[2].append(tab);
 		};
@@ -21,8 +27,8 @@ export default function Tab({ tab, url }) {
 	};
 
 	return (
-		<div>
-			<Link key={tab.id} href={'/' + tab.id}>
+		<div ref={tab_ref}>
+			<Link key={tab.id} href={'/' + tab.id} >
 				<a className={'tab' + (tab.id === url ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
 					{tab.label}
 
@@ -65,11 +71,11 @@ export default function Tab({ tab, url }) {
 				.tab.selected {
 					background: var(--selected);
 				}
-				.tab.blank {
+				.blank {
 					color: transparent;
 					background: transparent;
 				}
-				.tab.blank > * {
+				.blank > * {
 					visibility: collapse;
 				}
 

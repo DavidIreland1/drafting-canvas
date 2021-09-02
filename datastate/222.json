@@ -33,6 +33,12 @@
 		"type": "@@redux/INIT"
 	},
 	{
+		"type": "@@redux/INIT"
+	},
+	{
+		"type": "@@redux/INIT"
+	},
+	{
 		"meta": {},
 		"type": "counter/addUser",
 		"payload": {
@@ -17147,6 +17153,15 @@
 	},
 	{
 		"meta": {},
+		"type": "counter/addUser",
+		"payload": {
+			"user_id": "92119264",
+			"label": "House-broken Pig",
+			"color": "hsl(32,89%,34%)"
+		}
+	},
+	{
+		"meta": {},
 		"type": "counter/resize",
 		"payload": {
 			"user_id": "91092248",
@@ -18819,6 +18834,15 @@
 				"x": 106.984375,
 				"y": -562.2265625
 			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/addUser",
+		"payload": {
+			"user_id": "9112817347",
+			"label": "Creepy Tiger",
+			"color": "hsl(311,50%,31%)"
 		}
 	},
 	{
@@ -32377,6 +32401,20 @@
 		"type": "counter/removeUser",
 		"payload": {
 			"user_id": "35949589"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/removeUser",
+		"payload": {
+			"user_id": "9112817347"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/removeUser",
+		"payload": {
+			"user_id": "92119264"
 		}
 	}
 ]
