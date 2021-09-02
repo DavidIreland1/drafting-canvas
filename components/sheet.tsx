@@ -20,12 +20,12 @@ export default function Sheet({ store, actions }) {
 		const { page } = router.query;
 		if (!page) return;
 
-		fetch(`./page/${page}`).then(async (res) => {
+		// fetch(`./page/${page}`).then(async (res) => {
 			// const state = await res.json();
 			// store.dispatch(actions.overwrite({ state: state }));
 			// store.dispatch(actions.overwrite({ state: { elements: state.elements } }));
-			store.dispatch(actions.addUser({ user_id: Settings.user_id, label: Settings.user_name, color: Settings.user_color }));
-		});
+		// });
+		store.dispatch(actions.addUser({ user_id: Settings.user_id, label: Settings.user_name, color: Settings.user_color }));
 
 		window.addEventListener('beforeunload', async () => {
 			store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
@@ -39,7 +39,6 @@ export default function Sheet({ store, actions }) {
 				store.dispatch(actions.overwrite({ state: { elements: getPage(undefined).elements } }));
 			}
 			if (event.key === 'm') {
-				console.log(getPage('red').elements);
 				// window.location.reload();
 				store.dispatch(actions.overwrite({ state: { elements: getPage('red').elements } }));
 			}

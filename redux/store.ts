@@ -23,7 +23,8 @@ import { interaction_types } from '../reducers/modifications/interactions';
 
 const store = createStore(
 	undoable(slice.reducer, { filter: filterActions, groupBy: groupActions }) as any,
-	initial_state,
+	// initial_state,
+	undefined,
 	typeof Primus !== 'undefined'
 		? scuttlebutt({
 				primus: Primus,

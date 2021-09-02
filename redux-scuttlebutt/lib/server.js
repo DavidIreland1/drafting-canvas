@@ -15,22 +15,21 @@ const REMOTE_SB = process.env['REMOTE_SB'];
 const defaultOptions = {
 	getStatistics: getStatistics,
 	primusOptions: {},
-	dispatcherOptions: {},
 };
 
 let documents = {};
+let rooms = {}
+
 function openDocument(room, options) {
-	const gossip = new Dispatcher(options.dispatcherOptions);
+	console.log('opened room: ', room)
+
+	const gossip = new Dispatcher({});
 
 	const document_state = load(room);
 
 	const { store, dispatch, getState } = connectRedux(gossip, undefined);
 
-	if (document_state) {
-		document_state.forEach((action) => {
-			dispatch(action);
-		});
-	}
+	if (document_state) document_state.forEach((action) => dispatch(action));
 
 	return {
 		gossip,
@@ -41,6 +40,41 @@ function openDocument(room, options) {
 	};
 }
 
+function addUser(spark, room) {
+	console.log('add user: ', spark.id, ' to: ', room)
+	spark.join(room, () => spark.room(room).write({ action: 'info', room: spark.id + ' joined room ' + room }));
+
+	
+	// Each connection needs it's own stream
+	documents[room].streams[spark.id] = documents[room].gossip.createStream();
+
+	documents[room].streams[spark.id].on('data', function (data) {
+		// spark.room(room).write(data);
+		spark.write(data); // Might be sending this to all clients but line above breaks
+	});
+
+	documents[room].streams[spark.id].on('error', function (error) {
+		spark.leave(room);
+		console.log('[io]', spark.id, 'ERROR:', error);
+		spark.end('Disconnecting due to error', { reconnect: true });
+	});
+
+}
+
+function removeUser(spark, room) {
+	console.log('remove user: ', spark.id, ' from: ', room)
+	if (!documents[room]) return;
+
+	delete documents[room].streams[spark.id];
+	delete rooms[spark.id];
+
+	const num_streams = Object.keys(documents[room].streams).length;
+	if (num_streams === 0) {
+		save(room, documents[room].getState());
+		delete documents[room];
+	}
+}
+
 exports.default = function scuttlebuttServer(server, options) {
 	options = Object.assign(defaultOptions, options);
 
@@ -49,66 +83,30 @@ exports.default = function scuttlebuttServer(server, options) {
 
 	// const onStatistic = options.getStatistics();
 
-	primus.on('connection', function (spark) {
-		// const stream = gossip.createStream();
-		// This works console.log('[io] connection', spark.address, spark.id);
-		// onStatistic(spark.id, 'connect');
-		let room;
-
-		spark.on('data', function recv(data) {
-			if (data.action === 'admin') {
-				room = data.room;
-
-				spark.join(room, () => spark.room(room).write({ action: 'admin', room: spark.id + ' joined room ' + data.room }));
-
-				if (!documents[room]) documents[room] = openDocument(room, options);
-
-				// Each connection needs it's own stream
-				documents[room].streams[spark.id] = documents[room].gossip.createStream();
-
-				documents[room].streams[spark.id].on('data', function (data) {
-					// spark.room(room).write(data);
-					spark.write(data); // Might be sending this to all clients but line above breaks
-				});
-
-				documents[room].streams[spark.id].on('error', function (error) {
-					spark.leave(room);
-					console.log('[io]', spark.id, 'ERROR:', error);
-					spark.end('Disconnecting due to error', { reconnect: true });
-				});
+	primus.on('connection',  (spark) => {
+		spark.on('data',  (data) => {
+			if (data.action === 'join') {
+				rooms[spark.id] = data.room 
+				if (!documents[rooms[spark.id]]) documents[rooms[spark.id]] = openDocument(rooms[spark.id]);
+				addUser(spark, rooms[spark.id])
+			} else if (data.action === 'leave') {
+				removeUser(spark, rooms[spark.id])
 			} else {
-				// onStatistic(spark.id, 'recv');
-				// stream.write(data);
-
-				// Send data out to stream
-				documents[room].streams[spark.id].write(data);
+				// console.log('data', rooms[spark.id])
+				documents[rooms[spark.id]].streams[spark.id].write(data);
 			}
-
-			// console.log('[io]', spark.id, '<-', data);
 		});
+	});
 
-		// Seems to be deleteing / saving too often
-		primus.on('disconnection', function (spark) {
-			if (!documents[room]) return;
-			if (documents[room].streams[spark.id]) delete documents[room].streams[spark.id];
-
-			const num_streams = Object.keys(documents[room].streams).length;
-			if (num_streams === 0) {
-				save(room, documents[room].getState());
-				delete documents[room];
-			}
-
-			// console.log(, spark.id);
-
-			// This works console.log('[io] disconnect', spark.address, spark.id);
-			// onStatistic(spark.id, 'disconnect');
-			// in case you don't want to track zombie connections
-			// delete statistics[spark.id]
-		});
+	// Seems to be deleteing / saving too often
+	primus.on('disconnection',  (spark) => {
+		removeUser(spark, rooms[spark.id]);
 	});
 
 	// return { primus, store, dispatch, getState };
 };
+
+
 
 function connectRedux(gossip, initial_state) {
 	const Redux = require('redux');
@@ -118,8 +116,9 @@ function connectRedux(gossip, initial_state) {
 		const action = arguments[1];
 
 		// Filter out the actions we don't want to save
-		if (action.type.endsWith('cursor') || action.type.endsWith('hoverOnly')) {
-			// console.log(action.type);
+		if (action.type.endsWith('cursor') ||
+			action.type.endsWith('hoverOnly') ||
+			action.type.endsWith('INIT')) {
 			return state;
 		}
 		return state.concat(action);

@@ -93,19 +93,17 @@ function connectStreams(primus, createStream, room) {
 		// create fresh stream,
 		// discard the old one (hopefullly .destroy()d on 'end')
 		gossip = createStream();
-		gossip.pipe(primus);
+		gossip.on('data', (data) => {
+			primus.write(data);
+		});
 
-		primus.write({ action: 'admin', room: room });
+		primus.write({ action: 'join', room: room });
 
-		primus.on('data', function message(data) {
-			// console.log(JSON.parse(data));
-			if (data.action === 'admin') {
+		primus.on('data', (data) => {
+			console.log(JSON.parse(data));
+			if (data.action === 'info') {
 				console.log(data);
 				return;
-			}
-			// console.log('[primus] <-', data)
-			if (DEBUG_DELAY) {
-				return setTimeout(() => gossip.write(data), DEBUG_DELAY);
 			}
 			gossip.write(data);
 		});
