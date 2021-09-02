@@ -18,6 +18,18 @@
 		"type": "@@redux/INIT"
 	},
 	{
+		"type": "@@redux/INIT"
+	},
+	{
+		"meta": {},
+		"type": "counter/addUser",
+		"payload": {
+			"user_id": "9761995",
+			"label": "Hyperactive Hare",
+			"color": "hsl(143,74%,26%)"
+		}
+	},
+	{
 		"meta": {},
 		"type": "counter/addUser",
 		"payload": {
@@ -23370,6 +23382,13 @@
 		"type": "counter/removeUser",
 		"payload": {
 			"user_id": "667194299"
+		}
+	},
+	{
+		"meta": {},
+		"type": "counter/removeUser",
+		"payload": {
+			"user_id": "9761995"
 		}
 	}
 ]
