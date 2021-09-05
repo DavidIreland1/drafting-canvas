@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import Colors from './colors'
 
 import Elements from './../elements/elements';
 
 export default function Picker({ store, actions, color_id, color, event, setPicker }) {
-	const [picker_position, setPickerPosition] = useState({ x: event.clientX - 350, y: event.clientY });
+	const [picker_position, setPickerPosition] = useState({ x: event.clientX - 350, y: event.clientY - 80 });
 	const dragPicker = (down_event) => {
-		if (down_event.target.id !== 'container') return;
+		if (down_event.target.id !== 'container' && down_event.target.id !== 'header' && down_event.target.id !== 'name' ) return;
 		down_event.preventDefault();
 		down_event.target.setPointerCapture(down_event.pointerId);
 		const offset_x = picker_position.x - down_event.clientX;
 		const offset_y = picker_position.y - down_event.clientY;
-		const move = (move_event) => setPickerPosition({ x: move_event.clientX + offset_x, y: Math.max(move_event.clientY + offset_y, -40) });
+		const move = (move_event) => setPickerPosition({ x: move_event.clientX + offset_x, y: Math.max(move_event.clientY + offset_y, 0) });
 		down_event.target.addEventListener('pointermove', move);
 		down_event.target.addEventListener(
 			'pointerup',
@@ -34,11 +35,13 @@ export default function Picker({ store, actions, color_id, color, event, setPick
 	});
 
 	if (typeof base === 'undefined') {
-		// setPicker(null);
+		setTimeout(() => {
+			setPicker(null);
+		}, 10)
 		return null;
 	}
 
-	const HSBA = hslaToHsba(rgbaToHsla(colorToRgba(base.color)));
+	const HSBA = Colors.hslaToHsba(Colors.rgbaToHsla(Colors.stringToRgba(base.color)));
 
 	const drag = (down_event, id, callback) => {
 		down_event.preventDefault();
@@ -93,18 +96,21 @@ export default function Picker({ store, actions, color_id, color, event, setPick
 		if (brightness) scaled_brightness = 1 - brightness / fade_width;
 		if (aplha) scaled_aplha = aplha / slider_width;
 
-		const [h, s, l, a] = hsvaToHsla([scaled_hue, scaled_saturation, scaled_brightness, scaled_aplha]);
+		const [r, g, b, a] = Colors.hslaToRgba(Colors.hsvaToHsla([scaled_hue, scaled_saturation, scaled_brightness, scaled_aplha]));
 
-		const [r, g, b, a2] = hslaToRgba([h, s, l, a]);
-
-		const hex = rgbaToHex([r, g, b, a2]);
-
-		store.dispatch(actions.setColor({ color_id: color_id, color: hex }));
+		store.dispatch(actions.setColor({ color_id: color_id, color: [r, g, b, a] }));
 	}
 
-	console.log(HSBA);
 	return (
 		<div id="container" onPointerDown={dragPicker}>
+			<div id="header">
+				<div id="name"></div>
+				<svg id="cross" viewBox="0 0 20 20" onClick={() => setPicker(null)}>
+					<line x1="2" y1="2" x2="18" y2="18"/>
+					<line x1="18" y1="2" x2="2" y2="18"/>
+				</svg>
+			</div>
+			
 			<div id="fade" onPointerDown={dragFade}>
 				<div id="fade-handle" className="handle"></div>
 			</div>
@@ -126,6 +132,19 @@ export default function Picker({ store, actions, color_id, color, event, setPick
 			</div>
 
 			<style jsx>{`
+				#header {
+					display: grid;
+					grid-template-columns: 1fr 40px;
+				}
+				#cross {
+					width: 30px;
+					height: 30px;
+					stroke-width: 1;
+					stroke: white;
+				}
+				#cross:hover {
+					stroke: var(--selected);
+				}
 				#hsla {
 					display: grid;
 					grid-auto-flow: column;
@@ -138,7 +157,7 @@ export default function Picker({ store, actions, color_id, color, event, setPick
 					position: absolute;
 					z-index: 7;
 
-					padding: 40px 0 20px 0;
+					padding: 10px 0 20px 0;
 					background: var(--panel);
 
 					top: ${picker_position.y}px;
@@ -172,7 +191,7 @@ export default function Picker({ store, actions, color_id, color, event, setPick
 					border: 1px solid black;
 					box-sizing: border-box;
 					z-index: 2;
-					background-color: hsl(${HSBA[0] * 360}, ${HSBA[1] * 100}%, ${HSBA[2] * 100}%);
+					background-color: hsb(${HSBA[0] * 360}, ${HSBA[1] * 100}%, ${HSBA[2] * 100}%);
 				}
 				.handle::before {
 					position: absolute;
@@ -234,106 +253,6 @@ export default function Picker({ store, actions, color_id, color, event, setPick
 	);
 }
 
-function clamp(min, num, max) {
+export function clamp(min, num, max) {
 	return Math.min(Math.max(num, min), max);
-}
-
-function rgbaToHex([r, g, b, a]) {
-	return `#${[r, g, b, a]
-		.map((color) =>
-			Math.round(255 * color)
-				.toString(16)
-				.padStart(2, '0')
-		)
-		.join('')}`.toUpperCase();
-}
-
-function hslaToRgba([h, s, l, a]): [number, number, number, number] {
-	const b = s * Math.min(l, 1 - l);
-	const f = (n) => {
-		const k = (n + h * 12) % 12;
-		return l - b * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-	};
-	return [f(0), f(8), f(4), a];
-}
-
-function hsvaToHsla([h, s, v, a]): [number, number, number, number] {
-	// both hsv and hsl values are in [0, 1]
-	const l = ((2 - s) * v) / 2;
-
-	if (l !== 0) {
-		if (l === 1) {
-			s = 0;
-		} else if (l < 0.5) {
-			s = (s * v) / (l * 2);
-		} else {
-			s = (s * v) / (2 - l * 2);
-		}
-	}
-
-	return [h, s, l, a];
-}
-
-export function hslaToHsba([h, s, l, a]): [number, number, number, number] {
-	const hsv1 = s * (l < 0.5 ? l : 1 - l);
-	const hsvS = hsv1 === 0 ? 0 : (2 * hsv1) / (l + hsv1);
-	const hsvV = l + hsv1;
-	return [h, hsvS, hsvV, a];
-}
-
-function rgbaToHsla([r, g, b, a]): [number, number, number, number] {
-	const max = Math.max(r, g, b);
-	const min = Math.min(r, g, b);
-	let h;
-	let s;
-	const l = (max + min) / 2;
-
-	if (max === min) {
-		h = s = 0; // achromatic
-	} else {
-		var d = max - min;
-		s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-		switch (max) {
-			case r:
-				h = (g - b) / d + (g < b ? 6 : 0);
-				break;
-			case g:
-				h = (b - r) / d + 2;
-				break;
-			case b:
-				h = (r - g) / d + 4;
-				break;
-		}
-		h /= 6;
-	}
-	return [h, s, l, a];
-}
-
-// function hexToRgba(hex): [number, number, number, number] {
-// 	if (hex === 'blue') return [0, 0, 1, 1];
-// 	const r = parseInt(hex.substr(1, 2), 16) / 255;
-// 	const g = parseInt(hex.substr(3, 2), 16) / 255;
-// 	const b = parseInt(hex.substr(5, 2), 16) / 255;
-// 	const a = hex.length > 7 ? parseInt(hex.substr(7, 2), 16) / 255 : 1;
-
-// 	return [r, g, b, a];
-// }
-//: [number, number, number, number]
-function colorToRgba(color) {
-	const div = document.createElement('div');
-	div.style.background = color;
-	document.body.appendChild(div);
-	color = getComputedStyle(div).backgroundColor;
-	div.remove();
-
-	color = color
-		.split('(')[1]
-		.slice(0, -1)
-		.split(',')
-		.map(Number)
-		.map((color, i) => (i < 3 ? color / 255 : color));
-
-	if (color.length < 4) color.push(1);
-
-	return color;
 }

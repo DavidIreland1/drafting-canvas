@@ -1,12 +1,14 @@
 // import Defaults from './../../defaults';
 // const { line, box_size, highlight_color } = Defaults;
+
+import Colors from './../properties/colors';
 export default class Element {
 	static create(id, position): Object {
 		return {
 			id: id,
 			selected: true,
 			hover: false,
-			fill: [{ id: id + '2123', color: 'grey' }],
+			fill: [{ id: id + '2123', color: [1, 0, 0, 1] }],
 			stroke: [],
 			visible: true,
 			locked: false,
@@ -19,7 +21,7 @@ export default class Element {
 
 	static fill(element, context, path) {
 		element.fill.forEach((fill) => {
-			context.fillStyle = fill.color;
+			context.fillStyle = Colors.rgbaToString(fill.color);
 			context.fill(path);
 		});
 	}
@@ -27,7 +29,7 @@ export default class Element {
 	static stroke(element, context, path) {
 		element.stroke.forEach((stroke) => {
 			context.lineWidth = stroke.width;
-			context.strokeStyle = stroke.color;
+			context.strokeStyle = Colors.rgbaToString(stroke.color);
 			context.stroke(path);
 		});
 	}
@@ -160,7 +162,7 @@ export default class Element {
 
 	static setFill(element, props) {
 		element.fill.forEach((fill) => {
-			if (props.id === fill.color_id) fill.color = props.color;
+			if (props.color_id === fill.id) fill.color = props.color;
 		});
 	}
 
@@ -170,7 +172,8 @@ export default class Element {
 
 	static setStroke(element, props) {
 		element.stroke.forEach((stroke) => {
-			if (props.id === stroke.color_id) stroke.color = props.color;
+			console.log(props.color_id, stroke.id);
+			if (props.color_id === stroke.id) stroke.color = props.color;
 		});
 	}
 

@@ -7,7 +7,8 @@ import Settings from './settings';
 export default function Navbar({ store, actions }) {
 	// const [cursor.type, setTool] = useState('select');
 
-	let cursor = useSelector((state: RootState) => (state as any).present.cursors.find((cursor) => cursor.id === Settings.user_id));
+	let cursor = useSelector((state: RootState) => state.present.cursors.find((cursor) => cursor.id === Settings.user_id));
+	console.log(cursor);
 
 	const selectTool = (event) => {
 		event.preventDefault();
@@ -23,13 +24,13 @@ export default function Navbar({ store, actions }) {
 			);
 	};
 
-	if (!cursor || !['rectangle', 'line', 'ellipse'].includes(cursor.type)) cursor = { type: 'select' };
+	if (!cursor || !['rectangle', 'line', 'ellipse', 'pen'].includes(cursor.type)) cursor = { type: 'select' };
 
 	return (
 		<div id="container">
 			<div id="bar" onMouseDown={selectTool}>
 				<svg id="select" className={cursor.type === 'select' ? 'selected' : ''} viewBox="0 0 100 100">
-					<path d="M 30 15 l 0 70 l 23 -15 l 32 -3 L 30 15" />
+					<path d="M 30 15 l 0 70 l 23 -15 l 32 -3 Z" />
 				</svg>
 				<svg id="rectangle" className={cursor.type === 'rectangle' ? 'selected' : ''} viewBox="0 0 100 100">
 					<rect x="20" y="20" width="60" height="60" />
@@ -41,6 +42,9 @@ export default function Navbar({ store, actions }) {
 				</svg>
 				<svg id="ellipse" className={cursor.type === 'ellipse' ? 'selected' : ''} viewBox="0 0 100 100">
 					<circle cx="50" cy="50" r="30" />
+				</svg>
+				<svg id="pen" className={cursor.type === 'pen' ? 'selected' : ''} viewBox="0 0 100 100">
+					<path d="M 26 6 L 45 45 A 5 5 0 1 0 47.1 45 M 26 6 V 72 C 25 74 45 70 55 93 L 75 83 C 64 55 80 54 78 48 Z" />
 				</svg>
 			</div>
 

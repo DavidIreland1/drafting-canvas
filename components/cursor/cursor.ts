@@ -9,6 +9,9 @@ import Settings from './../settings';
 const Cursors = {
 	select: Select,
 	move: Select,
+
+	pen: Select, //
+
 	stretch: Stretch,
 	resize: Resize,
 	rotate: Rotate,

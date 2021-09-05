@@ -1,4 +1,5 @@
 import { ActionCreators } from 'redux-undo';
+import { generateID } from './../../utils/utils';
 
 export function shortCuts(event, store, actions): boolean {
 	switch (event.key) {
@@ -22,6 +23,12 @@ export function shortCuts(event, store, actions): boolean {
 			event.preventDefault();
 			console.log('save');
 			return true;
+
+		case 'g':
+			store.dispatch(actions.group({ id: generateID() }));
+			return true;
+
+		default:
+			return false;
 	}
-	return false;
 }

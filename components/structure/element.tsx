@@ -44,7 +44,7 @@ export default function Element({ store, actions, element, indentation, restruct
 		event.target.addEventListener('dragend', end, { once: true });
 	};
 
-	function setHover(hover_state) {
+	function setHover() {
 		store.dispatch(actions.hoverOnly({ id: element.id }));
 	}
 

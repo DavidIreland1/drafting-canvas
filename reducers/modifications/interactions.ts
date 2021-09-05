@@ -1,4 +1,4 @@
-import Elements, { flatten, selected } from '../../components/elements/elements';
+import Elements, { flatten, forEachElement, selected } from '../../components/elements/elements';
 
 import { slice } from './../../redux/slice';
 import { round } from '../../utils/utils';
@@ -15,12 +15,7 @@ const interactions = {
 		const { user_id, id, position, last_position } = props.payload;
 
 		const selected = state.elements.filter((element) => element.selected);
-		// const target = flatten(state.elements).find((element) => id === element.id);
-
 		selected.forEach((element) => Elements[element.type].rotate(element, position, last_position));
-
-		// const cursor = state.cursors.find((cursor) => user_id === cursor.id);
-		// cursor.rotation += rotation;
 	},
 	stretch: (state, props) => {
 		const { id, position, last_position } = props.payload;
@@ -60,8 +55,55 @@ const interactions = {
 		const element = flatten(state.elements).find((element) => element.id === id);
 		if (element) element.locked = !element.locked;
 	},
+
+	group: (state, props) => {
+		const { id } = props.payload;
+
+		const elements = state.elements;
+		const selected = flatten(elements).filter((element) => element.selected);
+
+		const selected_ids = selected.map((element) => element.id);
+
+		// slice.caseReducers.deleteSelected(state);
+
+		const location_id = selected_ids[0];
+
+		forEachElement(elements, (element, i, elements) => {
+			if (element.id === location_id)
+				elements[i] = {
+					id: id,
+					label: 'Group',
+					type: 'group',
+					selected: false,
+					hover: false,
+					rotation: 0,
+					visible: true,
+					locked: false,
+					elements: selected,
+				};
+		});
+
+		// Remove selected aside from in new group
+		forEachElementUntil(
+			elements,
+			(element, i, elements) => {
+				if (element.selected === true) elements.splice(i, 1);
+			},
+			id
+		);
+	},
 };
 
 export default interactions;
 
 export const interaction_actions = Object.keys(interactions);
+
+// Stops recursing at given id
+function forEachElementUntil(elements, callback, stop_id) {
+	elements.forEach((element, index, array) => {
+		callback(element, index, array);
+		if (element.type === 'group' && element.id !== stop_id) {
+			forEachElementUntil(element.elements, callback, stop_id);
+		}
+	});
+}

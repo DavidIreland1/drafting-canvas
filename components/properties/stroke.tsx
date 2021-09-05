@@ -1,14 +1,15 @@
 import Picker from './picker';
 import Elements from './../elements/elements';
 import { generateID } from '../../utils/utils';
+import Colors from './colors';
 
 export default function Stroke({ selected, store, actions, width, setPicker }) {
 	function addStroke() {
-		store.dispatch(actions.addStroke({ id: generateID(), width: 4, color: 'blue' }));
+		store.dispatch(actions.addStroke({ id: generateID(), width: 4, color: [0, 0, 1, 1] }));
 	}
 
-	function removeStroke() {
-		store.dispatch(actions.addStroke({ id: generateID(), color: 'blue' }));
+	function removeStroke(id) {
+		store.dispatch(actions.removeStroke({ id }));
 	}
 
 	function selectColor(event, color_id, color) {
@@ -18,9 +19,9 @@ export default function Stroke({ selected, store, actions, width, setPicker }) {
 	function toStroke(stroke) {
 		return (
 			<div key={stroke.id} className="property-row">
-				<div className="property-color" onClick={(event) => selectColor(event, stroke.id, stroke.color)} style={{ background: stroke.color }} />
-				{stroke.color}
-				<div className="property-minus" onClick={removeStroke}>
+				<div className="property-color" onClick={(event) => selectColor(event, stroke.id, stroke.color)} style={{ background: Colors.rgbaToString(stroke.color) }} />
+				{Colors.rgbaToHex(stroke.color)}
+				<div className="property-minus" onClick={() => removeStroke(stroke.id)}>
 					<svg viewBox="0 0 10 10" stroke="white" strokeWidth="1">
 						<line x1="0" y1="5" x2="10" y2="5" />
 					</svg>

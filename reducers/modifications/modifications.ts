@@ -1,6 +1,8 @@
 import interactions from './interactions';
 import properties from './properties';
 
+// Modification types can be undone / redone
+
 const modifications = {
 	...interactions,
 	...properties,

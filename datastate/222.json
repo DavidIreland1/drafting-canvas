@@ -1,0 +1,714 @@
+[
+	{
+		"meta": {},
+		"type": "action/addUser",
+		"payload": {
+			"user_id": "4342621",
+			"label": "Offensive Louse",
+			"color": "hsl(38,77%,32%)"
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/addUser",
+		"payload": {
+			"user_id": "000189223",
+			"label": "Disturbing Chicken",
+			"color": "hsl(2,54%,28%)"
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/addUser",
+		"payload": {
+			"user_id": "40718031",
+			"label": "Adulterous Cormorant",
+			"color": "hsl(131,65%,29%)"
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/addUser",
+		"payload": {
+			"user_id": "06936592",
+			"label": "Costumed Rat",
+			"color": "hsl(125,89%,28%)"
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/createElement",
+		"payload": {
+			"id": "06936592",
+			"mode": "edit"
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -216.75,
+				"y": -738.09375
+			},
+			"last_position": {
+				"x": -215.390625,
+				"y": -738.09375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -242.265625,
+				"y": -738.09375
+			},
+			"last_position": {
+				"x": -216.75,
+				"y": -738.09375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -296.96875,
+				"y": -738.09375
+			},
+			"last_position": {
+				"x": -242.265625,
+				"y": -738.09375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -378.453125,
+				"y": -738.09375
+			},
+			"last_position": {
+				"x": -296.96875,
+				"y": -738.09375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -476.671875,
+				"y": -735.9375
+			},
+			"last_position": {
+				"x": -378.453125,
+				"y": -738.09375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -507.4921875,
+				"y": -729.78125
+			},
+			"last_position": {
+				"x": -476.671875,
+				"y": -735.9375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -539.7109375,
+				"y": -718.875
+			},
+			"last_position": {
+				"x": -507.4921875,
+				"y": -729.78125
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -573.015625,
+				"y": -703.96875
+			},
+			"last_position": {
+				"x": -539.7109375,
+				"y": -718.875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -582.3359375,
+				"y": -696.71875
+			},
+			"last_position": {
+				"x": -573.015625,
+				"y": -703.96875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -586.7890625,
+				"y": -690.5390625
+			},
+			"last_position": {
+				"x": -582.3359375,
+				"y": -696.71875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -589.8359375,
+				"y": -685.9765625
+			},
+			"last_position": {
+				"x": -586.7890625,
+				"y": -690.5390625
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -592.34375,
+				"y": -680.2265625
+			},
+			"last_position": {
+				"x": -589.8359375,
+				"y": -685.9765625
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -593.21875,
+				"y": -674.4765625
+			},
+			"last_position": {
+				"x": -592.34375,
+				"y": -680.2265625
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -596.9140625,
+				"y": -666.1328125
+			},
+			"last_position": {
+				"x": -593.21875,
+				"y": -674.4765625
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -602.7734375,
+				"y": -657.359375
+			},
+			"last_position": {
+				"x": -596.9140625,
+				"y": -666.1328125
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -608.421875,
+				"y": -649.9921875
+			},
+			"last_position": {
+				"x": -602.7734375,
+				"y": -657.359375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -619.25,
+				"y": -635.5078125
+			},
+			"last_position": {
+				"x": -608.421875,
+				"y": -649.9921875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -629.5390625,
+				"y": -622.96875
+			},
+			"last_position": {
+				"x": -619.25,
+				"y": -635.5078125
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -640.6875,
+				"y": -606.7578125
+			},
+			"last_position": {
+				"x": -629.5390625,
+				"y": -622.96875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -650.8828125,
+				"y": -592.578125
+			},
+			"last_position": {
+				"x": -640.6875,
+				"y": -606.7578125
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -654.359375,
+				"y": -585.421875
+			},
+			"last_position": {
+				"x": -650.8828125,
+				"y": -592.578125
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -656.5390625,
+				"y": -581.8359375
+			},
+			"last_position": {
+				"x": -654.359375,
+				"y": -585.421875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -656.5390625,
+				"y": -580.7421875
+			},
+			"last_position": {
+				"x": -656.5390625,
+				"y": -581.8359375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -656.5390625,
+				"y": -581.2109375
+			},
+			"last_position": {
+				"x": -656.5390625,
+				"y": -580.7421875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -656.5390625,
+				"y": -581.765625
+			},
+			"last_position": {
+				"x": -656.5390625,
+				"y": -581.2109375
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -655.4453125,
+				"y": -582.3203125
+			},
+			"last_position": {
+				"x": -656.5390625,
+				"y": -581.765625
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -654.3515625,
+				"y": -582.3203125
+			},
+			"last_position": {
+				"x": -655.4453125,
+				"y": -582.3203125
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -652.5,
+				"y": -582.3203125
+			},
+			"last_position": {
+				"x": -654.3515625,
+				"y": -582.3203125
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/resize",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -651.40625,
+				"y": -582.875
+			},
+			"last_position": {
+				"x": -652.5,
+				"y": -582.3203125
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/move",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -413.65625,
+				"y": -667.8671875
+			},
+			"last_position": {
+				"x": -414.1015625,
+				"y": -667.8671875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/move",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -407.1640625,
+				"y": -667.8671875
+			},
+			"last_position": {
+				"x": -413.65625,
+				"y": -667.8671875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/move",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -393.9609375,
+				"y": -667.8671875
+			},
+			"last_position": {
+				"x": -407.1640625,
+				"y": -667.8671875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/move",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -373.2109375,
+				"y": -667.8671875
+			},
+			"last_position": {
+				"x": -393.9609375,
+				"y": -667.8671875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/move",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -356.34375,
+				"y": -667.8671875
+			},
+			"last_position": {
+				"x": -373.2109375,
+				"y": -667.8671875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/move",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -347.5703125,
+				"y": -667.8671875
+			},
+			"last_position": {
+				"x": -356.34375,
+				"y": -667.8671875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/move",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -340.6328125,
+				"y": -667.8671875
+			},
+			"last_position": {
+				"x": -347.5703125,
+				"y": -667.8671875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/move",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -337.046875,
+				"y": -667.8671875
+			},
+			"last_position": {
+				"x": -340.6328125,
+				"y": -667.8671875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/move",
+		"payload": {
+			"user_id": "06936592",
+			"id": "31938904",
+			"position": {
+				"x": -336.5,
+				"y": -667.8671875
+			},
+			"last_position": {
+				"x": -337.046875,
+				"y": -667.8671875
+			}
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/removeUser",
+		"payload": {
+			"user_id": "06936592"
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/removeUser",
+		"payload": {
+			"user_id": "000189223"
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/addUser",
+		"payload": {
+			"user_id": "4342621",
+			"label": "Offensive Louse",
+			"color": "hsl(38,77%,32%)"
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/removeUser",
+		"payload": {
+			"user_id": "4342621"
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/removeUser",
+		"payload": {
+			"user_id": "4342621"
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/addUser",
+		"payload": {
+			"user_id": "40718031",
+			"label": "Adulterous Cormorant",
+			"color": "hsl(131,65%,29%)"
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/removeUser",
+		"payload": {
+			"user_id": "40718031"
+		}
+	},
+	{
+		"meta": {},
+		"type": "action/removeUser",
+		"payload": {
+			"user_id": "40718031"
+		}
+	}
+]

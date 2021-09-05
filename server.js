@@ -49,7 +49,7 @@ app.prepare().then(() => {
 		console.log('> Ready on http://localhost:3000');
 	});
 
-	dispatcher(server);
+	// dispatcher(server);
 
 	// primusServer.save(__dirname + '/primus.js');
 
@@ -77,7 +77,7 @@ app.prepare().then(() => {
 });
 
 const slice = createSlice({
-	name: 'counter',
+	name: 'action',
 	initialState: initial_state,
 	reducers: reducers,
 });

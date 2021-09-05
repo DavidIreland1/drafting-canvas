@@ -16,5 +16,5 @@
 		"strict": false
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-	"exclude": ["node_modules",  "redux-scuttlebutt"]
+	"exclude": ["node_modules"]
 }

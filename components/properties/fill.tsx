@@ -1,14 +1,15 @@
 import Picker from './picker';
 import Elements from './../elements/elements';
 import { generateID } from '../../utils/utils';
+import Colors from './colors';
 
 export default function Fill({ selected, store, actions, width, setPicker }) {
 	function addFill() {
-		store.dispatch(actions.addFill({ id: generateID(), color: 'blue' }));
+		store.dispatch(actions.addFill({ id: generateID(), color: [0, 0, 0, 1] }));
 	}
 
-	function removeFill() {
-		store.dispatch(actions.addFill({ id: generateID(), color: 'blue' }));
+	function removeFill(id) {
+		store.dispatch(actions.removeFill({ id }));
 	}
 
 	function selectColor(event, color_id, color) {
@@ -18,9 +19,9 @@ export default function Fill({ selected, store, actions, width, setPicker }) {
 	function toFill(fill) {
 		return (
 			<div key={fill.id} className="property-row">
-				<div className="property-color" onClick={(event) => selectColor(event, fill.id, fill.color)} style={{ background: fill.color }} />
-				{fill.color}
-				<div className="property-minus" onClick={removeFill}>
+				<div className="property-color" onClick={(event) => selectColor(event, fill.id, fill.color)} style={{ background: Colors.rgbaToString(fill.color) }} />
+				{Colors.rgbaToHex(fill.color)}
+				<div className="property-minus" onClick={() => removeFill(fill.id)}>
 					<svg viewBox="0 0 10 10" stroke="white" strokeWidth="1">
 						<line x1="0" y1="5" x2="10" y2="5" />
 					</svg>

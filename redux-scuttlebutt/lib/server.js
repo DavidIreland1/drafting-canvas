@@ -18,10 +18,10 @@ const defaultOptions = {
 };
 
 let documents = {};
-let rooms = {}
+let rooms = {};
 
 function openDocument(room, options) {
-	console.log('opened room: ', room)
+	console.log('opened room: ', room);
 
 	const gossip = new Dispatcher({});
 
@@ -41,10 +41,9 @@ function openDocument(room, options) {
 }
 
 function addUser(spark, room) {
-	console.log('add user: ', spark.id, ' to: ', room)
+	console.log('add user: ', spark.id, ' to: ', room);
 	spark.join(room, () => spark.room(room).write({ action: 'info', room: spark.id + ' joined room ' + room }));
 
-	
 	// Each connection needs it's own stream
 	documents[room].streams[spark.id] = documents[room].gossip.createStream();
 
@@ -58,11 +57,10 @@ function addUser(spark, room) {
 		console.log('[io]', spark.id, 'ERROR:', error);
 		spark.end('Disconnecting due to error', { reconnect: true });
 	});
-
 }
 
 function removeUser(spark, room) {
-	console.log('remove user: ', spark.id, ' from: ', room)
+	console.log('remove user: ', spark.id, ' from: ', room);
 	if (!documents[room]) return;
 
 	delete documents[room].streams[spark.id];
@@ -83,30 +81,29 @@ exports.default = function scuttlebuttServer(server, options) {
 
 	// const onStatistic = options.getStatistics();
 
-	primus.on('connection',  (spark) => {
-		spark.on('data',  (data) => {
+	primus.on('connection', (spark) => {
+		spark.on('data', (data) => {
 			if (data.action === 'join') {
-				rooms[spark.id] = data.room 
+				rooms[spark.id] = data.room;
 				if (!documents[rooms[spark.id]]) documents[rooms[spark.id]] = openDocument(rooms[spark.id]);
-				addUser(spark, rooms[spark.id])
+				addUser(spark, rooms[spark.id]);
 			} else if (data.action === 'leave') {
-				removeUser(spark, rooms[spark.id])
+				removeUser(spark, rooms[spark.id]);
 			} else {
 				// console.log('data', rooms[spark.id])
+				// console.log(data)
 				documents[rooms[spark.id]].streams[spark.id].write(data);
 			}
 		});
 	});
 
 	// Seems to be deleteing / saving too often
-	primus.on('disconnection',  (spark) => {
+	primus.on('disconnection', (spark) => {
 		removeUser(spark, rooms[spark.id]);
 	});
 
 	// return { primus, store, dispatch, getState };
 };
-
-
 
 function connectRedux(gossip, initial_state) {
 	const Redux = require('redux');
@@ -116,9 +113,7 @@ function connectRedux(gossip, initial_state) {
 		const action = arguments[1];
 
 		// Filter out the actions we don't want to save
-		if (action.type.endsWith('cursor') ||
-			action.type.endsWith('hoverOnly') ||
-			action.type.endsWith('INIT')) {
+		if (action.type.endsWith('cursor') || action.type.endsWith('hoverOnly') || action.type.endsWith('INIT')) {
 			return state;
 		}
 		return state.concat(action);
