@@ -5,7 +5,6 @@ export default {
 		return `rgba(${r * 255},${g * 255},${b * 255},${a})`;
 	},
 	stringToRgba: (color) => {
-		console.log(color);
 		if (typeof color !== 'string') return color;
 		const div = document.createElement('div');
 		div.style.background = color;

@@ -113,7 +113,6 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 			elements = state.elements;
 			redraw(context);
 		});
-
 		redraw_auto(context);
 	}, []);
 

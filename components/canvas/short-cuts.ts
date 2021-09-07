@@ -28,7 +28,19 @@ export function shortCuts(event, store, actions): boolean {
 			store.dispatch(actions.group({ id: generateID() }));
 			return true;
 
+		case 'd':
+			download('store', store.getState().present);
+			return true;
 		default:
 			return false;
 	}
+}
+
+function download(filename, data) {
+	const a = document.createElement('a');
+	a.href = 'data:' + 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, '\t'));
+	a.download = filename + '.json';
+	document.body.appendChild(a);
+	a.click();
+	a.remove();
 }

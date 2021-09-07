@@ -10,7 +10,7 @@ const Cursors = {
 	select: Select,
 	move: Select,
 
-	pen: Select, //
+	pen: Select,
 
 	stretch: Stretch,
 	resize: Resize,
@@ -19,6 +19,9 @@ const Cursors = {
 	rectangle: Create,
 	line: Create,
 	ellipse: Create,
+	bezier: Create,
+	spline: Create,
+	frame: Create,
 };
 
 export default class Cursor {

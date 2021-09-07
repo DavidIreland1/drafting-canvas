@@ -172,7 +172,6 @@ export default class Element {
 
 	static setStroke(element, props) {
 		element.stroke.forEach((stroke) => {
-			console.log(props.color_id, stroke.id);
 			if (props.color_id === stroke.id) stroke.color = props.color;
 		});
 	}

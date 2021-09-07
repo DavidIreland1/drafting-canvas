@@ -43,10 +43,14 @@ export default class Line extends Element {
 	static highlight(line, context, cursor, highlight, line_width, box_size) {
 		this.outline(line, context, highlight, line_width);
 		let action = undefined;
-		// if (this.drawBound(line, context, cursor, highlight, line_width)) action = 'stretch';
+		if (this.drawBound(line, context, cursor, highlight, line_width)) action = 'stretch';
 		if (this.drawRotate(line, context, cursor, box_size)) action = 'rotate';
 		if (this.drawResize(line, context, cursor, highlight, line_width, box_size)) action = 'resize';
 		return action ? { action: action, element: line } : undefined;
+	}
+
+	static drawBound(element, context, cursor, color, line) {
+		return false;
 	}
 
 	static drawRotate(line, context, cursor, box_size) {

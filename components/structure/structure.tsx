@@ -43,7 +43,7 @@ export default function Structure({ store, actions }) {
 			const id = child.getAttribute('element-id');
 			const element = elements.find((element) => element.id === id);
 
-			if (element.type === 'group') element.elements = [];
+			if (element.type === 'group' || element.type === 'frame') element.elements = [];
 			structure.push(element);
 			if (child.querySelector('#elements')) {
 				recurse(child.querySelector('#elements'), element.elements, elements);

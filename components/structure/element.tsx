@@ -49,7 +49,7 @@ export default function Element({ store, actions, element, indentation, restruct
 	}
 
 	return (
-		<div id="element" element-id={element.id} draggable="true" onDragStart={drag} className={(element.selected ? 'highlighted' : '') + (element.type === 'group' ? ' group' : '')}>
+		<div id="element" element-id={element.id} draggable="true" onDragStart={drag} className={(element.selected ? 'highlighted' : '') + (element.type === 'group' || element.type === 'frame' ? ' group' : '')}>
 			<div id="label" className={(element.selected ? 'selected' : '') + (element.hover ? ' hover' : '')} style={{ paddingLeft: indentation + 'px' }} onMouseEnter={setHover} onMouseLeave={setHover}>
 				<label onClick={select}>{element.label}</label>
 				<svg viewBox="0 0 100 100" className={element.locked ? 'locked' : 'unlocked'} onClick={toggleLocked}>
@@ -71,7 +71,7 @@ export default function Element({ store, actions, element, indentation, restruct
 				</svg>
 			</div>
 
-			{element.type === 'group' ? (
+			{element.type === 'group' || element.type === 'frame' ? (
 				<div id="elements" onDragOver={(event) => event.preventDefault()}>
 					{element.elements.map((child) => (
 						<Element key={child.id} element={child} indentation={indentation + 15} store={store} actions={actions} restructure={restructure} />
@@ -86,7 +86,8 @@ export default function Element({ store, actions, element, indentation, restruct
 					margin-left: 2px;
 					box-sizing: border-box;
 				}
-				#element.group {
+				#element.group,
+				#element.frame {
 					border-left: 3px solid var(--selected);
 				}
 				#element:active {

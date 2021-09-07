@@ -3,7 +3,9 @@ import Elements from './elements';
 
 export default class Group extends Element {
 	static create(id, position) {
-		return Object.assign(super.create(id, position), {});
+		return Object.assign(super.create(id, position), {
+			elements: [],
+		});
 	}
 
 	static draw(group, context, cursor) {
