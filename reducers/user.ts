@@ -1,7 +1,7 @@
 export default {
 	addUser: (state, props) => {
 		const { user_id, label, color } = props.payload;
-		state.views.push({ id: user_id, label: label, x: 1000, y: 1000, scale: 1 });
+		state.views.push({ id: user_id, label: label, x: 1000, y: 1000, scale: 5 });
 		state.cursors.push({ id: user_id, label: label, color: color, x: 0, y: 0, rotation: 0, type: 'select', mode: 'edit', visible: false });
 	},
 	centerView: (state, props) => {

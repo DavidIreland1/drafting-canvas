@@ -37,7 +37,7 @@ export default function Input({ id, step = 1, selected, store, actions, width })
 			<style jsx>{`
 				.dimension {
 					display: grid;
-					grid-template-columns: 35px 1fr;
+					grid-template-columns: 25px 1fr;
 					padding: 5px 0;
 					border-bottom: 1px solid transparent;
 				}
@@ -49,7 +49,7 @@ export default function Input({ id, step = 1, selected, store, actions, width })
 					border-bottom: 1px solid white;
 				}
 				label {
-					padding: 0 10px;
+					padding: 0 5px;
 					cursor: ew-resize;
 					text-transform: uppercase;
 					font-size: 0;

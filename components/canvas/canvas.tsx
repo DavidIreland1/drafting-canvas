@@ -34,9 +34,8 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 		if (!user_view || !user_cursor) return auto_draw && setTimeout(() => redraw_auto(context), 500);
 
 		requestAnimationFrame(() => {
-			context.resetTransform();
 			context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-			if (Settings.grid_enabled) Grid.draw(context, user_view);
+
 			context.translate(user_view.x, user_view.y);
 			context.scale(user_view.scale, user_view.scale);
 
@@ -58,9 +57,8 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 						.filter((element) => Elements[element.type].draw(element, context, cursor))
 						.reverse()
 				)
-				.filter((element) => !element.locked);
-
-			active.hovering = active.hovering.sort((element1) => (element1.selected ? -1 : 1));
+				.filter((element) => !element.locked)
+				.sort((element1) => (element1.selected ? -1 : 1));
 
 			// Outline hovering
 			flatten(on_screen)
@@ -70,10 +68,40 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 			active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
 
+			const selected_points = active.selected.map((element) => Elements[element.type].points(element)).flat();
+
+			const size = 4 / user_view.scale;
+			context.beginPath();
+			context.strokeStyle = 'red';
+			context.lineWidth = 1 / user_view.scale;
+
+			flatten(on_screen)
+				.filter((element) => !element.selected)
+				.map((element) => Elements[element.type].points(element))
+				.flat()
+				.forEach((point) => {
+					selected_points.forEach((selected_point) => {
+						if (point.x === selected_point.x || point.y === selected_point.y) {
+							drawCrossPair(context, point, selected_point, size);
+						}
+					});
+				});
+
+			context.stroke();
+
+			// .filter(point => )
+
+			// points = points.filter((point) => );
+
+			// console.log(points);
+
 			cursors
 				.filter((cursor) => cursor.visible)
 				.sort((cursor) => (cursor.id !== user_id ? -1 : 1))
 				.forEach((cursor) => Cursor.draw(cursor, context, user_view));
+
+			context.resetTransform();
+			if (Settings.grid_enabled) Grid.draw(context, user_view);
 
 			const now = Date.now();
 			setFrameRate(Math.round(1000 / (now - last_frame)));
@@ -179,4 +207,19 @@ function boundScreen(context, view) {
 		x2: -view.x / view.scale + context.canvas.width / view.scale,
 		y2: -view.y / view.scale + context.canvas.height / view.scale,
 	};
+}
+
+function drawCrossPair(context, point1, point2, size) {
+	context.moveTo(point1.x - size, point1.y - size);
+	context.lineTo(point1.x + size, point1.y + size);
+	context.moveTo(point1.x - size, point1.y + size);
+	context.lineTo(point1.x + size, point1.y - size);
+
+	context.moveTo(point1.x, point1.y);
+	context.lineTo(point2.x, point2.y);
+
+	context.moveTo(point2.x - size, point2.y - size);
+	context.lineTo(point2.x + size, point2.y + size);
+	context.moveTo(point2.x - size, point2.y + size);
+	context.lineTo(point2.x + size, point2.y - size);
 }

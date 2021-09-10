@@ -15,10 +15,40 @@ export default class Ellipse extends Element {
 		});
 	}
 
-	static draw(ellipse, context: CanvasRenderingContext2D, cursor) {
-		context.beginPath();
+	static points(ellipse) {
+		return [
+			{
+				x: ellipse.x,
+				y: ellipse.y,
+			},
+			{
+				x: ellipse.x - ellipse.radius_x,
+				y: ellipse.y - ellipse.radius_y,
+			},
+			{
+				x: ellipse.x - ellipse.radius_x,
+				y: ellipse.y + ellipse.radius_y,
+			},
+			{
+				x: ellipse.x + ellipse.radius_x,
+				y: ellipse.y - ellipse.radius_y,
+			},
+			{
+				x: ellipse.x + ellipse.radius_x,
+				y: ellipse.y + ellipse.radius_y,
+			},
+		];
+	}
+
+	static path(ellipse) {
 		const path = new Path2D();
 		path.ellipse(ellipse.x, ellipse.y, Math.abs(ellipse.radius_x), Math.abs(ellipse.radius_y), ellipse.rotation, ellipse.start_angle, ellipse.end_angle, ellipse.counter_clockwise);
+		return path;
+	}
+
+	static draw(ellipse, context: CanvasRenderingContext2D, cursor) {
+		context.beginPath();
+		const path = this.path(ellipse);
 		this.fill(ellipse, context, path);
 		this.stroke(ellipse, context, path);
 		return context.isPointInPath(path, cursor.x, cursor.y);

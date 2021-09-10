@@ -14,10 +14,24 @@ export default class Circle extends Element {
 		});
 	}
 
-	static draw(circle, context, cursor) {
-		context.beginPath();
+	static points(circle) {
+		return [
+			{
+				x: circle.x,
+				y: circle.y,
+			},
+		];
+	}
+
+	static path(circle) {
 		const path = new Path2D();
 		path.arc(circle.x, circle.y, Math.abs(circle.radius), circle.start_angle, circle.end_angle, circle.counter_clockwise);
+		return path;
+	}
+
+	static draw(circle, context, cursor) {
+		context.beginPath();
+		const path = this.path(circle);
 		this.fill(circle, context, path);
 		this.stroke(circle, context, path);
 		return context.isPointInPath(path, cursor.x, cursor.y);

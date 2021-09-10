@@ -21,7 +21,6 @@ export default function Element({ store, actions, element, indentation, restruct
 
 	const drag = (event) => {
 		event.stopPropagation();
-		console.log(event.target);
 		const element = event.nativeEvent.composedPath().find((element) => element.id === 'element');
 		event.dataTransfer.effectAllowed = 'move';
 		requestAnimationFrame(() => {

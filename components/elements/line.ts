@@ -10,7 +10,7 @@ export default class Line extends Element {
 			label: 'Line',
 			type: 'line',
 			fill: [],
-			stroke: [{ id: id + '564', width: 10, color: [0.2, 0.2, 0.2, 1] }],
+			stroke: [{ id: id + '564', width: 3, color: [0.2, 0.2, 0.2, 1] }],
 		});
 	}
 
@@ -160,6 +160,19 @@ export default class Line extends Element {
 	}
 
 	static stretch(line, position, last_position): void {}
+
+	static points(line) {
+		return [
+			{
+				x: line.x1,
+				y: line.y1,
+			},
+			{
+				x: line.x2,
+				y: line.y2,
+			},
+		];
+	}
 
 	static boxes(line, box_size) {
 		return [

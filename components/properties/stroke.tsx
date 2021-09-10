@@ -2,6 +2,7 @@ import Picker from './picker';
 import Elements from './../elements/elements';
 import { generateID } from '../../utils/utils';
 import Colors from './colors';
+import Input from './input';
 
 export default function Stroke({ selected, store, actions, width, setPicker }) {
 	function addStroke() {
@@ -26,6 +27,7 @@ export default function Stroke({ selected, store, actions, width, setPicker }) {
 						<line x1="0" y1="5" x2="10" y2="5" />
 					</svg>
 				</div>
+				<Input id="width" selected={selected} store={store} actions={actions} width={width}></Input>
 			</div>
 		);
 	}

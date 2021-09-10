@@ -186,6 +186,10 @@ export default class Element {
 		};
 	}
 
+	static points(element) {
+		return [this.center(element)];
+	}
+
 	static move(element, position, last_position) {
 		element.x = element.x + position.x - last_position.x;
 		element.y = element.y + position.y - last_position.y;

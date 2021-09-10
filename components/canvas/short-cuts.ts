@@ -31,6 +31,7 @@ export function shortCuts(event, store, actions): boolean {
 		case 'd':
 			download('store', store.getState().present);
 			return true;
+
 		default:
 			return false;
 	}

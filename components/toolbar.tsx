@@ -53,7 +53,7 @@ export default function Navbar({ store, actions }) {
 					<rect x="70" y="70" width="15" height="15" />
 				</svg>
 
-				<svg id="frame" className={cursor.type === 'line' ? 'selected' : ''} viewBox="0 0 100 100">
+				<svg id="frame" className={cursor.type === 'frame' ? 'selected' : ''} viewBox="0 0 100 100">
 					<line x1="33" y1="15" x2="33" y2="85" />
 					<line x1="67" y1="15" x2="67" y2="85" />
 

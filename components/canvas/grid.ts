@@ -6,8 +6,8 @@ export default class Grid {
 
 		const step = Settings.grid_step * view.scale;
 
-		const top = Math.round(view.y % step);
-		const left = Math.round(view.x % step);
+		const top = Math.ceil(view.y % step);
+		const left = Math.ceil(view.x % step);
 
 		const bottom = context.canvas.height;
 		const right = context.canvas.width;

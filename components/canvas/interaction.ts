@@ -8,8 +8,6 @@ export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, s
 	const state = store.getState().present;
 	const view = state.views.find((view) => view.id === user_id);
 
-	// console.log(event.which, event.button, event.buttons);
-
 	if (String(event.deltaY).length < 5) {
 		// Pan
 		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
@@ -98,7 +96,7 @@ export function select(down_event, canvas, id, store, actions, active) {
 	const view = state.views.find((view) => view.id === id);
 	const cursor = state.cursors.find((cursor) => cursor.id === id);
 
-	let last_position = DOMToCanvas(down_event, canvas, view);
+	let last_position = roundPoint(DOMToCanvas(down_event, canvas, view));
 
 	if (cursor.mode === 'create') {
 		create(down_event, last_position, canvas, store, actions, active, view, cursor);
@@ -127,7 +125,7 @@ function edit(down_event, last_position, canvas, store, actions, active, view) {
 	}
 
 	const move = (move_event) => {
-		const position = DOMToCanvas(move_event, canvas, view);
+		const position = roundPoint(DOMToCanvas(move_event, canvas, view));
 		store.dispatch(actions[action]({ user_id: Settings.user_id, id: target.id, position, last_position }));
 		last_position = position;
 	};
@@ -151,7 +149,7 @@ function create(down_event, last_position, canvas, store, actions, active, view,
 
 	const action = 'resize';
 	const move = (move_event) => {
-		const position = DOMToCanvas(move_event, canvas, view);
+		const position = roundPoint(DOMToCanvas(move_event, canvas, view));
 		store.dispatch(actions[action]({ user_id: Settings.user_id, id: id, position, last_position }));
 		last_position = position;
 	};
@@ -161,6 +159,13 @@ function create(down_event, last_position, canvas, store, actions, active, view,
 		window.removeEventListener('pointermove', move);
 	};
 	window.addEventListener('pointerup', release, { once: true });
+}
+
+function roundPoint(point) {
+	return {
+		x: Math.round(point.x),
+		y: Math.round(point.y),
+	};
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
