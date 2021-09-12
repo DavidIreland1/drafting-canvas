@@ -96,11 +96,13 @@ export default class Line extends Element {
 	}
 
 	static bound(line): { x: number; y: number; width: number; height: number } {
+		const x = Math.min(line.x1, line.x2);
+		const y = Math.min(line.y1, line.y2);
 		return {
-			x: Math.min(line.x1, line.x2),
-			y: Math.min(line.y1, line.y2),
-			width: Math.max(line.x1, line.x2),
-			height: Math.max(line.y1, line.y2),
+			x: x,
+			y: y,
+			width: Math.max(line.x1, line.x2) - x,
+			height: Math.max(line.y1, line.y2) - y,
 		};
 	}
 

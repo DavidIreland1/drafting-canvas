@@ -5,6 +5,7 @@ import Elements, { flatten } from './../elements/elements';
 import Cursor from '../cursor/cursor';
 import Settings from './../settings';
 import Grid from './grid';
+import drawPoints from './points';
 
 const { line_width, box_size, highlight } = Settings;
 
@@ -68,32 +69,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 			active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
 
-			const selected_points = active.selected.map((element) => Elements[element.type].points(element)).flat();
-
-			const size = 4 / user_view.scale;
-			context.beginPath();
-			context.strokeStyle = 'red';
-			context.lineWidth = 1 / user_view.scale;
-
-			flatten(on_screen)
-				.filter((element) => !element.selected)
-				.map((element) => Elements[element.type].points(element))
-				.flat()
-				.forEach((point) => {
-					selected_points.forEach((selected_point) => {
-						if (point.x === selected_point.x || point.y === selected_point.y) {
-							drawCrossPair(context, point, selected_point, size);
-						}
-					});
-				});
-
-			context.stroke();
-
-			// .filter(point => )
-
-			// points = points.filter((point) => );
-
-			// console.log(points);
+			drawPoints(context, on_screen, active.selected, user_view);
 
 			cursors
 				.filter((cursor) => cursor.visible)
@@ -207,19 +183,4 @@ function boundScreen(context, view) {
 		x2: -view.x / view.scale + context.canvas.width / view.scale,
 		y2: -view.y / view.scale + context.canvas.height / view.scale,
 	};
-}
-
-function drawCrossPair(context, point1, point2, size) {
-	context.moveTo(point1.x - size, point1.y - size);
-	context.lineTo(point1.x + size, point1.y + size);
-	context.moveTo(point1.x - size, point1.y + size);
-	context.lineTo(point1.x + size, point1.y - size);
-
-	context.moveTo(point1.x, point1.y);
-	context.lineTo(point2.x, point2.y);
-
-	context.moveTo(point2.x - size, point2.y - size);
-	context.lineTo(point2.x + size, point2.y + size);
-	context.moveTo(point2.x - size, point2.y + size);
-	context.lineTo(point2.x + size, point2.y - size);
 }

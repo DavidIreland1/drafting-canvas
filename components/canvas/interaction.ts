@@ -96,16 +96,22 @@ export function select(down_event, canvas, id, store, actions, active) {
 	const view = state.views.find((view) => view.id === id);
 	const cursor = state.cursors.find((cursor) => cursor.id === id);
 
-	let last_position = roundPoint(DOMToCanvas(down_event, canvas, view));
+	const points = state.elements
+		.filter((element) => !element.selected)
+		.map((element) => Elements[element.type].points(element))
+		.flat();
+
+	let position = DOMToCanvas(down_event, canvas, view);
+	position = roundPosition(position, [position], points, view);
 
 	if (cursor.mode === 'create') {
-		create(down_event, last_position, canvas, store, actions, active, view, cursor);
+		create(position, canvas, store, actions, view, cursor, points);
 	} else {
-		edit(down_event, last_position, canvas, store, actions, active, view);
+		edit(down_event, position, canvas, store, actions, active, view, points);
 	}
 }
 
-function edit(down_event, last_position, canvas, store, actions, active, view) {
+function edit(down_event, last_position, canvas, store, actions, active, view, points) {
 	let action = 'move';
 	let target = active.hovering[0];
 
@@ -125,9 +131,20 @@ function edit(down_event, last_position, canvas, store, actions, active, view) {
 	}
 
 	const move = (move_event) => {
-		const position = roundPoint(DOMToCanvas(move_event, canvas, view));
+		let position = DOMToCanvas(move_event, canvas, view);
+
+		const state = store.getState().present;
+		let [selected_points, points] = split(state.elements, (element) => element.selected).map((elements) => elements.map((element) => Elements[element.type].points(element)).flat());
+		if (action === 'resize') {
+			selected_points = [position];
+		} else {
+			// selected_points = [selected_points[0]];
+		}
+		position = roundPosition(position, [] /*selected_points*/, points, view);
+
 		store.dispatch(actions[action]({ user_id: Settings.user_id, id: target.id, position, last_position }));
-		last_position = position;
+
+		last_position = position; //roundPosition(position, [], [], view);
 	};
 	down_event.target.addEventListener('pointermove', move);
 
@@ -142,14 +159,16 @@ function edit(down_event, last_position, canvas, store, actions, active, view) {
 	down_event.target.addEventListener('pointerup', release, { once: true });
 }
 
-function create(down_event, last_position, canvas, store, actions, active, view, cursor) {
+function create(last_position, canvas, store, actions, view, cursor, points) {
 	const id = generateID();
 
 	store.dispatch(actions.createElement({ user_id: Settings.user_id, id: id, type: cursor.type, position: last_position }));
 
 	const action = 'resize';
 	const move = (move_event) => {
-		const position = roundPoint(DOMToCanvas(move_event, canvas, view));
+		console.log(points);
+		let position = DOMToCanvas(move_event, canvas, view);
+		position = roundPosition(position, [position], points, view);
 		store.dispatch(actions[action]({ user_id: Settings.user_id, id: id, position, last_position }));
 		last_position = position;
 	};
@@ -161,11 +180,53 @@ function create(down_event, last_position, canvas, store, actions, active, view,
 	window.addEventListener('pointerup', release, { once: true });
 }
 
-function roundPoint(point) {
+function roundPosition(position, selected_points, points, view) {
+	if (selected_points.length === 0 || points.length === 0) {
+		return {
+			x: Math.round(position.x),
+			y: Math.round(position.y),
+		};
+	}
+
+	const closest_points = selected_points.map((selected_point) => {
+		const closeest_x = points.map((point) => ({ ...point, delta: selected_point.x - point.x })).sort((point1, point2) => Math.abs(point1.delta) - Math.abs(point2.delta))[0];
+		const closeest_y = points.map((point) => ({ ...point, delta: selected_point.y - point.y })).sort((point1, point2) => Math.abs(point1.delta) - Math.abs(point2.delta))[0];
+		return {
+			x: closeest_x.x,
+			y: closeest_y.y,
+			delta_x: closeest_x.delta,
+			delta_y: closeest_y.delta,
+		};
+	});
+
+	const closeest_x = closest_points.sort((point1, point2) => Math.abs(point1.delta_x) - Math.abs(point2.delta_x))[0];
+	const closeest_y = closest_points.sort((point1, point2) => Math.abs(point1.delta_y) - Math.abs(point2.delta_y))[0];
+
+	const stickness = 60 / view.scale;
+
+	let x = 0;
+	if (Math.abs(closeest_x.delta_x) < stickness) {
+		x = position.x - closeest_x.delta_x;
+	} else {
+		x = Math.round(position.x);
+	}
+
+	let y = 0;
+	if (Math.abs(closeest_y.delta_y) < stickness) {
+		y = position.y - closeest_y.delta_y;
+	} else {
+		y = Math.round(position.y);
+	}
+
 	return {
-		x: Math.round(point.x),
-		y: Math.round(point.y),
+		x: x,
+		y: y,
 	};
+}
+
+// Splits array into two arrays
+function split(array, comparison) {
+	return array.reduce(([pass, fail], element) => (comparison(element) ? [[...pass, element], fail] : [pass, [...fail, element]]), [[], []]);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -15,6 +15,17 @@ export default class Rectangle extends Element {
 	}
 
 	static points(rectangle) {
+		const center = this.center(rectangle);
+		return this._points(rectangle)
+			.map((point) => ({
+				x: point.x + rectangle.x + rectangle.width / 2,
+				y: point.y + rectangle.y + rectangle.height / 2,
+			}))
+			.map((point) => this.rotatePoint(point, center, rectangle.rotation))
+			.concat(center);
+	}
+
+	static _points(rectangle) {
 		return [
 			{
 				x: -rectangle.width / 2,
@@ -40,7 +51,7 @@ export default class Rectangle extends Element {
 	}
 
 	static path(rectangle) {
-		const points = this.points(rectangle);
+		const points = this._points(rectangle);
 
 		const delta_x = [0, -1, 0, 1];
 		const delta_y = [1, 0, -1, 0];

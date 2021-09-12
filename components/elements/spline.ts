@@ -43,6 +43,21 @@ export default class Bezier extends Element {
 		});
 	}
 
+	static points(line) {
+		return line.curves
+			.map((point) => [
+				{
+					x: point.x1,
+					y: point.y1,
+				},
+				{
+					x: point.x2,
+					y: point.y2,
+				},
+			])
+			.flat();
+	}
+
 	static path(line) {
 		const path = new Path2D();
 
