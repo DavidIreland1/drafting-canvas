@@ -6,6 +6,8 @@ import Sheet from './../components/sheet';
 import store from './../redux/store';
 import actions from '../redux/slice';
 
+import { Provider } from 'react-redux';
+
 export default function OffWhiteCanvas(): JSX.Element {
 	return (
 		<div>
@@ -16,8 +18,10 @@ export default function OffWhiteCanvas(): JSX.Element {
 			</Head>
 
 			<main>
-				<Navbar store={store} actions={actions} />
-				<Sheet store={store} actions={actions} />
+				<Provider store={store as any}>
+					<Navbar store={store} actions={actions} />
+					<Sheet store={store} actions={actions} />
+				</Provider>
 			</main>
 			<style jsx>{`
 				main {

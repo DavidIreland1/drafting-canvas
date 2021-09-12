@@ -9,8 +9,6 @@ import getPage from '../state/dev';
 
 import Settings from './settings';
 
-import { Provider } from 'react-redux';
-
 export default function Sheet({ store, actions }) {
 	const router = useRouter();
 
@@ -21,9 +19,9 @@ export default function Sheet({ store, actions }) {
 		if (!page) return;
 
 		// fetch(`./page/${page}`).then(async (res) => {
-			// const state = await res.json();
-			// store.dispatch(actions.overwrite({ state: state }));
-			// store.dispatch(actions.overwrite({ state: { elements: state.elements } }));
+		// const state = await res.json();
+		// store.dispatch(actions.overwrite({ state: state }));
+		// store.dispatch(actions.overwrite({ state: { elements: state.elements } }));
 		// });
 		store.dispatch(actions.addUser({ user_id: Settings.user_id, label: Settings.user_name, color: Settings.user_color }));
 
@@ -51,13 +49,11 @@ export default function Sheet({ store, actions }) {
 
 	return (
 		<div id="cols">
-			<Provider store={store}>
-				{picker}
-				<Toolbar store={store} actions={actions} />
-				<Structure store={store} actions={actions} />
-				<Canvas user_id={Settings.user_id} store={store} actions={actions} />
-				<Properties store={store} actions={actions} setPicker={setPicker} />
-			</Provider>
+			{picker}
+			<Toolbar store={store} actions={actions} />
+			<Structure store={store} actions={actions} />
+			<Canvas user_id={Settings.user_id} store={store} actions={actions} />
+			<Properties store={store} actions={actions} setPicker={setPicker} />
 
 			<style jsx>{`
 				#cols {

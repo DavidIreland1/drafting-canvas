@@ -1,7 +1,10 @@
 import { useRouter } from 'next/router';
 
-import Tab from './tab';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import Tab from './tab';
+import User from './user';
 
 export default function Navbar({ store, actions }) {
 	const router = useRouter();
@@ -42,6 +45,8 @@ export default function Navbar({ store, actions }) {
 		event.preventDefault();
 	}
 
+	const users = useSelector((state) => (state as any).present.cursors);
+
 	return (
 		<div>
 			<div id="nav" onDragOver={droppable}>
@@ -57,13 +62,21 @@ export default function Navbar({ store, actions }) {
 					<line x1="50" y1="25" x2="50" y2="75" />
 					<line x1="25" y1="50" x2="75" y2="50" />
 				</svg>
+
+				<div id="users">
+					{[users[0], users[0], users[0]]
+						.filter((ele) => ele)
+						.map((user, i) => (
+							<User key={i} user={user} />
+						))}
+				</div>
 			</div>
 
 			<style jsx>{`
 				#nav {
 					display: grid;
 					grid-auto-flow: column;
-					grid-template-columns: min-content max-content min-content auto;
+					grid-template-columns: min-content max-content min-content 1fr min-content;
 					height: var(--nav-height);
 					background: var(--nav-background);
 					color: var(--text-color);
@@ -112,6 +125,11 @@ export default function Navbar({ store, actions }) {
 				line {
 					stroke: white;
 					stroke-width: 6;
+				}
+
+				#users {
+					display: grid;
+					grid-auto-flow: column;
 				}
 			`}</style>
 		</div>
