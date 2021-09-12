@@ -1,4 +1,6 @@
 import { hover } from '../canvas/interaction';
+import Eye from '../icons/eye';
+import Lock from '../icons/lock';
 
 export default function Element({ store, actions, element, indentation, restructure }) {
 	const select = (event) => {
@@ -51,23 +53,14 @@ export default function Element({ store, actions, element, indentation, restruct
 		<div id="element" element-id={element.id} draggable="true" onDragStart={drag} className={(element.selected ? 'highlighted' : '') + (element.type === 'group' || element.type === 'frame' ? ' group' : '')}>
 			<div id="label" className={(element.selected ? 'selected' : '') + (element.hover ? ' hover' : '')} style={{ paddingLeft: indentation + 'px' }} onMouseEnter={setHover} onMouseLeave={setHover}>
 				<label onClick={select}>{element.label}</label>
-				<svg viewBox="0 0 100 100" className={element.locked ? 'locked' : 'unlocked'} onClick={toggleLocked}>
-					<path className="locked" d="M 35 50 L 35 30 A 50 200 0 0 1 70 30 L 70 50" strokeWidth="8" fill="none" />
-					<rect className="locked" x="30" y="50" width="45" height="35"></rect>
-					<path className="unlocked" d="M 05 50 L 05 30 A 50 200 0 0 1 40 30 L 40 50" strokeWidth="8" fill="none" />
-					<rect className="unlocked" x="30" y="50" width="45" height="35"></rect>
-				</svg>
-				<svg viewBox="0 0 100 100" className={element.visible ? 'visible' : 'hidden'}>
-					<path className="visible" d="M 5 50 A 50 40 0 0 1 95 50 " strokeWidth="5" fill="none" />
-					<circle className="visible" cx="50" cy="50" r="13"></circle>
-					<path className="visible" d="M 5 50 A 50 40 0 0 0 95 50 " strokeWidth="5" fill="none" />
-					<path className="hidden" d="M 5 50 A 50 40 0 0 0 95 50 " strokeWidth="5" fill="none" />
-					<line className="hidden" x1="15" y1="63" x2="5" y2="83" strokeWidth="5"></line>
-					<line className="hidden" x1="40" y1="70" x2="35" y2="90" strokeWidth="5"></line>
-					<line className="hidden" x1="60" y1="70" x2="65" y2="90" strokeWidth="5"></line>
-					<line className="hidden" x1="85" y1="63" x2="95" y2="83" strokeWidth="5"></line>
-					<rect width="100" height="100" fill="white" stroke="none" fillOpacity="0" onClick={toggleVisible}></rect>
-				</svg>
+
+				<div className={'icon ' + (element.locked ? ' visible' : '')}>
+					<Lock locked={element.locked} onClick={toggleLocked} />
+				</div>
+
+				<div className={'icon ' + (element.visible ? '' : ' visible')}>
+					<Eye open={element.visible} onClick={toggleVisible} />
+				</div>
 			</div>
 
 			{element.type === 'group' || element.type === 'frame' ? (
@@ -118,31 +111,19 @@ export default function Element({ store, actions, element, indentation, restruct
 					background: #56565b;
 				}
 
-				#label > svg {
+				.icon {
 					width: 18px;
 					height: 18px;
 					fill: var(--off-white);
 					stroke: var(--off-white);
 					z-index: 2;
-				}
-				#label > svg > * {
-					display: none;
-				}
-				#label:hover > svg > *,
-				#label.hover > svg > * {
-					display: block;
+					visibility: hidden;
 				}
 
-				svg.locked > .locked,
-				svg.hidden > .hidden {
-					display: block !important;
-				}
-
-				svg.unlocked > .locked,
-				svg.hidden > .visible,
-				svg.locked > .unlocked,
-				svg.visible > .hidden {
-					display: none !important;
+				.icon.visible,
+				.selected > .icon,
+				.hover > .icon {
+					visibility: visible;
 				}
 			`}</style>
 		</div>

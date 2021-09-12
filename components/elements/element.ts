@@ -8,15 +8,15 @@ export default class Element {
 			id: id,
 			selected: true,
 			hover: false,
-			fill: [{ id: id + '2123', color: [1, 0, 0, 1] }],
+			fill: [{ id: id + '2123', color: [1, 0, 0, 1], visible: true }],
 			stroke: [],
 			visible: true,
 			locked: false,
 		};
 	}
 
-	static draw(element, context, cursor): boolean {
-		return false;
+	static path(element) {
+		return new Path2D();
 	}
 
 	static fill(element, context, path) {
@@ -32,6 +32,18 @@ export default class Element {
 			context.strokeStyle = Colors.rgbaToString(stroke.color);
 			context.stroke(path);
 		});
+	}
+
+	static draw(element, context: CanvasRenderingContext2D, cursor): boolean {
+		const path = this.path(element);
+
+		this.fill(element, context, path);
+		const fill = element.fill.length && context.isPointInPath(path, cursor.x, cursor.y);
+
+		this.stroke(element, context, path);
+		const stroke = element.stroke.length && context.isPointInStroke(path, cursor.x, cursor.y);
+
+		return fill || stroke;
 	}
 
 	static resize(element, position, last_position): void {

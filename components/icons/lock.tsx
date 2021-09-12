@@ -1,0 +1,31 @@
+export default function Lock({ locked, onClick }) {
+	return (
+		<>
+			<svg viewBox="0 0 100 100" className={locked ? 'locked' : 'unlocked'} onClick={onClick}>
+				<path className="locked" d="M 35 50 L 35 30 A 50 200 0 0 1 70 30 L 70 50" strokeWidth="8" fill="none" />
+				<rect className="locked" x="30" y="50" width="45" height="35"></rect>
+				<path className="unlocked" d="M 05 50 L 05 30 A 50 200 0 0 1 40 30 L 40 50" strokeWidth="8" fill="none" />
+				<rect className="unlocked" x="30" y="50" width="45" height="35"></rect>
+			</svg>
+
+			<style jsx>{`
+				svg {
+					width: 100%;
+					height: 100%;
+					fill: var(--off-white);
+					stroke: var(--off-white);
+					z-index: 2;
+				}
+
+				svg.locked > .locked {
+					display: block !important;
+				}
+
+				svg.unlocked > .locked,
+				svg.locked > .unlocked {
+					display: none !important;
+				}
+			`}</style>
+		</>
+	);
+}

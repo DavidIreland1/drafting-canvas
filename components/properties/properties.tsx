@@ -5,6 +5,7 @@ import { RootState } from '../../redux/store';
 import Dimensions from './dimensions';
 import Fill from './fill';
 import Stroke from './stroke';
+import Effects from './effects/effects';
 
 export default function Properties({ store, actions, setPicker }) {
 	const [width, setWidth] = useState('max(20vw, 200px)');
@@ -28,8 +29,15 @@ export default function Properties({ store, actions, setPicker }) {
 			.property-container {
 				padding: 10px 0;
 			}
-			h4.property-heading {
-				margin: 10px 15px 8px 15px;
+			.property-heading {
+				display: grid;
+				grid-template-columns: 1fr 30px;
+				padding: 0 10px 5px 10px;
+				gap: 5px calc(${width} / 20);
+			}
+
+			.property-heading > h4 {
+				margin: 0px 0 0px 0;
 				font-weight: 300;
 			}
 		`}</style>
@@ -46,6 +54,8 @@ export default function Properties({ store, actions, setPicker }) {
 					<Fill selected={selected} store={store} actions={actions} width={width} setPicker={setPicker} />
 					<div className="divider" />
 					<Stroke selected={selected} store={store} actions={actions} width={width} setPicker={setPicker} />
+					<div className="divider" />
+					<Effects selected={selected} store={store} actions={actions} width={width} />
 				</div>
 			) : null}
 
@@ -59,22 +69,21 @@ export default function Properties({ store, actions, setPicker }) {
 				}
 
 				.property-row {
-					padding: 0 0 0 20px;
+					padding: 0 10px;
 					display: grid;
-					grid-template-columns: max-content 1fr max-content;
+					grid-template-columns: max-content 1fr 30px 30px;
 					gap: 10px;
 					line-height: 28px;
 				}
 				.property-minus {
-					width: 1em;
-					height: 1em;
+					width: 100%;
+					height: 100%;
 					margin: auto;
-					padding: 6px;
 					border-radius: 6px;
 				}
 				.property-minus  svg,
-					width: 1em;
-					height: 1em;
+					height: 100%;
+					width: 100%;
 				}
 				.property-minus:hover {
 					background: var(--hover);

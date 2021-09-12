@@ -1,11 +1,10 @@
 import Link from 'next/link';
 import { useRef } from 'react';
-
+import Cross from '../icons/cross';
 
 export default function Tab({ tab, url }) {
+	const tab_ref = useRef(null);
 
-	const tab_ref = useRef(null)
-	
 	const drag = (event) => {
 		const tab = tab_ref.current;
 
@@ -28,14 +27,11 @@ export default function Tab({ tab, url }) {
 
 	return (
 		<div ref={tab_ref}>
-			<Link key={tab.id} href={'/' + tab.id} >
+			<Link key={tab.id} href={'/' + tab.id}>
 				<a className={'tab' + (tab.id === url ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
 					{tab.label}
 
-					<svg className="cross" viewBox="0 0 100 100">
-						<line x1="25" y1="25" x2="75" y2="75" />
-						<line x1="25" y1="75" x2="75" y2="25" />
-					</svg>
+					<Cross onClick={() => {}} />
 				</a>
 			</Link>
 
@@ -46,7 +42,7 @@ export default function Tab({ tab, url }) {
 				}
 
 				.tab {
-					padding: 0 5px 0 20px;
+					padding: 2px 5px 2px 20px;
 					width: max(max-content, 10%);
 					border-radius: 4px;
 					color: white;
@@ -56,7 +52,7 @@ export default function Tab({ tab, url }) {
 					align-items: center;
 					display: grid;
 					grid-gap: 5px;
-					grid-template-columns: max-content 20px;
+					grid-template-columns: max-content 23px;
 					height: 100%;
 				}
 

@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 
 import Tab from './tab';
 import User from './user';
+import Plus from '../icons/plus';
 
 export default function Navbar({ store, actions }) {
 	const router = useRouter();
@@ -58,17 +59,15 @@ export default function Navbar({ store, actions }) {
 						<Tab key={i} tab={tab} url={page} />
 					))}
 				</div>
-				<svg onClick={newTab} id="plus" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 100 100" onDragOver={droppable}>
-					<line x1="50" y1="25" x2="50" y2="75" />
-					<line x1="25" y1="50" x2="75" y2="50" />
-				</svg>
+
+				<div id="plus" onDragOver={droppable}>
+					<Plus onClick={newTab} />
+				</div>
 
 				<div id="users">
-					{[users[0], users[0], users[0]]
-						.filter((ele) => ele)
-						.map((user, i) => (
-							<User key={i} user={user} />
-						))}
+					{users.map((user, i) => (
+						<User key={i} user={user} />
+					))}
 				</div>
 			</div>
 
@@ -114,14 +113,12 @@ export default function Navbar({ store, actions }) {
 					overflow-x: overlay;
 					overflow-y: hidden;
 				}
+
 				#plus {
 					width: 30px;
-					border-radius: 4px;
-					margin: 5px 0;
+					padding: 5px;
 				}
-				#plus:hover {
-					background: var(--hover);
-				}
+
 				line {
 					stroke: white;
 					stroke-width: 6;

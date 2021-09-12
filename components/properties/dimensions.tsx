@@ -30,19 +30,21 @@ export default function Dimensions({ selected, store, actions, width }) {
 
 	return (
 		<div id="property-container">
-			<h4 className="property-heading">DIMENSIONS</h4>
+			<div className="property-heading">
+				<h4>DIMENSIONS</h4>
+			</div>
 			<div id="properties">
-				<Input id="x" selected={selected} store={store} actions={actions} width={width} />
-				<Input id="y" selected={selected} store={store} actions={actions} width={width} />
+				<Input id="x" label="X" selected={selected} store={store} actions={actions} width={width} />
+				<Input id="y" label="Y" selected={selected} store={store} actions={actions} width={width} />
 
-				<Input id="x1" selected={selected} store={store} actions={actions} width={width} />
-				<Input id="y1" selected={selected} store={store} actions={actions} width={width} />
+				<Input id="x1" label="X1" selected={selected} store={store} actions={actions} width={width} />
+				<Input id="y1" label="Y1" selected={selected} store={store} actions={actions} width={width} />
 
-				<Input id="x2" selected={selected} store={store} actions={actions} width={width} />
-				<Input id="y2" selected={selected} store={store} actions={actions} width={width} />
+				<Input id="x2" label="X2" selected={selected} store={store} actions={actions} width={width} />
+				<Input id="y2" label="Y2" selected={selected} store={store} actions={actions} width={width} />
 
-				<Input id="width" selected={selected} store={store} actions={actions} width={width} />
-				<Input id="height" selected={selected} store={store} actions={actions} width={width} />
+				<Input id="width" label="W" selected={selected} store={store} actions={actions} width={width} />
+				<Input id="height" label="H" selected={selected} store={store} actions={actions} width={width} />
 
 				{selected[0].rotation !== undefined ? (
 					<div id="rotation" className="dimension">

@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import Colors from './colors'
-
+import Colors from './colors';
+import Cross from '../icons/cross';
 import Elements from './../elements/elements';
 
 export default function Picker({ store, actions, color_id, color, event, setPicker }) {
 	const [picker_position, setPickerPosition] = useState({ x: event.clientX - 350, y: event.clientY - 80 });
 	const dragPicker = (down_event) => {
-		if (down_event.target.id !== 'container' && down_event.target.id !== 'header' && down_event.target.id !== 'name' ) return;
+		if (down_event.target.id !== 'container' && down_event.target.id !== 'header' && down_event.target.id !== 'name') return;
 		down_event.preventDefault();
 		down_event.target.setPointerCapture(down_event.pointerId);
 		const offset_x = picker_position.x - down_event.clientX;
@@ -37,7 +37,7 @@ export default function Picker({ store, actions, color_id, color, event, setPick
 	if (typeof base === 'undefined') {
 		setTimeout(() => {
 			setPicker(null);
-		}, 10)
+		}, 10);
 		return null;
 	}
 
@@ -104,13 +104,11 @@ export default function Picker({ store, actions, color_id, color, event, setPick
 	return (
 		<div id="container" onPointerDown={dragPicker}>
 			<div id="header">
-				<div id="name"></div>
-				<svg id="cross" viewBox="0 0 20 20" onClick={() => setPicker(null)}>
-					<line x1="2" y1="2" x2="18" y2="18"/>
-					<line x1="18" y1="2" x2="2" y2="18"/>
-				</svg>
+				<div id="name">SOLID</div>
+
+				<Cross onClick={() => setPicker(null)} />
 			</div>
-			
+
 			<div id="fade" onPointerDown={dragFade}>
 				<div id="fade-handle" className="handle"></div>
 			</div>
@@ -134,16 +132,12 @@ export default function Picker({ store, actions, color_id, color, event, setPick
 			<style jsx>{`
 				#header {
 					display: grid;
-					grid-template-columns: 1fr 40px;
+					grid-template-columns: 1fr 30px;
+					padding: 0 10px;
+					color: white;
 				}
-				#cross {
-					width: 30px;
-					height: 30px;
-					stroke-width: 1;
-					stroke: white;
-				}
-				#cross:hover {
-					stroke: var(--selected);
+				#name {
+					margin: auto 0;
 				}
 				#hsla {
 					display: grid;

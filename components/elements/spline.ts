@@ -10,36 +10,36 @@ export default class Bezier extends Element {
 					x1cp: position.x,
 					y1cp: position.y,
 
-					x2: position.x + 200,
-					y2: position.y + 200,
+					x2: position.x + 20,
+					y2: position.y + 20,
 					x2cp: position.x,
-					y2cp: position.y - 100,
+					y2cp: position.y - 10,
 				},
 				{
-					x1: position.x + 200,
-					y1: position.y + 200,
-					x1cp: position.x + 100 + 200,
-					y1cp: position.y + 200,
-					x2: position.x + 400,
-					y2: position.y + 400,
-					x2cp: position.x + 200,
-					y2cp: position.y - 100 + 200,
+					x1: position.x + 20,
+					y1: position.y + 20,
+					x1cp: position.x + 10 + 20,
+					y1cp: position.y + 20,
+					x2: position.x + 40,
+					y2: position.y + 40,
+					x2cp: position.x + 20,
+					y2cp: position.y - 10 + 20,
 				},
 				{
-					x1: position.x + 400,
-					y1: position.y + 200,
-					x1cp: position.x + 1400 + 200,
-					y1cp: position.y + 200,
-					x2: position.x + 800,
-					y2: position.y + 400,
-					x2cp: position.x + 800,
-					y2cp: position.y - 100 + 200,
+					x1: position.x + 40,
+					y1: position.y + 20,
+					x1cp: position.x + 140 + 20,
+					y1cp: position.y + 20,
+					x2: position.x + 80,
+					y2: position.y + 40,
+					x2cp: position.x + 80,
+					y2cp: position.y - 10 + 20,
 				},
 			],
 			label: 'Spline',
 			type: 'spline',
 			fill: [],
-			stroke: [{ id: id + '564', width: 10, color: [0.2, 0.2, 0.2, 1] }],
+			stroke: [{ id: id + '564', width: 1, color: [0.2, 0.2, 0.2, 1], visible: true }],
 		});
 	}
 
@@ -71,17 +71,6 @@ export default class Bezier extends Element {
 		});
 
 		return path;
-	}
-
-	static draw(line, context: CanvasRenderingContext2D, cursor) {
-		const path = this.path(line);
-
-		this.fill(line, context, path);
-		this.stroke(line, context, path);
-
-		// context.lineWidth = line.stroke.reduce((max, stroke) => Math.max(max, stroke.width), 0);
-
-		return context.isPointInStroke(path, cursor.x, cursor.y);
 	}
 
 	static outline(line, context: CanvasRenderingContext2D, color, line_width) {

@@ -31,29 +31,35 @@ export default function Navbar({ store, actions }) {
 		<div id="container">
 			<div id="bar" onMouseDown={selectTool}>
 				<svg id="select" className={cursor.type === 'select' ? 'selected' : ''} viewBox="0 0 100 100">
+					<title>Select</title>
 					<path d="M 30 15 l 0 70 l 23 -15 l 32 -3 Z" />
 				</svg>
 				<svg id="rectangle" className={cursor.type === 'rectangle' ? 'selected' : ''} viewBox="0 0 100 100">
+					<title>Rectangle</title>
 					<rect x="20" y="20" width="60" height="60" />
 				</svg>
 
 				<svg id="ellipse" className={cursor.type === 'ellipse' ? 'selected' : ''} viewBox="0 0 100 100">
+					<title>Ellipse</title>
 					<circle cx="50" cy="50" r="30" />
 				</svg>
 
 				<svg id="line" className={cursor.type === 'line' ? 'selected' : ''} viewBox="0 0 100 100">
+					<title>Line</title>
 					<rect x="15" y="15" width="15" height="15" />
 					<line x1="30" y1="30" x2="70" y2="70" />
 					<rect x="70" y="70" width="15" height="15" />
 				</svg>
 
 				<svg id="spline" className={cursor.type === 'spline' ? 'selected' : ''} viewBox="0 0 100 100">
+					<title>Spline</title>
 					<rect x="15" y="15" width="15" height="15" />
 					<path d="M 22.5 30 C 22.5 70, 77.5 30, 77.5 70 " />
 					<rect x="70" y="70" width="15" height="15" />
 				</svg>
 
 				<svg id="frame" className={cursor.type === 'frame' ? 'selected' : ''} viewBox="0 0 100 100">
+					<title>Frame</title>
 					<line x1="33" y1="15" x2="33" y2="85" />
 					<line x1="67" y1="15" x2="67" y2="85" />
 
@@ -62,6 +68,7 @@ export default function Navbar({ store, actions }) {
 				</svg>
 
 				<svg id="pen" className={cursor.type === 'pen' ? 'selected' : ''} viewBox="0 0 100 100">
+					<title>Pen</title>
 					<path d="M 26 6 L 45 45 A 5 5 0 1 0 47.1 45 M 26 6 V 72 C 25 74 45 70 55 93 L 75 83 C 64 55 80 54 78 48 Z" />
 				</svg>
 			</div>

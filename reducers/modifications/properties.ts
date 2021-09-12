@@ -15,6 +15,16 @@ export default {
 				element.fill = element.fill.filter((fill) => fill.id !== id);
 			});
 	},
+	toggleFill: (state, props) => {
+		const { id } = props.payload;
+		flatten(state.elements)
+			.filter((element) => element.type !== 'group')
+			.forEach((element) => {
+				element.fill.forEach((fill) => {
+					if (fill.id === id) fill.visible = !fill.visible;
+				});
+			});
+	},
 	addStroke: (state, props) => {
 		selected(state.elements).forEach((element) => {
 			element.stroke.push(props.payload);

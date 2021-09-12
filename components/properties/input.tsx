@@ -1,4 +1,4 @@
-export default function Input({ id, step = 1, selected, store, actions, width }) {
+export default function Input({ id, label, step = 1, selected, store, actions, width }) {
 	if (selected[0][id] === undefined) return null;
 
 	const updateProperty = (event) => {
@@ -30,7 +30,7 @@ export default function Input({ id, step = 1, selected, store, actions, width })
 	return (
 		<div id="property-container">
 			<div id={id} className="dimension">
-				<label onPointerDown={dragProperty}>{id}</label>
+				<label onPointerDown={dragProperty}>{label}</label>
 				<input type="number" step={step} value={selected[0][id]} onChange={updateProperty} onClick={(event) => (event.target as any).select()} />
 			</div>
 
@@ -51,11 +51,6 @@ export default function Input({ id, step = 1, selected, store, actions, width })
 				label {
 					padding: 0 5px;
 					cursor: ew-resize;
-					text-transform: uppercase;
-					font-size: 0;
-				}
-				label:first-letter {
-					font-size: 16px;
 				}
 				input {
 					background: transparent;
