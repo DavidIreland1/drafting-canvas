@@ -8,7 +8,7 @@ export default class Group extends Element {
 		});
 	}
 
-	static draw(group, context, cursor) {
+	static draw(group, context, cursor, view) {
 		const center = this.center(group);
 		context.translate(center.x, center.y);
 		context.rotate(group.rotation);
@@ -17,7 +17,7 @@ export default class Group extends Element {
 		const hovering = group.elements
 			.filter((element) => element.visible)
 			.reverse()
-			.filter((element) => Elements[element.type].draw(element, context, cursor))
+			.filter((element) => Elements[element.type].draw(element, context, cursor, view))
 			.filter((element) => !element.locked);
 
 		context.translate(center.x, center.y);
@@ -78,6 +78,14 @@ export default class Group extends Element {
 
 	static setStroke(group, colors) {
 		group.elements.map((element) => Elements[element.type].setStroke(element, colors));
+	}
+
+	static getEffect(group) {
+		return group.elements.map((element) => Elements[element.type].getEffect(element)).flat();
+	}
+
+	static setEffect(group, colors) {
+		group.elements.map((element) => Elements[element.type].setEffect(element, colors));
 	}
 
 	static move(group, position, last_position) {

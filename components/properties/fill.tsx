@@ -1,5 +1,6 @@
 import Picker from './picker';
-import { generateID, dedup } from '../../utils/utils';
+import Elements from '../elements/elements';
+import { generateID } from '../../utils/utils';
 import Colors from './colors';
 import Eye from '../icons/eye';
 import Minus from '../icons/minus';
@@ -7,7 +8,7 @@ import Plus from '../icons/plus';
 
 export default function Fill({ selected, store, actions, width, setPicker }) {
 	function addFill() {
-		store.dispatch(actions.addFill({ id: generateID(), color: [0, 0, 0, 1] }));
+		store.dispatch(actions.addFill({ id: generateID(), color: [0, 0, 0, 1], visible: true }));
 	}
 
 	function removeFill(id) {
@@ -18,8 +19,12 @@ export default function Fill({ selected, store, actions, width, setPicker }) {
 		store.dispatch(actions.toggleFill({ id }));
 	}
 
-	function selectColor(event, color_id, color) {
-		setPicker(<Picker store={store} actions={actions} color_id={color_id} color={color} event={event} setPicker={setPicker} />);
+	function selectColor(event, id, color) {
+		setPicker(<Picker store={store} actions={actions} id={id} color={color} event={event} setPicker={setPicker} />);
+	}
+
+	function dedup(selected) {
+		return [...new Set(selected.map((element) => Elements[element.type].getFill(element)).flat())];
 	}
 
 	function toFill(fill) {
@@ -38,7 +43,6 @@ export default function Fill({ selected, store, actions, width, setPicker }) {
 		<div id="property-container">
 			<div className="property-heading">
 				<h4>FILL</h4>
-
 				<Plus onClick={addFill} />
 			</div>
 

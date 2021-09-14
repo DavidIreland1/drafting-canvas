@@ -95,10 +95,12 @@ export default function Element({ store, actions, element, indentation, restruct
 
 				#label {
 					display: grid;
-					grid-template-columns: auto 18px 18px;
-					grid-gap: 5px;
-					padding: 6px 8px 6px 0;
+					grid-template-columns: auto 28px 28px;
 					box-sizing: border-box;
+					padding: 2px 4px;
+				}
+				#label > label {
+					padding: 6px 4px 6px 0;
 				}
 				#label:hover,
 				#label.hover {
@@ -112,8 +114,6 @@ export default function Element({ store, actions, element, indentation, restruct
 				}
 
 				.icon {
-					width: 18px;
-					height: 18px;
 					fill: var(--off-white);
 					stroke: var(--off-white);
 					z-index: 2;

@@ -55,7 +55,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 				.concat(
 					[...on_screen]
 						.reverse()
-						.filter((element) => Elements[element.type].draw(element, context, cursor))
+						.filter((element) => Elements[element.type].draw(element, context, cursor, user_view))
 						.reverse()
 				)
 				.filter((element) => !element.locked)

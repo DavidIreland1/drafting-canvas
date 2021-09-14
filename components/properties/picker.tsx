@@ -4,7 +4,7 @@ import Colors from './colors';
 import Cross from '../icons/cross';
 import Elements from './../elements/elements';
 
-export default function Picker({ store, actions, color_id, color, event, setPicker }) {
+export default function Picker({ store, actions, id, color, event, setPicker }) {
 	const [picker_position, setPickerPosition] = useState({ x: event.clientX - 350, y: event.clientY - 80 });
 	const dragPicker = (down_event) => {
 		if (down_event.target.id !== 'container' && down_event.target.id !== 'header' && down_event.target.id !== 'name') return;
@@ -27,10 +27,10 @@ export default function Picker({ store, actions, color_id, color, event, setPick
 	const base = useSelector((state) => {
 		const selected = (state as any).present.elements.filter((element) => element.selected);
 
-		const fill_element = selected.map((element) => Elements[element.type].getFill(element).find((fill) => fill.id === color_id)).find((fill) => fill);
+		const fill_element = selected.map((element) => Elements[element.type].getFill(element).find((fill) => fill.id === id)).find((fill) => fill);
 		if (fill_element) return fill_element;
 
-		const stroke_element = selected.map((element) => Elements[element.type].getStroke(element).find((stroke) => stroke.id === color_id)).find((stroke) => stroke);
+		const stroke_element = selected.map((element) => Elements[element.type].getStroke(element).find((stroke) => stroke.id === id)).find((stroke) => stroke);
 		if (stroke_element) return stroke_element;
 	});
 
@@ -98,7 +98,7 @@ export default function Picker({ store, actions, color_id, color, event, setPick
 
 		const [r, g, b, a] = Colors.hslaToRgba(Colors.hsvaToHsla([scaled_hue, scaled_saturation, scaled_brightness, scaled_aplha]));
 
-		store.dispatch(actions.setColor({ color_id: color_id, color: [r, g, b, a] }));
+		store.dispatch(actions.setColor({ id: id, color: [r, g, b, a] }));
 	}
 
 	return (

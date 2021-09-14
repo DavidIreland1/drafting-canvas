@@ -46,11 +46,16 @@ export default class Ellipse extends Element {
 		return path;
 	}
 
-	static draw(ellipse, context: CanvasRenderingContext2D, cursor) {
+	static draw(ellipse, context: CanvasRenderingContext2D, cursor, view) {
 		context.beginPath();
 		const path = this.path(ellipse);
+
+		this.effect(ellipse, context, path, view);
 		this.fill(ellipse, context, path);
 		this.stroke(ellipse, context, path);
+
+		context.shadowColor = 'transparent';
+
 		return context.isPointInPath(path, cursor.x, cursor.y);
 	}
 

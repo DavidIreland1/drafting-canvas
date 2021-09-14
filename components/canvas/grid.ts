@@ -24,6 +24,7 @@ export default class Grid {
 			context.lineTo(right, _y);
 		}
 
+		context.shadowColor = 'transparent';
 		context.strokeStyle = `rgba(0, 0, 0, ${0.1 * (view.scale - Settings.grid_min_scale)})`;
 		context.lineWidth = Math.max(Settings.grid_line_width / view.scale, 0.1);
 		context.stroke();

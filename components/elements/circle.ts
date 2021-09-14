@@ -29,7 +29,7 @@ export default class Circle extends Element {
 		return path;
 	}
 
-	static draw(circle, context, cursor) {
+	static draw(circle, context, cursor, view) {
 		context.beginPath();
 		const path = this.path(circle);
 		this.fill(circle, context, path);

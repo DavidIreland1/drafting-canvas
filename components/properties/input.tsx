@@ -1,22 +1,29 @@
-export default function Input({ id, label, step = 1, selected, store, actions, width }) {
-	if (selected[0][id] === undefined) return null;
+import { useRef } from 'react';
 
-	const updateProperty = (event) => {
+export default function Input({ id, label, step = 1, value, min = NaN, onChange, width }) {
+	if (value === undefined) return null;
+
+	const input = useRef(null);
+
+	const updateValue = (event) => {
 		event.target.style.width = `max(calc(${width} / 6), ${Math.max(event.target.value.length + 2, 5)}ch)`;
-		if (!Number.isNaN(event.target.value) || event.target.value === '') store.dispatch(actions.property({ [event.target.parentNode.id]: Number(event.target.value) }));
+		onChange(event);
 	};
 
 	const dragProperty = (down_event) => {
 		down_event.preventDefault();
 		down_event.target.setPointerCapture(down_event.pointerId);
 
-		const input = down_event.target.nextElementSibling;
-		input.focus();
+		// const input = down_event.target.nextElementSibling;
+		input.current.focus();
 		let last_event = down_event;
 		const move = (move_event) => {
 			move_event.preventDefault();
-			const delta = move_event.clientX - last_event.clientX;
-			store.dispatch(actions.propertyRelative({ [down_event.target.parentNode.id]: Math.round(delta) * (input.step || 1) }));
+			const delta = (move_event.clientX - last_event.clientX) * step;
+
+			value += Math.round(delta / 2);
+			move_event.target.value = Number.isNaN(min) ? value : Math.max(value, min);
+			onChange(move_event);
 			last_event = move_event;
 		};
 		down_event.target.addEventListener('pointermove', move);
@@ -28,16 +35,16 @@ export default function Input({ id, label, step = 1, selected, store, actions, w
 	};
 
 	return (
-		<div id="property-container">
+		<>
 			<div id={id} className="dimension">
 				<label onPointerDown={dragProperty}>{label}</label>
-				<input type="number" step={step} value={selected[0][id]} onChange={updateProperty} onClick={(event) => (event.target as any).select()} />
+				<input ref={input} type="number" step={step} value={value} min={min} onChange={updateValue} onClick={(event) => (event.target as any).select()} />
 			</div>
 
 			<style jsx>{`
 				.dimension {
 					display: grid;
-					grid-template-columns: 25px 1fr;
+					grid-template-columns: auto 1fr;
 					padding: 5px 0;
 					border-bottom: 1px solid transparent;
 				}
@@ -66,6 +73,6 @@ export default function Input({ id, label, step = 1, selected, store, actions, w
 					outline: none;
 				}
 			`}</style>
-		</div>
+		</>
 	);
 }

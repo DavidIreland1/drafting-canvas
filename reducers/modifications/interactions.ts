@@ -48,12 +48,18 @@ const interactions = {
 	toggleVisible: (state, props) => {
 		const { id } = props.payload;
 		const element = flatten(state.elements).find((element) => element.id === id);
-		if (element) element.visible = !element.visible;
+		if (element) {
+			element.visible = !element.visible;
+			element.selected = element.visible;
+		}
 	},
 	toggleLocked: (state, props) => {
 		const { id } = props.payload;
 		const element = flatten(state.elements).find((element) => element.id === id);
-		if (element) element.locked = !element.locked;
+		if (element) {
+			element.locked = !element.locked;
+			element.selected = !element.locked;
+		}
 	},
 
 	group: (state, props) => {

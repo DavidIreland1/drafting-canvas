@@ -12,7 +12,6 @@ export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, s
 		// Pan
 		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
 
-		if (!cursor) console.log(state.cursors, user_id);
 		store.dispatch(
 			actions.view({
 				id: user_id,
@@ -166,7 +165,6 @@ function create(last_position, canvas, store, actions, view, cursor, points) {
 
 	const action = 'resize';
 	const move = (move_event) => {
-		console.log(points);
 		let position = DOMToCanvas(move_event, canvas, view);
 		position = roundPosition(position, [position], points, view);
 		store.dispatch(actions[action]({ user_id: Settings.user_id, id: id, position, last_position }));

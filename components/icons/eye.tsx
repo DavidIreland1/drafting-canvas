@@ -1,7 +1,7 @@
 export default function Eye({ open, onClick }) {
 	return (
-		<div>
-			<svg viewBox="0 0 100 100" className={open ? 'open' : 'closed'} onClick={onClick}>
+		<div onMouseDown={onClick}>
+			<svg viewBox="0 0 100 100" className={open ? 'open' : 'closed'}>
 				<path className="open" d="M 5 50 A 50 40 0 0 1 95 50 " strokeWidth="5" fill="none" />
 				<circle className="open" cx="50" cy="50" r="13"></circle>
 				<path className="open" d="M 5 50 A 50 40 0 0 0 95 50 " strokeWidth="5" fill="none" />
@@ -33,7 +33,7 @@ export default function Eye({ open, onClick }) {
 				}
 
 				div {
-					padding: 0;
+					padding: 5px;
 					margin: auto;
 					border-radius: 6px;
 					box-sizing: border-box;

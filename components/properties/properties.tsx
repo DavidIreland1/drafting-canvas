@@ -33,11 +33,11 @@ export default function Properties({ store, actions, setPicker }) {
 				display: grid;
 				grid-template-columns: 1fr 30px;
 				padding: 0 10px 5px 10px;
-				gap: 5px calc(${width} / 20);
+				gap: 5px calc(${width} / 40);
 			}
-
-			.property-heading > h4 {
-				margin: 0px 0 0px 0;
+			h4 {
+				margin: 0;
+				padding: 5px 0;
 				font-weight: 300;
 			}
 		`}</style>
@@ -55,7 +55,7 @@ export default function Properties({ store, actions, setPicker }) {
 					<div className="divider" />
 					<Stroke selected={selected} store={store} actions={actions} width={width} setPicker={setPicker} />
 					<div className="divider" />
-					<Effects selected={selected} store={store} actions={actions} width={width} />
+					<Effects selected={selected} store={store} actions={actions} width={width} setPicker={setPicker} />
 				</div>
 			) : null}
 
@@ -72,7 +72,7 @@ export default function Properties({ store, actions, setPicker }) {
 					padding: 0 10px;
 					display: grid;
 					grid-template-columns: max-content 1fr 30px 30px;
-					gap: 10px;
+					gap: 5px;
 					line-height: 28px;
 				}
 				.property-minus {
@@ -99,6 +99,8 @@ export default function Properties({ store, actions, setPicker }) {
 					display: grid;
 					height: 100%;
 					right: 0;
+					padding: 10px 0;
+					overflow-x: hidden;
 				}
 				#handle {
 					position: absolute;

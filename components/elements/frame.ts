@@ -47,7 +47,7 @@ export default class Frame extends Group {
 		return path;
 	}
 
-	static draw(frame, context: CanvasRenderingContext2D, cursor) {
+	static draw(frame, context: CanvasRenderingContext2D, cursor, draw) {
 		const center = this.center(frame);
 
 		context.fillStyle = frame.color;
@@ -68,7 +68,7 @@ export default class Frame extends Group {
 		const hover_child = frame.elements
 			.filter((element) => element.visible)
 			.reverse()
-			.filter((element) => Elements[element.type].draw(element, context, cursor))
+			.filter((element) => Elements[element.type].draw(element, context, cursor, draw))
 			.filter((element) => !element.locked);
 
 		if (hover_child.length > 0) return hover_child.length > 0;

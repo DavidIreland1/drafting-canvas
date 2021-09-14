@@ -76,18 +76,19 @@ export default class Rectangle extends Element {
 		return path;
 	}
 
-	static draw(rectangle, context: CanvasRenderingContext2D, cursor) {
+	static draw(rectangle, context: CanvasRenderingContext2D, cursor, view) {
 		const center = this.center(rectangle);
-
-		context.fillStyle = rectangle.color;
-		context.translate(center.x, center.y);
-		context.rotate(rectangle.rotation);
-		context.beginPath();
-
 		const path = this.path(rectangle);
 
+		context.fillStyle = rectangle.color;
+
+		context.translate(center.x, center.y);
+		this.effect(rectangle, context, path, view);
+
+		context.rotate(rectangle.rotation);
 		this.fill(rectangle, context, path);
 		this.stroke(rectangle, context, path);
+		context.shadowColor = 'transparent';
 
 		const hover = context.isPointInPath(path, cursor.x, cursor.y);
 

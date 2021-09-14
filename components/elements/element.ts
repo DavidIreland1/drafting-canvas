@@ -10,6 +10,7 @@ export default class Element {
 			hover: false,
 			fill: [{ id: id + '2123', color: [1, 0, 0, 1], visible: true }],
 			stroke: [],
+			effect: [],
 			visible: true,
 			locked: false,
 		};
@@ -20,28 +21,55 @@ export default class Element {
 	}
 
 	static fill(element, context, path) {
-		element.fill.forEach((fill) => {
-			context.fillStyle = Colors.rgbaToString(fill.color);
-			context.fill(path);
-		});
+		element.fill
+			.filter((fill) => fill.visible)
+			.forEach((fill) => {
+				context.fillStyle = Colors.rgbaToString(fill.color);
+				context.fill(path);
+			});
 	}
 
 	static stroke(element, context, path) {
-		element.stroke.forEach((stroke) => {
-			context.lineWidth = stroke.width;
-			context.strokeStyle = Colors.rgbaToString(stroke.color);
-			context.stroke(path);
-		});
+		element.stroke
+			.filter((stroke) => stroke.visible)
+			.forEach((stroke) => {
+				context.lineWidth = stroke.width;
+				context.strokeStyle = Colors.rgbaToString(stroke.color);
+				context.stroke(path);
+			});
 	}
 
-	static draw(element, context: CanvasRenderingContext2D, cursor): boolean {
+	static effect(element, context: CanvasRenderingContext2D, path, view) {
+		element.effect
+			.filter((effect) => effect.visible)
+			.forEach((effect) => {
+				if (effect.type === 'drop-shadow') {
+					context.save();
+					context.translate(effect.x, effect.y);
+					context.scale(effect.spread * 0.01, effect.spread * 0.01);
+
+					context.filter = `blur(${effect.blur / view.scale}px)`;
+					context.fillStyle = Colors.rgbaToString(effect.color);
+					context.fill(path);
+
+					context.restore();
+
+					context.filter = 'none';
+				}
+			});
+	}
+
+	static draw(element, context: CanvasRenderingContext2D, cursor, view): boolean {
 		const path = this.path(element);
 
+		this.effect(element, context, path, view);
 		this.fill(element, context, path);
 		const fill = element.fill.length && context.isPointInPath(path, cursor.x, cursor.y);
 
 		this.stroke(element, context, path);
 		const stroke = element.stroke.length && context.isPointInStroke(path, cursor.x, cursor.y);
+
+		context.shadowColor = 'transparent';
 
 		return fill || stroke;
 	}
@@ -174,7 +202,7 @@ export default class Element {
 
 	static setFill(element, props) {
 		element.fill.forEach((fill) => {
-			if (props.color_id === fill.id) fill.color = props.color;
+			if (props.id === fill.id) fill.color = props.color;
 		});
 	}
 
@@ -184,7 +212,17 @@ export default class Element {
 
 	static setStroke(element, props) {
 		element.stroke.forEach((stroke) => {
-			if (props.color_id === stroke.id) stroke.color = props.color;
+			if (props.id === stroke.id) stroke.color = props.color;
+		});
+	}
+
+	static getEffect(element) {
+		return element.effect;
+	}
+
+	static setEffect(element, props) {
+		element.stroke.forEach((stroke) => {
+			if (props.id === stroke.id) stroke.color = props.color;
 		});
 	}
 

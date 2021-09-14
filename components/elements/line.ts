@@ -14,7 +14,7 @@ export default class Line extends Element {
 		});
 	}
 
-	static draw(line, context: CanvasRenderingContext2D, cursor) {
+	static draw(line, context: CanvasRenderingContext2D, cursor, view) {
 		context.beginPath();
 		// context.moveTo(line.x1, line.y1);
 		// context.lineTo(line.x2, line.y2);

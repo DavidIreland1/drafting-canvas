@@ -33,12 +33,13 @@ export default function Sheet({ store, actions }) {
 	useEffect(() => {
 		window.addEventListener('keydown', (event) => {
 			if (event.key === 'b') {
-				// window.location.reload();
 				store.dispatch(actions.overwrite({ state: { elements: getPage(undefined).elements } }));
 			}
 			if (event.key === 'm') {
-				// window.location.reload();
 				store.dispatch(actions.overwrite({ state: { elements: getPage('red').elements } }));
+			}
+			if (event.key === 'l') {
+				store.dispatch(actions.overwrite({ state: { elements: getPage('test').elements } }));
 			}
 		});
 	}, []);
