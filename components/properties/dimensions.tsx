@@ -2,7 +2,14 @@ import Input from './input';
 
 export default function Dimensions({ selected, store, actions, width }) {
 	function updateDimension(event) {
-		if (!Number.isNaN(event.target.value) || event.target.value === '') store.dispatch(actions.property({ [event.target.parentNode.id]: Number(event.target.value) }));
+		if (Number.isNaN(event.target.value) || event.target.value === '') return;
+		store.dispatch(actions.property({ [event.target.parentNode.id]: Number(event.target.value) }));
+	}
+
+	function updateRotation(event) {
+		if (Number.isNaN(event.target.value) || event.target.value === '') return;
+
+		store.dispatch(actions.property({ [event.target.parentNode.id]: Number(event.target.value) }));
 	}
 
 	return (
@@ -23,7 +30,7 @@ export default function Dimensions({ selected, store, actions, width }) {
 				<Input id="width" label="W" value={selected[0].width} onChange={updateDimension} width={width} />
 				<Input id="height" label="H" value={selected[0].height} onChange={updateDimension} width={width} />
 
-				<Input id="rotation" label={<div style={{ fontSize: '30px', lineHeight: '12px' }}>⊾</div>} step={0.01} value={selected[0].rotation} onChange={updateDimension} width={width} />
+				<Input id="rotation" label={<div style={{ fontSize: '30px', lineHeight: '12px' }}>⊾</div>} step={0.01} value={selected[0].rotation} onChange={updateRotation} width={width} />
 
 				<Input id="border_radius" label={<div style={{ fontSize: '24px', lineHeight: '10px', padding: '0px 8px 0px 0px' }}>╭</div>} step={0.01} value={selected[0].border_radius} onChange={updateDimension} width={width} />
 			</div>
@@ -34,7 +41,9 @@ export default function Dimensions({ selected, store, actions, width }) {
 					gap: 8px calc(${width} / 20);
 					height: min-content;
 					width: fit-content;
-					margin: 0 auto;
+					width: 100%;
+					box-sizing: border-box;
+					padding: 0 10px;
 					overflow: hidden;
 				}
 			`}</style>

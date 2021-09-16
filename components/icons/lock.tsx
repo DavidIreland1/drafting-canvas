@@ -1,4 +1,4 @@
-export default function Lock({ locked, onClick }) {
+export default function Lock({ locked = true, onClick = undefined }) {
 	return (
 		<div onMouseDown={onClick}>
 			<svg viewBox="0 0 100 100" className={locked ? 'locked' : 'unlocked'}>

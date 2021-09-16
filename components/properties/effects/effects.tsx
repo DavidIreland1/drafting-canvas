@@ -1,4 +1,4 @@
-import Picker from './../picker';
+import Picker from '../../picker';
 import Elements from './../../elements/elements';
 import { generateID } from './../../../utils/utils';
 import Colors from './../colors';
@@ -6,54 +6,80 @@ import Eye from './../../icons/eye';
 import Minus from './../../icons/minus';
 import Plus from './../../icons/plus';
 import Input from '../input';
+import Select from '../select';
 
 export default function Effect({ selected, store, actions, width, setPicker }) {
 	function addEffect() {
 		store.dispatch(
 			actions.addEffect({
 				id: generateID(),
-				type: 'drop-shadow',
+				// type: 'Drop shadow',
+				type: 'Inner shadow',
 				x: 0,
 				y: 0,
-				blur: 100,
-				spread: 100,
+				blur: 10,
+				spread: 0,
 				color: [0, 0, 0, 1],
 				visible: true,
 			})
 		);
 	}
 
-	function removeEffect(id) {
-		store.dispatch(actions.removeEffect({ id }));
+	function removeEffect(effect) {
+		store.dispatch(actions.removeEffect({ id: effect.id }));
 	}
 
-	function toggleEffect(id) {
-		store.dispatch(actions.toggleEffect({ id }));
+	function toggleEffect(effect) {
+		store.dispatch(actions.setEffect({ id: effect.id, visible: !effect.visible }));
 	}
 
-	function selectColor(event, id, color) {
-		setPicker(<Picker store={store} actions={actions} id={id} color={color} event={event} setPicker={setPicker} />);
+	function openPicker(event, effect) {
+		const setProperty = (effect) => {
+			store.dispatch(actions.setEffect(effect));
+		};
+		setPicker(
+			<Picker setProperty={setProperty} prop_type="effect" prop_id={effect.id} event={event} setPicker={setPicker}>
+				Effect
+			</Picker>
+		);
 	}
 
-	function updateEffect(id, event) {
-		if (!Number.isNaN(event.target.value) || event.target.value === '') store.dispatch(actions.effect({ id, [event.target.parentNode.id]: Number(event.target.value) }));
+	function updateEffect(event, effect) {
+		store.dispatch(
+			actions.setEffect({
+				id: effect.id,
+				[event.target.id]: event.target.value,
+			})
+		);
+	}
+
+	function getEffects(selected) {
+		return selected.map((element) => Elements[element.type].getEffect(element)).flat();
 	}
 
 	function toEffect(effect) {
 		return (
 			<div key={effect.id}>
 				<div className="property-row">
-					<div className="property-color" onClick={(event) => selectColor(event, effect.id, effect.color)} style={{ background: Colors.rgbaToString(effect.color) }} />
+					<div className="property-color" onClick={(event) => openPicker(event, effect)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(effect.color)) }} />
 					{Colors.rgbaToHex(effect.color)}
 
-					<Eye open={effect.visible} onClick={() => toggleEffect(effect.id)} />
-					<Minus onClick={() => removeEffect(effect.id)} />
+					<Eye open={effect.visible} onClick={() => toggleEffect(effect)} />
+					<Minus onClick={() => removeEffect(effect)} />
 				</div>
+
 				<div className="grid">
-					<Input id="x" label="X" value={effect.x} onChange={(event) => updateEffect(effect.id, event)} width={width} />
-					<Input id="y" label="Y" value={effect.y} onChange={(event) => updateEffect(effect.id, event)} width={width} />
-					<Input id="blur" label="Blur" value={effect.blur} min={0} onChange={(event) => updateEffect(effect.id, event)} width={width} />
-					<Input id="spread" label="Spread" value={effect.spread} onChange={(event) => updateEffect(effect.id, event)} width={width} />
+					<Select id="type" label="" value={effect.type} onChange={(event) => updateEffect(event, effect)}>
+						<option value="Drop shadow">Drop Shadow</option>
+						<option value="Inner shadow">Inner Shadow</option>
+					</Select>
+				</div>
+
+				<div className="grid">
+					<Input id="x" label="X" value={effect.x} onChange={(event) => updateEffect(event, effect)} width={width} />
+					<Input id="y" label="Y" value={effect.y} onChange={(event) => updateEffect(event, effect)} width={width} />
+					<Input id="blur" label="Blur" value={effect.blur} min={0} onChange={(event) => updateEffect(event, effect)} width={width} />
+					<Input id="spread" label="Spread" value={effect.spread} onChange={(event) => updateEffect(event, effect)} width={width} />
 				</div>
 
 				<style jsx>{`
@@ -69,15 +95,12 @@ export default function Effect({ selected, store, actions, width, setPicker }) {
 
 	return (
 		<div id="property-container">
-			<div className="property-heading">
+			<div className="property-heading" onClick={addEffect}>
 				<h4>EFFECTS</h4>
-				<Plus onClick={addEffect} />
+				<Plus />
 			</div>
 
-			{selected
-				.map((element) => Elements[element.type].getEffect(element))
-				.flat()
-				.map(toEffect)}
+			{getEffects(selected).map(toEffect)}
 		</div>
 	);
 }

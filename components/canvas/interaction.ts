@@ -143,7 +143,7 @@ function edit(down_event, last_position, canvas, store, actions, active, view, p
 
 		store.dispatch(actions[action]({ user_id: Settings.user_id, id: target.id, position, last_position }));
 
-		last_position = position; //roundPosition(position, [], [], view);
+		last_position = roundPosition(position, [], [], view);
 	};
 	down_event.target.addEventListener('pointermove', move);
 

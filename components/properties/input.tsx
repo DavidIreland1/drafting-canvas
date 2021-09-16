@@ -7,6 +7,7 @@ export default function Input({ id, label, step = 1, value, min = NaN, onChange,
 
 	const updateValue = (event) => {
 		event.target.style.width = `max(calc(${width} / 6), ${Math.max(event.target.value.length + 2, 5)}ch)`;
+		event.target.id = id;
 		onChange(event);
 	};
 
@@ -19,12 +20,20 @@ export default function Input({ id, label, step = 1, value, min = NaN, onChange,
 		let last_event = down_event;
 		const move = (move_event) => {
 			move_event.preventDefault();
-			const delta = (move_event.clientX - last_event.clientX) * step;
-
-			value += Math.round(delta / 2);
-			move_event.target.value = Number.isNaN(min) ? value : Math.max(value, min);
+			const delta = Math.sign(move_event.clientX - last_event.clientX) * step;
+			value = Number(value);
+			if (isNaN(value)) value = 0;
+			value += delta;
+			move_event.target.value = isNaN(min) ? value : Math.max(value, min);
+			move_event.target.id = id;
 			onChange(move_event);
 			last_event = move_event;
+
+			if (move_event.stopPropagation) move_event.stopPropagation();
+			if (move_event.preventDefault) move_event.preventDefault();
+			move_event.cancelBubble = true;
+			move_event.returnValue = false;
+			return false;
 		};
 		down_event.target.addEventListener('pointermove', move);
 		const end = () => {
@@ -38,7 +47,7 @@ export default function Input({ id, label, step = 1, value, min = NaN, onChange,
 		<>
 			<div id={id} className="dimension">
 				<label onPointerDown={dragProperty}>{label}</label>
-				<input ref={input} type="number" step={step} value={value} min={min} onChange={updateValue} onClick={(event) => (event.target as any).select()} />
+				<input ref={input} type="number" step={step} value={value} min={min || undefined} onChange={updateValue} onClick={(event) => (event.target as any).select()} />
 			</div>
 
 			<style jsx>{`

@@ -39,7 +39,7 @@ export default class Bezier extends Element {
 			label: 'Spline',
 			type: 'spline',
 			fill: [],
-			stroke: [{ id: id + '564', width: 1, color: [0.2, 0.2, 0.2, 1], visible: true }],
+			stroke: [{ id: id + '564', type: 'Inside', width: 1, color: [0.2, 0.2, 0.2, 1], visible: true }],
 		});
 	}
 

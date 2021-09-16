@@ -82,18 +82,18 @@ export default class Rectangle extends Element {
 
 		context.fillStyle = rectangle.color;
 
+		context.save();
 		context.translate(center.x, center.y);
-		this.effect(rectangle, context, path, view);
+		this.effect(rectangle, context, path, true, view);
 
 		context.rotate(rectangle.rotation);
 		this.fill(rectangle, context, path);
+		this.effect(rectangle, context, path, false, view);
 		this.stroke(rectangle, context, path);
-		context.shadowColor = 'transparent';
 
 		const hover = context.isPointInPath(path, cursor.x, cursor.y);
 
-		context.rotate(-rectangle.rotation);
-		context.translate(-center.x, -center.y);
+		context.restore();
 
 		return hover;
 	}

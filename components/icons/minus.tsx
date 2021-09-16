@@ -1,4 +1,4 @@
-export default function Minus({ onClick }) {
+export default function Minus({ onClick = undefined }) {
 	return (
 		<div onMouseDown={onClick}>
 			<svg viewBox="0 0 10 10" stroke="white" strokeWidth="0.8">

@@ -2,10 +2,7 @@ export default function User({ user }) {
 	return (
 		<>
 			<div id="profile" title={user.label}>
-				{user.label
-					.split(' ')
-					.map((name) => name[0])
-					.join('')}
+				{user.label.replace(/[^A-Z]/g, '')}
 			</div>
 
 			<style jsx>
@@ -22,12 +19,13 @@ export default function User({ user }) {
 						border-radius: var(--nav-height);
 						line-height: calc(var(--nav-height) - var(--margin) - 2px);
 						text-align: center;
-						border: 1px solid white;
+						border: 1px solid black;
 						overflow: hidden;
+						color: black;
 					}
 
 					#profile:hover {
-						color: black;
+						border: 1px solid ${user.color};
 					}
 				`}
 			</style>

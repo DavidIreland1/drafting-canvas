@@ -8,9 +8,11 @@ export default class Element {
 			id: id,
 			selected: true,
 			hover: false,
-			fill: [{ id: id + '2123', color: [1, 0, 0, 1], visible: true }],
+			// fill: [{ id: id + '2123', type: 'Solid', color: [0.8, 0.8, 0.8, 1], visible: true }],
+			fill: [{ id: id + '2123', type: 'Solid', color: [0.8, 0.8, 0.8, 1], visible: true }],
 			stroke: [],
 			effect: [],
+			rotation: 0,
 			visible: true,
 			locked: false,
 		};
@@ -24,37 +26,84 @@ export default class Element {
 		element.fill
 			.filter((fill) => fill.visible)
 			.forEach((fill) => {
-				context.fillStyle = Colors.rgbaToString(fill.color);
-				context.fill(path);
+				if (fill.type === 'Solid') {
+					context.fillStyle = Colors.hslaToString(Colors.hsbaToHsla(fill.color));
+					context.fill(path);
+				} else if (fill.type === 'Image') {
+					context.fillStyle = 'purple';
+					context.fill(path);
+				}
 			});
 	}
 
-	static stroke(element, context, path) {
+	static stroke(element, context: CanvasRenderingContext2D, path: Path2D) {
 		element.stroke
 			.filter((stroke) => stroke.visible)
 			.forEach((stroke) => {
+				context.strokeStyle = Colors.hslaToString(Colors.hsbaToHsla(stroke.color));
 				context.lineWidth = stroke.width;
-				context.strokeStyle = Colors.rgbaToString(stroke.color);
-				context.stroke(path);
+				if (stroke.type === 'Inside') {
+					context.save();
+					context.clip(path);
+					context.lineWidth = stroke.width * 2;
+					context.stroke(path);
+					context.restore();
+				} else if (stroke.type === 'Outside') {
+					context.save();
+					const clone = new Path2D(path);
+
+					// Fix for negative widths
+					if ((element.height > 0 && element.width > 0) || (element.height < 0 && element.width < 0)) {
+						clone.rect(10000, -10000, -20000, 20000); // TODO: Need to fix this
+					} else {
+						clone.rect(-10000, -10000, 20000, 20000); // TODO: Need to fix this
+					}
+
+					context.clip(clone);
+					context.lineWidth = stroke.width * 2;
+					context.stroke(path);
+					context.restore();
+				} else {
+					// Center
+					context.stroke(path);
+				}
 			});
 	}
 
-	static effect(element, context: CanvasRenderingContext2D, path, view) {
+	static effect(element, context: CanvasRenderingContext2D, path: Path2D, before, view) {
 		element.effect
 			.filter((effect) => effect.visible)
 			.forEach((effect) => {
-				if (effect.type === 'drop-shadow') {
+				if (effect.type === 'Drop shadow' && before) {
 					context.save();
+					context.filter = `blur(${effect.blur * 0.1 * view.scale}px)`;
+					context.fillStyle = Colors.hslaToString(Colors.hsbaToHsla(effect.color));
 					context.translate(effect.x, effect.y);
-					context.scale(effect.spread * 0.01, effect.spread * 0.01);
-
-					context.filter = `blur(${effect.blur / view.scale}px)`;
-					context.fillStyle = Colors.rgbaToString(effect.color);
+					context.scale(Math.exp(effect.spread * 0.005), Math.exp(effect.spread * 0.005));
+					context.rotate(element.rotation);
 					context.fill(path);
-
 					context.restore();
-
 					context.filter = 'none';
+				} else if (effect.type === 'Inner shadow' && !before) {
+					context.save();
+
+					context.filter = `blur(${effect.blur * 0.1 * view.scale}px)`;
+					context.fillStyle = Colors.hslaToString(Colors.hsbaToHsla(effect.color));
+					context.clip(path);
+					context.translate(effect.x, effect.y);
+					context.scale(Math.exp(-effect.spread * 0.005), Math.exp(-effect.spread * 0.005));
+
+					const clone = new Path2D(path);
+
+					// Fix for negative widths
+					if ((element.height > 0 && element.width > 0) || (element.height < 0 && element.width < 0)) {
+						clone.rect(10000, -10000, -20000, 20000); // TODO: Need to fix this
+					} else {
+						clone.rect(-10000, -10000, 20000, 20000); // TODO: Need to fix this
+					}
+					context.fill(clone);
+					context.translate(-effect.x, -effect.y);
+					context.restore();
 				}
 			});
 	}
@@ -62,14 +111,14 @@ export default class Element {
 	static draw(element, context: CanvasRenderingContext2D, cursor, view): boolean {
 		const path = this.path(element);
 
-		this.effect(element, context, path, view);
+		this.effect(element, context, path, true, view);
 		this.fill(element, context, path);
+		this.effect(element, context, path, false, view);
+
 		const fill = element.fill.length && context.isPointInPath(path, cursor.x, cursor.y);
 
 		this.stroke(element, context, path);
 		const stroke = element.stroke.length && context.isPointInStroke(path, cursor.x, cursor.y);
-
-		context.shadowColor = 'transparent';
 
 		return fill || stroke;
 	}
@@ -202,7 +251,11 @@ export default class Element {
 
 	static setFill(element, props) {
 		element.fill.forEach((fill) => {
-			if (props.id === fill.id) fill.color = props.color;
+			if (props.id === fill.id) {
+				Object.entries(props).forEach(([key, value]) => {
+					fill[key] = value;
+				});
+			}
 		});
 	}
 
@@ -212,7 +265,11 @@ export default class Element {
 
 	static setStroke(element, props) {
 		element.stroke.forEach((stroke) => {
-			if (props.id === stroke.id) stroke.color = props.color;
+			if (props.id === stroke.id) {
+				Object.entries(props).forEach(([key, value]) => {
+					stroke[key] = value;
+				});
+			}
 		});
 	}
 
@@ -221,8 +278,12 @@ export default class Element {
 	}
 
 	static setEffect(element, props) {
-		element.stroke.forEach((stroke) => {
-			if (props.id === stroke.id) stroke.color = props.color;
+		element.effect.forEach((effect) => {
+			if (props.id === effect.id) {
+				Object.entries(props).forEach(([key, value]) => {
+					effect[key] = value;
+				});
+			}
 		});
 	}
 

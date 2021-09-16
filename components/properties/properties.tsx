@@ -36,6 +36,7 @@ export default function Properties({ store, actions, setPicker }) {
 				gap: 5px calc(${width} / 40);
 			}
 			h4 {
+				cursor: default;
 				margin: 0;
 				padding: 5px 0;
 				font-weight: 300;

@@ -1,6 +1,10 @@
 // All values are [0-1]
 
 export default {
+	hslaToString: ([h, l, s, a]) => {
+		return `hsla(${h * 360},${l * 100}%,${s * 100}%,${a})`;
+	},
+
 	rgbaToString: ([r, g, b, a]) => {
 		return `rgba(${r * 255},${g * 255},${b * 255},${a})`;
 	},
@@ -40,24 +44,24 @@ export default {
 		};
 		return [f(0), f(8), f(4), a];
 	},
-	hsvaToHsla: ([h, s, v, a]): [number, number, number, number] => {
-		const l = ((2 - s) * v) / 2;
+	hsbaToHsla: ([h, s, b, a]): [number, number, number, number] => {
+		const l = ((2 - s) * b) / 2;
 		if (l !== 0) {
 			if (l === 1) {
 				s = 0;
 			} else if (l < 0.5) {
-				s = (s * v) / (l * 2);
+				s = (s * b) / (l * 2);
 			} else {
-				s = (s * v) / (2 - l * 2);
+				s = (s * b) / (2 - l * 2);
 			}
 		}
 		return [h, s, l, a];
 	},
 	hslaToHsba: ([h, s, l, a]): [number, number, number, number] => {
-		const hsv1 = s * (l < 0.5 ? l : 1 - l);
-		const hsvS = hsv1 === 0 ? 0 : (2 * hsv1) / (l + hsv1);
-		const hsvV = l + hsv1;
-		return [h, hsvS, hsvV, a];
+		const hsb1 = s * (l < 0.5 ? l : 1 - l);
+		const hsbS = hsb1 === 0 ? 0 : (2 * hsb1) / (l + hsb1);
+		const hsbV = l + hsb1;
+		return [h, hsbS, hsbV, a];
 	},
 	rgbaToHsla: ([r, g, b, a]): [number, number, number, number] => {
 		const max = Math.max(r, g, b);

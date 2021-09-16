@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import Cross from './icons/cross';
+import { clamp } from '../utils/utils';
+import Select from './properties/select';
 import { useSelector } from 'react-redux';
-import Colors from './colors';
-import Cross from '../icons/cross';
-import Elements from './../elements/elements';
+import { flatten } from './elements/elements';
 
-export default function Picker({ store, actions, id, color, event, setPicker }) {
+export default function Picker({ setProperty, prop_type, prop_id, event, setPicker, children }) {
 	const [picker_position, setPickerPosition] = useState({ x: event.clientX - 350, y: event.clientY - 80 });
 	const dragPicker = (down_event) => {
 		if (down_event.target.id !== 'container' && down_event.target.id !== 'header' && down_event.target.id !== 'name') return;
@@ -24,24 +25,22 @@ export default function Picker({ store, actions, id, color, event, setPicker }) 
 		);
 	};
 
-	const base = useSelector((state) => {
-		const selected = (state as any).present.elements.filter((element) => element.selected);
-
-		const fill_element = selected.map((element) => Elements[element.type].getFill(element).find((fill) => fill.id === id)).find((fill) => fill);
-		if (fill_element) return fill_element;
-
-		const stroke_element = selected.map((element) => Elements[element.type].getStroke(element).find((stroke) => stroke.id === id)).find((stroke) => stroke);
-		if (stroke_element) return stroke_element;
+	const property = useSelector((state) => {
+		return flatten((state as any).present.elements)
+			.filter((element) => element.selected)
+			.filter((element) => element.type !== 'group')
+			.map((element) => element[prop_type])
+			.flat()
+			.find((prop) => prop.id === prop_id);
 	});
 
-	if (typeof base === 'undefined') {
+	if (typeof property === 'undefined') {
+		// Kinda werid
 		setTimeout(() => {
 			setPicker(null);
 		}, 10);
 		return null;
 	}
-
-	const HSBA = Colors.hslaToHsba(Colors.rgbaToHsla(Colors.stringToRgba(base.color)));
 
 	const drag = (down_event, id, callback) => {
 		down_event.preventDefault();
@@ -60,52 +59,46 @@ export default function Picker({ store, actions, id, color, event, setPicker }) 
 		);
 	};
 
+	const hsba = property.color;
+
 	const dragFade = (down_event) => {
 		drag(down_event, 'fade', (move_event, bounds) => {
 			const saturation = clamp(0, move_event.clientX - bounds.x - 8, bounds.width - 14);
 			const brightness = clamp(0, move_event.clientY - bounds.y - 16, bounds.height - 14);
-			setColor(HSBA[0] * slider_width, saturation, brightness, HSBA[3] * slider_width);
+			setColor(hsba[0] * slider_width, saturation, brightness, hsba[3] * slider_width);
 		});
 	};
 
 	const dragHue = (down_event) => {
 		drag(down_event, 'hue', (move_event, bounds) => {
 			const new_hue = clamp(0, move_event.clientX - bounds.x - 8, bounds.width - 14);
-			setColor(new_hue, HSBA[1] * fade_width, (1 - HSBA[2]) * fade_width, HSBA[3] * slider_width);
+			setColor(new_hue, hsba[1] * fade_width, (1 - hsba[2]) * fade_width, hsba[3] * slider_width);
 		});
 	};
 
 	const dragAlpha = (down_event) => {
 		drag(down_event, 'checkers', (move_event, bounds) => {
 			const new_aplha = clamp(0, move_event.clientX - bounds.x - 8, bounds.width - 14);
-			setColor(HSBA[0] * slider_width, HSBA[1] * fade_width, (1 - HSBA[2]) * fade_width, new_aplha);
+			setColor(hsba[0] * slider_width, hsba[1] * fade_width, (1 - hsba[2]) * fade_width, new_aplha);
 		});
 	};
 
 	const fade_width = 286;
 	const slider_width = 266;
 
-	let scaled_hue = HSBA[0] * slider_width;
-	let scaled_saturation = HSBA[1] * fade_width;
-	let scaled_brightness = (1 - HSBA[2]) * fade_width;
-	let scaled_aplha = HSBA[3] * slider_width;
-
 	function setColor(hue, saturation, brightness, aplha) {
-		if (hue) scaled_hue = hue / slider_width;
-		if (saturation) scaled_saturation = saturation / fade_width;
-		if (brightness) scaled_brightness = 1 - brightness / fade_width;
-		if (aplha) scaled_aplha = aplha / slider_width;
+		const h = hue / slider_width;
+		const s = saturation / fade_width;
+		const b = 1 - brightness / fade_width;
+		const a = aplha / slider_width;
 
-		const [r, g, b, a] = Colors.hslaToRgba(Colors.hsvaToHsla([scaled_hue, scaled_saturation, scaled_brightness, scaled_aplha]));
-
-		store.dispatch(actions.setColor({ id: id, color: [r, g, b, a] }));
+		setProperty({ ...property, color: [h, s, b, a] });
 	}
 
 	return (
 		<div id="container" onPointerDown={dragPicker}>
 			<div id="header">
-				<div id="name">SOLID</div>
-
+				{children}
 				<Cross onClick={() => setPicker(null)} />
 			</div>
 
@@ -122,19 +115,19 @@ export default function Picker({ store, actions, id, color, event, setPicker }) 
 			</div>
 
 			<div id="hsla">
-				<div>HSBA</div>
-				<div>{Math.round(HSBA[0] * 360)}</div>
-				<div>{Math.round(HSBA[1] * 100)}</div>
-				<div>{Math.round(HSBA[2] * 100)}</div>
-				<div>{Math.round(HSBA[3] * 100)}%</div>
+				<div>hsba</div>
+				<div>{Math.round(hsba[0] * 360)}</div>
+				<div>{Math.round(hsba[1] * 100)}</div>
+				<div>{Math.round(hsba[2] * 100)}</div>
+				<div>{Math.round(hsba[3] * 100)}%</div>
 			</div>
 
 			<style jsx>{`
 				#header {
 					display: grid;
-					grid-template-columns: 1fr 30px;
+					grid-template-columns: min-content 30px;
 					padding: 0 10px;
-					color: white;
+					justify-content: space-between;
 				}
 				#name {
 					margin: auto 0;
@@ -171,11 +164,11 @@ export default function Picker({ store, actions, id, color, event, setPicker }) 
 					background: -moz-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -moz-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
 					background: -ms-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -ms-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
 					background: -o-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -o-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
-					background-color: hsl(${HSBA[0] * 360}, 100%, 50%);
+					background-color: hsl(${hsba[0] * 360}, 100%, 50%);
 				}
 				#fade-handle {
-					top: ${fade_width - HSBA[2] * fade_width}px;
-					left: ${HSBA[1] * fade_width}px;
+					top: ${fade_width - hsba[2] * fade_width}px;
+					left: ${hsba[1] * fade_width}px;
 				}
 				.handle {
 					position: absolute;
@@ -185,7 +178,7 @@ export default function Picker({ store, actions, id, color, event, setPicker }) 
 					border: 1px solid black;
 					box-sizing: border-box;
 					z-index: 2;
-					background-color: hsb(${HSBA[0] * 360}, ${HSBA[1] * 100}%, ${HSBA[2] * 100}%);
+					background-color: hsb(${hsba[0] * 360}, ${hsba[1] * 100}%, ${hsba[2] * 100}%);
 				}
 				.handle::before {
 					position: absolute;
@@ -212,15 +205,15 @@ export default function Picker({ store, actions, id, color, event, setPicker }) 
 				}
 				#hue-handle {
 					top: 0;
-					left: ${HSBA[0] * slider_width}px;
-					background-color: hsl(${HSBA[0] * 360}, 100%, 50%);
+					left: ${hsba[0] * slider_width}px;
+					background-color: hsl(${hsba[0] * 360}, 100%, 50%);
 				}
 
 				#aplha {
-					background: -webkit-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${HSBA[0] * 360}, 100%, 50%) 100%);
-					background: -moz-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${HSBA[0] * 360}, 100%, 50%) 100%);
-					background: -ms-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${HSBA[0] * 360}, 100%, 50%) 100%);
-					background: -o-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${HSBA[0] * 360}, 100%, 50%) 100%);
+					background: -webkit-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${hsba[0] * 360}, 100%, 50%) 100%);
+					background: -moz-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${hsba[0] * 360}, 100%, 50%) 100%);
+					background: -ms-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${hsba[0] * 360}, 100%, 50%) 100%);
+					background: -o-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${hsba[0] * 360}, 100%, 50%) 100%);
 					margin: 0;
 				}
 				#checkers {
@@ -235,8 +228,8 @@ export default function Picker({ store, actions, id, color, event, setPicker }) 
 				}
 				#aplha-handle {
 					top: 0;
-					left: ${HSBA[3] * slider_width}px;
-					background-color: hsl(${HSBA[0] * 360}, 100%, ${100 - (HSBA[3] * 100) / 2}%);
+					left: ${hsba[3] * slider_width}px;
+					background-color: hsl(${hsba[0] * 360}, 100%, ${100 - (hsba[3] * 100) / 2}%);
 				}
 				.color {
 					width: 1em;
@@ -245,8 +238,4 @@ export default function Picker({ store, actions, id, color, event, setPicker }) 
 			`}</style>
 		</div>
 	);
-}
-
-export function clamp(min, num, max) {
-	return Math.min(Math.max(num, min), max);
 }

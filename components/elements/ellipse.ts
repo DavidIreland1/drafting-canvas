@@ -16,6 +16,7 @@ export default class Ellipse extends Element {
 	}
 
 	static points(ellipse) {
+		const center = this.center(ellipse);
 		return [
 			{
 				x: ellipse.x,
@@ -37,7 +38,7 @@ export default class Ellipse extends Element {
 				x: ellipse.x + ellipse.radius_x,
 				y: ellipse.y + ellipse.radius_y,
 			},
-		];
+		].map((point) => this.rotatePoint(point, center, ellipse.rotation));
 	}
 
 	static path(ellipse) {
@@ -50,8 +51,9 @@ export default class Ellipse extends Element {
 		context.beginPath();
 		const path = this.path(ellipse);
 
-		this.effect(ellipse, context, path, view);
+		this.effect(ellipse, context, path, true, view);
 		this.fill(ellipse, context, path);
+		this.effect(ellipse, context, path, false, view);
 		this.stroke(ellipse, context, path);
 
 		context.shadowColor = 'transparent';
@@ -62,9 +64,8 @@ export default class Ellipse extends Element {
 	static outline(ellipse, context, color, line_width): void {
 		context.strokeStyle = color;
 		context.lineWidth = line_width;
-		context.beginPath();
-		context.ellipse(ellipse.x, ellipse.y, Math.abs(ellipse.radius_x), Math.abs(ellipse.radius_y), ellipse.rotation, ellipse.start_angle, ellipse.end_angle, ellipse.counter_clockwise);
-		context.stroke();
+		const path = this.path(ellipse);
+		context.stroke(path);
 	}
 
 	static center(ellipse) {

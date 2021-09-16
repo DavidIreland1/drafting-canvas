@@ -1,4 +1,4 @@
-export default function Eye({ open, onClick }) {
+export default function Eye({ open = true, onClick = undefined }) {
 	return (
 		<div onMouseDown={onClick}>
 			<svg viewBox="0 0 100 100" className={open ? 'open' : 'closed'}>
