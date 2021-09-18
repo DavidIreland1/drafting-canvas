@@ -1,15 +1,15 @@
 import Input from './input';
 
 export default function Dimensions({ selected, store, actions, width }) {
+	const selected_ids = selected.map((element) => element.id);
 	function updateDimension(event) {
 		if (Number.isNaN(event.target.value) || event.target.value === '') return;
-		store.dispatch(actions.property({ [event.target.parentNode.id]: Number(event.target.value) }));
+		store.dispatch(actions.property({ selected_ids, props: { [event.target.id]: Number(event.target.value) } }));
 	}
 
 	function updateRotation(event) {
 		if (Number.isNaN(event.target.value) || event.target.value === '') return;
-
-		store.dispatch(actions.property({ [event.target.parentNode.id]: Number(event.target.value) }));
+		store.dispatch(actions.property({ selected_ids, props: { [event.target.id]: Number(event.target.value) / 57.29577951308232 } }));
 	}
 
 	return (
@@ -30,9 +30,30 @@ export default function Dimensions({ selected, store, actions, width }) {
 				<Input id="width" label="W" value={selected[0].width} onChange={updateDimension} width={width} />
 				<Input id="height" label="H" value={selected[0].height} onChange={updateDimension} width={width} />
 
-				<Input id="rotation" label={<div style={{ fontSize: '30px', lineHeight: '12px' }}>⊾</div>} step={0.01} value={selected[0].rotation} onChange={updateRotation} width={width} />
+				<Input
+					id="rotation"
+					label={
+						<div id="rotation" style={{ fontSize: '30px', lineHeight: '12px', height: '100%' }}>
+							⊾
+						</div>
+					}
+					unit="°"
+					value={(selected[0].rotation * 57.29577951308232) % 360}
+					onChange={updateRotation}
+					width={width}
+				/>
 
-				<Input id="border_radius" label={<div style={{ fontSize: '24px', lineHeight: '10px', padding: '0px 8px 0px 0px' }}>╭</div>} step={0.01} value={selected[0].border_radius} onChange={updateDimension} width={width} />
+				<Input
+					id="radius"
+					label={
+						<div id="radius" style={{ fontSize: '24px', lineHeight: '10px', height: '100%' }}>
+							╭
+						</div>
+					}
+					value={selected[0].radius}
+					onChange={updateDimension}
+					width={width}
+				/>
 			</div>
 			<style jsx>{`
 				#properties {

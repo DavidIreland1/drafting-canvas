@@ -52,7 +52,7 @@ function drawLabel(cursor, context, view) {
 
 	context.fillStyle = cursor.color;
 	context.fillRect(cursor.x + 15, cursor.y + 35, width.width + 10, 35);
-	context.fillStyle = 'white';
+	context.fillStyle = 'black';
 	context.fillText(cursor.label, cursor.x + 20, cursor.y + 60);
 
 	context.translate(cursor.x, cursor.y);

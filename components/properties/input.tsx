@@ -1,12 +1,14 @@
 import { useRef } from 'react';
 
-export default function Input({ id, label, step = 1, value, min = NaN, onChange, width }) {
+export default function Input({ id, label, step = 1, value, min = NaN, unit = '', onChange, width = undefined }) {
 	if (value === undefined) return null;
 
 	const input = useRef(null);
 
 	const updateValue = (event) => {
+		console.log('he');
 		event.target.style.width = `max(calc(${width} / 6), ${Math.max(event.target.value.length + 2, 5)}ch)`;
+
 		event.target.id = id;
 		onChange(event);
 	};
@@ -15,7 +17,6 @@ export default function Input({ id, label, step = 1, value, min = NaN, onChange,
 		down_event.preventDefault();
 		down_event.target.setPointerCapture(down_event.pointerId);
 
-		// const input = down_event.target.nextElementSibling;
 		input.current.focus();
 		let last_event = down_event;
 		const move = (move_event) => {
@@ -23,12 +24,11 @@ export default function Input({ id, label, step = 1, value, min = NaN, onChange,
 			const delta = Math.sign(move_event.clientX - last_event.clientX) * step;
 			value = Number(value);
 			if (isNaN(value)) value = 0;
-			value += delta;
+			value = (delta + value).toPrecision(12); // Stops floating point errors
 			move_event.target.value = isNaN(min) ? value : Math.max(value, min);
 			move_event.target.id = id;
 			onChange(move_event);
 			last_event = move_event;
-
 			if (move_event.stopPropagation) move_event.stopPropagation();
 			if (move_event.preventDefault) move_event.preventDefault();
 			move_event.cancelBubble = true;
@@ -71,15 +71,26 @@ export default function Input({ id, label, step = 1, value, min = NaN, onChange,
 				input {
 					background: transparent;
 					border: none;
-					max-width: calc(${width} / 2 - 20px);
-					width: max(calc(${width} / 6), 5ch);
-					min-width: max(100%, 4ch);
+					font-weight: inherit;
+					font-family: inherit;
+					${width
+						? `
+						max-width: calc(${width} / 2 - 20px);
+						width: max(calc(${width} / 6), 5ch);
+						min-width: max(100%, 4ch);
+					`
+						: ''}
+
 					color: var(--text-color);
 					font-size: 16px;
 					text-align: right;
 				}
 				input:focus {
 					outline: none;
+				}
+
+				input::after {
+					content: '${unit}';
 				}
 			`}</style>
 		</>

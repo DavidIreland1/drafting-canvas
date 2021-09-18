@@ -1,15 +1,16 @@
 import Elements, { flatten, forEachElement, selected } from '../../components/elements/elements';
-import { round } from '../../utils/utils';
 
 export default {
 	addFill: (state, props) => {
-		selected(state.elements).forEach((element) => {
-			element.fill.push(props.payload);
+		const { selected_ids } = props.payload;
+		selected(state.elements, selected_ids).forEach((element) => {
+			element.fill.push(props.payload.props);
 		});
 	},
 	setFill: (state, props) => {
-		selected(state.elements).forEach((element) => {
-			Elements[element.type].setFill(element, props.payload);
+		const { selected_ids } = props.payload;
+		selected(state.elements, selected_ids).forEach((element) => {
+			Elements[element.type].setFill(element, props.payload.props);
 		});
 	},
 	removeFill: (state, props) => {
@@ -22,13 +23,17 @@ export default {
 	},
 
 	addStroke: (state, props) => {
-		selected(state.elements).forEach((element) => {
-			element.stroke.push(props.payload);
+		const { selected_ids } = props.payload;
+
+		console.log(selected_ids);
+		selected(state.elements, selected_ids).forEach((element) => {
+			element.stroke.push(props.payload.props);
 		});
 	},
 	setStroke: (state, props) => {
-		selected(state.elements).forEach((element) => {
-			Elements[element.type].setStroke(element, props.payload);
+		const { selected_ids } = props.payload;
+		selected(state.elements, selected_ids).forEach((element) => {
+			Elements[element.type].setStroke(element, props.payload.props);
 		});
 	},
 	removeStroke: (state, props) => {
@@ -41,13 +46,15 @@ export default {
 	},
 
 	addEffect: (state, props) => {
-		selected(state.elements).forEach((element) => {
-			element.effect.push(props.payload);
+		const { selected_ids } = props.payload;
+		selected(state.elements, selected_ids).forEach((element) => {
+			element.effect.push(props.payload.props);
 		});
 	},
 	setEffect: (state, props) => {
-		selected(state.elements).forEach((element) => {
-			Elements[element.type].setEffect(element, props.payload);
+		const { selected_ids } = props.payload;
+		selected(state.elements, selected_ids).forEach((element) => {
+			Elements[element.type].setEffect(element, props.payload.props);
 		});
 	},
 	removeEffect: (state, props) => {
@@ -60,8 +67,9 @@ export default {
 	},
 
 	property: (state, props) => {
-		selected(state.elements).forEach((element) => {
-			Object.entries(props.payload).forEach(([key, value]) => {
+		const { selected_ids } = props.payload;
+		selected(state.elements, selected_ids).forEach((element) => {
+			Object.entries(props.payload.props).forEach(([key, value]) => {
 				element[key] = value;
 			});
 		});

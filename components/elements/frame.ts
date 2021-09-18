@@ -2,8 +2,8 @@ import Group from './group';
 import Elements from './elements';
 
 export default class Frame extends Group {
-	static create(id, position) {
-		return Object.assign(super.create(id, position), {
+	static create(id, position, selected) {
+		return Object.assign(super.create(id, position, selected), {
 			x: position.x,
 			y: position.y,
 			label: 'Frame',

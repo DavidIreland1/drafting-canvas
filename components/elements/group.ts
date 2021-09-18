@@ -2,8 +2,8 @@ import Element from './element';
 import Elements from './elements';
 
 export default class Group extends Element {
-	static create(id, position) {
-		return Object.assign(super.create(id, position), {
+	static create(id, position, selected) {
+		return Object.assign(super.create(id, position, selected), {
 			elements: [],
 		});
 	}

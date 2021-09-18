@@ -1,8 +1,8 @@
 import Element from './element';
 
 export default class Bezier extends Element {
-	static create(id, position) {
-		return Object.assign(super.create(id, position), {
+	static create(id, position, selected) {
+		return Object.assign(super.create(id, position, selected), {
 			curves: [
 				{
 					x1: position.x - 1,

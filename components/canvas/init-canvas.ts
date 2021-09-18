@@ -51,9 +51,9 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active
 		select(event, canvas, id, store, actions, active);
 	};
 
-	document.onkeydown = (event) => {
+	document.onkeydown = async (event) => {
 		if (event.metaKey || event.ctrlKey) {
-			if (shortCuts(event, store, actions)) {
+			if (await shortCuts(event, store, actions)) {
 				event.preventDefault();
 			}
 		}

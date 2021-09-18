@@ -1,8 +1,8 @@
 import Element from './element';
 
 export default class Circle extends Element {
-	static create(id, position) {
-		return Object.assign(super.create(id, position), {
+	static create(id, position, selected) {
+		return Object.assign(super.create(id, position, selected), {
 			label: 'Circle',
 			type: 'circle',
 			x: position.x,

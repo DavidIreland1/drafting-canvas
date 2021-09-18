@@ -22,14 +22,14 @@ import { modification_actions } from '../reducers/modifications/modifications';
 import { interaction_actions } from '../reducers/modifications/interactions';
 
 const store = createStore(
-	undoable(slice.reducer, { filter: filterActions, groupBy: groupActions }) as any,
-	initial_state,
+	undoable(slice.reducer, { filter: filterActions, groupBy: groupActions }),
+	{ past: [], present: initial_state, future: [] },
 	typeof Primus !== 'undefined'
-		? scuttlebutt({
+		? (scuttlebutt({
 				primus: Primus,
 				uri: 'http://localhost:3000',
 				room: room,
-		  })
+		  }) as any)
 		: undefined
 );
 

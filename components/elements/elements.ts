@@ -31,6 +31,6 @@ export function forEachElement(elements, callback) {
 	});
 }
 
-export function selected(elements) {
-	return flatten(elements).filter((element) => element.selected);
+export function selected(elements, selected_ids) {
+	return flatten(elements).filter((element) => selected_ids.includes(element.id));
 }

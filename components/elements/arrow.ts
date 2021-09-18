@@ -1,8 +1,8 @@
 import Line from './line';
 
 export default class Arrow extends Line {
-	static create(id, position) {
-		return Object.assign(super.create(id, position), {
+	static create(id, position, selected) {
+		return Object.assign(super.create(id, position, selected), {
 			label: 'Arrow',
 			type: 'arrow',
 		});

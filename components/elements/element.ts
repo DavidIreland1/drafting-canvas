@@ -2,14 +2,16 @@
 // const { line, box_size, highlight_color } = Defaults;
 
 import Colors from './../properties/colors';
+
+const images = {};
 export default class Element {
-	static create(id, position): Object {
+	static create(id, position, selected): Object {
 		return {
 			id: id,
-			selected: true,
+			selected: selected,
 			hover: false,
 			// fill: [{ id: id + '2123', type: 'Solid', color: [0.8, 0.8, 0.8, 1], visible: true }],
-			fill: [{ id: id + '2123', type: 'Solid', color: [0.8, 0.8, 0.8, 1], visible: true }],
+			fill: [{ id: id + '2123', type: 'Image', color: [0.8, 0.8, 0.8, 1], alpha: 1, visible: true, x: 0, y: 0, src: '/images/draft.svg' }],
 			stroke: [],
 			effect: [],
 			rotation: 0,
@@ -22,7 +24,7 @@ export default class Element {
 		return new Path2D();
 	}
 
-	static fill(element, context, path) {
+	static fill(element, context: CanvasRenderingContext2D, path) {
 		element.fill
 			.filter((fill) => fill.visible)
 			.forEach((fill) => {
@@ -30,8 +32,14 @@ export default class Element {
 					context.fillStyle = Colors.hslaToString(Colors.hsbaToHsla(fill.color));
 					context.fill(path);
 				} else if (fill.type === 'Image') {
-					context.fillStyle = 'purple';
-					context.fill(path);
+					context.save();
+					context.clip(path);
+					if (!images[fill.id]) {
+						images[fill.id] = new Image();
+						images[fill.id].src = fill.src;
+					}
+					context.drawImage(images[fill.id], fill.x - element.width / 2, fill.y - element.height / 2, element.width, element.height);
+					context.restore();
 				}
 			});
 	}
@@ -41,6 +49,7 @@ export default class Element {
 			.filter((stroke) => stroke.visible)
 			.forEach((stroke) => {
 				context.strokeStyle = Colors.hslaToString(Colors.hsbaToHsla(stroke.color));
+				if (stroke.width === 0) return;
 				context.lineWidth = stroke.width;
 				if (stroke.type === 'Inside') {
 					context.save();

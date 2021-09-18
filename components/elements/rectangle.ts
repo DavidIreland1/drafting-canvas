@@ -1,8 +1,8 @@
 import Element from './element';
 
 export default class Rectangle extends Element {
-	static create(id, position) {
-		return Object.assign(super.create(id, position), {
+	static create(id, position, selected) {
+		return Object.assign(super.create(id, position, selected), {
 			x: position.x,
 			y: position.y,
 			label: 'Rectangle',
@@ -10,7 +10,7 @@ export default class Rectangle extends Element {
 			rotation: 0,
 			width: 0,
 			height: 0,
-			radius: 0,
+			radius: 10,
 		});
 	}
 
@@ -62,10 +62,12 @@ export default class Rectangle extends Element {
 		const delta_angle = Math.PI / 2;
 
 		const path = new Path2D();
-		if (rectangle.radius > 0) {
+		if (rectangle.radius.length || rectangle.radius > 0) {
+			const radius = Math.min(Math.min(Math.abs(rectangle.width), Math.abs(rectangle.height)) / 2, rectangle.radius);
+
 			points.forEach((point, i) => {
-				path.lineTo(point.x + point.radius * delta_x[i], point.y + point.radius * delta_y[i]);
-				path.arc(point.x + point.radius * cente_x[i], point.y + point.radius * cente_y[i], point.radius, angle, angle + delta_angle);
+				path.lineTo(point.x + radius * delta_x[i], point.y + radius * delta_y[i]);
+				path.arc(point.x + radius * cente_x[i], point.y + radius * cente_y[i], radius, angle, angle + delta_angle);
 				angle += delta_angle;
 			});
 		} else {

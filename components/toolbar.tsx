@@ -7,7 +7,7 @@ import Settings from './settings';
 export default function Navbar({ store, actions }) {
 	// const [cursor.type, setTool] = useState('select');
 
-	let cursor = useSelector((state: RootState) => state.present.cursors.find((cursor) => cursor.id === Settings.user_id));
+	let cursor = useSelector((state) => (state as any).present.cursors.find((cursor) => cursor.id === Settings.user_id));
 
 	const selectTool = (event) => {
 		event.preventDefault();

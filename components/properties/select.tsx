@@ -40,6 +40,8 @@ export default function Select({ id, label, value, onChange, children }) {
 					color: white;
 					border: 0;
 					font-size: inherit;
+					font-weight: inherit;
+					font-family: inherit;
 					background: transparent;
 				}
 				select:focus {

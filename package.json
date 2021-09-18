@@ -10,6 +10,7 @@
 		"package": "git archive -v -o ../draftingcanvas.zip --format=zip HEAD"
 	},
 	"dependencies": {
+		"@dnd-kit/sortable": "^4.0.0",
 		"@reduxjs/toolkit": "^1.6.0",
 		"bufferutil": "^4.0.3",
 		"fs": "*",

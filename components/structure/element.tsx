@@ -25,9 +25,7 @@ export default function Element({ store, actions, element, indentation, restruct
 		event.stopPropagation();
 		const element = event.nativeEvent.composedPath().find((element) => element.id === 'element');
 		event.dataTransfer.effectAllowed = 'move';
-		requestAnimationFrame(() => {
-			element.classList.add('blank');
-		});
+		requestAnimationFrame(() => element.classList.add('blank'));
 		const move = (move_event) => {
 			let hover = document.elementFromPoint(move_event.clientX, move_event.clientY);
 			if (hover === element || hover === element.nextSibling) return;
@@ -85,8 +83,9 @@ export default function Element({ store, actions, element, indentation, restruct
 				#element:active {
 					cursor: default !important; //not working
 				}
-				#element.blank > * {
-					visibility: collapse;
+				#element.blank > *,
+				#element.blank > * > * {
+					visibility: collapse !important;
 					border: none;
 				}
 				#elements {

@@ -141,7 +141,9 @@ function edit(down_event, last_position, canvas, store, actions, active, view, p
 		}
 		position = roundPosition(position, [] /*selected_points*/, points, view);
 
-		store.dispatch(actions[action]({ user_id: Settings.user_id, id: target.id, position, last_position }));
+		const selected_ids = state.elements.filter((element) => element.selected).map((element) => element.id);
+
+		store.dispatch(actions[action]({ user_id: Settings.user_id, id: target.id, position, last_position, selected_ids }));
 
 		last_position = roundPosition(position, [], [], view);
 	};
@@ -167,7 +169,7 @@ function create(last_position, canvas, store, actions, view, cursor, points) {
 	const move = (move_event) => {
 		let position = DOMToCanvas(move_event, canvas, view);
 		position = roundPosition(position, [position], points, view);
-		store.dispatch(actions[action]({ user_id: Settings.user_id, id: id, position, last_position }));
+		store.dispatch(actions[action]({ user_id: Settings.user_id, id: id, position, last_position, selected_ids: [id] }));
 		last_position = position;
 	};
 	window.addEventListener('pointermove', move);

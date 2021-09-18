@@ -79,6 +79,8 @@ exports.default = function scuttlebuttServer(server, options) {
 	const primus = new Primus(server, options.primusOptions);
 	primus.plugin('rooms', Rooms);
 
+	// console.log('hello');
+
 	// const onStatistic = options.getStatistics();
 
 	primus.on('connection', (spark) => {
@@ -87,6 +89,8 @@ exports.default = function scuttlebuttServer(server, options) {
 				rooms[spark.id] = data.room;
 				if (!documents[rooms[spark.id]]) documents[rooms[spark.id]] = openDocument(rooms[spark.id]);
 				addUser(spark, rooms[spark.id]);
+
+				console.log('added user: ', spark.id);
 			} else if (data.action === 'leave') {
 				removeUser(spark, rooms[spark.id]);
 			} else {

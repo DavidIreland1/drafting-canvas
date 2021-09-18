@@ -7,10 +7,13 @@ import Select from './select';
 import Eye from '../icons/eye';
 import Minus from '../icons/minus';
 import Plus from '../icons/plus';
+import Text from './text';
 
-export default function Stroke({ selected, store, actions, width, setPicker }) {
+export default function Stroke({ selected, store, actions, setPicker, width }) {
+	const selected_ids = selected.map((element) => element.id);
+
 	function addStroke() {
-		store.dispatch(actions.addStroke({ id: generateID(), type: 'Center', width: 2, color: [0.5, 0.5, 1, 1], visible: true }));
+		store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 2, color: [0.5, 0.5, 1, 1], visible: true } }));
 	}
 
 	function removeStroke(stroke) {
@@ -41,11 +44,11 @@ export default function Stroke({ selected, store, actions, width, setPicker }) {
 	}
 
 	function changeWidth(event, stroke) {
-		store.dispatch(actions.setStroke({ id: stroke.id, width: Number(event.target.value) }));
+		store.dispatch(actions.setStroke({ selected_ids, props: { id: stroke.id, width: Number(event.target.value) } }));
 	}
 
 	function changeType(event, stroke) {
-		store.dispatch(actions.setStroke({ id: stroke.id, type: event.target.value }));
+		store.dispatch(actions.setStroke({ selected_ids, props: { id: stroke.id, type: event.target.value } }));
 	}
 
 	function getStrokes(selected) {
@@ -56,8 +59,15 @@ export default function Stroke({ selected, store, actions, width, setPicker }) {
 		return (
 			<div key={stroke.id}>
 				<div className="property-row">
+					<div>::</div>
 					<div className="property-color" onClick={(event) => openPicker(event, stroke)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(stroke.color)) }} />
-					{Colors.rgbaToHex(stroke.color)}
+
+					<div>
+						<Text id="color" placeholder="Color" onChange={console.log}>
+							{Colors.rgbaToHex(stroke.color)}
+						</Text>
+					</div>
+
 					<Eye open={stroke.visible} onClick={() => toggleStroke(stroke)} />
 					<Minus onClick={() => removeStroke(stroke)} />
 				</div>

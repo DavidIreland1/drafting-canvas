@@ -60,6 +60,7 @@ export default function OffWhiteCanvas(): JSX.Element {
 					font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 					background: var(--off-white);
 					overflow: hidden;
+					font-weight: 200;
 				}
 
 				::-webkit-scrollbar {

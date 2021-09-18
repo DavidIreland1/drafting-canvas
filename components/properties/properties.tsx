@@ -52,11 +52,11 @@ export default function Properties({ store, actions, setPicker }) {
 				<div>
 					<Dimensions selected={selected} store={store} actions={actions} width={width} />
 					<div className="divider" />
-					<Fill selected={selected} store={store} actions={actions} width={width} setPicker={setPicker} />
+					<Fill selected={selected} store={store} actions={actions} setPicker={setPicker} />
 					<div className="divider" />
-					<Stroke selected={selected} store={store} actions={actions} width={width} setPicker={setPicker} />
+					<Stroke selected={selected} store={store} actions={actions} setPicker={setPicker} width={width} />
 					<div className="divider" />
-					<Effects selected={selected} store={store} actions={actions} width={width} setPicker={setPicker} />
+					<Effects selected={selected} store={store} actions={actions} setPicker={setPicker} width={width} />
 				</div>
 			) : null}
 
@@ -70,9 +70,9 @@ export default function Properties({ store, actions, setPicker }) {
 				}
 
 				.property-row {
-					padding: 0 10px;
+					padding: 0 10px 0 5px;
 					display: grid;
-					grid-template-columns: max-content 1fr 30px 30px;
+					grid-template-columns: min-content max-content 1fr 30px 30px;
 					gap: 5px;
 					line-height: 28px;
 				}

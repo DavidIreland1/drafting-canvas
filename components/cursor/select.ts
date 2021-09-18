@@ -1,5 +1,3 @@
-import Settings from './../settings';
-
 export default class Select {
 	static draw(cursor, context: CanvasRenderingContext2D, view) {
 		context.translate(cursor.x, cursor.y);

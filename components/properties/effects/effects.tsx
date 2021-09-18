@@ -6,21 +6,27 @@ import Eye from './../../icons/eye';
 import Minus from './../../icons/minus';
 import Plus from './../../icons/plus';
 import Input from '../input';
+import Text from '../text';
 import Select from '../select';
 
-export default function Effect({ selected, store, actions, width, setPicker }) {
+export default function Effect({ selected, store, actions, setPicker, width }) {
+	const selected_ids = selected.map((element) => element.id);
+
 	function addEffect() {
 		store.dispatch(
 			actions.addEffect({
-				id: generateID(),
-				// type: 'Drop shadow',
-				type: 'Inner shadow',
-				x: 0,
-				y: 0,
-				blur: 10,
-				spread: 0,
-				color: [0, 0, 0, 1],
-				visible: true,
+				selected_ids,
+				props: {
+					id: generateID(),
+					// type: 'Drop shadow',
+					type: 'Inner shadow',
+					x: 0,
+					y: 0,
+					blur: 10,
+					spread: 0,
+					color: [0, 0, 0, 1],
+					visible: true,
+				},
 			})
 		);
 	}
@@ -61,8 +67,10 @@ export default function Effect({ selected, store, actions, width, setPicker }) {
 		return (
 			<div key={effect.id}>
 				<div className="property-row">
+					<div>::</div>
 					<div className="property-color" onClick={(event) => openPicker(event, effect)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(effect.color)) }} />
-					{Colors.rgbaToHex(effect.color)}
+
+					<Text onChange={console.log}>{Colors.rgbaToHex(effect.color)}</Text>
 
 					<Eye open={effect.visible} onClick={() => toggleEffect(effect)} />
 					<Minus onClick={() => removeEffect(effect)} />

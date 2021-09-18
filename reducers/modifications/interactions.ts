@@ -1,47 +1,42 @@
 import Elements, { flatten, forEachElement, selected } from '../../components/elements/elements';
 
 import { slice } from './../../redux/slice';
-import { round } from '../../utils/utils';
+
+import Settings from '../../components/settings';
 
 const interactions = {
 	resize: (state, props) => {
-		const { id, position, last_position } = props.payload;
+		const { position, last_position, selected_ids } = props.payload;
 
-		const selected = state.elements.filter((element) => element.selected);
-
-		selected.forEach((element) => Elements[element.type].resize(element, position, last_position));
+		selected(state.elements, selected_ids).forEach((element) => Elements[element.type].resize(element, position, last_position));
 	},
 	rotate: (state, props) => {
-		const { user_id, id, position, last_position } = props.payload;
+		const { position, last_position, selected_ids } = props.payload;
 
-		const selected = state.elements.filter((element) => element.selected);
-		selected.forEach((element) => Elements[element.type].rotate(element, position, last_position));
+		selected(state.elements, selected_ids).forEach((element) => Elements[element.type].rotate(element, position, last_position));
 	},
 	stretch: (state, props) => {
-		const { id, position, last_position } = props.payload;
+		const { position, last_position, selected_ids } = props.payload;
 
-		const selected = state.elements.filter((element) => element.selected);
-
-		selected.forEach((element) => Elements[element.type].stretch(element, position, last_position));
-	},
-	propertyRelative: (state, props) => {
-		selected(state.elements).forEach((element) => {
-			Object.entries(props.payload).forEach(([key, value]) => {
-				element[key] += round(value, 2);
-			});
-		});
+		selected(state.elements, selected_ids).forEach((element) => Elements[element.type].stretch(element, position, last_position));
 	},
 	move: (state, props) => {
-		const { position, last_position } = props.payload;
-		selected(state.elements).forEach((element) => Elements[element.type].move(element, position, last_position));
+		const { position, last_position, selected_ids } = props.payload;
+		selected(state.elements, selected_ids).forEach((element) => Elements[element.type].move(element, position, last_position));
+	},
+
+	createElements: (state, props) => {
+		slice.caseReducers.unselectAll(state);
+		state.elements = props.payload.elements.concat(state.elements);
 	},
 
 	createElement: (state, props) => {
 		const { user_id, id, type, position } = props.payload;
 		slice.caseReducers.unselectAll(state);
 		if (!type || !Elements[type]) return; // Bad
-		state.elements.unshift(Elements[type].create(id, position));
 
+		const selected = Settings.user_id === user_id;
+		state.elements.unshift(Elements[type].create(id, position, selected));
 		props.payload = { id: user_id, mode: 'edit' };
 		slice.caseReducers.cursor(state, props);
 	},
@@ -63,15 +58,9 @@ const interactions = {
 	},
 
 	group: (state, props) => {
-		const { id } = props.payload;
+		const { id, selected_ids } = props.payload;
 
 		const elements = state.elements;
-		const selected = flatten(elements).filter((element) => element.selected);
-
-		const selected_ids = selected.map((element) => element.id);
-
-		// slice.caseReducers.deleteSelected(state);
-
 		const location_id = selected_ids[0];
 
 		forEachElement(elements, (element, i, elements) => {
