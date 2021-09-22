@@ -36,7 +36,7 @@ export default function Effect({ selected, store, actions, setPicker, width }) {
 	}
 
 	function toggleEffect(effect) {
-		store.dispatch(actions.setEffect({ id: effect.id, visible: !effect.visible }));
+		store.dispatch(actions.setEffect({ selected_ids, props: { id: effect.id, visible: !effect.visible } }));
 	}
 
 	function openPicker(event, effect) {
@@ -53,8 +53,11 @@ export default function Effect({ selected, store, actions, setPicker, width }) {
 	function updateEffect(event, effect) {
 		store.dispatch(
 			actions.setEffect({
-				id: effect.id,
-				[event.target.id]: event.target.value,
+				selected_ids,
+				props: {
+					id: effect.id,
+					[event.target.id]: event.target.value,
+				},
 			})
 		);
 	}

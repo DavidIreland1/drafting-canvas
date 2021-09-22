@@ -8,12 +8,13 @@ import Stroke from './stroke';
 import Effects from './effects/effects';
 
 export default function Properties({ store, actions, setPicker }) {
-	const [width, setWidth] = useState('max(20vw, 200px)');
+	const [width, setWidth] = useState('max(20vw, 230px)');
 
 	function resize(event) {
 		event.preventDefault();
 		event.target.setPointerCapture(event.pointerId);
-		const move = (move_event) => setWidth(Math.max(window.innerWidth - move_event.clientX, 3) + 'px');
+		// const move = (move_event) => setWidth(Math.max(window.innerWidth - move_event.clientX, 3) + 'px');
+		const move = (move_event) => setWidth(`max(${((window.innerWidth - move_event.clientX) / window.innerWidth) * 100}vw, 3px)`);
 		event.target.addEventListener('pointermove', move);
 		const end = () => {
 			event.target.releasePointerCapture(event.pointerId);

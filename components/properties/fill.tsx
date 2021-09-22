@@ -20,12 +20,12 @@ export default function Fill({ selected, store, actions, setPicker }) {
 	}
 
 	function toggleFill(fill) {
-		store.dispatch(actions.setFill({ id: fill.id, visible: !fill.visible }));
+		store.dispatch(actions.setFill({ selected_ids, props: { id: fill.id, visible: !fill.visible } }));
 	}
 
 	function openPicker(event, fill) {
 		const setProperty = (fill) => {
-			store.dispatch(actions.setFill(fill));
+			store.dispatch(actions.setFill({ selected_ids, props: fill }));
 		};
 		function setType(event) {
 			setProperty({ ...fill, type: event.target.value });

@@ -1,25 +1,21 @@
 import { useRef, useState } from 'react';
 import Element from './element';
 import { flatten } from '../elements/elements';
+import { useSelector } from 'react-redux';
 
 export default function Structure({ store, actions }) {
-	const [elements, setElements] = useState(store.getState().present.elements);
+	const elements = useSelector((state) => (state as any).present.elements);
 	const [key, setKey] = useState(Math.random());
-
-	store.subscribe(() => {
-		setElements(store.getState().present.elements);
-	});
-
 	const structure_ref = useRef(null);
-
-	const [width, setWidth] = useState('15vw');
+	const [width, setWidth] = useState('max(15vw, 150px)');
 
 	const resize = (event) => {
 		event.preventDefault();
 		event.target.setPointerCapture(event.pointerId);
 		const structure = structure_ref.current;
 		const offset = structure.parentElement.getBoundingClientRect().left;
-		const move = (move_event) => setWidth(Math.max(move_event.clientX - offset, 3) + 'px');
+
+		const move = (move_event) => setWidth(`max(${((move_event.clientX - offset) / window.innerWidth) * 100}vw, 3px)`);
 		event.target.addEventListener('pointermove', move);
 		const end = () => {
 			event.target.releasePointerCapture(event.pointerId);
