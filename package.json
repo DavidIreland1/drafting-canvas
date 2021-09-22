@@ -10,10 +10,9 @@
 		"package": "git archive -v -o ../draftingcanvas.zip --format=zip HEAD"
 	},
 	"dependencies": {
-		"@dnd-kit/sortable": "^4.0.0",
 		"@reduxjs/toolkit": "^1.6.0",
 		"bufferutil": "^4.0.3",
-		"fs": "*",
+		"fs": "0.0.1-security",
 		"next": "^10.0.0",
 		"primus": "^8.0.4",
 		"primus-rooms": "^3.4.1",
