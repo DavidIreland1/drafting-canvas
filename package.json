@@ -6,6 +6,7 @@
 		"dev": "node server.js",
 		"build": "next build && next export",
 		"start": "next start",
+		"serve": "next serve",
 		"devstart": "NODE_ENV=production node server.js",
 		"reducers": "npx webpack --config webpack.reducers.js"
 	},
