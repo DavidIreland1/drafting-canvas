@@ -29,8 +29,7 @@ export default function Tab({ tab, url }) {
 		<div ref={tab_ref}>
 			<Link key={tab.id} href={'/' + tab.id}>
 				<a className={'tab' + (tab.id === url ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
-					{tab.label}
-
+					<div>{tab.label}</div>
 					<Cross onClick={() => {}} />
 				</a>
 			</Link>

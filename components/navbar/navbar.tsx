@@ -32,7 +32,7 @@ export default function Navbar({ store, actions }) {
 
 	useEffect(() => {
 		if (page && !tabs.find((tab) => tab.id === page)) {
-			setTabs(tabs.concat([{ id: String(page), label: String(page) }]));
+			setTabs(tabs.concat([{ id: String(page), label: 'New Page' }]));
 		}
 	}, [page]);
 
