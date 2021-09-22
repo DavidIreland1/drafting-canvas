@@ -4,10 +4,10 @@
 	"private": true,
 	"scripts": {
 		"dev": "node server.js",
-		"build": "next build",
-		"start": "NODE_ENV=production node server.js",
-		"reducers": "npx webpack --config webpack.reducers.js",
-		"package": "git archive -v -o ../draftingcanvas.zip --format=zip HEAD"
+		"build": "next build && next export",
+		"start": "next start",
+		"devstart": "NODE_ENV=production node server.js",
+		"reducers": "npx webpack --config webpack.reducers.js"
 	},
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.6.0",
