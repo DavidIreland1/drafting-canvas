@@ -4,7 +4,7 @@ import { generateID } from '../utils/utils';
 
 export default function OffWhiteCanvas(): JSX.Element {
 	useEffect(() => {
-		open(window.location + generateID(20), '_self');
+		window.location.href += generateID(20);
 	}, []);
 	return <div>Redirect</div>;
 }
