@@ -5,16 +5,16 @@ import { useRouter } from 'next/router';
 export default function Home(): JSX.Element {
 	const router = useRouter();
 
+	if (router.route !== '/') router.push(router.route);
+
 	return (
 		<div className="container">
 			<Head>
-				<title>Create Next App</title>
-				<link rel="icon" href="/favicon.ico" />
+				<title>Drafting Canvas</title>
+				<link rel="icon" href="/favicon.svg" />
 			</Head>
 
 			<main>
-				<h1>Hello</h1>
-
 				<button onClick={() => router.push('111')}>Create New Page</button>
 			</main>
 
