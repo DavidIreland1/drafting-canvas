@@ -90,6 +90,7 @@ export function hover(event, canvas, store, actions, id, active) {
 	store.dispatch(actions.cursor({ id: Settings.user_id, ...position, rotation, type: action, visible: true }));
 }
 
+// Needs refactor to use strategy design pattern
 export function select(down_event, canvas, id, store, actions, active) {
 	const state = store.getState().present;
 	const view = state.views.find((view) => view.id === id);

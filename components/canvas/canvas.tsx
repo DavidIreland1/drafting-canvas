@@ -105,7 +105,6 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 		});
 
 		store.subscribe(() => {
-			// if (Math.random() > 0.95) console.log(JSON.stringify(store.getState()));
 			const state = store.getState().present;
 
 			user_view = state.views.find((view) => view.id === user_id);
