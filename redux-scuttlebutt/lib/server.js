@@ -68,7 +68,7 @@ function removeUser(spark, room) {
 
 	const num_streams = Object.keys(documents[room].streams).length;
 	if (num_streams === 0) {
-		save(room, documents[room].getState());
+		// save(room, documents[room].getState());
 		delete documents[room];
 	}
 }

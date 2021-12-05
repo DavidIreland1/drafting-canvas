@@ -112,12 +112,12 @@ class Dispatcher extends Scuttlebutt {
 		// this.history(), and can be added back by other peers as they receive
 		// them
 		Object.defineProperty(localAction.meta, META_TIMESTAMP, {
-			enumerable: false,
+			enumerable: true, // false - David
 			value: timestamp,
 		});
 
 		Object.defineProperty(localAction.meta, META_SOURCE, {
-			enumerable: false,
+			enumerable: true, // false - David
 			value: source,
 		});
 

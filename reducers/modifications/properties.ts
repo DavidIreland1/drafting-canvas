@@ -74,9 +74,10 @@ export default {
 			});
 		});
 	},
-	deleteSelected: (state) => {
+	delete: (state, props) => {
+		const { selected_ids } = props.payload;
 		forEachElement(state.elements, (element, i, elements) => {
-			if (element.selected === true) elements.splice(i, 1);
+			if (selected_ids.includes(element.id)) elements.splice(i, 1);
 		});
 	},
 };

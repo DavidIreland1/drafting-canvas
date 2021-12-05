@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useRef } from 'react';
 import Cross from '../icons/cross';
 
-export default function Tab({ tab, url }) {
+export default function Tab({ tab, url, leavePage, closeTab }) {
 	const tab_ref = useRef(null);
 
 	const drag = (event) => {
@@ -27,10 +27,10 @@ export default function Tab({ tab, url }) {
 
 	return (
 		<div ref={tab_ref}>
-			<Link key={tab.id} href={'/' + tab.id}>
-				<a className={'tab' + (tab.id === url ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
+			<Link href={'/' + tab.id}>
+				<a onClick={leavePage} className={'tab' + (tab.id === url ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
 					<div>{tab.label}</div>
-					<Cross onClick={() => {}} />
+					<Cross onClick={() => closeTab(tab.id)} />
 				</a>
 			</Link>
 
@@ -72,19 +72,6 @@ export default function Tab({ tab, url }) {
 				}
 				.blank > * {
 					visibility: collapse;
-				}
-
-				.cross {
-					width: 20px;
-					height: 20px;
-					border-radius: 4px;
-					padding: 2px;
-					box-sizing: border-box;
-					margin: auto;
-				}
-
-				.cross:hover {
-					background: var(--nav-background);
 				}
 			`}</style>
 		</div>

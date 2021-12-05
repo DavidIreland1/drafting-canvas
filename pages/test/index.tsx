@@ -1,13 +1,15 @@
 import Head from 'next/head';
 
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 export default function Home(): JSX.Element {
 	const router = useRouter();
 
-	console.log(router);
-
-	if (router.route !== '/') router.push(router.route);
+	useEffect(() => {
+		console.log(router);
+		if (router.route !== '/') router.push(router.route);
+	}, []);
 
 	return (
 		<>
@@ -19,8 +21,6 @@ export default function Home(): JSX.Element {
 			<main>
 				<button onClick={() => router.push('111')}>New Canvas</button>
 			</main>
-
-			<main></main>
 
 			<style jsx>{`
 				button {

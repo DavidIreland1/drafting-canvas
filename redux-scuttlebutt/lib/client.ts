@@ -66,43 +66,21 @@ function connectStreams(primus, createStream, room) {
 		console.debug('delayed connection active', DEBUG_DELAY);
 	}
 
-	let gossip;
-
-	// scuttlebutt uses 'stream', but primus does not, hence the lopsided pipe
-
-	// primus.on('data', function message(data) {
-	//   // console.log('[primus] <-', data)
-	//   if (DEBUG_DELAY) {
-	//     return setTimeout(() => gossip.write(data), DEBUG_DELAY)
-	//   }
-	//   gossip.write(data)
-	// })
-
-	// gossip.pipe(primus)
-	// gossip.on('data', (data) => {
-	//   // console.log('[primus] ->', data)
-	//   if (DEBUG_DELAY) {
-	//     return setTimeout(() => primus.write(data), DEBUG_DELAY)
-	//   }
-	//   primus.write(data)
-	// })
-
-	// network events
-
 	primus.on('open', () => {
 		console.log('[primus] connection open');
 
 		// create fresh stream,
 		// discard the old one (hopefullly .destroy()d on 'end')
-		gossip = createStream();
+		const gossip = createStream();
+
+		// Data going out
 		gossip.on('data', (data) => {
 			// Filter out local only 'tool' actions
 			const action = JSON.parse(data);
 			if (action.length && action[0].type) {
 				const type = action[0].type.split('action/')[1];
-				if (tool_actions.includes(type)) {
-					return;
-				}
+				console.log('send', type);
+				if (tool_actions.includes(type)) return;
 			}
 
 			primus.write(data);
@@ -110,6 +88,7 @@ function connectStreams(primus, createStream, room) {
 
 		primus.write({ action: 'join', room: room });
 
+		// Data coming in
 		primus.on('data', (data) => {
 			if (data.action === 'info') {
 				console.log(data);

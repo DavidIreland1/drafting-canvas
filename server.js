@@ -5,12 +5,10 @@ const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
 
-const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev });
+const app = next({ dev: process.env.NODE_ENV !== 'production' });
 const handle = app.getRequestHandler();
 
 const fs = require('fs');
-// var os = require('os');
 
 const initial_state = {
 	cursors: [],
@@ -41,7 +39,7 @@ app.prepare().then(() => {
 		if (pathname.startsWith('/page/')) {
 			const page_id = pathname.split('/')[2];
 			res.setHeader('Content-Type', 'application/json');
-			res.end(JSON.stringify(load(page_id) || initial_state));
+			// res.end(JSON.stringify(load(page_id) || initial_state));
 		} else {
 			handle(req, res, parsedUrl);
 		}
@@ -49,18 +47,7 @@ app.prepare().then(() => {
 		console.log('> Ready on http://localhost:3000');
 	});
 
-	// dispatcher(server);
-
-	// primusServer.save(__dirname + '/primus.js');
-
-	// store.subscribe(() => {
-	// const state = store.getState();
-	// const state2 = getState();
-	// console.log(Math.round(process.memoryUsage().heapUsed / 10000000), JSON.stringify(state).length, JSON.stringify(state2).length);
-	// });
-
-	// const dispatcher2 = new Dispatcher({});
-	// const dispatcher3 = dispatcher2.wrapDispatch(clone.dispatch);
+	dispatcher(server);
 
 	// Apply all changes
 	setTimeout(() => {
@@ -97,48 +84,44 @@ function updateSnapshot(actions) {
 // 	save('snapshot.json', clone.getState());
 // });
 
-function save(name, data) {
-	fs.writeFile('./database/' + name + '.json', JSON.stringify(data, null, '\t'), 'utf8', () => {});
-}
+// function load(name) {
+// 	if (name.startsWith('test-')) return loadTest(Number(name.slice(5)));
+// 	try {
+// 		return JSON.parse(fs.readFileSync('./database/' + name + '.json'));
+// 	} catch (error) {
+// 		return undefined;
+// 	}
+// }
 
-function load(name) {
-	if (name.startsWith('test-')) return loadTest(Number(name.slice(5)));
-	try {
-		return JSON.parse(fs.readFileSync('./database/' + name + '.json'));
-	} catch (error) {
-		return undefined;
-	}
-}
-
-function loadTest(n) {
-	return {
-		id: 'test-' + n,
-		label: 'Test Page ' + n,
-		views: [{ id: '123', x: 0, y: 0, scale: 1 }],
-		cursors: [
-			{ id: '123', label: 'Davis', x: 0, y: 0, rotation: 0, type: 'none' },
-			{ id: '234', label: 'Irene', x: 100, y: 100, rotation: 0, type: 'none' },
-		],
-		elements: Array(n)
-			.fill()
-			.map((element, i, array) => {
-				const side = Math.round(Math.sqrt(array.length));
-				return {
-					id: '35674' + i,
-					type: 'circle',
-					label: 'circle',
-					selected: false,
-					hover: false,
-					x: (n / side) * (i % side),
-					y: (n / side) * Math.floor(i / side),
-					fill: [{ color: 'red' }],
-					stroke: [{ width: 2, color: 'green' }],
-					rotation: 0,
-					radius: 5,
-					start_angle: 0,
-					end_angle: 2 * Math.PI,
-					visible: true,
-				};
-			}),
-	};
-}
+// function loadTest(n) {
+// 	return {
+// 		id: 'test-' + n,
+// 		label: 'Test Page ' + n,
+// 		views: [{ id: '123', x: 0, y: 0, scale: 1 }],
+// 		cursors: [
+// 			{ id: '123', label: 'Davis', x: 0, y: 0, rotation: 0, type: 'none' },
+// 			{ id: '234', label: 'Irene', x: 100, y: 100, rotation: 0, type: 'none' },
+// 		],
+// 		elements: Array(n)
+// 			.fill()
+// 			.map((element, i, array) => {
+// 				const side = Math.round(Math.sqrt(array.length));
+// 				return {
+// 					id: '35674' + i,
+// 					type: 'circle',
+// 					label: 'circle',
+// 					selected: false,
+// 					hover: false,
+// 					x: (n / side) * (i % side),
+// 					y: (n / side) * Math.floor(i / side),
+// 					fill: [{ color: 'red' }],
+// 					stroke: [{ width: 2, color: 'green' }],
+// 					rotation: 0,
+// 					radius: 5,
+// 					start_angle: 0,
+// 					end_angle: 2 * Math.PI,
+// 					visible: true,
+// 				};
+// 			}),
+// 	};
+// }

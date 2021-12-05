@@ -7,6 +7,8 @@ import Tab from './tab';
 import User from './user';
 import Plus from '../icons/plus';
 
+import Settings from './../settings';
+
 export default function Navbar({ store, actions }) {
 	const router = useRouter();
 	const { page } = router.query;
@@ -16,18 +18,18 @@ export default function Navbar({ store, actions }) {
 			id: '111',
 			label: 'page 1',
 		},
-		{
-			id: '222',
-			label: 'page 2',
-		},
-		{
-			id: '333',
-			label: 'page 3',
-		},
-		{
-			id: 'test-1000',
-			label: 'test 1000',
-		},
+		// {
+		// 	id: '222',
+		// 	label: 'page 2',
+		// },
+		// {
+		// 	id: '333',
+		// 	label: 'page 3',
+		// },
+		// {
+		// 	id: 'test-1000',
+		// 	label: 'test 1000',
+		// },
 	]);
 
 	useEffect(() => {
@@ -39,6 +41,7 @@ export default function Navbar({ store, actions }) {
 	function newTab() {
 		const id = `${tabs.length + 1}${tabs.length + 1}${tabs.length + 1}`;
 		setTabs(tabs.concat([{ id: id, label: `page ${tabs.length + 1}` }]));
+		leavePage();
 		router.push(id);
 	}
 
@@ -46,7 +49,19 @@ export default function Navbar({ store, actions }) {
 		event.preventDefault();
 	}
 
+	function leavePage() {
+		store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
+	}
+
+	function closeTab(id) {
+		setTabs(tabs.filter((tab) => tab.id !== id));
+	}
+
 	const users = useSelector((state) => (state as any).present.cursors);
+
+	function copyLink() {
+		navigator.clipboard.writeText(location.href);
+	}
 
 	return (
 		<div>
@@ -56,13 +71,15 @@ export default function Navbar({ store, actions }) {
 
 				<div id="tabs" onDragOver={droppable}>
 					{tabs.map((tab, i) => (
-						<Tab key={i} tab={tab} url={page} />
+						<Tab key={i} tab={tab} url={page} leavePage={leavePage} closeTab={closeTab} />
 					))}
 				</div>
 
 				<div id="plus" onDragOver={droppable}>
 					<Plus onClick={newTab} />
 				</div>
+
+				<button onClick={copyLink}>Share</button>
 
 				<div id="users">
 					{users.map((user, i) => (
@@ -118,12 +135,21 @@ export default function Navbar({ store, actions }) {
 					width: 30px;
 					padding: 5px;
 				}
-
 				line {
 					stroke: white;
 					stroke-width: 6;
 				}
 
+				button {
+					margin: 6px;
+					background: var(--accent);
+					border: 0;
+					border-radius: 5px;
+					opacity: 0.8;
+				}
+				button:hover {
+					opacity: 1;
+				}
 				#users {
 					display: grid;
 					grid-auto-flow: column;

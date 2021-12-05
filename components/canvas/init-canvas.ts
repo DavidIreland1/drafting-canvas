@@ -11,7 +11,21 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active
 	canvas.onkeydown = (event: KeyboardEvent) => {
 		if (event.key === 'Delete' || event.key === 'Backspace') {
 			event.preventDefault();
-			store.dispatch(actions.deleteSelected());
+
+			console.log(
+				store
+					.getState()
+					.present.elements.filter((element) => element.selected)
+					.map((element) => element.id)
+			);
+			store.dispatch(
+				actions.delete({
+					selected_ids: store
+						.getState()
+						.present.elements.filter((element) => element.selected)
+						.map((element) => element.id),
+				})
+			);
 		}
 	};
 
