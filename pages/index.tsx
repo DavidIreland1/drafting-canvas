@@ -17,7 +17,9 @@ export default function Home(): JSX.Element {
 			</Head>
 
 			<main>
-				<button onClick={() => router.push('111')}>New Canvas</button>
+				<div>
+					<button onClick={() => router.push('111')}>New Canvas</button>
+				</div>
 			</main>
 
 			<main></main>
@@ -27,8 +29,6 @@ export default function Home(): JSX.Element {
 					height: 100%;
 					width: 100%;
 					padding: 20px;
-					margin: 30%;
-					box-sizing: border-box;
 				}
 			`}</style>
 
