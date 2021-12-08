@@ -9,18 +9,30 @@ Try it out [draftingcanvas.com](https://www.draftingcanvas.com/)
 ### Setup dev enviroment
 
 Clone the repo
-`git clone https://github.com/DavidIreland1/drafting-canvas.git`
+
+```console
+git clone https://github.com/DavidIreland1/drafting-canvas.git
+```
 
 cd into the drafting-canvas folder
-`cd drafting-canvas`
+
+```console
+cd drafting-canvas
+```
 
 Install dev dependencies
-`npm install`
+
+```console
+npm install
+```
 
 Run the node web server
-`npm run dev`
 
-Open localhost port 3000
+```console
+npm run dev
+```
+
+Open on localhost  
 [localhost:3000](http://localhost:3000/)
 
 ## Technology Stack
