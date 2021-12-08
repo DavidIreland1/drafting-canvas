@@ -39,11 +39,12 @@ Open on localhost
 
 ### UI created with:
 
+-   [NextJS](https://nextjs.org/)
 -   [React](https://reactjs.org/)
 -   [Redux](https://redux.js.org/)
 -   [Redux Toolkit](https://redux-toolkit.js.org/)
 
-### Real time state sync with shared cursors created with:
+### Real time state sync between peer users with:
 
 -   [redux-scuttlebutt](https://github.com/grrowl/redux-scuttlebutt) modified
 -   [scuttlebutt](https://github.com/dominictarr/scuttlebutt)
@@ -56,8 +57,6 @@ Open on localhost
 -   Sockets - [AWS EC2](https://aws.amazon.com/ec2/) - In Progress
 -   Storage - [AWS DynamodB](https://aws.amazon.com/dynamodb/) - In Progress
 -   Images - [AWS S3](https://aws.amazon.com/s3/) - In Progress
-
-Contributions Welcome!
 
 ### Complete Features:
 
@@ -79,11 +78,11 @@ Contributions Welcome!
 
 ### Features in Progress:
 
--   [-] Shadow effects
--   [-] Projects page
--   [-] Spline tool
--   [-] Frames
--   [x] Image fill
+-   [ ] Shadow effects
+-   [ ] Projects page
+-   [ ] Spline tool
+-   [ ] Frames
+-   [ ] Image fill
 
 ### Features TODO:
 
@@ -107,5 +106,7 @@ Contributions Welcome!
 -   [ ] Touch screens
 -   [ ] Pen support
 -   [ ] Responsive view port
+
+Contributions very welcome!
 
 Created by David Ireland
