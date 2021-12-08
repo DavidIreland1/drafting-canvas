@@ -11,10 +11,10 @@ export default function Home(): JSX.Element {
 	if (typeof window !== 'undefined') {
 		if (router.asPath === '/') {
 			setTimeout(() => {
-				router.push(generateID());
+				router.replace(generateID());
 			}, 100);
 		} else {
-			router.push(router.asPath.split('/')[1]);
+			router.replace('/' + router.asPath.split('/')[1]);
 		}
 	}
 
