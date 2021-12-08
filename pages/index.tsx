@@ -6,6 +6,8 @@ import { generateID } from '../utils/utils';
 export default function Home(): JSX.Element {
 	const router = useRouter();
 
+	console.log(router);
+
 	if (router.route === '/') {
 		setTimeout(() => {
 			router.push(generateID());
