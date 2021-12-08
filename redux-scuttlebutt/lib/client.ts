@@ -24,12 +24,13 @@ export default function scuttlebutt(options) {
 	return (createStore) => {
 		// is it more efficient to store previous states, or replay a bunch of
 		// previous actions? (until we have COMMIT checkpointing, the former)
-		const dispatcher = new Dispatcher(options.dispatcherOptions);
-		const scuttlebutt = connectGossip(dispatcher, options.uri, options.primusOptions, options.primus, options.room);
+		let dispatcher = new Dispatcher(options.dispatcherOptions);
+
+		dispatcher = connectGossip(dispatcher, options.uri, options.primusOptions, options.primus, options.room);
 
 		return (reducer, initialState, enhancer) => {
 			const store = createStore(
-				scuttlebutt.wrapReducer(reducer),
+				dispatcher.wrapReducer(reducer),
 				dispatcher.wrapInitialState(initialState), // preloaded state is the earliest snapshot
 				enhancer
 			);
@@ -37,22 +38,22 @@ export default function scuttlebutt(options) {
 			return {
 				...store,
 				scuttlebutt,
-				dispatch: scuttlebutt.wrapDispatch(store.dispatch),
-				getState: scuttlebutt.wrapGetState(store.getState),
+				dispatch: dispatcher.wrapDispatch(store.dispatch),
+				getState: dispatcher.wrapGetState(store.getState),
 			};
 		};
 	};
 }
 
 // initialise network io
-function connectGossip(scuttlebutt, uri, primusOptions, Primus, room) {
-	scuttlebutt.primus = Primus.connect(uri, primusOptions);
+function connectGossip(dispatcher, uri, primusOptions, Primus, room) {
+	dispatcher.primus = Primus.connect(uri, primusOptions);
 
 	console.log('[io] connecting...');
 
-	connectStreams(scuttlebutt.primus, () => scuttlebutt.createStream(), room);
+	connectStreams(dispatcher.primus, () => dispatcher.createStream(), room);
 
-	return scuttlebutt;
+	return dispatcher;
 }
 
 // the internet is a series of tubes
@@ -79,10 +80,10 @@ function connectStreams(primus, createStream, room) {
 			const action = JSON.parse(data);
 			if (action.length && action[0].type) {
 				const type = action[0].type.split('action/')[1];
-				console.log('send', type);
+				// console.log('send', type);
 				if (tool_actions.includes(type)) return;
+				if (type === 'cursor') return;
 			}
-
 			primus.write(data);
 		});
 
@@ -90,10 +91,9 @@ function connectStreams(primus, createStream, room) {
 
 		// Data coming in
 		primus.on('data', (data) => {
-			if (data.action === 'info') {
-				console.log(data);
-				return;
-			}
+			if (!data) return;
+			if (data.action === 'info') return;
+
 			gossip.write(data);
 		});
 

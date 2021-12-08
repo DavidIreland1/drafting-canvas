@@ -32,9 +32,11 @@ const interactions = {
 
 	createElement: (state, props) => {
 		const { user_id, id, type, position } = props.payload;
-		slice.caseReducers.unselectAll(state);
-		if (!type || !Elements[type]) return; // Bad
 
+		// slice.caseReducers.unselectAll(state);
+		// if (!type || !Elements[type]) return; // Bad
+
+		console.log(props.payload);
 		const selected = Settings.user_id === user_id;
 		state.elements.unshift(Elements[type].create(id, position, selected));
 		props.payload = { id: user_id, mode: 'edit' };

@@ -61,6 +61,7 @@ class Dispatcher extends Scuttlebutt {
 		return (action) => {
 			// apply this action to our scuttlebutt model (and send to peers). It
 			// will dispatch, taking care of the the appropriate time ordering
+
 			if (this._isGossipType(action.type)) {
 				this.localUpdate(action);
 			} else {
@@ -72,7 +73,6 @@ class Dispatcher extends Scuttlebutt {
 	// wraps getState to the state within orderedHistory
 	wrapGetState(getState) {
 		this._reduxGetState = getState;
-
 		return () => orderedHistory.getState(getState());
 	}
 

@@ -34,6 +34,10 @@ export async function shortCuts(event, store, actions): Promise<boolean> {
 			console.log(data);
 
 			return true;
+
+		case 'a':
+			store.dispatch(actions.selectAll());
+			return true;
 		case 's':
 			event.preventDefault();
 			console.log('save');

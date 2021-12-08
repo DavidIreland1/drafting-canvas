@@ -5,7 +5,7 @@ import Canvas from './canvas/canvas';
 import Toolbar from './toolbar';
 import Structure from './structure/structure';
 import Properties from './properties/properties';
-import getPage from '../state/dev';
+import devElements, { loadTest } from '../state/dev';
 
 import Settings from './settings';
 
@@ -33,13 +33,10 @@ export default function Sheet({ store, actions }) {
 	useEffect(() => {
 		window.addEventListener('keydown', (event) => {
 			if (event.key === 'b') {
-				store.dispatch(actions.overwrite({ state: { elements: getPage(undefined).elements } }));
-			}
-			if (event.key === 'm') {
-				store.dispatch(actions.overwrite({ state: { elements: getPage('red').elements } }));
+				store.dispatch(actions.overwrite({ state: { elements: devElements(undefined).elements } }));
 			}
 			if (event.key === 'l') {
-				store.dispatch(actions.overwrite({ state: { elements: getPage('test').elements } }));
+				store.dispatch(actions.overwrite({ state: { elements: loadTest(1000).elements } }));
 			}
 		});
 	}, []);

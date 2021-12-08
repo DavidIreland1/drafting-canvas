@@ -41,6 +41,7 @@ export default store;
 export type RootState = ReturnType<typeof store.getState>;
 
 function filterActions(action) {
+	// console.warn(action);
 	return modification_actions.includes(action.type.slice(8));
 }
 

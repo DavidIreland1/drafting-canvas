@@ -14,10 +14,8 @@ export default {
 	},
 	removeUser: (state, props) => {
 		const { user_id } = props.payload;
-		console.log(state.elements);
 		state.views = state.views.filter((view) => view.id !== user_id);
 		state.cursors = state.cursors.filter((view) => view.id !== user_id);
-		console.log(state.elements);
 	},
 	view: (state, props) => {
 		const { id, delta_x, delta_y, delta_scale, cursor_x, cursor_y } = props.payload;

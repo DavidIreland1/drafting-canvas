@@ -1,12 +1,8 @@
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
 
 import Settings from './settings';
 
 export default function Navbar({ store, actions }) {
-	// const [cursor.type, setTool] = useState('select');
-
 	let cursor = useSelector((state) => (state as any).present.cursors.find((cursor) => cursor.id === Settings.user_id));
 
 	const selectTool = (event) => {
@@ -24,7 +20,6 @@ export default function Navbar({ store, actions }) {
 		}
 	};
 
-	// if (!cursor || !cursor.type) cursor = { type: 'select' };
 	if (!cursor || !['rectangle', 'line', 'ellipse', 'pen', 'spline', 'frame'].includes(cursor.type)) cursor = { type: 'select' };
 
 	return (
@@ -67,10 +62,10 @@ export default function Navbar({ store, actions }) {
 					<line x1="15" y1="67" x2="85" y2="67" />
 				</svg>
 
-				<svg id="pen" className={cursor.type === 'pen' ? 'selected' : ''} viewBox="0 0 100 100">
+				{/* <svg id="pen" className={cursor.type === 'pen' ? 'selected' : ''} viewBox="0 0 100 100">
 					<title>Pen</title>
 					<path d="M 26 6 L 45 45 A 5 5 0 1 0 47.1 45 M 26 6 V 72 C 25 74 45 70 55 93 L 75 83 C 64 55 80 54 78 48 Z" />
-				</svg>
+				</svg> */}
 			</div>
 
 			<style jsx>{`
