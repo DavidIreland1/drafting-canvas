@@ -4,6 +4,27 @@ Drafting Canvas is an real time collaborative design tool that is free and open 
 
 Try it out [draftingcanvas.com](https://www.draftingcanvas.com/)
 
+## Development
+
+### Setup dev enviroment
+
+Clone the repo
+`git clone https://github.com/DavidIreland1/drafting-canvas.git`
+
+cd into the drafting-canvas folder
+`cd drafting-canvas`
+
+Install dev dependencies
+`npm install`
+
+Run the node web server
+`npm run dev`
+
+Open localhost port 3000
+[localhost:3000](http://localhost:3000/)
+
+## Technology Stack
+
 ### UI created with:
 
 -   [React](https://reactjs.org/)
@@ -19,14 +40,12 @@ Try it out [draftingcanvas.com](https://www.draftingcanvas.com/)
 ### Hosting:
 
 -   CDN - [AWS Amplify](https://aws.amazon.com/amplify/)
--   Sockets - [AWS EC2](https://aws.amazon.com/ec2/)
 -   Domain - [AWS Route 53](https://aws.amazon.com/route53/)
+-   Sockets - [AWS EC2](https://aws.amazon.com/ec2/) - In Progress
 -   Storage - [AWS DynamodB](https://aws.amazon.com/dynamodb/) - In Progress
 -   Images - [AWS S3](https://aws.amazon.com/s3/) - In Progress
 
 Contributions Welcome!
-
-## Development
 
 ### Complete Features:
 
