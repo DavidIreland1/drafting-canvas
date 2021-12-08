@@ -14,10 +14,10 @@ export default function Navbar({ store, actions }) {
 	const { page } = router.query;
 
 	const [tabs, setTabs] = useState([
-		{
-			id: '111',
-			label: 'page 1',
-		},
+		// {
+		// 	id: '111',
+		// 	label: 'page 1',
+		// },
 		// {
 		// 	id: '222',
 		// 	label: 'page 2',

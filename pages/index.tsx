@@ -6,13 +6,11 @@ import { generateID } from '../utils/utils';
 export default function Home(): JSX.Element {
 	const router = useRouter();
 
-	console.log(router);
-
 	if (typeof window !== 'undefined') {
 		if (router.asPath === '/') {
 			setTimeout(() => {
 				router.replace(generateID());
-			}, 100);
+			});
 		} else {
 			router.replace('/' + router.asPath.split('/')[1]);
 		}
