@@ -8,10 +8,14 @@ export default function Home(): JSX.Element {
 
 	console.log(router);
 
-	if (router.route === '/') {
-		setTimeout(() => {
-			router.push(generateID());
-		}, 100);
+	if (typeof window !== 'undefined') {
+		if (router.asPath === '/') {
+			setTimeout(() => {
+				router.push(generateID());
+			}, 100);
+		} else {
+			router.push(router.asPath.split('/')[0]);
+		}
 	}
 
 	return (
