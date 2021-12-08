@@ -14,7 +14,7 @@ export default function Home(): JSX.Element {
 				router.push(generateID());
 			}, 100);
 		} else {
-			router.push(router.asPath.split('/')[0]);
+			router.push(router.asPath.split('/')[1]);
 		}
 	}
 
