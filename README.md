@@ -6,7 +6,7 @@ Try it out [draftingcanvas.com](https://www.draftingcanvas.com/)
 
 ## Development
 
-### Setup dev enviroment
+### Development Enviroment Setup
 
 Clone the repo
 
