@@ -1,22 +1,22 @@
 ![## Drafting Canvas](https://raw.githubusercontent.com/DavidIreland1/drafting-canvas/main/public/images/drafting-canvas.svg)
 
-The Drafting Canvas is an open source free online real time collaborative design tool
+The Drafting Canvas is an real time collaborative design tool that is free and open source
 
 Try it out [draftingcanvas.com](draftingcanvas.com)
 
-UI created with:
+### UI created with:
 
 -   [React](https://reactjs.org/)
 -   [Redux](https://redux.js.org/)
 -   [Redux Toolkit](https://redux-toolkit.js.org/)
 
-Real time state sync with shared cursors created with:
+### Real time state sync with shared cursors created with:
 
 -   modified [redux-scuttlebutt](https://github.com/grrowl/redux-scuttlebutt)
 -   [scuttlebutt](https://github.com/dominictarr/scuttlebutt)
 -   [Primus](https://github.com/primus/primus)
 
-Hosting:
+### Hosting:
 
 -   CDN - [AWS Amplify](https://aws.amazon.com/amplify/)
 -   Domain - [AWS Route 53](https://aws.amazon.com/route53/)
@@ -25,26 +25,38 @@ Hosting:
 
 Contributions Welcome!
 
-Features:
+## Development
+
+### Complete Features:
 
 -   [x] Real Time Collaboration
 -   [x] Shareable Links
--   [x] User icons
--   [x] Sticky points
+-   [x] Users on document
 -   [x] HSBA color picker
+-   [x] Rectange tool
+-   [x] Elipse tool
 -   [x] Shadow effects
--   [x]
+-   [x] Sticky points
+-   [x] Drag and drop tabs
+-   [x] Structure panel
+-   [x] Groups
+-   [x] Solid fill
+-   [x] Strokes
+-   [x] Lockable elements
+-   [x] Hidden elements
 
-In Progress:
+### Features in Progress:
 
 -   [-] Shadow effects
 -   [-] Projects page
--   [-] Splines
+-   [-] Spline tool
 -   [-] Frames
+-   [x] Image fill
 
-TODO:
+### Features TODO:
 
 -   [ ] Text
+-   [ ] Graient fill
 -   [ ] Fonts
 -   [ ] Sortable props
 -   [ ] Export as SVG
@@ -60,5 +72,8 @@ TODO:
 -   [ ] Group multi select
 -   [ ] HSVA color picker
 -   [ ] RGBA color picker
+-   [ ] Touch screens
+-   [ ] Pen support
+-   [ ] Responsive view port
 
 Created by David Ireland

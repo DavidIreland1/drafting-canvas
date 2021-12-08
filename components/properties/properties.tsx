@@ -8,7 +8,7 @@ import Stroke from './stroke';
 import Effects from './effects/effects';
 
 export default function Properties({ store, actions, setPicker }) {
-	const [width, setWidth] = useState('max(3vw, 20px)');
+	const [width, setWidth] = useState('max(20vw, 150px)');
 
 	function resize(event) {
 		event.preventDefault();
