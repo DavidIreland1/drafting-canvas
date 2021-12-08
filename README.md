@@ -1,6 +1,6 @@
 ![## Drafting Canvas](https://raw.githubusercontent.com/DavidIreland1/drafting-canvas/main/public/images/drafting-canvas.svg)
 
-The Drafting Canvas is an real time collaborative design tool that is free and open source
+Drafting Canvas is an real time collaborative design tool that is free and open source
 
 Try it out [draftingcanvas.com](draftingcanvas.com)
 
