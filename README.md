@@ -2,7 +2,7 @@
 
 Drafting Canvas is an real time collaborative design tool that is free and open source
 
-Try it out [draftingcanvas.com](draftingcanvas.com)
+Try it out [draftingcanvas.com](https://www.draftingcanvas.com/)
 
 ### UI created with:
 
@@ -12,7 +12,7 @@ Try it out [draftingcanvas.com](draftingcanvas.com)
 
 ### Real time state sync with shared cursors created with:
 
--   modified [redux-scuttlebutt](https://github.com/grrowl/redux-scuttlebutt)
+-   [redux-scuttlebutt](https://github.com/grrowl/redux-scuttlebutt) modified
 -   [scuttlebutt](https://github.com/dominictarr/scuttlebutt)
 -   [Primus](https://github.com/primus/primus)
 
