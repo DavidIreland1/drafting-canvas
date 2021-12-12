@@ -1,6 +1,6 @@
 ![## Drafting Canvas](https://raw.githubusercontent.com/DavidIreland1/drafting-canvas/main/public/images/drafting-canvas.svg)
 
-Drafting Canvas is an real time collaborative design tool that is free and open source
+Drafting Canvas is a real time collaborative design tool created through a free and open source project
 
 Try it out [draftingcanvas.com](https://www.draftingcanvas.com/)
 
@@ -52,11 +52,11 @@ Open on localhost
 
 ### Hosting:
 
--   CDN - [AWS Amplify](https://aws.amazon.com/amplify/)
--   Domain - [AWS Route 53](https://aws.amazon.com/route53/)
--   Sockets - [AWS EC2](https://aws.amazon.com/ec2/) - In Progress
--   Storage - [AWS DynamodB](https://aws.amazon.com/dynamodb/) - In Progress
--   Images - [AWS S3](https://aws.amazon.com/s3/) - In Progress
+-   CDN: [AWS Amplify](https://aws.amazon.com/amplify/)
+-   Domain: [AWS Route 53](https://aws.amazon.com/route53/)
+-   Sockets: [AWS EC2](https://aws.amazon.com/ec2/) - In Progress
+-   Storage: [AWS DynamodB](https://aws.amazon.com/dynamodb/) - In Progress
+-   Images: [AWS S3](https://aws.amazon.com/s3/) - In Progress
 
 ### Complete Features:
 

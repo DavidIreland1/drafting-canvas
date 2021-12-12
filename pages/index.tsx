@@ -8,9 +8,7 @@ export default function Home(): JSX.Element {
 
 	if (typeof window !== 'undefined') {
 		if (router.asPath === '/') {
-			setTimeout(() => {
-				router.replace(generateID());
-			});
+			router.replace(generateID());
 		} else {
 			router.replace('/' + router.asPath.split('/')[1]);
 		}
