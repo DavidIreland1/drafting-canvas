@@ -2,7 +2,6 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const fs = require('fs');
 const Primus = require('primus');
 const Dispatcher = require('./dispatcher').default;
 
@@ -16,6 +15,9 @@ const defaultOptions = {
 	getStatistics: getStatistics,
 	primusOptions: {},
 };
+
+const save = require('./database/save').default;
+const load = require('./database/load').default;
 
 let documents = {};
 let rooms = {};
@@ -134,17 +136,6 @@ function connectRedux(gossip, initial_state) {
 	return { store, dispatch, getState };
 }
 
-function save(name, data) {
-	fs.writeFile('./datastate/' + name + '.json', JSON.stringify(data, null, '\t'), 'utf8', () => {});
-}
-
-function load(name) {
-	try {
-		return JSON.parse(fs.readFileSync('./datastate/' + name + '.json'));
-	} catch (error) {
-		return undefined;
-	}
-}
 //
 //
 //

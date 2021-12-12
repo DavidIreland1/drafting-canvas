@@ -38,6 +38,7 @@ const interactions = {
 		const { user_id, id, type, position } = props.payload;
 
 		slice.caseReducers.unselectAll(state);
+		console.log(props.payload);
 
 		const selected = Settings.user_id === user_id;
 		state.elements.unshift(Elements[type].create(id, position, selected));

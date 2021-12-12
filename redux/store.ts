@@ -27,8 +27,8 @@ const store = createStore(
 	typeof Primus !== 'undefined'
 		? (scuttlebutt({
 				primus: Primus,
-				// uri: 'http://localhost:3000',
-				uri: 'http://ec2-18-190-153-178.us-east-2.compute.amazonaws.com:3000',
+				uri: 'http://localhost:3000',
+				// uri: 'http://ec2-18-190-153-178.us-east-2.compute.amazonaws.com:3000',
 				room: room,
 		  }) as any)
 		: undefined
@@ -42,7 +42,6 @@ export default store;
 export type RootState = ReturnType<typeof store.getState>;
 
 function filterActions(action) {
-	// console.warn(action);
 	return modification_actions.includes(action.type.slice(8));
 }
 

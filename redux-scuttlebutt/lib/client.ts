@@ -80,9 +80,10 @@ function connectStreams(primus, createStream, room) {
 			const action = JSON.parse(data);
 			if (action.length && action[0].type) {
 				const type = action[0].type.split('action/')[1];
-				// console.log('send', type);
 				if (tool_actions.includes(type)) return;
-				if (type === 'cursor') return;
+
+				// Stop shareing cursor actions for easier debugging
+				// if (type === 'cursor') return;
 			}
 			primus.write(data);
 		});

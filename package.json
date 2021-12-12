@@ -11,6 +11,7 @@
 		"reducers": "npx webpack --config webpack.reducers.js"
 	},
 	"dependencies": {
+		"@aws-sdk/client-dynamodb": "^3.44.0",
 		"@reduxjs/toolkit": "^1.6.0",
 		"bufferutil": "^4.0.3",
 		"fs": "0.0.1-security",
