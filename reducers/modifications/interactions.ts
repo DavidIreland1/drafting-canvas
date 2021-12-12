@@ -4,6 +4,10 @@ import { slice } from './../../redux/slice';
 
 import Settings from '../../components/settings';
 
+function clone(data) {
+	return JSON.parse(JSON.stringify(data));
+}
+
 const interactions = {
 	resize: (state, props) => {
 		const { position, last_position, selected_ids } = props.payload;
@@ -33,14 +37,14 @@ const interactions = {
 	createElement: (state, props) => {
 		const { user_id, id, type, position } = props.payload;
 
-		// slice.caseReducers.unselectAll(state);
-		// if (!type || !Elements[type]) return; // Bad
+		slice.caseReducers.unselectAll(state);
 
-		console.log(props.payload);
 		const selected = Settings.user_id === user_id;
 		state.elements.unshift(Elements[type].create(id, position, selected));
-		props.payload = { id: user_id, mode: 'edit' };
-		slice.caseReducers.cursor(state, props);
+
+		const props_clone = clone(props);
+		props_clone.payload = { id: user_id, mode: 'edit' };
+		slice.caseReducers.cursor(state, props_clone);
 	},
 	toggleVisible: (state, props) => {
 		const { id } = props.payload;
@@ -84,7 +88,7 @@ const interactions = {
 		forEachElementUntil(
 			elements,
 			(element, i, elements) => {
-				if (element.selected === true) elements.splice(i, 1);
+				if (selected_ids.includes(element.id)) elements.splice(i, 1);
 			},
 			id
 		);

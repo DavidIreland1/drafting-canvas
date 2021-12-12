@@ -7,7 +7,8 @@ export default function Structure({ store, actions }) {
 	const elements = useSelector((state) => (state as any).present.elements);
 	const [key, setKey] = useState(Math.random());
 	const structure_ref = useRef(null);
-	const [width, setWidth] = useState('max(15vw, 150px)');
+	// const [width, setWidth] = useState('max(15vw, 150px)');
+	const [width, setWidth] = useState('max(15vw, 15px)');
 
 	const resize = (event) => {
 		event.preventDefault();
