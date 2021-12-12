@@ -84,7 +84,7 @@ const interactions = {
 				};
 		});
 
-		// Remove selected aside from in new group
+		// Remove selected elements, aside from in new group
 		forEachElementUntil(
 			elements,
 			(element, i, elements) => {
