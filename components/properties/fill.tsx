@@ -6,7 +6,7 @@ import Eye from '../icons/eye';
 import Minus from '../icons/minus';
 import Plus from '../icons/plus';
 import Select from './select';
-import Text from './text';
+import Text from './inputs/text';
 
 export default function Fill({ selected, store, actions, setPicker }) {
 	const selected_ids = selected.map((element) => element.id);
@@ -80,7 +80,7 @@ export default function Fill({ selected, store, actions, setPicker }) {
 		return (
 			<div key={fill.id} id="prop" className="property-row" draggable={true} onDragStart={drag} onDragEnd={dragEnd} onMouseDown={setTarget} onDragOver={dragOver}>
 				<div id="handle">::</div>
-				{fill.type === 'Solid' ? (
+				{fill.type === 'Solid' || fill.type === 'Text' ? (
 					//Hello
 					<div className="property-color" onClick={(event) => openPicker(event, fill)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(fill.color)) }} />
 				) : (

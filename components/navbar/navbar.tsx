@@ -79,13 +79,17 @@ export default function Navbar({ store, actions }) {
 					<Plus onClick={newTab} />
 				</div>
 
-				<button onClick={copyLink}>Share</button>
-
 				<div id="users">
 					{users.map((user, i) => (
 						<User key={i} user={user} />
 					))}
 				</div>
+
+				<button onClick={copyLink}>Share</button>
+
+				<a target="_blank" href="https://github.com/DavidIreland1/drafting-canvas">
+					<img id="github" src="/images/github.svg" alt="Git" />
+				</a>
 			</div>
 
 			<style jsx>{`
@@ -141,11 +145,12 @@ export default function Navbar({ store, actions }) {
 				}
 
 				button {
-					margin: 6px;
+					margin: 5px;
 					background: var(--accent);
 					border: 0;
 					border-radius: 5px;
 					opacity: 0.8;
+					height: 30px;
 				}
 				button:hover {
 					opacity: 1;
@@ -153,6 +158,19 @@ export default function Navbar({ store, actions }) {
 				#users {
 					display: grid;
 					grid-auto-flow: column;
+				}
+				a {
+					cursor: default;
+					border-radius: 20px;
+				}
+				#github {
+					padding: 3px;
+					background: none;
+					border-radius: 20px;
+					filter: invert(1);
+				}
+				#github:hover {
+					background: #b7b7b7;
 				}
 			`}</style>
 		</div>

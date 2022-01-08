@@ -40,6 +40,9 @@ export default class Element {
 					}
 					context.drawImage(images[fill.id], fill.x - element.width / 2, fill.y - element.height / 2, element.width, element.height);
 					context.restore();
+				} else if (fill.type === 'Text') {
+					context.fillStyle = Colors.hslaToString(Colors.hsbaToHsla(fill.color));
+					context.fillText(element.text, -context.measureText(element.text).width / 2, 0);
 				}
 			});
 	}

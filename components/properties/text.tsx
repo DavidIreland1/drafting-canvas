@@ -1,40 +1,39 @@
-import { useRef } from 'react';
+import TextInput from './inputs/text';
 
-export default function Input({ id = undefined, placeholder = undefined, onChange, children }) {
-	// if (value === undefined) return null;
+export default function Text({ selected, store, actions, width }) {
+	const selected_ids = selected.map((element) => element.id);
 
-	const input = useRef(null);
+	function updateText(event) {
+		console.log({ [event.target.id]: event.target.value });
+		store.dispatch(actions.property({ selected_ids, props: { [event.target.id]: event.target.value } }));
+	}
 
-	const updateValue = (event) => {
-		event.target.id = id;
-		onChange(event);
-	};
+	if (!selected[0].text) return null;
 
 	return (
-		<>
-			<div id={id} className="input" ref={input} contentEditable={true} placeholder={placeholder} onChange={updateValue} suppressContentEditableWarning={true}>
-				{String(children)}
+		<div id="property-container">
+			<div className="property-heading">
+				<h4>Text</h4>
 			</div>
-
+			<div id="properties">
+				Value:
+				<TextInput id="text" onChange={updateText}>
+					{selected[0].text}
+				</TextInput>
+			</div>
 			<style jsx>{`
-				.input {
-					background: transparent;
-					border: none;
-					color: var(--text-color);
-					font-size: 16px;
-				}
-				.input:focus {
-					outline: none;
-				}
-
-				.input:hover {
-					background: var(--hover);
-				}
-				.input:focus-within {
-					background: var(--hover);
-					border-bottom: 1px solid white;
+				#properties {
+					display: grid;
+					grid-template-columns: auto auto;
+					gap: 8px calc(${width} / 20);
+					height: min-content;
+					width: fit-content;
+					width: 100%;
+					box-sizing: border-box;
+					padding: 0 10px;
+					overflow: hidden;
 				}
 			`}</style>
-		</>
+		</div>
 	);
 }

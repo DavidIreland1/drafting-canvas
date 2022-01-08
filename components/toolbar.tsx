@@ -5,6 +5,9 @@ import Settings from './settings';
 export default function Navbar({ store, actions }) {
 	let cursor = useSelector((state) => (state as any).present.cursors.find((cursor) => cursor.id === Settings.user_id));
 
+	// Need a default cursor when there is no users
+	if (!cursor || !['rectangle', 'line', 'ellipse', 'pen', 'spline', 'frame', 'text'].includes(cursor.type)) cursor = { type: 'select' };
+
 	const selectTool = (event) => {
 		event.preventDefault();
 		const tool = event.nativeEvent.composedPath().find((element) => element.tagName === 'svg');
@@ -19,8 +22,6 @@ export default function Navbar({ store, actions }) {
 			);
 		}
 	};
-
-	if (!cursor || !['rectangle', 'line', 'ellipse', 'pen', 'spline', 'frame'].includes(cursor.type)) cursor = { type: 'select' };
 
 	return (
 		<div id="container">
@@ -44,6 +45,12 @@ export default function Navbar({ store, actions }) {
 					<rect x="15" y="15" width="15" height="15" />
 					<line x1="30" y1="30" x2="70" y2="70" />
 					<rect x="70" y="70" width="15" height="15" />
+				</svg>
+
+				<svg id="text" className={cursor.type === 'text' ? 'selected' : ''} viewBox="0 0 100 100">
+					<title>Text</title>
+					<line x1="20" y1="20" x2="80" y2="20" />
+					<line x1="50" y1="20" x2="50" y2="80" />
 				</svg>
 
 				<svg id="spline" className={cursor.type === 'spline' ? 'selected' : ''} viewBox="0 0 100 100">

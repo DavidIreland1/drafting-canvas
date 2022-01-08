@@ -1,4 +1,4 @@
-import Input from './input';
+import Input from './inputs/input';
 
 export default function Dimensions({ selected, store, actions, width }) {
 	const selected_ids = selected.map((element) => element.id);

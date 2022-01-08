@@ -1,18 +1,19 @@
 import Head from 'next/head';
 
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { generateID } from '../utils/utils';
 
 export default function Home(): JSX.Element {
 	const router = useRouter();
 
-	if (typeof window !== 'undefined') {
+	useEffect(() => {
 		if (router.asPath === '/') {
 			router.replace(generateID());
 		} else {
 			router.replace('/' + router.asPath.split('/')[1]);
 		}
-	}
+	}, []);
 
 	return (
 		<>
@@ -26,8 +27,6 @@ export default function Home(): JSX.Element {
 					<button onClick={() => router.push('111')}>New Canvas</button>
 				</div>
 			</main>
-
-			<main></main>
 
 			<style jsx>{`
 				button {

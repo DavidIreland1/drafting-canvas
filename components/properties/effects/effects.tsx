@@ -5,8 +5,8 @@ import Colors from './../colors';
 import Eye from './../../icons/eye';
 import Minus from './../../icons/minus';
 import Plus from './../../icons/plus';
-import Input from '../input';
-import Text from '../text';
+import Input from '../inputs/input';
+import Text from '../inputs/text';
 import Select from '../select';
 
 export default function Effect({ selected, store, actions, setPicker, width }) {

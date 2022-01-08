@@ -22,6 +22,7 @@ const Cursors = {
 	bezier: Create,
 	spline: Create,
 	frame: Create,
+	text: Create,
 };
 
 export default class Cursor {

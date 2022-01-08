@@ -6,6 +6,7 @@ import Dimensions from './dimensions';
 import Fill from './fill';
 import Stroke from './stroke';
 import Effects from './effects/effects';
+import Text from './text';
 
 export default function Properties({ store, actions, setPicker }) {
 	// const [width, setWidth] = useState('max(20vw, 150px)');
@@ -59,6 +60,8 @@ export default function Properties({ store, actions, setPicker }) {
 					<Stroke selected={selected} store={store} actions={actions} setPicker={setPicker} width={width} />
 					<div className="divider" />
 					<Effects selected={selected} store={store} actions={actions} setPicker={setPicker} width={width} />
+					<div className="divider" />
+					<Text selected={selected} store={store} actions={actions} width={width} />
 				</div>
 			) : null}
 

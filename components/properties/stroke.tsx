@@ -2,12 +2,12 @@ import Picker from '../picker';
 import Elements from '../elements/elements';
 import { generateID } from '../../utils/utils';
 import Colors from './colors';
-import Input from './input';
+import Input from './inputs/input';
 import Select from './select';
 import Eye from '../icons/eye';
 import Minus from '../icons/minus';
 import Plus from '../icons/plus';
-import Text from './text';
+import Text from './inputs/text';
 
 export default function Stroke({ selected, store, actions, setPicker, width }) {
 	const selected_ids = selected.map((element) => element.id);

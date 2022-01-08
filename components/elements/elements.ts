@@ -6,6 +6,7 @@ import Frame from './frame';
 import Line from './line';
 import Arrow from './arrow';
 import Spline from './spline';
+import Text from './text';
 
 export default {
 	circle: Circle,
@@ -16,6 +17,7 @@ export default {
 	line: Line,
 	arrow: Arrow,
 	spline: Spline,
+	text: Text,
 };
 
 export function flatten(elements) {

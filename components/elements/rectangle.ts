@@ -105,12 +105,12 @@ export default class Rectangle extends Element {
 
 		context.strokeStyle = color;
 		context.lineWidth = line_width;
+		context.save();
 		context.translate(center.x, center.y);
 		context.rotate(rectangle.rotation);
 		const path = this.path(rectangle);
 		context.stroke(path);
-		context.rotate(-rectangle.rotation);
-		context.translate(-center.x, -center.y);
+		context.restore();
 	}
 
 	static bound(rectangle): { x: number; y: number; width: number; height: number } {

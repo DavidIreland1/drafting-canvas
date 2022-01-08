@@ -6,9 +6,7 @@ export default function Input({ id, label, step = 1, value, min = NaN, unit = ''
 	const input = useRef(null);
 
 	const updateValue = (event) => {
-		console.log('he');
 		event.target.style.width = `max(calc(${width} / 6), ${Math.max(event.target.value.length + 2, 5)}ch)`;
-
 		event.target.id = id;
 		onChange(event);
 	};
