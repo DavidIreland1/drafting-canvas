@@ -8,7 +8,7 @@ export default class Text extends Element {
 			y: position.y,
 			label: 'Text',
 			type: 'text',
-			text: 'Hello There\nGeneral Kenoby\nMy Man',
+			text: '',
 			style: 'normal',
 			weight: 'normal',
 			family: 'arial',
