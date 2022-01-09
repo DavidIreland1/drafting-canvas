@@ -7,7 +7,7 @@ import Minus from './../../icons/minus';
 import Plus from './../../icons/plus';
 import Input from '../inputs/input';
 import Text from '../inputs/text';
-import Select from '../select';
+import Select from '../inputs/select';
 
 export default function Effect({ selected, store, actions, setPicker, width }) {
 	const selected_ids = selected.map((element) => element.id);
@@ -41,7 +41,7 @@ export default function Effect({ selected, store, actions, setPicker, width }) {
 
 	function openPicker(event, effect) {
 		const setProperty = (effect) => {
-			store.dispatch(actions.setEffect(effect));
+			store.dispatch(actions.setEffect({ selected_ids, props: effect }));
 		};
 		setPicker(
 			<Picker setProperty={setProperty} prop_type="effect" prop_id={effect.id} event={event} setPicker={setPicker}>

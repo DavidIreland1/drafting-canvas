@@ -38,7 +38,7 @@ const interactions = {
 		const { user_id, id, type, position } = props.payload;
 
 		slice.caseReducers.unselectAll(state);
-		console.log(props.payload);
+		// console.log(props.payload); // Sync error created here from bad payload
 
 		const selected = Settings.user_id === user_id;
 		state.elements.unshift(Elements[type].create(id, position, selected));
@@ -66,11 +66,11 @@ const interactions = {
 
 	group: (state, props) => {
 		const { id, selected_ids } = props.payload;
+		console.log(id, selected_ids);
 
-		const elements = state.elements;
 		const location_id = selected_ids[0];
 
-		forEachElement(elements, (element, i, elements) => {
+		forEachElement(state.elements, (element, i, elements) => {
 			if (element.id === location_id)
 				elements[i] = {
 					id: id,
@@ -81,13 +81,13 @@ const interactions = {
 					rotation: 0,
 					visible: true,
 					locked: false,
-					elements: selected,
+					elements: selected(state.elements, selected_ids),
 				};
 		});
 
 		// Remove selected elements, aside from in new group
 		forEachElementUntil(
-			elements,
+			state.elements,
 			(element, i, elements) => {
 				if (selected_ids.includes(element.id)) elements.splice(i, 1);
 			},

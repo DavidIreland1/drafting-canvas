@@ -16,7 +16,8 @@ export default {
 	line_width: 2,
 
 	box_size: 8,
-	highlight: '#1a83ee',
+	// highlight: '#1a83ee',
+	highlight: '#4EB2F4',
 
 	max_zoom: 500,
 	min_zoom: 0.0001,

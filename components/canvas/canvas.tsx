@@ -19,7 +19,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 	let user_view = state.views.find((view) => view.id === user_id);
 	let user_cursor = cursors.find((cursor) => cursor.id === user_id);
 
-	let [frames, setFrameRate] = useState(0);
+	// let [frames, setFrameRate] = useState(0);
 
 	let last_frame = Date.now();
 
@@ -80,7 +80,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 			if (Settings.grid_enabled) Grid.draw(context, user_view);
 
 			const now = Date.now();
-			setFrameRate(Math.round(1000 / (now - last_frame)));
+			// setFrameRate(Math.round(1000 / (now - last_frame)));
 			last_frame = now;
 
 			if (auto_draw) redraw_auto(context);
@@ -129,7 +129,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 	return (
 		<div>
 			<canvas ref={canvas_ref} {...rest} tabIndex={1} />
-			<div id="frame_rate">{frames || 0}</div>
+			{/* <div id="frame_rate">{frames || 0}</div> */}
 
 			<style jsx>{`
 				canvas {

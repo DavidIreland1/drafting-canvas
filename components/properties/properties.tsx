@@ -55,13 +55,12 @@ export default function Properties({ store, actions, setPicker }) {
 				<div>
 					<Dimensions selected={selected} store={store} actions={actions} width={width} />
 					<div className="divider" />
+					<Text selected={selected} store={store} actions={actions} width={width} />
 					<Fill selected={selected} store={store} actions={actions} setPicker={setPicker} />
 					<div className="divider" />
 					<Stroke selected={selected} store={store} actions={actions} setPicker={setPicker} width={width} />
 					<div className="divider" />
 					<Effects selected={selected} store={store} actions={actions} setPicker={setPicker} width={width} />
-					<div className="divider" />
-					<Text selected={selected} store={store} actions={actions} width={width} />
 				</div>
 			) : null}
 

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Cross from './icons/cross';
 import { clamp } from '../utils/utils';
-import Select from './properties/select';
 import { useSelector } from 'react-redux';
 import { flatten } from './elements/elements';
 
@@ -36,9 +35,7 @@ export default function Picker({ setProperty, prop_type, prop_id, event, setPick
 
 	if (typeof property === 'undefined') {
 		// Kinda werid
-		setTimeout(() => {
-			setPicker(null);
-		}, 10);
+		setTimeout(() => setPicker(null), 10);
 		return null;
 	}
 

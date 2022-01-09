@@ -14,7 +14,7 @@ export default function Select({ id, label, value, onChange, children }) {
 
 	return (
 		<>
-			<div id={id} className="dimension">
+			<div id={id} className="container">
 				<label htmlFor="label">{label}</label>
 				<select id="label" ref={input} value={_value} onChange={updateValue}>
 					{children}
@@ -22,16 +22,16 @@ export default function Select({ id, label, value, onChange, children }) {
 			</div>
 
 			<style jsx>{`
-				.dimension {
+				.container {
 					display: grid;
 					grid-template-columns: auto 1fr;
 					padding: 5px 0;
 					border-bottom: 1px solid transparent;
 				}
-				.dimension:hover {
+				.container:hover {
 					background: var(--hover);
 				}
-				.dimension:focus-within {
+				.container:focus-within {
 					background: var(--hover);
 					border-bottom: 1px solid white;
 				}

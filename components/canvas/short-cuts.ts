@@ -5,7 +5,7 @@ export async function shortCuts(event, store, actions): Promise<boolean> {
 	switch (event.key) {
 		case 'c':
 			const selected = JSON.stringify(store.getState().present.elements.filter((element) => element.selected));
-			const result = navigator.clipboard.writeText(selected);
+			navigator.clipboard.writeText(selected);
 			return true;
 
 		case 'z':
@@ -18,7 +18,7 @@ export async function shortCuts(event, store, actions): Promise<boolean> {
 			store.dispatch(ActionCreators.redo());
 			return true;
 		case 'v':
-			console.log('paste');
+			// console.log('paste');
 			const data = await navigator.clipboard.readText();
 
 			try {
@@ -30,8 +30,10 @@ export async function shortCuts(event, store, actions): Promise<boolean> {
 					element.effect.forEach((effect) => (effect.id = generateID()));
 				});
 				store.dispatch(actions.createElements({ elements: new_elements }));
-			} catch {}
-			console.log(data);
+			} catch {
+				return false;
+			}
+			// console.log(data);
 
 			return true;
 
@@ -44,7 +46,15 @@ export async function shortCuts(event, store, actions): Promise<boolean> {
 			return true;
 
 		case 'g':
-			store.dispatch(actions.group({ id: generateID() }));
+			store.dispatch(
+				actions.group({
+					id: generateID(),
+					selected_ids: store
+						.getState()
+						.present.elements.filter((element) => element.selected)
+						.map((element) => element.id),
+				})
+			);
 			return true;
 
 		case 'd':

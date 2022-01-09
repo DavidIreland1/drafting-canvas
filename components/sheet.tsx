@@ -30,16 +30,16 @@ export default function Sheet({ store, actions }) {
 		});
 	}, [router.query.page]);
 
-	useEffect(() => {
-		window.addEventListener('keydown', (event) => {
-			if (event.key === 'b') {
-				store.dispatch(actions.overwrite({ state: { elements: devElements(undefined).elements } }));
-			}
-			if (event.key === 'l') {
-				store.dispatch(actions.overwrite({ state: { elements: loadTest(1000).elements } }));
-			}
-		});
-	}, []);
+	// useEffect(() => {
+	// 	window.addEventListener('keydown', (event) => {
+	// 		if (event.key === 'b') {
+	// 			store.dispatch(actions.overwrite({ state: { elements: devElements(undefined).elements } }));
+	// 		}
+	// 		if (event.key === 'l') {
+	// 			store.dispatch(actions.overwrite({ state: { elements: loadTest(1000).elements } }));
+	// 		}
+	// 	});
+	// }, []);
 
 	// store.subscribe(() => {
 	// 	window.localStorage.setItem('elements', JSON.stringify(store.getState()));

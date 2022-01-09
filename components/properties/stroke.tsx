@@ -3,7 +3,7 @@ import Elements from '../elements/elements';
 import { generateID } from '../../utils/utils';
 import Colors from './colors';
 import Input from './inputs/input';
-import Select from './select';
+import Select from './inputs/select';
 import Eye from '../icons/eye';
 import Minus from '../icons/minus';
 import Plus from '../icons/plus';
@@ -21,11 +21,11 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 	}
 
 	function toggleStroke(stroke) {
-		store.dispatch(actions.setStroke({ id: stroke.id, visible: !stroke.visible }));
+		store.dispatch(actions.setStroke({ selected_ids, props: { id: stroke.id, visible: !stroke.visible } }));
 	}
 
 	const setProperty = (stroke) => {
-		store.dispatch(actions.setStroke(stroke));
+		store.dispatch(actions.setStroke({ selected_ids, props: stroke }));
 	};
 
 	function openPicker(event, stroke) {
@@ -93,9 +93,9 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 
 	return (
 		<div id="property-container">
-			<div className="property-heading" onClick={addStroke}>
+			<div className="property-heading">
 				<h4>STROKE</h4>
-				<Plus />
+				<Plus onClick={addStroke} />
 			</div>
 
 			{getStrokes(selected).map(toStroke)}

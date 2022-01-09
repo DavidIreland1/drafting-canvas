@@ -1,36 +1,33 @@
 import { useRef } from 'react';
 
-export default function Input({ id = undefined, placeholder = undefined, onChange, children }) {
-	// if (value === undefined) return null;
-
+export default function Text({ id = undefined, placeholder = undefined, onChange, children }) {
 	const input = useRef(null);
 
 	function updateValue(event) {
-		console.log(event);
 		event.target.id = id;
 		onChange(event);
 	}
 
 	return (
 		<>
-			<input id={id} className="input" ref={input} placeholder={placeholder} onChange={updateValue} value={String(children)}></input>
+			<input id={id} ref={input} placeholder={placeholder} onChange={updateValue} value={String(children || '')} />
 
 			<style jsx>{`
-				.input {
+				input {
 					background: transparent;
 					border: none;
 					color: var(--text-color);
 					font-size: 16px;
 					width: 100%;
 				}
-				.input:focus {
+				input:focus {
 					outline: none;
 				}
 
-				.input:hover {
+				input:hover {
 					background: var(--hover);
 				}
-				.input:focus-within {
+				input:focus-within {
 					background: var(--hover);
 					border-bottom: 1px solid white;
 				}

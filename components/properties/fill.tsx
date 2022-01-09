@@ -5,7 +5,7 @@ import Colors from './colors';
 import Eye from '../icons/eye';
 import Minus from '../icons/minus';
 import Plus from '../icons/plus';
-import Select from './select';
+import Select from './inputs/select';
 import Text from './inputs/text';
 
 export default function Fill({ selected, store, actions, setPicker }) {
@@ -125,9 +125,9 @@ export default function Fill({ selected, store, actions, setPicker }) {
 
 	return (
 		<div id="property-container">
-			<div className="property-heading" onClick={addFill}>
+			<div className="property-heading">
 				<h4>FILL</h4>
-				<Plus />
+				<Plus onClick={addFill} />
 			</div>
 
 			{getFills(selected).map(toFill)}
