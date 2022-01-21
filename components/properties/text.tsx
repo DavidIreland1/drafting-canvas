@@ -48,7 +48,7 @@ export default function Text({ selected, store, actions, width }) {
 						<line x1="1" y1="5" x2="5" y2="5" />
 						<line x1="1" y1="8" x2="7" y2="8" />
 					</svg>
-					<svg id="middle" className={selected[0].justified === 'middle' ? 'selected' : ''} viewBox="0 0 10 10">
+					<svg id="center" className={selected[0].justified === 'center' ? 'selected' : ''} viewBox="0 0 10 10">
 						<line x1="1" y1="2" x2="9" y2="2" />
 						<line x1="3" y1="5" x2="7" y2="5" />
 						<line x1="2" y1="8" x2="8" y2="8" />
@@ -67,7 +67,7 @@ export default function Text({ selected, store, actions, width }) {
 						<line x1="3" y1="5" x2="5" y2="3" />
 						<line x1="7" y1="5" x2="5" y2="3" />
 					</svg>
-					<svg id="middle" className={selected[0].align === 'middle' ? 'selected' : ''} viewBox="0 0 10 10">
+					<svg id="center" className={selected[0].align === 'center' ? 'selected' : ''} viewBox="0 0 10 10">
 						<line x1="5" y1="0" x2="5" y2="4" />
 						<line x1="3" y1="2" x2="5" y2="4" />
 						<line x1="7" y1="2" x2="5" y2="4" />

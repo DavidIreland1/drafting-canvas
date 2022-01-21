@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '../../redux/store';
+import Background from './background';
 import Dimensions from './dimensions';
 import Fill from './fill';
 import Stroke from './stroke';
@@ -11,6 +12,7 @@ import Text from './text';
 export default function Properties({ store, actions, setPicker }) {
 	// const [width, setWidth] = useState('max(20vw, 150px)');
 	const [width, setWidth] = useState('max(20vw, 15px)');
+	const selected = useSelector((state: RootState) => state.present.elements.filter((element) => element.selected));
 
 	function resize(event) {
 		event.preventDefault();
@@ -25,33 +27,13 @@ export default function Properties({ store, actions, setPicker }) {
 		event.target.addEventListener('pointerup', end, { once: true });
 	}
 
-	const selected = useSelector((state: RootState) => (state as any).present.elements.filter((element) => element.selected));
-
-	const styles = (
-		<style>{`
-			.property-container {
-				padding: 10px 0;
-			}
-			.property-heading {
-				display: grid;
-				grid-template-columns: 1fr 30px;
-				padding: 0 10px 5px 10px;
-				gap: 5px calc(${width} / 40);
-			}
-			h4 {
-				cursor: default;
-				margin: 0;
-				padding: 5px 0;
-				font-weight: 300;
-			}
-		`}</style>
-	);
-
 	return (
 		<div id="container">
 			<div id="handle" onPointerDown={resize}></div>
 
-			{selected.length ? (
+			{selected.length === 0 ? (
+				<Background store={store} actions={actions} setPicker={setPicker}></Background>
+			) : (
 				<div>
 					<Dimensions selected={selected} store={store} actions={actions} width={width} />
 					<div className="divider" />
@@ -62,9 +44,25 @@ export default function Properties({ store, actions, setPicker }) {
 					<div className="divider" />
 					<Effects selected={selected} store={store} actions={actions} setPicker={setPicker} width={width} />
 				</div>
-			) : null}
+			)}
 
-			{styles}
+			<style>{`
+				.property-container {
+					padding: 10px 0;
+				}
+				.property-heading {
+					display: grid;
+					grid-template-columns: 1fr 30px;
+					padding: 0 10px 5px 10px;
+					gap: 5px calc(${width} / 40);
+				}
+				h4 {
+					cursor: default;
+					margin: 0;
+					padding: 5px 0;
+					font-weight: 300;
+				}
+			`}</style>
 
 			<style>{`
 				.property-color {

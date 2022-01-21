@@ -10,7 +10,7 @@ export default class Rectangle extends Element {
 			rotation: 0,
 			width: 0,
 			height: 0,
-			radius: 10,
+			radius: 0,
 		});
 	}
 

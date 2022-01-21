@@ -14,7 +14,7 @@ export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, s
 
 		store.dispatch(
 			actions.view({
-				id: user_id,
+				user_id: user_id,
 				delta_x: -event.deltaX * pan_sensitivity,
 				delta_y: -event.deltaY * pan_sensitivity,
 
@@ -31,7 +31,7 @@ export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, s
 		const position = DOMToCanvas(event, canvas, view);
 		store.dispatch(
 			actions.view({
-				id: user_id,
+				user_id: user_id,
 				delta_x: position.x * delta_scale,
 				delta_y: position.y * delta_scale,
 				delta_scale: -delta_scale,
@@ -63,7 +63,8 @@ export function hover(event, canvas, store, actions, id, active) {
 	if (!view) return;
 	const position = DOMToCanvas(event, canvas, view);
 
-	if (cursor.mode === 'create') return store.dispatch(actions.cursor({ id: Settings.user_id, ...position }));
+	//
+	if (cursor.mode === 'create') return store.dispatch(actions.cursor({ user_id: Settings.user_id, ...position }));
 
 	const target = active.altering.length ? active.altering[0].element : undefined;
 	let action = active.altering.length ? active.altering[0].action : 'select';
@@ -87,7 +88,7 @@ export function hover(event, canvas, store, actions, id, active) {
 
 	// Combine these
 	store.dispatch(actions.hoverOnly({ id: active.hovering.length ? active.hovering[0].id : undefined }));
-	store.dispatch(actions.cursor({ id: Settings.user_id, ...position, rotation, type: action, visible: true }));
+	store.dispatch(actions.cursor({ user_id: Settings.user_id, ...position, rotation, type: action, visible: true }));
 }
 
 // Needs refactor to use strategy design pattern

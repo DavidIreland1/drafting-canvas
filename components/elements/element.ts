@@ -10,7 +10,7 @@ export default class Element {
 			id: id,
 			selected: selected,
 			hover: false,
-			fill: [{ id: id + '2123', type: 'Solid', color: [0.8, 0.8, 0.8, 1], visible: true }],
+			fill: [{ id: id + '2123', type: 'Solid', color: [0, 0, 0.8, 1], visible: true }],
 			// fill: [{ id: id + '2123', type: 'Image', color: [0.8, 0.8, 0.8, 1], alpha: 1, visible: true, x: 0, y: 0, src: '/images/draft.svg' }],
 			stroke: [],
 			effect: [],

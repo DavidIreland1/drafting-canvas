@@ -81,10 +81,10 @@ export default function Fill({ selected, store, actions, setPicker }) {
 			<div key={fill.id} id="prop" className="property-row" draggable={true} onDragStart={drag} onDragEnd={dragEnd} onMouseDown={setTarget} onDragOver={dragOver}>
 				<div id="handle">::</div>
 				{fill.type === 'Solid' || fill.type === 'Text' ? (
-					//Hello
+					// Color Picker
 					<div className="property-color" onClick={(event) => openPicker(event, fill)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(fill.color)) }} />
 				) : (
-					//Hello
+					// Image
 					<img className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill)} />
 				)}
 
@@ -131,8 +131,6 @@ export default function Fill({ selected, store, actions, setPicker }) {
 			</div>
 
 			{getFills(selected).map(toFill)}
-
-			<style jsx>{``}</style>
 		</div>
 	);
 }

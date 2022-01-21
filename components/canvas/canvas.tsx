@@ -6,6 +6,7 @@ import Cursor from '../cursor/cursor';
 import Settings from './../settings';
 import Grid from './grid';
 import drawPoints from './points';
+import TextLayer from './text-layer';
 
 const { line_width, box_size, highlight } = Settings;
 
@@ -93,6 +94,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
 		const context: CanvasRenderingContext2D = canvas.getContext('2d'); //, { alpha: false } makes it flash black but is more efficient?
 
+		// Just for console debugging
 		(window as any).canvas = canvas;
 		(window as any).context = context;
 
@@ -110,7 +112,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 			user_view = state.views.find((view) => view.id === user_id);
 			user_cursor = state.cursors.find((cursor) => cursor.id === user_id);
 
-			if (user_view && user_view.centered === false) store.dispatch(actions.centerView({ id: user_id, x: canvas.width / 2, y: canvas.height / 2 }));
+			if (user_view && user_view.centered === false) store.dispatch(actions.centerView({ user_id: user_id, x: canvas.width / 2, y: canvas.height / 2 }));
 
 			cursors = state.cursors;
 			elements = state.elements;
@@ -128,6 +130,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 	return (
 		<div>
+			<TextLayer canvas={canvas_ref.current} user_id={user_id} store={store} actions={actions} />
 			<canvas ref={canvas_ref} {...rest} tabIndex={1} />
 			{/* <div id="frame_rate">{frames || 0}</div> */}
 

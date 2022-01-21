@@ -232,7 +232,7 @@ function breakText(element, context) {
 	);
 }
 
-function breakLine(words, max_width, delim) {
+function breakLine(words: Array<{ value: string; width: number }>, max_width: number, delim: string): Array<string> {
 	let line_width = 0;
 
 	return words.reduce(
@@ -249,17 +249,17 @@ function breakLine(words, max_width, delim) {
 	);
 }
 
-function createOffsets(element, context, lines) {
+function createOffsets(element, context, lines): { x: number; y: number } {
 	return lines.map((line, i) => {
 		let offset_x = -Math.abs(element.width) / 2;
-		if (element.justified === 'middle') {
+		if (element.justified === 'center') {
 			offset_x = -context.measureText(line).width / 2;
 		} else if (element.justified === 'right') {
 			offset_x = Math.abs(element.width) / 2 - context.measureText(line).width;
 		}
 
 		let offset_y = -Math.abs(element.height) / 2 + (i + 1) * Math.abs(element.size);
-		if (element.align === 'middle') {
+		if (element.align === 'center') {
 			offset_y = (i + 1 - lines.length / 2) * Math.abs(element.size);
 		} else if (element.align === 'bottom') {
 			offset_y = Math.abs(element.height) / 2 - element.size / 2 + (i + 1 - lines.length) * Math.abs(element.size);

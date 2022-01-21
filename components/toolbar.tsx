@@ -15,7 +15,7 @@ export default function Navbar({ store, actions }) {
 		if (tool) {
 			store.dispatch(
 				actions.cursor({
-					id: Settings.user_id,
+					user_id: Settings.user_id,
 					type: tool.id,
 					mode: tool.id === 'select' ? 'edit' : 'create',
 				})

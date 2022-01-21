@@ -5,7 +5,6 @@ import Canvas from './canvas/canvas';
 import Toolbar from './toolbar';
 import Structure from './structure/structure';
 import Properties from './properties/properties';
-import devElements, { loadTest } from '../state/dev';
 
 import Settings from './settings';
 
@@ -25,7 +24,7 @@ export default function Sheet({ store, actions }) {
 		// });
 		store.dispatch(actions.addUser({ user_id: Settings.user_id, label: Settings.user_name, color: Settings.user_color }));
 
-		window.addEventListener('beforeunload', async () => {
+		window.addEventListener('beforeunload', () => {
 			store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
 		});
 	}, [router.query.page]);

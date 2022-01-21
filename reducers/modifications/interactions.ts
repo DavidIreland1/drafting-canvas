@@ -44,7 +44,7 @@ const interactions = {
 		state.elements.unshift(Elements[type].create(id, position, selected));
 
 		const props_clone = clone(props);
-		props_clone.payload = { id: user_id, mode: 'edit' };
+		props_clone.payload = { user_id, mode: 'edit' };
 		slice.caseReducers.cursor(state, props_clone);
 	},
 	toggleVisible: (state, props) => {

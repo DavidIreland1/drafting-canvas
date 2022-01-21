@@ -1,10 +1,10 @@
 import { onWheel, hover, select } from './interaction';
 import { shortCuts } from './short-cuts';
 
-export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active) {
+export function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, active) {
 	canvas.onwheel = (event: WheelEvent) => {
 		event.preventDefault();
-		onWheel(event, canvas, id, store, actions);
+		onWheel(event, canvas, user_id, store, actions);
 	};
 
 	canvas.focus(); // Needed for react?
@@ -27,16 +27,18 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active
 				})
 			);
 		}
+
+		console.log(event.key);
 	};
 
 	canvas.ondblclick = () => {
 		if (active.hovering.length) return;
 
-		const view = store.getState().present.views.find((view) => view.id === id);
+		const view = store.getState().present.views.find((view) => view.id === user_id);
 
 		store.dispatch(
 			actions.view({
-				id: id,
+				user_id: user_id,
 				delta_x: canvas.width / 2 - view.x,
 				delta_y: canvas.height / 2 - view.y,
 				delta_scale: 1 - view.scale,
@@ -46,23 +48,23 @@ export function initCanvas(canvas: HTMLCanvasElement, id, store, actions, active
 	};
 
 	canvas.onpointermove = (event) => {
-		hover(event, canvas, store, actions, id, active);
+		hover(event, canvas, store, actions, user_id, active);
 	};
 
 	canvas.onpointerout = () => {
-		store.dispatch(actions.cursor({ id: id, visible: false }));
+		store.dispatch(actions.cursor({ user_id: user_id, visible: false }));
 	};
 
 	canvas.onpointerover = () => {
 		canvas.focus(); // Needed for react?
-		store.dispatch(actions.cursor({ id: id, visible: true }));
+		store.dispatch(actions.cursor({ user_id: user_id, visible: true }));
 	};
 
 	canvas.onpointerdown = (event) => {
 		if (event.button !== 0) return;
 		event.preventDefault();
 		(event.target as any).setPointerCapture(event.pointerId);
-		select(event, canvas, id, store, actions, active);
+		select(event, canvas, user_id, store, actions, active);
 	};
 
 	document.onkeydown = async (event) => {
