@@ -1,6 +1,6 @@
 ![## Drafting Canvas](https://raw.githubusercontent.com/DavidIreland1/drafting-canvas/main/public/images/drafting-canvas.svg)
 
-Drafting Canvas is a real time collaborative design tool created through a free and open source project
+Drafting Canvas is a free real time collaborative design tool created as open source project
 
 Try it out [draftingcanvas.com](https://www.draftingcanvas.com/)
 
@@ -56,7 +56,7 @@ Open on localhost
 -   Domain: [AWS Route 53](https://aws.amazon.com/route53/)
 -   Sockets: [AWS EC2](https://aws.amazon.com/ec2/) - In Progress
 -   Storage: [AWS DynamodB](https://aws.amazon.com/dynamodb/) - In Progress
--   Images: [AWS S3](https://aws.amazon.com/s3/) - In Progress
+-   Image Storage: [AWS S3](https://aws.amazon.com/s3/) - In Progress
 
 ### Complete Features:
 
@@ -75,18 +75,18 @@ Open on localhost
 -   [x] Strokes
 -   [x] Lockable elements
 -   [x] Hidden elements
+-   [x] Shadow effects
 
 ### Features in Progress:
 
--   [ ] Shadow effects
 -   [ ] Projects page
 -   [ ] Spline tool
 -   [ ] Frames
 -   [ ] Image fill
+-   [ ] Text
 
 ### Features TODO:
 
--   [ ] Text
 -   [ ] Graient fill
 -   [ ] Fonts
 -   [ ] Sortable props
@@ -107,6 +107,6 @@ Open on localhost
 -   [ ] Pen support
 -   [ ] Responsive view port
 
-Contributions very welcome!
+Contributions and feature suggestions very welcome!
 
 Created by David Ireland
