@@ -112,7 +112,7 @@ export default function Picker({ setProperty, prop_type, prop_id, event, setPick
 			</div>
 
 			<div id="hsla">
-				<div>hsba</div>
+				<div>HSBA</div>
 				<div>{Math.round(hsba[0] * 360)}</div>
 				<div>{Math.round(hsba[1] * 100)}</div>
 				<div>{Math.round(hsba[2] * 100)}</div>

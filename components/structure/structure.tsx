@@ -72,6 +72,7 @@ export default function Structure({ store, actions }) {
 					overflow-x: hidden;
 					left: var(--nav-height);
 					border-left: 1px solid var(--selected);
+					z-index: 2;
 				}
 				#structure {
 					overflow-x: hidden;

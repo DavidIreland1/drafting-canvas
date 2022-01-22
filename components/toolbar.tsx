@@ -78,6 +78,7 @@ export default function Navbar({ store, actions }) {
 			<style jsx>{`
 				#container {
 					background: #212123;
+					z-index: 2;
 				}
 				#bar {
 					width: var(--nav-height);

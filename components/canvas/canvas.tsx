@@ -1,14 +1,9 @@
 import { useRef, useEffect, useState } from 'react';
+import draw from './draw';
 
 import { initCanvas } from './init-canvas';
-import Elements, { flatten } from './../elements/elements';
-import Cursor from '../cursor/cursor';
-import Settings from './../settings';
-import Grid from './grid';
-import drawPoints from './points';
-import TextLayer from './text-layer';
 
-const { line_width, box_size, highlight } = Settings;
+import TextLayer from './text-layer';
 
 const Canvas = ({ user_id, store, actions, ...rest }) => {
 	const canvas_ref = useRef(null);
@@ -20,75 +15,13 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 	let user_view = state.views.find((view) => view.id === user_id);
 	let user_cursor = cursors.find((cursor) => cursor.id === user_id);
 
-	// let [frames, setFrameRate] = useState(0);
-
-	let last_frame = Date.now();
-
-	const auto_draw = false;
+	const mouse = { pressed: false };
 
 	const active = {
 		hovering: [],
 		selected: [],
 		altering: [],
 	};
-
-	let redraw_auto = (context: CanvasRenderingContext2D) => {
-		if (!user_view || !user_cursor) return auto_draw && setTimeout(() => redraw_auto(context), 500);
-
-		requestAnimationFrame(() => {
-			context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-
-			context.translate(user_view.x, user_view.y);
-			context.scale(user_view.scale, user_view.scale);
-
-			const screen = boundScreen(context, user_view);
-
-			const on_screen = elements.filter((element) => element.visible).filter((element) => Elements[element.type].onScreen(element, screen));
-
-			const line = line_width / user_view.scale;
-			const box = box_size / user_view.scale;
-			const cursor = transformPoint(user_cursor, context.getTransform());
-
-			active.selected = flatten(on_screen).filter((element) => element.selected);
-
-			active.hovering = active.selected
-				.filter((element) => Elements[element.type].insideBound(element, context, cursor))
-				.concat(
-					[...on_screen]
-						.reverse()
-						.filter((element) => Elements[element.type].draw(element, context, cursor, user_view))
-						.reverse()
-				)
-				.filter((element) => !element.locked)
-				.sort((element1) => (element1.selected ? -1 : 1));
-
-			// Outline hovering
-			flatten(on_screen)
-				.filter((element) => element.hover && !element.selected)
-				.forEach((element) => Elements[element.type].outline(element, context, highlight, line * 2));
-			// active.hovering.slice(0, 1).forEach((element) => (element.selected ? undefined : Elements[element.type].outline(element, context, highlight, line * 2)));
-
-			active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
-
-			drawPoints(context, on_screen, active.selected, user_view);
-
-			cursors
-				.filter((cursor) => cursor.visible)
-				.sort((cursor) => (cursor.id !== user_id ? -1 : 1))
-				.forEach((cursor) => Cursor.draw(cursor, context, user_view));
-
-			context.resetTransform();
-			if (Settings.grid_enabled) Grid.draw(context, user_view);
-
-			const now = Date.now();
-			// setFrameRate(Math.round(1000 / (now - last_frame)));
-			last_frame = now;
-
-			if (auto_draw) redraw_auto(context);
-		});
-	};
-
-	const redraw = auto_draw ? (contet) => true : redraw_auto;
 
 	useEffect(() => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
@@ -99,11 +32,10 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 		(window as any).context = context;
 
 		resizeCanvas(canvas);
-		initCanvas(canvas, user_id, store, actions, active);
+		initCanvas(canvas, user_id, store, actions, active, mouse);
 
 		window.addEventListener('resize', () => {
 			resizeCanvas(canvas);
-			redraw(context);
 		});
 
 		store.subscribe(() => {
@@ -114,11 +46,12 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 			if (user_view && user_view.centered === false) store.dispatch(actions.centerView({ user_id: user_id, x: canvas.width / 2, y: canvas.height / 2 }));
 
-			cursors = state.cursors;
 			elements = state.elements;
-			redraw(context);
+			cursors = state.cursors;
+			draw(context, elements, cursors, active, user_id, user_view, user_cursor, mouse);
 		});
-		redraw_auto(context);
+
+		// draw(context, elements, cursors, active, user_id, user_view, user_cursor, mouse);
 	}, []);
 
 	const svg = `
@@ -169,20 +102,4 @@ export function resizeCanvas(canvas): boolean {
 	}
 
 	return false;
-}
-
-function transformPoint(point, transform) {
-	return {
-		x: transform.a * point.x + transform.c * point.y + transform.e,
-		y: transform.b * point.x + transform.d * point.y + transform.f,
-	};
-}
-
-function boundScreen(context, view) {
-	return {
-		x1: -view.x / view.scale,
-		y1: -view.y / view.scale,
-		x2: -view.x / view.scale + context.canvas.width / view.scale,
-		y2: -view.y / view.scale + context.canvas.height / view.scale,
-	};
 }

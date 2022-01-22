@@ -13,11 +13,11 @@ export default function Text({ selected, store, actions, width }) {
 
 	if (typeof selected[0].text !== 'string') return null;
 
-	const textarea = useRef(null);
+	// const textarea = useRef(null);
 
-	useEffect(() => {
-		updateTextarea(textarea.current);
-	}, [textarea, width]);
+	// useEffect(() => {
+	// 	updateTextarea(textarea.current);
+	// }, [textarea, width]);
 
 	return (
 		<div id="property-container">
@@ -25,7 +25,7 @@ export default function Text({ selected, store, actions, width }) {
 				<h4>TEXT</h4>
 			</div>
 			<div id="properties">
-				<textarea ref={textarea} id="text" onChange={updateText} placeholder="Text..." value={selected[0].text === 'Text...' ? undefined : selected[0].text} onInput={(event) => updateTextarea(event.target)} />
+				{/* <textarea ref={textarea} id="text" onChange={updateText} placeholder="Text..." value={selected[0].text === 'Text...' ? undefined : selected[0].text} onInput={(event) => updateTextarea(event.target)} /> */}
 
 				<DataList id="family" label="Font Family" value={selected[0].family} onChange={updateText}>
 					{Fonts.map((font, i) => (
@@ -35,6 +35,8 @@ export default function Text({ selected, store, actions, width }) {
 
 				<Input id="size" label="Size" value={selected[0].size} onChange={(event) => updateText(event, (value) => Math.max(value, 0))} width={width} />
 
+				<Input id="line_height" label="Line Height" step={0.01} value={selected[0].line_height} onChange={(event) => updateText(event, (value) => Math.max(value, 0))} width={width} />
+
 				<Select id="weight" label="" value={selected[0].weight} onChange={updateText}>
 					<option value="lighter">Lighter</option>
 					<option value="normal">Normal</option>
@@ -42,18 +44,18 @@ export default function Text({ selected, store, actions, width }) {
 					<option value="bolder">Bolder</option>
 				</Select>
 
-				<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: '28px' }} onClick={(event) => updateText({ target: { id: 'justified', value: (event.target as SVGElement).id } })}>
-					<svg id="left" className={selected[0].justified === 'left' ? 'selected' : ''} viewBox="0 0 10 10">
+				<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: '28px' }} onClick={(event) => updateText({ target: { id: 'justify', value: (event.target as SVGElement).id } })}>
+					<svg id="left" className={selected[0].justify === 'left' ? 'selected' : ''} viewBox="0 0 10 10">
 						<line x1="1" y1="2" x2="9" y2="2" />
 						<line x1="1" y1="5" x2="5" y2="5" />
 						<line x1="1" y1="8" x2="7" y2="8" />
 					</svg>
-					<svg id="center" className={selected[0].justified === 'center' ? 'selected' : ''} viewBox="0 0 10 10">
+					<svg id="center" className={selected[0].justify === 'center' ? 'selected' : ''} viewBox="0 0 10 10">
 						<line x1="1" y1="2" x2="9" y2="2" />
 						<line x1="3" y1="5" x2="7" y2="5" />
 						<line x1="2" y1="8" x2="8" y2="8" />
 					</svg>
-					<svg id="right" className={selected[0].justified === 'right' ? 'selected' : ''} viewBox="0 0 10 10">
+					<svg id="right" className={selected[0].justify === 'right' ? 'selected' : ''} viewBox="0 0 10 10">
 						<line x1="1" y1="2" x2="9" y2="2" />
 						<line x1="5" y1="5" x2="9" y2="5" />
 						<line x1="3" y1="8" x2="9" y2="8" />
@@ -61,7 +63,7 @@ export default function Text({ selected, store, actions, width }) {
 				</div>
 
 				<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: '28px' }} onClick={(event) => updateText({ target: { id: 'align', value: (event.target as SVGElement).id } })}>
-					<svg id="top" className={selected[0].align === 'top' ? 'selected' : ''} viewBox="0 0 10 10">
+					<svg id="start" className={selected[0].align === 'start' ? 'selected' : ''} viewBox="0 0 10 10">
 						<line x1="2" y1="2" x2="8" y2="2" />
 						<line x1="5" y1="3" x2="5" y2="9" />
 						<line x1="3" y1="5" x2="5" y2="3" />
@@ -78,7 +80,7 @@ export default function Text({ selected, store, actions, width }) {
 						<line x1="3" y1="8" x2="5" y2="6" />
 						<line x1="7" y1="8" x2="5" y2="6" />
 					</svg>
-					<svg id="bottom" className={selected[0].align === 'bottom' ? 'selected' : ''} viewBox="0 0 10 10">
+					<svg id="end" className={selected[0].align === 'end' ? 'selected' : ''} viewBox="0 0 10 10">
 						<line x1="5" y1="1" x2="5" y2="7" />
 						<line x1="3" y1="5" x2="5" y2="7" />
 						<line x1="7" y1="5" x2="5" y2="7" />
@@ -133,6 +135,9 @@ export default function Text({ selected, store, actions, width }) {
 					width: 100%;
 					padding: 4px 0;
 					box-sizing: border-box;
+				}
+				svg > * {
+					pointer-events: none;
 				}
 				svg:hover {
 					background: var(--hover);

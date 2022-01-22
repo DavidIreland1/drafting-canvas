@@ -1,23 +1,16 @@
 import { onWheel, hover, select } from './interaction';
 import { shortCuts } from './short-cuts';
 
-export function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, active) {
+export function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, active, mouse) {
 	canvas.onwheel = (event: WheelEvent) => {
 		event.preventDefault();
 		onWheel(event, canvas, user_id, store, actions);
 	};
 
 	canvas.focus(); // Needed for react?
-	canvas.onkeydown = (event: KeyboardEvent) => {
+	canvas.onkeydown = async (event: KeyboardEvent) => {
 		if (event.key === 'Delete' || event.key === 'Backspace') {
 			event.preventDefault();
-
-			console.log(
-				store
-					.getState()
-					.present.elements.filter((element) => element.selected)
-					.map((element) => element.id)
-			);
 			store.dispatch(
 				actions.delete({
 					selected_ids: store
@@ -28,7 +21,11 @@ export function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, a
 			);
 		}
 
-		console.log(event.key);
+		if (event.metaKey || event.ctrlKey) {
+			if (await shortCuts(event, store, actions)) {
+				event.preventDefault();
+			}
+		}
 	};
 
 	canvas.ondblclick = () => {
@@ -44,7 +41,6 @@ export function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, a
 				delta_scale: 1 - view.scale,
 			})
 		);
-		// Add cursor movement
 	};
 
 	canvas.onpointermove = (event) => {
@@ -61,17 +57,14 @@ export function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, a
 	};
 
 	canvas.onpointerdown = (event) => {
+		mouse.pressed = true;
 		if (event.button !== 0) return;
 		event.preventDefault();
 		(event.target as any).setPointerCapture(event.pointerId);
 		select(event, canvas, user_id, store, actions, active);
 	};
 
-	document.onkeydown = async (event) => {
-		if (event.metaKey || event.ctrlKey) {
-			if (await shortCuts(event, store, actions)) {
-				event.preventDefault();
-			}
-		}
+	canvas.onpointerup = () => {
+		mouse.pressed = false;
 	};
 }
