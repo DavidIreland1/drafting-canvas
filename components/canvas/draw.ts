@@ -37,14 +37,14 @@ export default function draw(context: CanvasRenderingContext2D, elements, cursor
 			.sort((element1) => (element1.selected ? -1 : 1));
 
 		// Outline hovering
-		flatten(on_screen)
-			.filter((element) => element.hover && !element.selected)
-			.forEach((element) => Elements[element.type].outline(element, context, highlight, line * 2));
+		if (!mouse.pressed)
+			flatten(on_screen)
+				.filter((element) => element.hover && !element.selected)
+				.forEach((element) => Elements[element.type].outline(element, context, highlight, line * 2));
 		// active.hovering.slice(0, 1).forEach((element) => (element.selected ? undefined : Elements[element.type].outline(element, context, highlight, line * 2)));
 
-		active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
+		if (!mouse.pressed) active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
 
-		// console.log(mouse.pressed);
 		if (mouse.pressed) drawPoints(context, on_screen, active.selected, user_view);
 
 		cursors

@@ -13,24 +13,7 @@ export default function Navbar({ store, actions }) {
 	const router = useRouter();
 	const { page } = router.query;
 
-	const [tabs, setTabs] = useState([
-		// {
-		// 	id: '111',
-		// 	label: 'page 1',
-		// },
-		// {
-		// 	id: '222',
-		// 	label: 'page 2',
-		// },
-		// {
-		// 	id: '333',
-		// 	label: 'page 3',
-		// },
-		// {
-		// 	id: 'test-1000',
-		// 	label: 'test 1000',
-		// },
-	]);
+	const [tabs, setTabs] = useState([]);
 
 	useEffect(() => {
 		if (page && !tabs.find((tab) => tab.id === page)) {
@@ -164,7 +147,10 @@ export default function Navbar({ store, actions }) {
 					border-radius: 20px;
 				}
 				#github {
-					padding: 3px;
+					padding: 4px;
+					margin: 4px;
+					height: 32px;
+					width: 32px;
 					background: none;
 					border-radius: 20px;
 					filter: invert(1);

@@ -63,7 +63,7 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 
 	return (
 		<div>
-			<TextLayer canvas={canvas_ref.current} user_id={user_id} store={store} actions={actions} />
+			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} actions={actions} />
 			<canvas ref={canvas_ref} {...rest} tabIndex={1} />
 			{/* <div id="frame_rate">{frames || 0}</div> */}
 
