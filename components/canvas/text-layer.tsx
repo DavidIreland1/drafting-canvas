@@ -1,6 +1,7 @@
 import { useMemo, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import Colors from './../properties/colors';
 
 export default function TextLayer({ canvas, user_id, store, actions }) {
 	const selected = useSelector((state: RootState) => (state as any).present.elements.filter((element) => element.selected));
@@ -31,6 +32,7 @@ export default function TextLayer({ canvas, user_id, store, actions }) {
 		fontWeight: selected[0].weight,
 		fontStyle: selected[0].style,
 		lineHeight: selected[0].line_height,
+		color: Colors.hslaToString(Colors.hsbaToHsla(selected[0].fill[0].color)),
 	};
 
 	return (
@@ -121,6 +123,7 @@ function Editable({ id, element_id, value, style, align, placeholder, onChange }
 					white-space: pre-wrap;
 					width: 100%;
 					box-sizing: border-box;
+					caret-color: black;
 				}
 				#editable:focus {
 					outline: none;
