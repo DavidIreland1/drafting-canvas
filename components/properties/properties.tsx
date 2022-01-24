@@ -9,7 +9,7 @@ import Stroke from './stroke';
 import Effects from './effects/effects';
 import Text from './text';
 
-export default function Properties({ store, actions, setPicker }) {
+export default function Properties({ store, actions, setPicker, fonts }) {
 	// const [width, setWidth] = useState('max(20vw, 150px)');
 	const [width, setWidth] = useState('max(20vw, 15px)');
 	const selected = useSelector((state: RootState) => state.present.elements.filter((element) => element.selected));
@@ -37,7 +37,7 @@ export default function Properties({ store, actions, setPicker }) {
 				<div>
 					<Dimensions selected={selected} store={store} actions={actions} width={width} />
 					<div className="divider" />
-					<Text selected={selected} store={store} actions={actions} width={width} />
+					<Text selected={selected} store={store} actions={actions} width={width} fonts={fonts} />
 					<Fill selected={selected} store={store} actions={actions} setPicker={setPicker} />
 					<div className="divider" />
 					<Stroke selected={selected} store={store} actions={actions} setPicker={setPicker} width={width} />

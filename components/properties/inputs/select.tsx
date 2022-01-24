@@ -19,6 +19,9 @@ export default function Select({ id, label, value, onChange, children }) {
 				<select id="label" ref={input} value={_value} onChange={updateValue}>
 					{children}
 				</select>
+				<svg viewBox="0 0 10 10">
+					<path d="M 2 4 L 5 7 L 8 4" />
+				</svg>
 			</div>
 
 			<style jsx>{`
@@ -27,6 +30,9 @@ export default function Select({ id, label, value, onChange, children }) {
 					grid-template-columns: auto 1fr;
 					padding: 5px 0;
 					border-bottom: 1px solid transparent;
+					position: relative;
+					height: 30px;
+					box-sizing: border-box;
 				}
 				.container:hover {
 					background: var(--hover);
@@ -46,6 +52,23 @@ export default function Select({ id, label, value, onChange, children }) {
 				}
 				select:focus {
 					outline: none;
+				}
+				select {
+					-webkit-appearance: none;
+					-moz-appearance: none;
+					text-indent: 1px;
+					text-overflow: '';
+				}
+				svg {
+					height: 30px;
+					position: absolute;
+					top: 0;
+					right: 0;
+					stroke: white;
+					stroke-width: 1px;
+					box-sizing: border-box;
+					padding: 8px;
+					pointer-events: none;
 				}
 			`}</style>
 		</>

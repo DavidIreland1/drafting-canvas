@@ -7,11 +7,13 @@ import Structure from './structure/structure';
 import Properties from './properties/properties';
 
 import Settings from './settings';
+import getFonts from '../utils/fonts';
 
 export default function Sheet({ store, actions }) {
 	const router = useRouter();
 
 	const [picker, setPicker] = useState(null);
+	const [fonts, setFonts] = useState(null);
 
 	useEffect(() => {
 		const { page } = router.query;
@@ -28,6 +30,10 @@ export default function Sheet({ store, actions }) {
 			store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
 		});
 	}, [router.query.page]);
+
+	useEffect(() => {
+		getFonts().then(setFonts);
+	}, []);
 
 	// useEffect(() => {
 	// 	window.addEventListener('keydown', (event) => {
@@ -50,7 +56,7 @@ export default function Sheet({ store, actions }) {
 			<Toolbar store={store} actions={actions} />
 			<Structure store={store} actions={actions} />
 			<Canvas user_id={Settings.user_id} store={store} actions={actions} />
-			<Properties store={store} actions={actions} setPicker={setPicker} />
+			<Properties store={store} actions={actions} setPicker={setPicker} fonts={fonts} />
 
 			<style jsx>{`
 				#cols {

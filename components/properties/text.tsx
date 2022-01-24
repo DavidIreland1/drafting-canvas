@@ -1,23 +1,61 @@
+import { useState } from 'react';
 import DataList from './inputs/datalist';
-import Fonts from '../../utils/fonts';
 import Input from './inputs/input';
-import { useEffect, useRef } from 'react';
 import Select from './inputs/select';
 
-export default function Text({ selected, store, actions, width }) {
+async function importFont(fontFamily, variants = 'regular') {
+	const link = document.createElement('link');
+	link.setAttribute('rel', 'stylesheet');
+	link.setAttribute('type', 'text/css');
+	link.setAttribute('href', `https://fonts.googleapis.com/css?family=${encodeURIComponent(fontFamily)}:${variants}`);
+
+	document.head.appendChild(link);
+
+	await new Promise((resolve) => {
+		link.onload = () => resolve(0);
+	});
+}
+
+export default function Text({ selected, store, actions, width, fonts }) {
 	const selected_ids = selected.map((element) => element.id);
 
 	function updateText(event, alter = (value) => value) {
 		store.dispatch(actions.property({ selected_ids, props: { [event.target.id]: alter(event.target.value) } }));
 	}
 
+	async function updateFont(event) {
+		const font_family = event.target.value;
+		const font = fonts.find((font) => font.family === font_family);
+		if (!font) return;
+		setWeights(font.variants);
+
+		document.fonts.onloadingdone = (event) => {
+			console.log(event);
+			console.log('hello');
+			updateText({ target: { id: 'style', value: 'normal' } });
+			updateText({ target: { id: 'family', value: font_family } });
+		};
+
+		await importFont(font_family);
+
+		// Force font load by using it in a div
+		const div = document.createElement('div');
+		div.innerText = 'hello';
+		div.style.fontFamily = font_family;
+		div.style.height = '0';
+		document.body.append(div);
+		requestAnimationFrame(() => div.remove());
+
+		// setTimeout(() => {
+		// 	updateText({ target: { id: 'style', value: 'normal' } });
+		// 	updateText({ target: { id: 'family', value: font_family } });
+		// }, 400);
+		// importFont(font.files.regular);
+	}
+
+	const [weights, setWeights] = useState(['Lighter', 'Normal', 'Bold', 'Bolder']);
+
 	if (typeof selected[0].text !== 'string') return null;
-
-	// const textarea = useRef(null);
-
-	// useEffect(() => {
-	// 	updateTextarea(textarea.current);
-	// }, [textarea, width]);
 
 	return (
 		<div id="property-container">
@@ -25,24 +63,22 @@ export default function Text({ selected, store, actions, width }) {
 				<h4>TEXT</h4>
 			</div>
 			<div id="properties">
-				{/* <textarea ref={textarea} id="text" onChange={updateText} placeholder="Text..." value={selected[0].text === 'Text...' ? undefined : selected[0].text} onInput={(event) => updateTextarea(event.target)} /> */}
-
-				<DataList id="family" label="Font Family" value={selected[0].family} onChange={updateText}>
-					{Fonts.map((font, i) => (
-						<option key={i} value={font}></option>
+				<DataList id="family" label="Font Family" value={selected[0].family} onChange={updateFont}>
+					{fonts.map((font, i) => (
+						<option key={i} value={font.family} />
 					))}
 				</DataList>
+				<Select id="weight" label="" value={selected[0].weight} onChange={updateText}>
+					{weights.map((weight, i) => (
+						<option key={i} value={weight}>
+							{weight}
+						</option>
+					))}
+				</Select>
 
 				<Input id="size" label="Size" value={selected[0].size} onChange={(event) => updateText(event, (value) => Math.max(value, 0))} width={width} />
 
 				<Input id="line_height" label="Line Height" step={0.01} value={selected[0].line_height} onChange={(event) => updateText(event, (value) => Math.max(value, 0))} width={width} />
-
-				<Select id="weight" label="" value={selected[0].weight} onChange={updateText}>
-					<option value="lighter">Lighter</option>
-					<option value="normal">Normal</option>
-					<option value="bold">Bold</option>
-					<option value="bolder">Bolder</option>
-				</Select>
 
 				<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: '28px' }} onClick={(event) => updateText({ target: { id: 'justify', value: (event.target as SVGElement).id } })}>
 					<svg id="left" className={selected[0].justify === 'left' ? 'selected' : ''} viewBox="0 0 10 10">
@@ -153,9 +189,4 @@ export default function Text({ selected, store, actions, width }) {
 			`}</style>
 		</div>
 	);
-}
-
-function updateTextarea(target) {
-	target.style.height = '';
-	target.style.height = target.scrollHeight + 'px';
 }

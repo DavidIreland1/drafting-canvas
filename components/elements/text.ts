@@ -24,7 +24,7 @@ export default class Text extends Element {
 	}
 
 	static fill(element, context: CanvasRenderingContext2D, path) {
-		context.font = `${element.style} normal ${element.weight} ${Math.abs(element.size)}px ${element.family}`;
+		context.font = `${element.style} normal ${element.weight} ${Math.abs(element.size)}px ${element.family.toLowerCase()}`;
 
 		// Splitup text into many lines
 		const lines = breakText(element, context);
@@ -222,17 +222,17 @@ function breakText(element, context) {
 				)
 			)
 			.flat()
-		// Add line breaks between characters where overflowing
-		// .map((line) =>
-		// 	context.measureText(line).width > Math.abs(element.width)
-		// 		? breakLine(
-		// 				line.split('').map((character) => ({ value: character, width: context.measureText(character).width })),
-		// 				Math.abs(element.width),
-		// 				''
-		// 		  )
-		// 		: line
-		// )
-		// .flat()
+			// Add line breaks between characters where overflowing
+			.map((line) =>
+				context.measureText(line).width > Math.abs(element.width)
+					? breakLine(
+							line.split('').map((character) => ({ value: character, width: context.measureText(character).width })),
+							Math.abs(element.width),
+							''
+					  )
+					: line
+			)
+			.flat()
 	);
 }
 

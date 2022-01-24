@@ -1,5 +1,7 @@
 import { useRef } from 'react';
 
+const click_position = { x: 0, y: 0 };
+
 export default function Input({ id, label, step = 1, value, min = NaN, unit = '', onChange, width = undefined }) {
 	if (value === undefined) return null;
 
@@ -41,11 +43,21 @@ export default function Input({ id, label, step = 1, value, min = NaN, unit = ''
 		down_event.target.addEventListener('pointerup', end, { once: true });
 	};
 
+	function mouseDown(event) {
+		click_position.x = event.clientX;
+		click_position.y = event.clientY;
+	}
+	function mouseUp(event) {
+		if (event.clientX == click_position.x && event.clientY === click_position.y) {
+			event.target.select();
+		}
+	}
+
 	return (
 		<>
 			<div id={id} className="dimension">
 				<label onPointerDown={dragProperty}>{label}</label>
-				<input ref={input} type="number" step={step} value={value} min={min || undefined} onChange={updateValue} onClick={(event) => (event.target as any).select()} />
+				<input ref={input} type="number" step={step} value={value} min={min || undefined} onChange={updateValue} onMouseDown={mouseDown} onMouseUp={mouseUp} />
 			</div>
 
 			<style jsx>{`
