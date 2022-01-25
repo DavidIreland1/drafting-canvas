@@ -83,24 +83,30 @@ export default function Input({ id, label, step = 1, value, min = NaN, unit = ''
 					border: none;
 					font-weight: inherit;
 					font-family: inherit;
-					${width
-						? `
-						max-width: calc(${width} / 2 - 20px);
-						width: max(calc(${width} / 6), 5ch);
-						min-width: max(100%, 4ch);
-					`
-						: ''}
-
+					max-width: calc(${width} / 2 - 20px);
+					width: max(calc(${width} / 6), 5ch);
+					min-width: max(100%, 4ch);
 					color: var(--text-color);
 					font-size: 16px;
 					text-align: right;
+					-moz-appearance: textfield;
+				}
+				input:hover {
+					-moz-appearance: unset;
 				}
 				input:focus {
 					outline: none;
 				}
-
 				input::after {
 					content: '${unit}';
+				}
+				input::-webkit-inner-spin-button,
+				input::-webkit-outer-spin-button {
+					opacity: 0;
+				}
+				input:hover::-webkit-inner-spin-button,
+				input:hover::-webkit-outer-spin-button {
+					opacity: 1;
 				}
 			`}</style>
 		</>
