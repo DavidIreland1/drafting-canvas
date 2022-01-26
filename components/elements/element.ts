@@ -8,6 +8,7 @@ export default class Element {
 	static create(id, position, selected): Object {
 		return {
 			id: id,
+			editing: false,
 			selected: selected,
 			hover: false,
 			fill: [{ id: id + '2123', type: 'Solid', color: [0, 0, 0.8, 1], visible: true }],
@@ -159,6 +160,7 @@ export default class Element {
 	}
 
 	static insideBound(element, context: CanvasRenderingContext2D, cursor): boolean {
+		return false;
 		const bounds = this.bound(element);
 		const center = this.center(element);
 

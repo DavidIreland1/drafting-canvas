@@ -33,9 +33,9 @@ export default function Dimensions({ selected, store, actions, width }) {
 				<Input
 					id="rotation"
 					label={
-						<div id="rotation" style={{ fontSize: '30px', lineHeight: '12px', height: '100%' }}>
-							⊾
-						</div>
+						<svg viewBox="0 0 10 10">
+							<path d="M 2 2 L 2 8 L 8 8 M 2 4 A 3.5 3.5 0 0 1 6 8" />
+						</svg>
 					}
 					unit="°"
 					value={(selected[0].rotation * 57.29577951308232) % 360}
@@ -46,9 +46,9 @@ export default function Dimensions({ selected, store, actions, width }) {
 				<Input
 					id="radius"
 					label={
-						<div id="radius" style={{ fontSize: '24px', lineHeight: '10px', height: '100%' }}>
-							╭
-						</div>
+						<svg viewBox="0 0 10 10">
+							<path d="M 2 8 L 2 5 A 3 3 0 0 1 5 2 L 8 2 " />
+						</svg>
 					}
 					value={selected[0].radius}
 					onChange={updateDimension}
@@ -61,11 +61,19 @@ export default function Dimensions({ selected, store, actions, width }) {
 					grid-template-columns: auto auto;
 					gap: 8px calc(${width} / 20);
 					height: min-content;
-					width: fit-content;
 					width: 100%;
 					box-sizing: border-box;
 					padding: 0 10px;
 					overflow: hidden;
+				}
+				svg {
+					fill: none;
+					margin-top: 3px;
+					margin-bottom: -3px;
+					height: 20px;
+					width: 100%;
+					stroke: white;
+					stroke-width: 0.5px;
 				}
 			`}</style>
 		</div>

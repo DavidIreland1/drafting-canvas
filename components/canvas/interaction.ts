@@ -108,11 +108,11 @@ export function select(down_event, canvas, id, store, actions, active) {
 	if (cursor.mode === 'create') {
 		create(position, canvas, store, actions, view, cursor, points);
 	} else {
-		edit(down_event, position, canvas, store, actions, active, view, points);
+		moveOrResize(down_event, position, canvas, store, actions, active, view);
 	}
 }
 
-function edit(down_event, last_position, canvas, store, actions, active, view, points) {
+function moveOrResize(down_event, last_position, canvas, store, actions, active, view) {
 	let action = 'move';
 	let target = active.hovering[0];
 
@@ -154,7 +154,7 @@ function edit(down_event, last_position, canvas, store, actions, active, view, p
 	const release = (up_event) => {
 		if (down_event.clientX === up_event.clientX && down_event.clientY === up_event.clientY) {
 			if (was_selected) {
-				store.dispatch(actions.unselect({ id: target.id }));
+				// store.dispatch(actions.unselect({ id: target.id }));
 			}
 		}
 		down_event.target.removeEventListener('pointermove', move);

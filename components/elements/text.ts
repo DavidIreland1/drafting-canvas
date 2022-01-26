@@ -11,7 +11,7 @@ export default class Text extends Element {
 			text: '',
 			style: 'normal',
 			weight: 'normal',
-			family: 'arial',
+			family: 'Arial',
 			justify: 'left',
 			align: 'start',
 			size: 10,
@@ -23,9 +23,12 @@ export default class Text extends Element {
 		});
 	}
 
-	static fill(element, context: CanvasRenderingContext2D, path) {
+	static setFont(element, context: CanvasRenderingContext2D) {
 		context.font = `${element.style} normal ${element.weight} ${Math.abs(element.size)}px ${element.family.toLowerCase()}`;
+	}
 
+	static fill(element, context: CanvasRenderingContext2D, path) {
+		this.setFont(element, context);
 		// Splitup text into many lines
 		const lines = breakText(element, context);
 		const offsets = calculateOffsets(element, context, lines);
@@ -41,7 +44,7 @@ export default class Text extends Element {
 	}
 
 	static stroke(element, context: CanvasRenderingContext2D, path: Path2D) {
-		context.font = `${element.style} normal ${element.weight} ${Math.abs(element.size)}px ${element.family}`;
+		this.setFont(element, context);
 
 		// Splitup text into many lines
 		const lines = breakText(element, context);
@@ -61,6 +64,7 @@ export default class Text extends Element {
 	static effect(element, context: CanvasRenderingContext2D, path: Path2D, before, view) {
 		const lines = breakText(element, context);
 		const offsets = calculateOffsets(element, context, lines);
+		this.setFont(element, context);
 
 		element.effect
 			.filter((effect) => effect.visible)
@@ -208,10 +212,11 @@ function breakText(element, context) {
 	// Add placehoder Text...
 	if (element.text === '') return ['Text...'];
 
-	// console.log(JSON.stringify(element.text));
+	// Add space to create extra line for trailing new line character
+	const last_line = element.text.endsWith('\n') ? ' ' : '';
 
 	return (
-		element.text
+		(element.text + last_line)
 			.split('\n')
 			// Add line breaks between words where overflowing
 			.map((line) =>

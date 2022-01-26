@@ -98,6 +98,7 @@ export default function Effect({ selected, store, actions, setPicker, width }) {
 						display: grid;
 						grid-template-columns: auto auto;
 						padding: 0 10px;
+						grid-gap: 8px calc(max(20vw, 15px) / 20);
 					}
 				`}</style>
 			</div>

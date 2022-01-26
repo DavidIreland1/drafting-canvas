@@ -4,7 +4,7 @@ import { RootState } from '../../redux/store';
 import Colors from './../properties/colors';
 
 export default function TextLayer({ canvas, user_id, store, actions }) {
-	const selected = useSelector((state: RootState) => (state as any).present.elements.filter((element) => element.selected));
+	const editing = useSelector((state: RootState) => (state as any).present.elements.filter((element) => element.editing));
 	const view = useSelector((state: RootState) => (state as any).present.views.find((view) => view.id === user_id));
 
 	const container = useRef(null);
@@ -18,30 +18,41 @@ export default function TextLayer({ canvas, user_id, store, actions }) {
 		});
 	}, [container.current]);
 
-	if (selected.length === 0 || selected[0].type !== 'text' || typeof view === 'undefined') return null;
+	if (editing.length === 0 || editing[0].type !== 'text' || typeof view === 'undefined') return null;
 
-	const selected_ids = selected.map((element) => element.id);
+	const text = editing[0];
+
 	function updateText(event, alter = (value) => value) {
-		store.dispatch(actions.property({ selected_ids, props: { [event.target.id]: alter(event.target.value) } }));
+		store.dispatch(actions.property({ selected_ids: [text.id], props: { [event.target.id]: alter(event.target.value) } }));
 	}
 
 	const style = {
-		fontFamily: selected[0].family,
-		textAlign: selected[0].justify,
-		fontSize: Math.abs(selected[0].size) + 'px',
-		fontWeight: selected[0].weight,
-		fontStyle: selected[0].style,
-		lineHeight: selected[0].line_height,
-		color: Colors.hslaToString(Colors.hsbaToHsla(selected[0].fill[0].color)),
+		fontFamily: text.family,
+		textAlign: text.justify,
+		fontSize: Math.abs(text.size) + 'px',
+		fontWeight: text.weight,
+		fontStyle: text.style,
+		lineHeight: text.line_height,
+		color: Colors.hslaToString(Colors.hsbaToHsla(text.fill[0].color)),
+	};
+
+	const transformed = {
+		height: Math.abs(text.height) + 'px',
+		width: Math.abs(text.width) + 'px',
+		transform: `translate(${(text.x * view.scale + view.x) / window.devicePixelRatio}px, ${(text.y * view.scale + view.y) / window.devicePixelRatio}px) scale(${view.scale / window.devicePixelRatio})`,
+	};
+
+	const rotated = {
+		transform: `rotate(${text.rotation}rad)`,
 	};
 
 	return (
 		<>
 			<div id="container" ref={container}>
 				<div id="relative">
-					<div id="transformed">
-						<div id="rotated">
-							<Editable id="text" element_id={selected[0].id} placeholder="" style={style} align={selected[0].align} value={selected[0].text === 'Text...' ? null : selected[0].text} onChange={updateText} />
+					<div id="transformed" style={transformed}>
+						<div id="rotated" style={rotated}>
+							<Editable id="text" element_id={text.id} style={style} align={text.align} value={text.text === 'Text...' ? null : text.text} onChange={updateText} />
 						</div>
 					</div>
 				</div>
@@ -58,19 +69,16 @@ export default function TextLayer({ canvas, user_id, store, actions }) {
 					height: 100%;
 					width: 100%;
 					position: relative;
+					overflow: hidden;
 				}
 				#transformed {
 					position: absolute;
-					height: ${Math.abs(selected[0].height)}px;
-					width: ${Math.abs(selected[0].width)}px;
 					transform-origin: 0 0;
-					transform: translate(${(selected[0].x * view.scale + view.x) / window.devicePixelRatio}px, ${(selected[0].y * view.scale + view.y) / window.devicePixelRatio}px) scale(${view.scale / window.devicePixelRatio});
 				}
 				#rotated {
 					transform-origin: center center;
 					height: 100%;
 					width: 100%;
-					transform: rotate(${selected[0].rotation}rad);
 					pointer-events: all;
 				}
 			`}</style>
@@ -78,7 +86,7 @@ export default function TextLayer({ canvas, user_id, store, actions }) {
 	);
 }
 
-function Editable({ id, element_id, value, style, align, placeholder, onChange }) {
+function Editable({ id, element_id, value, style, align, placeholder = '', onChange }) {
 	const div = useRef(null);
 
 	function emitChange() {
@@ -89,6 +97,11 @@ function Editable({ id, element_id, value, style, align, placeholder, onChange }
 			},
 		});
 	}
+
+	useEffect(() => {
+		// div.current.focus();
+		window.getSelection().selectAllChildren(div.current);
+	}, [div.current]);
 
 	return (
 		<>

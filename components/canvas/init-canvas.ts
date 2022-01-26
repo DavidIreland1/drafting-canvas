@@ -1,7 +1,7 @@
 import { onWheel, hover, select } from './interaction';
 import { shortCuts } from './short-cuts';
 
-export function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, active, mouse) {
+export function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, active) {
 	canvas.onwheel = (event: WheelEvent) => {
 		event.preventDefault();
 		onWheel(event, canvas, user_id, store, actions);
@@ -28,19 +28,23 @@ export function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, a
 		}
 	};
 
-	canvas.ondblclick = () => {
-		if (active.hovering.length) return;
-
-		const view = store.getState().present.views.find((view) => view.id === user_id);
-
-		store.dispatch(
-			actions.view({
-				user_id: user_id,
-				delta_x: canvas.width / 2 - view.x,
-				delta_y: canvas.height / 2 - view.y,
-				delta_scale: 1 - view.scale,
-			})
-		);
+	canvas.ondblclick = (event) => {
+		// console.log('double click');
+		if (active.hovering.length) {
+			console.log(active.hovering);
+			store.dispatch(actions.edit({ id: active.hovering[0].id }));
+		} else {
+			// Reset view
+			const view = store.getState().present.views.find((view) => view.id === user_id);
+			store.dispatch(
+				actions.view({
+					user_id: user_id,
+					delta_x: canvas.width / 2 - view.x,
+					delta_y: canvas.height / 2 - view.y,
+					delta_scale: 1 - view.scale,
+				})
+			);
+		}
 	};
 
 	canvas.onpointermove = (event) => {
@@ -57,14 +61,15 @@ export function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, a
 	};
 
 	canvas.onpointerdown = (event) => {
-		mouse.pressed = true;
 		if (event.button !== 0) return;
+		// console.log('single click');
+		if (active.selected.length) store.dispatch(actions.cursor({ user_id: user_id, pressed: true }));
 		event.preventDefault();
 		(event.target as any).setPointerCapture(event.pointerId);
 		select(event, canvas, user_id, store, actions, active);
 	};
 
 	canvas.onpointerup = () => {
-		mouse.pressed = false;
+		store.dispatch(actions.cursor({ user_id: user_id, pressed: false }));
 	};
 }

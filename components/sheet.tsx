@@ -63,7 +63,6 @@ export default function Sheet({ store, actions }) {
 					position: relative;
 					display: grid;
 					grid-auto-flow: column;
-					grid-template-columns: min-content auto;
 					height: calc(100vh - var(--nav-height));
 					overflow: hidden;
 				}

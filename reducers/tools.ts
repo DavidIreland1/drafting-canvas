@@ -1,7 +1,5 @@
 import { flatten } from '../components/elements/elements';
 
-
-
 const tools = {
 	hoverOnly: (state, props) => {
 		flatten(state.elements).forEach((element) => (element.hover = element.id === props.payload.id));
@@ -15,16 +13,25 @@ const tools = {
 	},
 	unselect: (state, props) => {
 		const element = flatten(state.elements).find((element) => element.id === props.payload.id);
-		if (element) element.selected = false;
+		if (element) {
+			element.selected = false;
+			element.editing = false;
+		}
 	},
 	selectAll: (state) => {
 		flatten(state.elements).forEach((element) => (element.selected = true));
 	},
 	unselectAll: (state) => {
-		flatten(state.elements).forEach((element) => (element.selected = false));
+		flatten(state.elements).forEach((element) => {
+			element.selected = false;
+			element.editing = false;
+		});
+	},
+	edit: (state, props) => {
+		const element = flatten(state.elements).find((element) => element.id === props.payload.id);
+		if (element) element.editing = true;
 	},
 };
-
 
 export default tools;
 

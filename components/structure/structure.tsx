@@ -65,12 +65,11 @@ export default function Structure({ store, actions }) {
 					position: relative;
 					width: ${width};
 					background: var(--panel);
-					position: absolute;
 					display: grid;
 					height: 100%;
 					overflow-y: auto;
 					overflow-x: hidden;
-					left: var(--nav-height);
+					/*left: var(--nav-height);*/
 					border-left: 1px solid var(--selected);
 					z-index: 2;
 				}

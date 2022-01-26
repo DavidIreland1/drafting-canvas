@@ -98,7 +98,7 @@ export default function Properties({ store, actions, setPicker, fonts }) {
 					color: var(--text-color);
 					width: ${width};
 					background: var(--panel);
-					position: absolute;
+					position: relative;
 					display: grid;
 					height: 100%;
 					right: 0;
