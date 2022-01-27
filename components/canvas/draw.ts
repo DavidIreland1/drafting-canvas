@@ -74,9 +74,7 @@ function boundScreen(context, view) {
 	};
 }
 
-function drawScroll(context, elements, user_view) {
-	context.fillStyle = '#40404080';
-
+function drawScroll(context: CanvasRenderingContext2D, elements, user_view) {
 	const bounds = elements.map((element) => Elements[element.type].positiveBound(element));
 	const min_x = Math.min(...bounds.map((bound) => bound.x));
 	const max_x = Math.max(...bounds.map((bound) => bound.x + bound.width));
@@ -95,6 +93,10 @@ function drawScroll(context, elements, user_view) {
 	drawYBar(context, screen, min_y, max_y, bar_width, side_space, end_space, speed, min_length);
 	drawXBar(context, screen, min_x, max_x, bar_width, side_space, end_space, speed, min_length);
 	context.closePath();
+	context.fillStyle = '#4448';
+	context.strokeStyle = '#FFF8';
+	context.lineWidth = 2;
+	context.stroke();
 	context.fill();
 }
 

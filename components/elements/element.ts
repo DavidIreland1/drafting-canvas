@@ -159,6 +159,7 @@ export default class Element {
 		return action ? { action: action, element: element } : undefined;
 	}
 
+	// Maybe 
 	static insideBound(element, context: CanvasRenderingContext2D, cursor): boolean {
 		return false;
 		const bounds = this.bound(element);
