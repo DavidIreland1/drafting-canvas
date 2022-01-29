@@ -24,8 +24,6 @@ export default {
 
 	addStroke: (state, props) => {
 		const { selected_ids } = props.payload;
-
-		console.log(selected_ids);
 		selected(state.elements, selected_ids).forEach((element) => {
 			element.stroke.push(props.payload.props);
 		});

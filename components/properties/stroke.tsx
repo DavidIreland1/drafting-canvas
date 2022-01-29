@@ -13,7 +13,7 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 	const selected_ids = selected.map((element) => element.id);
 
 	function addStroke() {
-		store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 2, color: [0.5, 0.5, 1, 1], visible: true } }));
+		store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 1, color: [0.5, 0.5, 1, 1], visible: true } }));
 	}
 
 	function removeStroke(stroke) {
@@ -72,7 +72,7 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 					<Minus onClick={() => removeStroke(stroke)} />
 				</div>
 				<div className="grid">
-					<Input id="width" label="W" value={stroke.width} min={0} step={0.1} onChange={(event) => changeWidth(event, stroke)} width={width}></Input>
+					<Input id="width" label="W" value={stroke.width} min={0} step={0.01} onChange={(event) => changeWidth(event, stroke)} width={width}></Input>
 					<Select id="trpe" label="" value={stroke.type} onChange={(event) => changeType(event, stroke)}>
 						<option value="Inside">Inside</option>
 						<option value="Center">Center</option>

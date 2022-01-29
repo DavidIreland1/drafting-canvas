@@ -17,7 +17,7 @@ export default function Page({ store, actions }): JSX.Element {
 
 			<style jsx>{`
 				main {
-					height: 100vh;
+					height: calc(100vh - var(--nav-height));
 					display: grid;
 					grid-template-rows: min-content;
 				}

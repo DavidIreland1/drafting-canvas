@@ -13,7 +13,7 @@ export default function TextLayer({ canvas, user_id, store, actions }) {
 		if (container.current === null) return;
 		container.current.addEventListener('wheel', (event) => {
 			event.preventDefault();
-			// Clone event through to the canvas
+			// Clone the wheel event through to the canvas
 			canvas.current.dispatchEvent(new event.constructor(event.type, event));
 		});
 	}, [container.current]);

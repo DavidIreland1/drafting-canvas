@@ -5,21 +5,11 @@ import { initCanvas } from './init-canvas';
 
 import TextLayer from './text-layer';
 
-const Canvas = ({ user_id, store, actions, ...rest }) => {
+// This shading pollyfill for safari and firefox doesn't really work
+// import('./polyfill');
+
+export default function Canvas({ user_id, store, actions, ...rest }) {
 	const canvas_ref = useRef(null);
-
-	const state = store.getState().present;
-
-	let cursors = state.cursors;
-	let elements = state.elements;
-	let user_view = state.views.find((view) => view.id === user_id);
-	let user_cursor = cursors.find((cursor) => cursor.id === user_id);
-
-	const active = {
-		hovering: [],
-		selected: [],
-		altering: [],
-	};
 
 	useEffect(() => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
@@ -29,49 +19,31 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 		(window as any).canvas = canvas;
 		(window as any).context = context;
 
-		resizeCanvas(canvas);
-		initCanvas(canvas, user_id, store, actions, active);
+		const active = {
+			hovering: [],
+			selected: [],
+			altering: [],
+		};
 
-		canvas.addEventListener('resize', () => console.log('hello'));
+		initCanvas(canvas, user_id, store, actions, active);
 
 		store.subscribe(() => {
 			const state = store.getState().present;
 
-			user_view = state.views.find((view) => view.id === user_id);
-			user_cursor = state.cursors.find((cursor) => cursor.id === user_id);
+			const user_view = state.views.find((view) => view.id === user_id);
+			const user_cursor = state.cursors.find((cursor) => cursor.id === user_id);
 
 			if (user_view && user_view.centered === false) store.dispatch(actions.centerView({ user_id: user_id, x: canvas.width / 2, y: canvas.height / 2 }));
 
-			elements = state.elements;
-			cursors = state.cursors;
+			const elements = state.elements;
+			const cursors = state.cursors;
 			draw(context, elements, cursors, active, user_id, user_view, user_cursor);
 		});
 
-		let last_x = canvas.getBoundingClientRect().left;
-
-		const resize_observer = new ResizeObserver((entries) => {
-			const { width, height } = entries[0].contentRect;
-
-			if (canvas.width !== width || canvas.height !== height) {
-				(window as any).devicePixelRatio = 2; // This should not be needed
-				const ratio = window.devicePixelRatio;
-				canvas.width = width * ratio;
-				// canvas.height = height * ratio;
-			}
-
-			const delta_x = last_x - canvas.getBoundingClientRect().left;
-			last_x -= delta_x;
-			store.dispatch(
-				actions.view({
-					user_id: user_id,
-					delta_x: delta_x * 2,
-				})
-			);
-		});
-		resize_observer.observe(canvas_ref.current);
+		const resize_observer = observeResize(canvas, store, actions, user_id);
 
 		return () => {
-			resize_observer.unobserve(canvas_ref.current);
+			resize_observer.disconnect();
 		};
 	}, [canvas_ref.current]);
 
@@ -83,11 +55,14 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 	const cursor = `url("data:image/svg+xml,${encodeURIComponent(svg)}") 0 0, auto;`;
 
 	return (
-		<div>
+		<div id="container">
 			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} actions={actions} />
 			<canvas ref={canvas_ref} {...rest} tabIndex={1} />
 
 			<style jsx>{`
+				#container {
+					position: relative;
+				}
 				canvas {
 					width: 100%;
 					height: 100%;
@@ -99,20 +74,36 @@ const Canvas = ({ user_id, store, actions, ...rest }) => {
 			`}</style>
 		</div>
 	);
-};
+}
 
-export default Canvas;
+function observeResize(canvas, store, actions, user_id) {
+	let last_x = canvas.getBoundingClientRect().left;
+	let observer_started = false;
 
-export function resizeCanvas(canvas): boolean {
-	const { width, height } = canvas.getBoundingClientRect();
+	const resize_observer = new ResizeObserver((entries) => {
+		const { width, height } = entries[0].contentRect;
 
-	if (canvas.width !== width || canvas.height !== height) {
-		(window as any).devicePixelRatio = 2; // This should not be needed
-		const ratio = window.devicePixelRatio;
-		canvas.width = width * ratio;
-		canvas.height = height * ratio * 0.9;
-		return true;
-	}
+		if (observer_started) {
+			observer_started = false;
+			return;
+		}
+		observer_started = true;
 
-	return false;
+		if (canvas.width === width && canvas.height === height) return;
+
+		canvas.width = width * window.devicePixelRatio;
+		canvas.height = height * window.devicePixelRatio;
+
+		const delta_x = last_x - canvas.getBoundingClientRect().left;
+		last_x -= delta_x;
+		store.dispatch(
+			actions.view({
+				user_id: user_id,
+				delta_x: delta_x * 2,
+			})
+		);
+	});
+	resize_observer.observe(canvas);
+
+	return resize_observer;
 }

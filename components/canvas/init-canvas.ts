@@ -29,9 +29,7 @@ export function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, a
 	};
 
 	canvas.ondblclick = (event) => {
-		// console.log('double click');
 		if (active.hovering.length) {
-			console.log(active.hovering);
 			store.dispatch(actions.edit({ id: active.hovering[0].id }));
 		} else {
 			// Reset view

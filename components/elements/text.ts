@@ -54,10 +54,12 @@ export default class Text extends Element {
 			.filter((stroke) => stroke.visible)
 			.forEach((stroke) => {
 				if (stroke.width === 0) return;
+
+				console.log(stroke.color);
 				context.lineWidth = stroke.width;
 				context.strokeStyle = Colors.hslaToString(Colors.hsbaToHsla(stroke.color));
 				// Inside, Center and Outsize
-				lines.forEach((line, i) => context.fillText(line, offsets[i].x, offsets[i].y));
+				lines.forEach((line, i) => context.strokeText(line, offsets[i].x, offsets[i].y));
 			});
 	}
 
@@ -131,8 +133,8 @@ export default class Text extends Element {
 		context.translate(center.x, center.y);
 		context.rotate(text.rotation);
 		this.effect(text, context, path, true, view);
-		this.fill(text, context, path);
 		this.stroke(text, context, path);
+		this.fill(text, context, path);
 
 		const hover = context.isPointInPath(path, cursor.x, cursor.y);
 

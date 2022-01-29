@@ -51,7 +51,7 @@ export default function Sheet({ store, actions }) {
 	// });
 
 	return (
-		<div id="cols">
+		<div id="sheet">
 			{picker}
 			<Toolbar store={store} actions={actions} />
 			<Structure store={store} actions={actions} />
@@ -59,7 +59,7 @@ export default function Sheet({ store, actions }) {
 			<Properties store={store} actions={actions} setPicker={setPicker} fonts={fonts} />
 
 			<style jsx>{`
-				#cols {
+				#sheet {
 					position: relative;
 					display: grid;
 					grid-auto-flow: column;
