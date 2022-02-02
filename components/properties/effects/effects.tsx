@@ -1,5 +1,5 @@
 import Picker from '../../picker';
-import Elements from './../../elements/elements';
+import Elements, { flatten } from './../../elements/elements';
 import { generateID } from './../../../utils/utils';
 import Colors from './../colors';
 import Eye from './../../icons/eye';
@@ -43,8 +43,15 @@ export default function Effect({ selected, store, actions, setPicker, width }) {
 		const setProperty = (effect) => {
 			store.dispatch(actions.setEffect({ selected_ids, props: effect }));
 		};
+		const selector = (state) => {
+			return flatten(state.present.elements)
+				.filter((element) => element.type !== 'group' && element.selected)
+				.map((element) => element.effect)
+				.flat()
+				.find((prop) => prop.id === effect.id);
+		};
 		setPicker(
-			<Picker setProperty={setProperty} prop_type="effect" prop_id={effect.id} event={event} setPicker={setPicker}>
+			<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
 				Effect
 			</Picker>
 		);

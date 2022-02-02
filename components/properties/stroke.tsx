@@ -36,7 +36,7 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 		const selector = (state) => {
 			return flatten(state.present.elements)
 				.filter((element) => element.type !== 'group' && element.selected)
-				.map((element) => element['stroke'])
+				.map((element) => element.stroke)
 				.flat()
 				.find((prop) => prop.id === stroke.id);
 		};

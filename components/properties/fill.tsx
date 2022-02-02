@@ -34,7 +34,7 @@ export default function Fill({ selected, store, actions, setPicker }) {
 		const selector = (state) => {
 			return flatten(state.present.elements)
 				.filter((element) => element.type !== 'group' && element.selected)
-				.map((element) => element['fill'])
+				.map((element) => element.fill)
 				.flat()
 				.find((prop) => prop.id === fill.id);
 		};
