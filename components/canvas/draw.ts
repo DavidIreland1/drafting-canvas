@@ -16,7 +16,7 @@ export default function draw(context: CanvasRenderingContext2D, store, actions, 
 
 	if (user_view.centered === false) store.dispatch(actions.centerView({ user_id: user_id, x: context.canvas.width / 2, y: context.canvas.height / 2 }));
 
-	// context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+	context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 	context.fillStyle = Colors.hslaToString(Colors.hsbaToHsla(state.page.color));
 	context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 

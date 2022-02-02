@@ -48,7 +48,7 @@ export default function Canvas({ user_id, store, actions, ...rest }) {
 	return (
 		<div id="container">
 			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} actions={actions} />
-			<canvas ref={canvas_ref} {...rest} tabIndex={1} />
+			<canvas className="checkers" ref={canvas_ref} {...rest} tabIndex={1} />
 
 			<style jsx>{`
 				#container {
@@ -61,6 +61,17 @@ export default function Canvas({ user_id, store, actions, ...rest }) {
 					cursor: none;
 					outline: none;
 					cursor: ${cursor};
+					--checker-size: 8px;
+				}
+				.checkers {
+					--checker-color-1: white;
+					--checker-color-2: lightgrey;
+					--checker-size: 8px;
+					--checker-gradient: linear-gradient(45deg, var(--checker-color-1) 25%, transparent 0%, transparent 75%, var(--checker-color-1) 75%);
+					background-color: var(--checker-color-2);
+					background-image: var(--checker-gradient), var(--checker-gradient);
+					background-position: 0 0, var(--checker-size) var(--checker-size);
+					background-size: calc(var(--checker-size) * 2) calc(var(--checker-size) * 2);
 				}
 			`}</style>
 		</div>
