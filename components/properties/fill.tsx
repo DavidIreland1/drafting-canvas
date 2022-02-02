@@ -1,5 +1,5 @@
 import Picker from '../picker';
-import Elements from '../elements/elements';
+import Elements, { flatten } from '../elements/elements';
 import { generateID } from '../../utils/utils';
 import Colors from './colors';
 import Eye from '../icons/eye';
@@ -30,8 +30,16 @@ export default function Fill({ selected, store, actions, setPicker }) {
 		function setType(event) {
 			setProperty({ ...fill, type: event.target.value });
 		}
+
+		const selector = (state) => {
+			return flatten(state.present.elements)
+				.filter((element) => element.type !== 'group' && element.selected)
+				.map((element) => element['fill'])
+				.flat()
+				.find((prop) => prop.id === fill.id);
+		};
 		setPicker(
-			<Picker setProperty={setProperty} prop_type="fill" prop_id={fill.id} event={event} setPicker={setPicker}>
+			<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
 				<Select id="type" label="" value={fill.type} onChange={setType}>
 					<option id="Solid">Solid</option>
 					<option id="Image">Image</option>

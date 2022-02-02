@@ -28,16 +28,7 @@ export default function Canvas({ user_id, store, actions, ...rest }) {
 		initCanvas(canvas, user_id, store, actions, active);
 
 		store.subscribe(() => {
-			const state = store.getState().present;
-
-			const user_view = state.views.find((view) => view.id === user_id);
-			const user_cursor = state.cursors.find((cursor) => cursor.id === user_id);
-
-			if (user_view && user_view.centered === false) store.dispatch(actions.centerView({ user_id: user_id, x: canvas.width / 2, y: canvas.height / 2 }));
-
-			const elements = state.elements;
-			const cursors = state.cursors;
-			draw(context, elements, cursors, active, user_id, user_view, user_cursor);
+			draw(context, store, actions, active, user_id);
 		});
 
 		const resize_observer = observeResize(canvas, store, actions, user_id);

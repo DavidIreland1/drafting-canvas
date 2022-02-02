@@ -3,21 +3,29 @@ import Cursor from '../cursor/cursor';
 import Grid from './grid';
 import drawPoints from './points';
 import Settings from './../settings';
+import Colors from './../properties/colors';
 
 const { line_width, box_size, highlight } = Settings;
 
-export default function draw(context: CanvasRenderingContext2D, elements, cursors, active, user_id, user_view, user_cursor) {
+export default function draw(context: CanvasRenderingContext2D, store, actions, active, user_id) {
+	const state = store.getState().present;
+
+	const user_view = state.views.find((view) => view.id === user_id);
+	const user_cursor = state.cursors.find((cursor) => cursor.id === user_id);
 	if (!user_view || !user_cursor) return;
 
-	// requestAnimationFrame(() => {
-	context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+	if (user_view.centered === false) store.dispatch(actions.centerView({ user_id: user_id, x: context.canvas.width / 2, y: context.canvas.height / 2 }));
+
+	// context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+	context.fillStyle = Colors.hslaToString(Colors.hsbaToHsla(state.page.color));
+	context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 
 	context.translate(user_view.x, user_view.y);
 	context.scale(user_view.scale, user_view.scale);
 
 	const screen = boundScreen(context, user_view);
 
-	const on_screen = elements.filter((element) => element.visible).filter((element) => Elements[element.type].onScreen(element, screen));
+	const on_screen = state.elements.filter((element) => element.visible).filter((element) => Elements[element.type].onScreen(element, screen));
 
 	const line = line_width / user_view.scale;
 	const box = box_size / user_view.scale;
@@ -46,16 +54,15 @@ export default function draw(context: CanvasRenderingContext2D, elements, cursor
 
 	if (user_cursor.pressed) drawPoints(context, on_screen, active.selected, user_view);
 
-	cursors
+	state.cursors
 		.filter((cursor) => cursor.visible)
 		.sort((cursor) => (cursor.id !== user_id ? -1 : 1))
 		.forEach((cursor) => Cursor.draw(cursor, context, user_view));
 
 	context.resetTransform();
-	drawScroll(context, elements, user_view);
+	drawScroll(context, state.elements, user_view);
 
 	if (Settings.grid_enabled) Grid.draw(context, user_view);
-	// });
 }
 
 function transformPoint(point, transform) {

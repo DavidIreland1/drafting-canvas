@@ -78,4 +78,7 @@ export default {
 			if (selected_ids.includes(element.id)) elements.splice(i, 1);
 		});
 	},
+	setBackground: (state, props) => {
+		state.page.color = props.payload.color;
+	},
 };

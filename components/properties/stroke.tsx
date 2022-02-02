@@ -1,5 +1,5 @@
 import Picker from '../picker';
-import Elements from '../elements/elements';
+import Elements, { flatten } from '../elements/elements';
 import { generateID } from '../../utils/utils';
 import Colors from './colors';
 import Input from './inputs/input';
@@ -32,8 +32,16 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 		function setType(event) {
 			setProperty({ ...stroke, type: event.target.value });
 		}
+
+		const selector = (state) => {
+			return flatten(state.present.elements)
+				.filter((element) => element.type !== 'group' && element.selected)
+				.map((element) => element['stroke'])
+				.flat()
+				.find((prop) => prop.id === stroke.id);
+		};
 		setPicker(
-			<Picker setProperty={setProperty} prop_type="stroke" prop_id={stroke.id} event={event} setPicker={setPicker}>
+			<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
 				<Select id="type" label="" value={stroke.type} onChange={setType}>
 					<option id="Inner">Inner</option>
 					<option id="Center">Center</option>
@@ -72,7 +80,7 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 					<Minus onClick={() => removeStroke(stroke)} />
 				</div>
 				<div className="grid">
-					<Input id="width" label="W" value={stroke.width} min={0} step={0.01} onChange={(event) => changeWidth(event, stroke)} width={width}></Input>
+					<Input id="width" label="W" value={stroke.width} min={0} step={0.1} onChange={(event) => changeWidth(event, stroke)} width={width}></Input>
 					<Select id="trpe" label="" value={stroke.type} onChange={(event) => changeType(event, stroke)}>
 						<option value="Inside">Inside</option>
 						<option value="Center">Center</option>

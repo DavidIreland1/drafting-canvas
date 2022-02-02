@@ -1,11 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Cross from './icons/cross';
 import { clamp } from '../utils/utils';
 import { useSelector } from 'react-redux';
-import { flatten } from './elements/elements';
 
-export default function Picker({ setProperty, prop_type, prop_id, event, setPicker, children }) {
+export default function Picker({ setProperty, selector, event, setPicker, children }) {
 	const [picker_position, setPickerPosition] = useState({ x: event.clientX - 350, y: event.clientY - 80 });
+
+	const [isVisible, setIsVisible] = useState(true);
+	const ref = useRef(null);
+
+	const handleClickOutside = (event) => {
+		if (ref.current && !ref.current.contains(event.target)) setIsVisible(false);
+	};
+
+	useEffect(() => {
+		document.addEventListener('click', handleClickOutside, true);
+		return () => document.removeEventListener('click', handleClickOutside, true);
+	});
+
+	const property = useSelector(selector);
+
+	if (!isVisible || typeof property === 'undefined') {
+		// Kinda werid
+		setTimeout(() => setPicker(null), 10);
+		return null;
+	}
+
 	const dragPicker = (down_event) => {
 		if (down_event.target.id !== 'container' && down_event.target.id !== 'header' && down_event.target.id !== 'name') return;
 		down_event.preventDefault();
@@ -24,21 +44,6 @@ export default function Picker({ setProperty, prop_type, prop_id, event, setPick
 		);
 	};
 
-	const property = useSelector((state) => {
-		return flatten((state as any).present.elements)
-			.filter((element) => element.selected)
-			.filter((element) => element.type !== 'group')
-			.map((element) => element[prop_type])
-			.flat()
-			.find((prop) => prop.id === prop_id);
-	});
-
-	if (typeof property === 'undefined') {
-		// Kinda werid
-		setTimeout(() => setPicker(null), 10);
-		return null;
-	}
-
 	const drag = (down_event, id, callback) => {
 		down_event.preventDefault();
 		down_event.target.setPointerCapture(down_event.pointerId);
@@ -56,7 +61,7 @@ export default function Picker({ setProperty, prop_type, prop_id, event, setPick
 		);
 	};
 
-	const hsba = property.color;
+	const hsba = (property as any).color;
 
 	const dragFade = (down_event) => {
 		drag(down_event, 'fade', (move_event, bounds) => {
@@ -89,11 +94,11 @@ export default function Picker({ setProperty, prop_type, prop_id, event, setPick
 		const b = 1 - brightness / fade_width;
 		const a = aplha / slider_width;
 
-		setProperty({ ...property, color: [h, s, b, a] });
+		setProperty({ ...(property as any), color: [h, s, b, a] });
 	}
 
 	return (
-		<div id="container" onPointerDown={dragPicker}>
+		<div id="container" ref={ref} onPointerDown={dragPicker}>
 			<div id="header">
 				{children}
 				<Cross onClick={() => setPicker(null)} />
