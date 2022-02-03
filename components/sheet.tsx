@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import useIsVisible from '../hooks/use-is-visible';
 
-import Canvas from './canvas/canvas';
+import Canvas from './rust/canvas';
+// import Canvas from './canvas/canvas';
 import Toolbar from './toolbar';
 import Structure from './structure/structure';
 import Properties from './properties/properties';

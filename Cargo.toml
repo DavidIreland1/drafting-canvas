@@ -1,0 +1,25 @@
+[package]
+name = "drafting-canvas"
+version = "0.1.0"
+authors = ["David Ireland"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = { version = "0.2.79", features = ["serde-serialize"] }
+serde_json = "1.0.32"
+serde_derive = "1.0.80"
+serde = "1.0.80"
+
+
+[dependencies.web-sys]
+version = "0.3.4"
+features = [
+  'CanvasRenderingContext2d',
+  'Document',
+  'Element',
+  'HtmlCanvasElement',
+  'Window',
+]
