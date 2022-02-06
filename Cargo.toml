@@ -1,8 +1,11 @@
 [package]
-name = "drafting-canvas"
+name = "index"
 version = "0.1.0"
 authors = ["David Ireland"]
 edition = "2018"
+description = "2D canvas rendering engine for Drafting Canvas"
+repository = "https://github.com/DavidIreland1/drafting-canvas"
+license = "mit"
 
 [lib]
 crate-type = ["cdylib"]
@@ -12,7 +15,6 @@ wasm-bindgen = { version = "0.2.79", features = ["serde-serialize"] }
 serde_json = "1.0.32"
 serde_derive = "1.0.80"
 serde = "1.0.80"
-
 
 [dependencies.web-sys]
 version = "0.3.4"

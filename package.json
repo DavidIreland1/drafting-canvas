@@ -12,6 +12,7 @@
 	},
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.6.0",
+		"@wasm-tool/wasm-pack-plugin": "^1.6.0",
 		"aws-sdk": "^2.1046.0",
 		"bufferutil": "^4.0.3",
 		"fs": "0.0.1-security",
@@ -29,7 +30,6 @@
 		"ws": "^1.1.5"
 	},
 	"devDependencies": {
-		"@wasm-tool/wasm-pack-plugin": "1.5.0",
 		"@types/react": "^17.0.13",
 		"ts-loader": "^9.2.3",
 		"ts-node": "^10.1.0",

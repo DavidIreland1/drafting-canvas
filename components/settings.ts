@@ -6,7 +6,7 @@ import { generateID } from '../utils/utils';
 
 const id = generateID();
 
-console.log(Adjective + ' ' + Animal, id);
+// console.log(Adjective + ' ' + Animal, id);
 
 export default {
 	user_id: id,

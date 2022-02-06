@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 
 import TextLayer from './../canvas/text-layer';
 import { initCanvas } from './../canvas/init-canvas';
+import Colors from './../properties/colors';
 
 let draw;
 import('./../../pkg').then((module) => (draw = module.draw));
@@ -31,11 +32,13 @@ export default function Canvas({ user_id, store, actions, ...rest }) {
 		store.subscribe(() => {
 			if (draw === undefined) return;
 			const state = store.getState().present;
-			// const elements = state.elements.map((element) => ({ ...element, _type: element.type }));
+			const elements = state.elements.map((element) => ({ ...element, _type: element.type, fill: element.fill.map((fill) => ({ ...fill, _type: fill.type, color: fill.color.map((val) => Math.floor(255 * val)) })) }));
 
-			let elements = [{ id: 'rect_123', label: 'Rectangle', _type: 'rectangle', x: -100, y: 0, rotation: 0, width: 50, height: 80, radius: 0 }];
+			// let elements = [{ id: 'rect_123', label: 'Rectangle', _type: 'rectangle', x: -100, y: 0, rotation: 0, width: 50, height: 80, radius: 0 }];
 			const views = state.views;
 			const cursors = state.cursors.map((cursor) => ({ ...cursor, _type: cursor.type }));
+
+			// console.log(views.length ? views[0].scale : '');
 			const result = draw(elements, views, cursors, user_id);
 			console.log(result);
 		});
