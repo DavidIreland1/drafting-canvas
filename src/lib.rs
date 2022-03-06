@@ -1,17 +1,11 @@
-use std::f64;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
+
 mod colors;
 
 #[macro_use]
 extern crate serde_derive;
 extern crate wasm_bindgen;
-
-#[wasm_bindgen]
-extern "C" {
-	#[wasm_bindgen(js_namespace = console)]
-	fn log(s: &str);
-}
 
 #[derive(Serialize, Deserialize)]
 struct Fill {
@@ -51,7 +45,7 @@ struct Cursor {
 }
 
 #[wasm_bindgen]
-pub fn draw(elements: &JsValue, views: &JsValue, cursors: &JsValue, user_id: &str) -> f64 {
+pub fn draw(elements: &JsValue, views: &JsValue, cursors: &JsValue, user_id: &str) -> String {
 	let document = web_sys::window().unwrap().document().unwrap();
 	let canvas = document.get_element_by_id("canvas").unwrap();
 	let canvas: web_sys::HtmlCanvasElement = canvas
@@ -68,7 +62,7 @@ pub fn draw(elements: &JsValue, views: &JsValue, cursors: &JsValue, user_id: &st
 
 	let elements: Vec<Element> = elements.into_serde().unwrap();
 	let views: Vec<View> = views.into_serde().unwrap();
-	// let cursors: Vec<Cursor> = cursors.into_serde().unwrap();
+	let cursors: Vec<Cursor> = cursors.into_serde().unwrap();
 
 	let user_view: &View = views.iter().find(|&view| view.id.eq(user_id)).unwrap();
 
@@ -93,11 +87,15 @@ pub fn draw(elements: &JsValue, views: &JsValue, cursors: &JsValue, user_id: &st
 				.fill
 				.iter()
 				.map(|fill| {
-					// context.set_fill_style(&JsValue::from(
-					// 	colors::HSBA::from_vec(&fill.color)
-					// 		.to_hsla()
-					// 		.to_css_string(),
-					// ));
+					let col = colors::HSBA::from_vec(&fill.color)
+						.to_hsla()
+						.to_css_string();
+
+					context.set_fill_style(&JsValue::from(
+						colors::HSBA::from_vec(&fill.color)
+							.to_hsla()
+							.to_css_string(),
+					));
 					context.fill_rect(element.x, element.y, element.width, element.height);
 					1.0
 				})
@@ -107,8 +105,7 @@ pub fn draw(elements: &JsValue, views: &JsValue, cursors: &JsValue, user_id: &st
 		})
 		.sum();
 
-	// context.stroke();
-	// log(user_id);
+	context.stroke();
 	context.restore();
-	sum
+	"qho".into()
 }

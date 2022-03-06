@@ -32,7 +32,7 @@ export default function Canvas({ user_id, store, actions, ...rest }) {
 		store.subscribe(() => {
 			if (draw === undefined) return;
 			const state = store.getState().present;
-			const elements = state.elements.map((element) => ({ ...element, _type: element.type, fill: element.fill.map((fill) => ({ ...fill, _type: fill.type, color: fill.color.map((val) => Math.floor(255 * val)) })) }));
+			const elements = state.elements.map((element) => ({ ...element, _type: element.type, fill: element.fill.map((fill) => ({ ...fill, _type: fill.type })) }));
 
 			// let elements = [{ id: 'rect_123', label: 'Rectangle', _type: 'rectangle', x: -100, y: 0, rotation: 0, width: 50, height: 80, radius: 0 }];
 			const views = state.views;

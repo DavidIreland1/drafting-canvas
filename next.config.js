@@ -16,12 +16,13 @@ module.exports = {
 
 		config.plugins.push(
 			new WasmPackPlugin({
-				// args: '--log-level warn',
+				args: '--verbose',
 				// forceMode: 'production',
 				crateDirectory: path.resolve(__dirname, '.'),
 				// pluginLogLevel: 'error',
 			})
 		);
+		config.experiments = { asyncWebAssembly: true };
 		return config;
 	},
 };
