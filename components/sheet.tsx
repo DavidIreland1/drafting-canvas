@@ -19,11 +19,6 @@ export default function Sheet({ store, actions }) {
 		const { page } = router.query;
 		if (!page) return;
 
-		// fetch(`./page/${page}`).then(async (res) => {
-		// const state = await res.json();
-		// store.dispatch(actions.overwrite({ state: state }));
-		// store.dispatch(actions.overwrite({ state: { elements: state.elements } }));
-		// });
 		store.dispatch(actions.addUser({ user_id: Settings.user_id, label: Settings.user_name, color: Settings.user_color }));
 
 		window.addEventListener('beforeunload', () => {
@@ -34,21 +29,6 @@ export default function Sheet({ store, actions }) {
 	useEffect(() => {
 		getFonts().then(setFonts);
 	}, []);
-
-	// useEffect(() => {
-	// 	window.addEventListener('keydown', (event) => {
-	// 		if (event.key === 'b') {
-	// 			store.dispatch(actions.overwrite({ state: { elements: devElements(undefined).elements } }));
-	// 		}
-	// 		if (event.key === 'l') {
-	// 			store.dispatch(actions.overwrite({ state: { elements: loadTest(1000).elements } }));
-	// 		}
-	// 	});
-	// }, []);
-
-	// store.subscribe(() => {
-	// 	window.localStorage.setItem('elements', JSON.stringify(store.getState()));
-	// });
 
 	const canvas = useRef(null);
 

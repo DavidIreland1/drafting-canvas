@@ -39,7 +39,7 @@ export default function TextLayer({ canvas, user_id, store, actions }) {
 		fontWeight: text.weight,
 		fontStyle: text.style,
 		lineHeight: text.line_height,
-		color: Colors.hslaToString(Colors.hsbaToHsla(text.fill[0].color)),
+		color: Colors.toString(Colors.hsbaToHsla(text.fill[0].color)),
 	};
 
 	const transformed = {

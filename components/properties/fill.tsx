@@ -26,7 +26,7 @@ export default function Fill({ selected, store, actions, setPicker }) {
 }
 
 function addFill(selected_ids, store, actions) {
-	store.dispatch(actions.addFill({ selected_ids, props: { id: generateID(), type: 'Solid', color: [0, 0, 0, 1], visible: true } }));
+	store.dispatch(actions.addFill({ selected_ids, props: { id: generateID(), type: 'Solid', color: [0, 0, 0, 1], format: 'hex4', visible: true } }));
 }
 
 function removeFill(fill, store, actions) {
@@ -93,7 +93,8 @@ function dragEnd() {
 
 let previous_color = '';
 function toFill(fill, setPicker, selected_ids, store, actions) {
-	const hex = Colors.rgbaToHex(Colors.hslaToRgba(Colors.hsbaToHsla(fill.color)));
+	// const hex = Colors.rgbaToHex8(Colors.hslaToRgba(Colors.hsbaToHsla(fill.color)));
+	const hex = Colors.toString(fill.color, fill.format);
 
 	const [color, setColor] = useState(hex);
 
@@ -107,12 +108,14 @@ function toFill(fill, setPicker, selected_ids, store, actions) {
 		const new_color = event.target.value;
 		setColor(new_color);
 		if (Colors.isValid(new_color)) {
+			console.log(Colors.getFormat(new_color));
 			store.dispatch(
 				actions.setFill({
 					selected_ids,
 					props: {
 						...fill,
 						color: Colors.hslaToHsba(Colors.rgbaToHsla(Colors.stringToRgba(new_color))),
+						format: Colors.getFormat(new_color),
 					},
 				})
 			);
@@ -126,7 +129,7 @@ function toFill(fill, setPicker, selected_ids, store, actions) {
 			{fill.type === 'Solid' || fill.type === 'Text' ? (
 				// Color Picker
 				<div className="checker-background">
-					<div className="property-color" onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(fill.color)) }} />
+					<div className="property-color" onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} style={{ background: Colors.toString(Colors.hsbaToHsla(fill.color)) }} />
 				</div>
 			) : (
 				// Image

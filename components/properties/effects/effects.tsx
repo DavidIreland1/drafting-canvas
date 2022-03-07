@@ -79,9 +79,9 @@ export default function Effect({ selected, store, actions, setPicker, width }) {
 				<div className="property-row">
 					<div>::</div>
 					<div className="checker-background">
-						<div className="property-color" onClick={(event) => openPicker(event, effect)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(effect.color)) }} />
+						<div className="property-color" onClick={(event) => openPicker(event, effect)} style={{ background: Colors.toString(Colors.hsbaToHsla(effect.color)) }} />
 					</div>
-					<Text onChange={console.log}>{Colors.rgbaToHex(effect.color)}</Text>
+					<Text onChange={console.log}>{Colors.rgbaToHex8(effect.color)}</Text>
 
 					<Eye open={effect.visible} onClick={() => toggleEffect(effect)} />
 					<Minus onClick={() => removeEffect(effect)} />
