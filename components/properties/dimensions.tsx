@@ -17,7 +17,7 @@ export default function Dimensions({ selected, store, actions, width }) {
 			<div className="property-heading">
 				<h4>DIMENSIONS</h4>
 			</div>
-			<div id="properties">
+			<div id="properties" style={{ gap: `8px calc(${width} / 20)` }}>
 				<Input id="x" label="X" value={selected[0].x} onChange={updateDimension} width={width} />
 				<Input id="y" label="Y" value={selected[0].y} onChange={updateDimension} width={width} />
 
@@ -59,7 +59,6 @@ export default function Dimensions({ selected, store, actions, width }) {
 				#properties {
 					display: grid;
 					grid-template-columns: auto auto;
-					gap: 8px calc(${width} / 20);
 					height: min-content;
 					width: 100%;
 					box-sizing: border-box;
@@ -68,10 +67,8 @@ export default function Dimensions({ selected, store, actions, width }) {
 				}
 				svg {
 					fill: none;
-					margin-top: 3px;
-					margin-bottom: -3px;
-					height: 20px;
-					width: 100%;
+					height: 100%;
+					width: 20px;
 					stroke: white;
 					stroke-width: 0.5px;
 				}

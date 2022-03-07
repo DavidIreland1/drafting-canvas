@@ -11,7 +11,7 @@ export default class Element {
 			editing: false,
 			selected: selected,
 			hover: false,
-			fill: [{ id: id + '2123', type: 'Solid', color: [0, 0, 0.8, 1], visible: true }],
+			fill: [{ id: id + '2123', type: 'Solid', color: [0, 0, 0.8, 1], format: 'hex4', visible: true }],
 			// fill: [{ id: id + '2123', type: 'Image', color: [0.8, 0.8, 0.8, 1], alpha: 1, visible: true, x: 0, y: 0, src: '/images/draft.svg' }],
 			stroke: [],
 			effect: [],
@@ -30,7 +30,7 @@ export default class Element {
 			.filter((fill) => fill.visible)
 			.forEach((fill) => {
 				if (fill.type === 'Solid') {
-					context.fillStyle = Colors.hslaToString(Colors.hsbaToHsla(fill.color));
+					context.fillStyle = Colors.toString(Colors.hsbaToHsla(fill.color));
 					context.fill(path);
 				} else if (fill.type === 'Image') {
 					context.save();
@@ -49,7 +49,7 @@ export default class Element {
 		element.stroke
 			.filter((stroke) => stroke.visible)
 			.forEach((stroke) => {
-				context.strokeStyle = Colors.hslaToString(Colors.hsbaToHsla(stroke.color));
+				context.strokeStyle = Colors.toString(Colors.hsbaToHsla(stroke.color));
 				if (stroke.width === 0) return;
 				context.lineWidth = stroke.width;
 				if (stroke.type === 'Inside') {
@@ -87,7 +87,7 @@ export default class Element {
 				if (effect.type === 'Drop shadow' && before) {
 					context.save();
 					context.filter = `blur(${effect.blur * 0.1 * view.scale}px)`;
-					context.fillStyle = Colors.hslaToString(Colors.hsbaToHsla(effect.color));
+					context.fillStyle = Colors.toString(Colors.hsbaToHsla(effect.color));
 					context.translate(effect.x, effect.y);
 					context.scale(Math.exp(effect.spread * 0.005), Math.exp(effect.spread * 0.005));
 					context.rotate(element.rotation);
@@ -98,7 +98,7 @@ export default class Element {
 					context.save();
 
 					context.filter = `blur(${effect.blur * 0.1 * view.scale}px)`;
-					context.fillStyle = Colors.hslaToString(Colors.hsbaToHsla(effect.color));
+					context.fillStyle = Colors.toString(Colors.hsbaToHsla(effect.color));
 					context.clip(path);
 					context.translate(effect.x, effect.y);
 					context.scale(Math.exp(-effect.spread * 0.005), Math.exp(-effect.spread * 0.005));

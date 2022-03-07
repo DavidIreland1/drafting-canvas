@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-export default function Text({ id = undefined, placeholder = undefined, onChange, children }) {
+export default function Text({ id = undefined, placeholder = undefined, className = undefined, onChange, children }) {
 	const input = useRef(null);
 
 	function updateValue(event) {
@@ -10,7 +10,7 @@ export default function Text({ id = undefined, placeholder = undefined, onChange
 
 	return (
 		<>
-			<input id={id} ref={input} placeholder={placeholder} onChange={updateValue} value={String(children || '')} />
+			<input id={id} ref={input} className={className} placeholder={placeholder} onChange={updateValue} value={String(children || '')} />
 
 			<style jsx>{`
 				input {
@@ -30,6 +30,10 @@ export default function Text({ id = undefined, placeholder = undefined, onChange
 				input:focus-within {
 					background: var(--hover);
 					border-bottom: 1px solid white;
+				}
+
+				input.invalid {
+					background: var(--invalid);
 				}
 			`}</style>
 		</>

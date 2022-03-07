@@ -14,7 +14,8 @@ export default function Select({ id, label, value, onChange, children }) {
 
 	return (
 		<>
-			<div id={id} className="container">
+			<div id={id} className="container" onClick={() => input.current.click()}>
+				{/* ^onClick^ Doesn't work */}
 				<label htmlFor="label">{label}</label>
 				<select id="label" ref={input} value={_value} onChange={updateValue}>
 					{children}
@@ -27,7 +28,7 @@ export default function Select({ id, label, value, onChange, children }) {
 			<style jsx>{`
 				.container {
 					display: grid;
-					grid-template-columns: auto 1fr;
+					grid-template-columns: 0 max-content 30px;
 					padding: 5px 0;
 					border-bottom: 1px solid transparent;
 					position: relative;

@@ -7,7 +7,10 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 
 export default function Background({ store, actions, setPicker }) {
-	const page = useSelector((state: RootState) => state.present.page);
+	const page = useSelector(
+		(state: RootState) => state.present.page,
+		(a, b) => JSON.stringify(a) === JSON.stringify(b)
+	);
 
 	function openPicker(event) {
 		const setBackground = (page) => store.dispatch(actions.setBackground(page));
@@ -27,10 +30,11 @@ export default function Background({ store, actions, setPicker }) {
 				</div>
 
 				<div className="property-row">
-					<div className="property-color" onClick={(event) => openPicker(event)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(page.color)) }} />
-
+					<div className="checker-background">
+						<div className="property-color" onClick={(event) => openPicker(event)} style={{ background: Colors.toString(Colors.hsbaToHsla(page.color)) }} />
+					</div>
 					<Text id="color" placeholder="Color" onChange={console.log}>
-						{Colors.rgbaToHex(page.color)}
+						{Colors.rgbaToHex8(page.color)}
 					</Text>
 					<Eye open={true} onClick={console.log} />
 

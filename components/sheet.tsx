@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import Canvas from './rust/canvas';
@@ -20,11 +20,6 @@ export default function Sheet({ store, actions }) {
 		const { page } = router.query;
 		if (!page) return;
 
-		// fetch(`./page/${page}`).then(async (res) => {
-		// const state = await res.json();
-		// store.dispatch(actions.overwrite({ state: state }));
-		// store.dispatch(actions.overwrite({ state: { elements: state.elements } }));
-		// });
 		store.dispatch(actions.addUser({ user_id: Settings.user_id, label: Settings.user_name, color: Settings.user_color }));
 
 		window.addEventListener('beforeunload', () => {
@@ -36,28 +31,15 @@ export default function Sheet({ store, actions }) {
 		getFonts().then(setFonts);
 	}, []);
 
-	// useEffect(() => {
-	// 	window.addEventListener('keydown', (event) => {
-	// 		if (event.key === 'b') {
-	// 			store.dispatch(actions.overwrite({ state: { elements: devElements(undefined).elements } }));
-	// 		}
-	// 		if (event.key === 'l') {
-	// 			store.dispatch(actions.overwrite({ state: { elements: loadTest(1000).elements } }));
-	// 		}
-	// 	});
-	// }, []);
-
-	// store.subscribe(() => {
-	// 	window.localStorage.setItem('elements', JSON.stringify(store.getState()));
-	// });
+	const canvas = useRef(null);
 
 	return (
 		<div id="sheet">
 			{picker}
 			<Toolbar store={store} actions={actions} />
-			<Structure store={store} actions={actions} />
-			<Canvas user_id={Settings.user_id} store={store} actions={actions} />
-			<Properties store={store} actions={actions} setPicker={setPicker} fonts={fonts} />
+			<Structure store={store} actions={actions} onResize={() => canvas.current.onResize()} />
+			<Canvas ref={canvas} user_id={Settings.user_id} store={store} actions={actions} />
+			<Properties store={store} actions={actions} setPicker={setPicker} fonts={fonts} onResize={() => canvas.current.onResize()} />
 
 			<style jsx>{`
 				#sheet {

@@ -3,7 +3,10 @@ import { useSelector } from 'react-redux';
 import Settings from './settings';
 
 export default function Navbar({ store, actions }) {
-	let cursor = useSelector((state) => (state as any).present.cursors.find((cursor) => cursor.id === Settings.user_id));
+	let cursor = useSelector(
+		(state) => (state as any).present.cursors.find((cursor) => cursor.id === Settings.user_id),
+		(a, b) => JSON.stringify(a) === JSON.stringify(b)
+	);
 
 	// Need a default cursor when there is no users
 	if (!cursor || !['rectangle', 'line', 'ellipse', 'pen', 'spline', 'frame', 'text'].includes(cursor.type)) cursor = { type: 'select' };

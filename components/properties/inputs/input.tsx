@@ -57,7 +57,20 @@ export default function Input({ id, label, step = 1, value, min = NaN, unit = ''
 		<>
 			<div id={id} className="dimension">
 				<label onPointerDown={dragProperty}>{label}</label>
-				<input ref={input} type="number" step={step} value={value} min={min || undefined} onChange={updateValue} onMouseDown={mouseDown} onMouseUp={mouseUp} />
+				<input
+					ref={input}
+					type="number"
+					step={step}
+					value={value}
+					min={min || undefined}
+					style={{
+						maxWidth: `calc(${width} / 2 - 20px)`,
+						width: `max(calc(${width} / 6), 5ch)`,
+					}}
+					onChange={updateValue}
+					onMouseDown={mouseDown}
+					onMouseUp={mouseUp}
+				/>
 			</div>
 
 			<style jsx>{`
@@ -83,8 +96,6 @@ export default function Input({ id, label, step = 1, value, min = NaN, unit = ''
 					border: none;
 					font-weight: inherit;
 					font-family: inherit;
-					max-width: calc(${width} / 2 - 20px);
-					width: max(calc(${width} / 6), 5ch);
 					min-width: max(100%, 4ch);
 					color: var(--text-color);
 					font-size: 16px;

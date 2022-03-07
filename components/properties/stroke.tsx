@@ -13,7 +13,7 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 	const selected_ids = selected.map((element) => element.id);
 
 	function addStroke() {
-		store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 1, color: [0.5, 0.5, 1, 1], visible: true } }));
+		store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 1, color: [0.5, 0.5, 1, 1], format: 'hex4', visible: true } }));
 	}
 
 	function removeStroke(stroke) {
@@ -68,11 +68,12 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 			<div key={stroke.id}>
 				<div className="property-row">
 					<div>::</div>
-					<div className="property-color" onClick={(event) => openPicker(event, stroke)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(stroke.color)) }} />
-
+					<div className="checker-background">
+						<div className="property-color" onClick={(event) => openPicker(event, stroke)} style={{ background: Colors.toString(Colors.hsbaToHsla(stroke.color)) }} />
+					</div>
 					<div>
 						<Text id="color" placeholder="Color" onChange={console.log}>
-							{Colors.rgbaToHex(stroke.color)}
+							{Colors.rgbaToHex8(stroke.color)}
 						</Text>
 					</div>
 
@@ -107,7 +108,6 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 			</div>
 
 			{getStrokes(selected).map(toStroke)}
-			<style jsx>{``}</style>
 		</div>
 	);
 }

@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import draw from './draw';
 
 import { initCanvas } from './init-canvas';
@@ -8,16 +8,36 @@ import TextLayer from './text-layer';
 // This shading pollyfill for safari and firefox doesn't really work
 // import('./polyfill');
 
-export default function Canvas({ user_id, store, actions, ...rest }) {
+let last_x = 0;
+
+export default forwardRef(Canvas);
+
+function Canvas({ user_id, store, actions }, ref) {
+	// const { user_id, store, actions } = props as any;
 	const canvas_ref = useRef(null);
+
+	useImperativeHandle(ref, () => ({
+		onResize() {
+			onResize(canvas_ref.current, store, actions, user_id);
+		},
+	}));
 
 	useEffect(() => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
 		const context: CanvasRenderingContext2D = canvas.getContext('2d'); //, { alpha: false } makes it flash black but is more efficient?
 
+		const { width, height, left } = canvas.getBoundingClientRect();
+		canvas.width = width * window.devicePixelRatio;
+		canvas.height = height * window.devicePixelRatio;
+		last_x = left;
+
 		// Just for console debugging
 		(window as any).canvas = canvas;
 		(window as any).context = context;
+
+		window.addEventListener('resize', () => {
+			onResize(canvas, store, actions, user_id);
+		});
 
 		const active = {
 			hovering: [],
@@ -30,12 +50,6 @@ export default function Canvas({ user_id, store, actions, ...rest }) {
 		store.subscribe(() => {
 			draw(context, store, actions, active, user_id);
 		});
-
-		const resize_observer = observeResize(canvas, store, actions, user_id);
-
-		return () => {
-			resize_observer.disconnect();
-		};
 	}, [canvas_ref.current]);
 
 	const svg = `
@@ -48,7 +62,7 @@ export default function Canvas({ user_id, store, actions, ...rest }) {
 	return (
 		<div id="container">
 			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} actions={actions} />
-			<canvas className="checkers" ref={canvas_ref} {...rest} tabIndex={1} />
+			<canvas className="checkers" ref={canvas_ref} tabIndex={1} />
 
 			<style jsx>{`
 				#container {
@@ -78,34 +92,50 @@ export default function Canvas({ user_id, store, actions, ...rest }) {
 	);
 }
 
-function observeResize(canvas, store, actions, user_id) {
-	let last_x = canvas.getBoundingClientRect().left;
-	let observer_started = false;
+function onResize(canvas, store, actions, user_id) {
+	const { width, height } = canvas.getBoundingClientRect();
 
-	const resize_observer = new ResizeObserver((entries) => {
-		const { width, height } = entries[0].contentRect;
+	canvas.width = width * window.devicePixelRatio;
+	canvas.height = height * window.devicePixelRatio;
 
-		if (observer_started) {
-			observer_started = false;
-			return;
-		}
-		observer_started = true;
-
-		if (canvas.width === width && canvas.height === height) return;
-
-		canvas.width = width * window.devicePixelRatio;
-		canvas.height = height * window.devicePixelRatio;
-
-		const delta_x = last_x - canvas.getBoundingClientRect().left;
-		last_x -= delta_x;
-		store.dispatch(
-			actions.view({
-				user_id: user_id,
-				delta_x: delta_x * 2,
-			})
-		);
-	});
-	resize_observer.observe(canvas);
-
-	return resize_observer;
+	const delta_x = last_x - canvas.getBoundingClientRect().left;
+	last_x -= delta_x;
+	store.dispatch(
+		actions.view({
+			user_id: user_id,
+			delta_x: delta_x * 2,
+		})
+	);
 }
+
+// function observeResize(canvas, store, actions, user_id) {
+// 	let last_x = canvas.getBoundingClientRect().left;
+// 	let observer_started = false;
+
+// 	const resize_observer = new ResizeObserver((entries) => {
+// 		const { width, height } = entries[0].contentRect;
+
+// 		if (observer_started) {
+// 			observer_started = false;
+// 			return;
+// 		}
+// 		observer_started = true;
+
+// 		if (canvas.width === width && canvas.height === height) return;
+
+// 		canvas.width = width * window.devicePixelRatio;
+// 		canvas.height = height * window.devicePixelRatio;
+
+// 		const delta_x = last_x - canvas.getBoundingClientRect().left;
+// 		last_x -= delta_x;
+// 		store.dispatch(
+// 			actions.view({
+// 				user_id: user_id,
+// 				delta_x: delta_x * 2,
+// 			})
+// 		);
+// 	});
+// 	resize_observer.observe(canvas);
+
+// 	return resize_observer;
+// }

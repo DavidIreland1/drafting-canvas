@@ -9,16 +9,22 @@ import Stroke from './stroke';
 import Effects from './effects/effects';
 import Text from './text';
 
-export default function Properties({ store, actions, setPicker, fonts }) {
-	// const [width, setWidth] = useState('max(20vw, 150px)');
-	const [width, setWidth] = useState('max(20vw, 15px)');
-	const selected = useSelector((state: RootState) => state.present.elements.filter((element) => element.selected));
+export default function Properties({ store, actions, setPicker, fonts, onResize }) {
+	const [width, setWidth] = useState('max(20vw, 150px)');
+	const selected = useSelector(
+		(state: RootState) => state.present.elements.filter((element) => element.selected),
+		(a, b) => JSON.stringify(a) === JSON.stringify(b)
+	);
+	// const selected = [];
 
 	function resize(event) {
 		event.preventDefault();
 		event.target.setPointerCapture(event.pointerId);
 		// const move = (move_event) => setWidth(Math.max(window.innerWidth - move_event.clientX, 3) + 'px');
-		const move = (move_event) => setWidth(`max(${((window.innerWidth - move_event.clientX) / window.innerWidth) * 100}vw, 3px)`);
+		const move = (move_event) => {
+			setWidth(`max(${((window.innerWidth - move_event.clientX) / window.innerWidth) * 100}vw, 3px)`);
+			onResize();
+		};
 		event.target.addEventListener('pointermove', move);
 		const end = () => {
 			event.target.releasePointerCapture(event.pointerId);
@@ -28,7 +34,7 @@ export default function Properties({ store, actions, setPicker, fonts }) {
 	}
 
 	return (
-		<div id="container">
+		<div id="container" style={{ width: width }}>
 			<div id="handle" onPointerDown={resize}></div>
 
 			{selected.length === 0 ? (
@@ -54,7 +60,7 @@ export default function Properties({ store, actions, setPicker, fonts }) {
 					display: grid;
 					grid-template-columns: 1fr 30px;
 					padding: 0 10px 5px 10px;
-					gap: 5px calc(${width} / 40);
+					gap: 5px;
 				}
 				h4 {
 					cursor: default;
@@ -65,12 +71,22 @@ export default function Properties({ store, actions, setPicker, fonts }) {
 			`}</style>
 
 			<style>{`
-				.property-color {
+
+				.checker-background {
+					margin: auto;
 					width: 1.5em;
 					height: 1.5em;
-					margin: auto;
+					white: white;
+					background-color: lightgrey;
+					background-image: linear-gradient(45deg, white 25%, transparent 0%, transparent 75%, white 75%), linear-gradient(45deg, white 25%, transparent 0%, transparent 75%, white 75%);
+					background-position: 0 0, 0.3em 0.3em;
+					background-size: calc(0.3em * 2) calc(0.3em * 2);
 				}
-
+				.property-color {
+					position: absolute;
+					width: 1.5em;
+					height: 1.5em;
+				}
 				.property-row {
 					padding: 0 10px 0 5px;
 					display: grid;
@@ -96,7 +112,6 @@ export default function Properties({ store, actions, setPicker, fonts }) {
 			<style jsx>{`
 				#container {
 					color: var(--text-color);
-					width: ${width};
 					background: var(--panel);
 					position: relative;
 					display: grid;

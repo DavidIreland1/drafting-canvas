@@ -4,8 +4,14 @@ import { RootState } from '../../redux/store';
 import Colors from './../properties/colors';
 
 export default function TextLayer({ canvas, user_id, store, actions }) {
-	const editing = useSelector((state: RootState) => (state as any).present.elements.filter((element) => element.editing));
-	const view = useSelector((state: RootState) => (state as any).present.views.find((view) => view.id === user_id));
+	const editing = useSelector(
+		(state: RootState) => (state as any).present.elements.filter((element) => element.editing),
+		(a, b) => JSON.stringify(a) === JSON.stringify(b)
+	);
+	const view = useSelector(
+		(state: RootState) => (state as any).present.views.find((view) => view.id === user_id),
+		(a, b) => JSON.stringify(a) === JSON.stringify(b)
+	);
 
 	const container = useRef(null);
 
@@ -33,7 +39,7 @@ export default function TextLayer({ canvas, user_id, store, actions }) {
 		fontWeight: text.weight,
 		fontStyle: text.style,
 		lineHeight: text.line_height,
-		color: Colors.hslaToString(Colors.hsbaToHsla(text.fill[0].color)),
+		color: Colors.toString(Colors.hsbaToHsla(text.fill[0].color)),
 	};
 
 	const transformed = {
