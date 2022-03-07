@@ -13,6 +13,8 @@
 	--hover: #34343a;
 	--selected: #42414d;
 
+	--invalid: #6f3939;
+
 	--shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
 
 	--nav-height: 40px;

@@ -1,8 +1,8 @@
 // All values are [0-1]
 
 export default {
-	hslaToString: ([h, l, s, a]) => {
-		return `hsla(${h * 360},${l * 100}%,${s * 100}%,${a})`;
+	hslaToString: ([h, s, l, a]) => {
+		return `hsla(${h * 360},${s * 100}%,${l * 100}%,${a})`;
 	},
 
 	rgbaToString: ([r, g, b, a]) => {
@@ -97,5 +97,10 @@ export default {
 		const a = hex.length > 7 ? parseInt(hex.substr(7, 2), 16) / 255 : 1;
 
 		return [r, g, b, a];
+	},
+	isValid: (strColor) => {
+		const option = new Option().style;
+		option.color = strColor;
+		return option.color !== '';
 	},
 };

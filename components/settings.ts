@@ -1,8 +1,6 @@
 import Adjective from './../utils/adjectives';
 import Animal from './../utils/animals';
-import Color from './../utils/colors';
-
-import { generateID } from '../utils/utils';
+import { generateID, pastelColor } from '../utils/utils';
 
 const id = generateID();
 
@@ -11,7 +9,7 @@ console.log(Adjective + ' ' + Animal, id);
 export default {
 	user_id: id,
 	user_name: Adjective + ' ' + Animal,
-	user_color: Color,
+	user_color: pastelColor(),
 
 	line_width: 2,
 

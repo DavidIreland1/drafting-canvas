@@ -7,108 +7,139 @@ import Minus from '../icons/minus';
 import Plus from '../icons/plus';
 import Select from './inputs/select';
 import Text from './inputs/text';
+import { useState } from 'react';
 
 export default function Fill({ selected, store, actions, setPicker }) {
 	const selected_ids = selected.map((element) => element.id);
 
-	function addFill() {
-		store.dispatch(actions.addFill({ selected_ids, props: { id: generateID(), type: 'Solid', color: [0, 0, 0, 1], visible: true } }));
-	}
+	const fills = selected.map((element) => Elements[element.type].getFill(element)).flat();
+	return (
+		<div id="property-container">
+			<div className="property-heading">
+				<h4>FILL</h4>
+				<Plus onClick={addFill} />
+			</div>
 
-	function removeFill(fill) {
-		store.dispatch(actions.removeFill({ id: fill.id }));
-	}
+			{fills.map((fill) => toFill(fill, setPicker, selected_ids, store, actions))}
+		</div>
+	);
+}
 
-	function toggleFill(fill) {
-		store.dispatch(actions.setFill({ selected_ids, props: { id: fill.id, visible: !fill.visible } }));
-	}
+function addFill(selected_ids, store, actions) {
+	store.dispatch(actions.addFill({ selected_ids, props: { id: generateID(), type: 'Solid', color: [0, 0, 0, 1], visible: true } }));
+}
 
-	function openPicker(event, fill) {
-		const setProperty = (fill) => {
-			store.dispatch(actions.setFill({ selected_ids, props: fill }));
-		};
-		function setType(event) {
-			setProperty({ ...fill, type: event.target.value });
-		}
+function removeFill(fill, store, actions) {
+	store.dispatch(actions.removeFill({ id: fill.id }));
+}
 
-		const selector = (state) => {
-			return flatten(state.present.elements)
-				.filter((element) => element.type !== 'group' && element.selected)
-				.map((element) => element.fill)
-				.flat()
-				.find((prop) => prop.id === fill.id);
-		};
-		setPicker(
-			<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
-				<Select id="type" label="" value={fill.type} onChange={setType}>
-					<option id="Solid">Solid</option>
-					<option id="Image">Image</option>
-				</Select>
-			</Picker>
-		);
-	}
+function toggleFill(fill, selected_ids, store, actions) {
+	store.dispatch(actions.setFill({ selected_ids, props: { id: fill.id, visible: !fill.visible } }));
+}
 
-	function getFills(selected) {
-		return selected.map((element) => Elements[element.type].getFill(element)).flat();
-	}
-
-	let target;
-
-	function setTarget(event) {
-		target = event.target;
-	}
-
-	const drag = (event) => {
-		if (target.id !== 'handle') return event.preventDefault();
-		event.stopPropagation();
-		// event.dataTransfer.effectAllowed = 'move';
-		requestAnimationFrame(() => target.parentElement.classList.add('blank'));
+function openPicker(event, fill, setPicker, selected_ids, store, actions) {
+	const setProperty = (fill) => {
+		store.dispatch(actions.setFill({ selected_ids, props: fill }));
 	};
 
-	function dragOver(event) {
-		const selected = target.parentElement;
+	const selector = (state) =>
+		flatten(state.present.elements)
+			.filter((element) => element.type !== 'group' && element.selected)
+			.map((element) => element.fill)
+			.flat()
+			.find((prop) => prop.id === fill.id);
 
-		const hover = event.nativeEvent.composedPath().find((element) => (element.id = 'prop'));
-		if (!hover || hover === selected) return;
-		console.log(hover);
+	setPicker(
+		<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
+			<Select id="type" label="" value={fill.type} onChange={(event) => setProperty({ ...fill, type: event.target.value })}>
+				<option id="Solid">Solid</option>
+				<option id="Image">Image</option>
+			</Select>
+		</Picker>
+	);
+}
 
-		const box = hover.getBoundingClientRect();
-		if (event.clientY > box.top + box.height / 2) {
-			hover.parentElement.insertBefore(selected, hover);
-		} else {
-			hover.parentElement.insertBefore(selected, hover.nextSibling);
+let target;
+
+function setTarget(event) {
+	target = event.target;
+}
+
+const drag = (event) => {
+	if (target.id !== 'handle') return event.preventDefault();
+	event.stopPropagation();
+	// event.dataTransfer.effectAllowed = 'move';
+	requestAnimationFrame(() => target.parentElement.classList.add('blank'));
+};
+
+function dragOver(event) {
+	const selected = target.parentElement;
+
+	const hover = event.nativeEvent.composedPath().find((element) => (element.id = 'prop'));
+	if (!hover || hover === selected) return;
+	console.log(hover);
+
+	const box = hover.getBoundingClientRect();
+	if (event.clientY > box.top + box.height / 2) {
+		hover.parentElement.insertBefore(selected, hover);
+	} else {
+		hover.parentElement.insertBefore(selected, hover.nextSibling);
+	}
+}
+
+function dragEnd() {
+	target.parentElement.classList.remove('blank');
+}
+
+let previous_color = '';
+function toFill(fill, setPicker, selected_ids, store, actions) {
+	const hex = Colors.rgbaToHex(Colors.hslaToRgba(Colors.hsbaToHsla(fill.color)));
+
+	const [color, setColor] = useState(hex);
+
+	if (previous_color !== hex) {
+		previous_color = hex;
+		setColor(hex);
+	}
+	// if (color !== hex) setColor(hex);
+
+	function changeColor(event) {
+		const new_color = event.target.value;
+		setColor(new_color);
+		if (Colors.isValid(new_color)) {
+			store.dispatch(
+				actions.setFill({
+					selected_ids,
+					props: {
+						...fill,
+						color: Colors.hslaToHsba(Colors.rgbaToHsla(Colors.stringToRgba(new_color))),
+					},
+				})
+			);
 		}
 	}
 
-	function dragEnd() {
-		target.parentElement.classList.remove('blank');
-	}
+	return (
+		<div key={fill.id} id="prop" className="property-row" draggable={true} onDragStart={drag} onDragEnd={dragEnd} onMouseDown={setTarget} onDragOver={dragOver}>
+			<div id="handle">::</div>
 
-	function toFill(fill) {
-		return (
-			<div key={fill.id} id="prop" className="property-row" draggable={true} onDragStart={drag} onDragEnd={dragEnd} onMouseDown={setTarget} onDragOver={dragOver}>
-				<div id="handle">::</div>
-				{fill.type === 'Solid' || fill.type === 'Text' ? (
-					// Color Picker
-					<div className="property-color" onClick={(event) => openPicker(event, fill)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(fill.color)) }} />
-				) : (
-					// Image
-					<img className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill)} />
-				)}
+			{fill.type === 'Solid' || fill.type === 'Text' ? (
+				// Color Picker
+				<div className="checker-background">
+					<div className="property-color" onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(fill.color)) }} />
+				</div>
+			) : (
+				// Image
+				<img className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} />
+			)}
 
-				<div>
-					<Text id="color" placeholder="Color" onChange={console.log}>
-						{Colors.rgbaToHex(fill.color)}
-					</Text>
-				</div>
-				<div>
-					<Eye open={fill.visible} onClick={() => toggleFill(fill)} />
-				</div>
-				<div>
-					<Minus onClick={() => removeFill(fill)} />
-				</div>
+			<Text id="color" placeholder="Color" className={Colors.isValid(color) || 'invalid'} onChange={changeColor}>
+				{color}
+			</Text>
+			<Eye open={fill.visible} onClick={() => toggleFill(fill, selected_ids, store, actions)} />
+			<Minus onClick={() => removeFill(fill, store, actions)} />
 
-				<style jsx>{`
+			<style jsx>{`
 					.blank > *,
 					.blank > * > * {
 						visibility: collapse;
@@ -127,18 +158,6 @@ export default function Fill({ selected, store, actions, setPicker }) {
 						background: var(--hover)
 					}
 				`}</style>
-			</div>
-		);
-	}
-
-	return (
-		<div id="property-container">
-			<div className="property-heading">
-				<h4>FILL</h4>
-				<Plus onClick={addFill} />
-			</div>
-
-			{getFills(selected).map(toFill)}
 		</div>
 	);
 }

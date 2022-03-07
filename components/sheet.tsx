@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import useIsVisible from '../hooks/use-is-visible';
 
 import Canvas from './canvas/canvas';
 import Toolbar from './toolbar';
@@ -51,13 +50,15 @@ export default function Sheet({ store, actions }) {
 	// 	window.localStorage.setItem('elements', JSON.stringify(store.getState()));
 	// });
 
+	const canvas = useRef(null);
+
 	return (
 		<div id="sheet">
 			{picker}
 			<Toolbar store={store} actions={actions} />
-			<Structure store={store} actions={actions} />
-			<Canvas user_id={Settings.user_id} store={store} actions={actions} />
-			<Properties store={store} actions={actions} setPicker={setPicker} fonts={fonts} />
+			<Structure store={store} actions={actions} onResize={() => canvas.current.onResize()} />
+			<Canvas ref={canvas} user_id={Settings.user_id} store={store} actions={actions} />
+			<Properties store={store} actions={actions} setPicker={setPicker} fonts={fonts} onResize={() => canvas.current.onResize()} />
 
 			<style jsx>{`
 				#sheet {

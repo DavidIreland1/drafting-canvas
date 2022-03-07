@@ -40,7 +40,10 @@ export default function Navbar({ store, actions }) {
 		setTabs(tabs.filter((tab) => tab.id !== id));
 	}
 
-	const users = useSelector((state) => (state as any).present.cursors);
+	const users = useSelector(
+		(state) => (state as any).present.cursors,
+		(a, b) => JSON.stringify(a) === JSON.stringify(b)
+	);
 
 	function copyLink() {
 		navigator.clipboard.writeText(location.href);
@@ -120,6 +123,7 @@ export default function Navbar({ store, actions }) {
 
 				#plus {
 					width: 30px;
+					height: 30px;
 					padding: 5px;
 				}
 				line {
@@ -145,6 +149,7 @@ export default function Navbar({ store, actions }) {
 				a {
 					cursor: default;
 					border-radius: 20px;
+					height: 40px;
 				}
 				#github {
 					padding: 4px;

@@ -18,8 +18,8 @@ export default function Effect({ selected, store, actions, setPicker, width }) {
 				selected_ids,
 				props: {
 					id: generateID(),
-					// type: 'Drop shadow',
-					type: 'Inner shadow',
+					type: 'Drop shadow',
+					// type: 'Inner shadow',
 					x: 0,
 					y: 0,
 					blur: 10,
@@ -78,22 +78,23 @@ export default function Effect({ selected, store, actions, setPicker, width }) {
 			<div key={effect.id}>
 				<div className="property-row">
 					<div>::</div>
-					<div className="property-color" onClick={(event) => openPicker(event, effect)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(effect.color)) }} />
-
+					<div className="checker-background">
+						<div className="property-color" onClick={(event) => openPicker(event, effect)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(effect.color)) }} />
+					</div>
 					<Text onChange={console.log}>{Colors.rgbaToHex(effect.color)}</Text>
 
 					<Eye open={effect.visible} onClick={() => toggleEffect(effect)} />
 					<Minus onClick={() => removeEffect(effect)} />
 				</div>
 
-				<div className="grid">
+				<div className="grid" style={{ gap: `8px calc(max(20vw, 15px) / 20)` }}>
 					<Select id="type" label="" value={effect.type} onChange={(event) => updateEffect(event, effect)}>
 						<option value="Drop shadow">Drop Shadow</option>
 						<option value="Inner shadow">Inner Shadow</option>
 					</Select>
 				</div>
 
-				<div className="grid">
+				<div className="grid" style={{ gap: `8px calc(max(20vw, 15px) / 20)` }}>
 					<Input id="x" label="X" value={effect.x} onChange={(event) => updateEffect(event, effect)} width={width} />
 					<Input id="y" label="Y" value={effect.y} onChange={(event) => updateEffect(event, effect)} width={width} />
 					<Input id="blur" label="Blur" value={effect.blur} min={0} onChange={(event) => updateEffect(event, effect)} width={width} />
@@ -105,7 +106,6 @@ export default function Effect({ selected, store, actions, setPicker, width }) {
 						display: grid;
 						grid-template-columns: auto auto;
 						padding: 0 10px;
-						grid-gap: 8px calc(max(20vw, 15px) / 20);
 					}
 				`}</style>
 			</div>

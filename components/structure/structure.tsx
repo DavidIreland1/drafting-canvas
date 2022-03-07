@@ -3,12 +3,14 @@ import Element from './element';
 import { flatten } from '../elements/elements';
 import { useSelector } from 'react-redux';
 
-export default function Structure({ store, actions }) {
-	const elements = useSelector((state) => (state as any).present.elements);
+export default function Structure({ store, actions, onResize }) {
+	const elements = useSelector(
+		(state) => (state as any).present.elements,
+		(a, b) => JSON.stringify(a) === JSON.stringify(b)
+	);
 	const [key, setKey] = useState(Math.random());
 	const structure_ref = useRef(null);
-	// const [width, setWidth] = useState('max(15vw, 150px)');
-	const [width, setWidth] = useState('max(15vw, 15px)');
+	const [width, setWidth] = useState('max(15vw, 150px)');
 
 	const resize = (event) => {
 		event.preventDefault();
@@ -16,7 +18,10 @@ export default function Structure({ store, actions }) {
 		const structure = structure_ref.current;
 		const offset = structure.parentElement.getBoundingClientRect().left;
 
-		const move = (move_event) => setWidth(`max(${((move_event.clientX - offset) / window.innerWidth) * 100}vw, 3px)`);
+		const move = (move_event) => {
+			setWidth(`max(${((move_event.clientX - offset) / window.innerWidth) * 100}vw, 3px)`);
+			onResize();
+		};
 		event.target.addEventListener('pointermove', move);
 		const end = () => {
 			event.target.releasePointerCapture(event.pointerId);
@@ -51,25 +56,23 @@ export default function Structure({ store, actions }) {
 	const clone = (data) => JSON.parse(JSON.stringify(data));
 
 	return (
-		<div id="container" key={key}>
+		<div id="container" key={key} style={{ width: width }}>
 			<div id="structure" ref={structure_ref} onDragOver={(event) => event.preventDefault()}>
 				{elements.map((element) => (
 					<Element key={element.id} element={element} indentation={10} store={store} actions={actions} restructure={restructure} />
 				))}
 			</div>
 
-			<div id="handle" onPointerDown={resize}></div>
+			<div id="handle" onPointerDown={resize} />
 
 			<style jsx>{`
 				#container {
 					position: relative;
-					width: ${width};
 					background: var(--panel);
 					display: grid;
 					height: 100%;
 					overflow-y: auto;
 					overflow-x: hidden;
-					/*left: var(--nav-height);*/
 					border-left: 1px solid var(--selected);
 					z-index: 2;
 				}

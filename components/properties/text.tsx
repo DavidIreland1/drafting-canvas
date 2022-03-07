@@ -62,7 +62,7 @@ export default function Text({ selected, store, actions, width, fonts }) {
 			<div className="property-heading">
 				<h4>TEXT</h4>
 			</div>
-			<div id="properties">
+			<div id="properties" style={{ gap: `8px calc(${width} / 20)` }}>
 				<DataList id="family" label="Font Family" value={selected[0].family} onChange={updateFont}>
 					{fonts.map((font, i) => (
 						<option key={i} value={font.family} />
@@ -130,7 +130,6 @@ export default function Text({ selected, store, actions, width, fonts }) {
 			<style jsx>{`
 				#properties {
 					display: grid;
-					gap: 8px calc(${width} / 20);
 					height: min-content;
 					width: fit-content;
 					width: 100%;
@@ -155,7 +154,6 @@ export default function Text({ selected, store, actions, width, fonts }) {
 				textarea:focus {
 					outline: none;
 				}
-
 				textarea:hover {
 					background: var(--hover);
 				}

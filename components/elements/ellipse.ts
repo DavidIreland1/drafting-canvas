@@ -56,8 +56,7 @@ export default class Ellipse extends Element {
 		this.effect(ellipse, context, path, false, view);
 		this.stroke(ellipse, context, path);
 
-		context.shadowColor = 'transparent';
-
+		// context.shadowColor = 'transparent';
 		return context.isPointInPath(path, cursor.x, cursor.y);
 	}
 

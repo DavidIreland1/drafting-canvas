@@ -18,7 +18,7 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 		return () => document.removeEventListener('click', handleClickOutside, true);
 	});
 
-	const property = useSelector(selector);
+	const property = useSelector(selector, (a, b) => JSON.stringify(a) === JSON.stringify(b));
 
 	if (!isVisible || typeof property === 'undefined') {
 		// Kinda werid
@@ -93,27 +93,26 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 		const s = saturation / fade_width;
 		const b = 1 - brightness / fade_width;
 		const a = aplha / slider_width;
-
 		setProperty({ ...(property as any), color: [h, s, b, a] });
 	}
 
 	return (
-		<div id="container" ref={ref} onPointerDown={dragPicker}>
+		<div id="container" ref={ref} onPointerDown={dragPicker} style={{ top: picker_position.y + 'px', left: `min(${picker_position.x}px, calc(100vw - 300px))` }}>
 			<div id="header">
 				{children}
 				<Cross onClick={() => setPicker(null)} />
 			</div>
 
-			<div id="fade" onPointerDown={dragFade}>
-				<div id="fade-handle" className="handle"></div>
+			<div id="fade" onPointerDown={dragFade} style={{ backgroundColor: `hsl(${hsba[0] * 360}, 100%, 50%)` }}>
+				<div id="fade-handle" className="handle" style={{ background: `hsb(${hsba[0] * 360}, ${hsba[1] * 100}%, ${hsba[2] * 100}%)`, top: fade_width - hsba[2] * fade_width + 'px', left: hsba[1] * fade_width + 'px' }} />
 			</div>
 			<div id="hue" className="slider" onPointerDown={dragHue}>
-				<div id="hue-handle" className="handle"></div>
+				<div id="hue-handle" className="handle" style={{ left: hsba[0] * slider_width + 'px', background: `hsl(${hsba[0] * 360}, 100%, 50%)` }} />
 			</div>
 
 			<div id="checkers" className="slider" onPointerDown={dragAlpha}>
-				<div id="aplha" className="slider" />
-				<div id="aplha-handle" className="handle"></div>
+				<div id="aplha" className="slider" style={{ background: ` -webkit-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${hsba[0] * 360}, 100%, 50%) 100%)` }} />
+				<div id="aplha-handle" className="handle" style={{ left: hsba[3] * slider_width + 'px', background: `hsl(${hsba[0] * 360}, 100%, ${100 - (hsba[3] * 100) / 2}%)` }} />
 			</div>
 
 			<div id="hsla">
@@ -145,15 +144,9 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 				#container {
 					position: absolute;
 					z-index: 7;
-
 					padding: 10px 0 20px 0;
 					background: var(--panel);
-
-					top: ${picker_position.y}px;
-					left: min(${picker_position.x}px, calc(100vw - 300px));
-
 					box-shadow: 0 0 10px black;
-
 					display: grid;
 					grid-gap: 10px;
 				}
@@ -166,11 +159,8 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 					background: -moz-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -moz-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
 					background: -ms-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -ms-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
 					background: -o-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -o-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
-					background-color: hsl(${hsba[0] * 360}, 100%, 50%);
 				}
 				#fade-handle {
-					top: ${fade_width - hsba[2] * fade_width}px;
-					left: ${hsba[1] * fade_width}px;
 				}
 				.handle {
 					position: absolute;
@@ -180,7 +170,6 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 					border: 1px solid black;
 					box-sizing: border-box;
 					z-index: 2;
-					background-color: hsb(${hsba[0] * 360}, ${hsba[1] * 100}%, ${hsba[2] * 100}%);
 				}
 				.handle::before {
 					position: absolute;
@@ -207,15 +196,8 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 				}
 				#hue-handle {
 					top: 0;
-					left: ${hsba[0] * slider_width}px;
-					background-color: hsl(${hsba[0] * 360}, 100%, 50%);
 				}
-
 				#aplha {
-					background: -webkit-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${hsba[0] * 360}, 100%, 50%) 100%);
-					background: -moz-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${hsba[0] * 360}, 100%, 50%) 100%);
-					background: -ms-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${hsba[0] * 360}, 100%, 50%) 100%);
-					background: -o-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${hsba[0] * 360}, 100%, 50%) 100%);
 					margin: 0;
 				}
 				#checkers {
@@ -230,8 +212,6 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 				}
 				#aplha-handle {
 					top: 0;
-					left: ${hsba[3] * slider_width}px;
-					background-color: hsl(${hsba[0] * 360}, 100%, ${100 - (hsba[3] * 100) / 2}%);
 				}
 				.color {
 					width: 1em;

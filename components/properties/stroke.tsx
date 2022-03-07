@@ -68,8 +68,9 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 			<div key={stroke.id}>
 				<div className="property-row">
 					<div>::</div>
-					<div className="property-color" onClick={(event) => openPicker(event, stroke)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(stroke.color)) }} />
-
+					<div className="checker-background">
+						<div className="property-color" onClick={(event) => openPicker(event, stroke)} style={{ background: Colors.hslaToString(Colors.hsbaToHsla(stroke.color)) }} />
+					</div>
 					<div>
 						<Text id="color" placeholder="Color" onChange={console.log}>
 							{Colors.rgbaToHex(stroke.color)}
@@ -107,7 +108,6 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 			</div>
 
 			{getStrokes(selected).map(toStroke)}
-			<style jsx>{``}</style>
 		</div>
 	);
 }
