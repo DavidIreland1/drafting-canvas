@@ -68,7 +68,7 @@ export default function Text({ selected, store, actions, width, fonts }) {
 						<option key={i} value={font.family} />
 					))}
 				</DataList>
-				<Select id="weight" label="" value={selected[0].weight} onChange={updateText}>
+				<Select id="weight" value={selected[0].weight} onChange={updateText}>
 					{weights.map((weight, i) => (
 						<option key={i} value={weight}>
 							{weight}

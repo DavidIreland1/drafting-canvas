@@ -51,9 +51,9 @@ function openPicker(event, fill, setPicker, selected_ids, store, actions) {
 
 	setPicker(
 		<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
-			<Select id="type" label="" value={fill.type} onChange={(event) => setProperty({ ...fill, type: event.target.value })}>
-				<option id="Solid">Solid</option>
-				<option id="Image">Image</option>
+			<Select id="type" value={fill.type} onChange={(event) => setProperty({ ...fill, type: event.target.value })}>
+				<option value="Solid">Solid</option>
+				<option value="Image">Image</option>
 			</Select>
 		</Picker>
 	);

@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import Cross from './icons/cross';
 import { clamp } from '../utils/utils';
 import { useSelector } from 'react-redux';
+import Colors from './properties/colors';
+import Select from './properties/inputs/select';
 
 export default function Picker({ setProperty, selector, event, setPicker, children }) {
 	const [picker_position, setPickerPosition] = useState({ x: event.clientX - 350, y: event.clientY - 80 });
@@ -61,7 +63,9 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 		);
 	};
 
-	const hsba = (property as any).color;
+	const { color: hsba, format } = property as any;
+
+	console.log(format, hsba);
 
 	const dragFade = (down_event) => {
 		drag(down_event, 'fade', (move_event, bounds) => {
@@ -116,11 +120,14 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 			</div>
 
 			<div id="hsla">
-				<div>HSBA</div>
-				<div>{Math.round(hsba[0] * 360)}</div>
-				<div>{Math.round(hsba[1] * 100)}</div>
-				<div>{Math.round(hsba[2] * 100)}</div>
-				<div>{Math.round(hsba[3] * 100)}%</div>
+				<Select id="format" value={format} onChange={(event) => setProperty({ ...(property as any), format: event.target.value })}>
+					<option value="hex8">Hex</option>
+					<option value="rgba">RGB</option>
+					<option value="css">CSS</option>
+					<option value="hsla">HSL</option>
+					<option value="hsba">HSB</option>
+				</Select>
+				{values(hsba, format)}
 			</div>
 
 			<style jsx>{`
@@ -133,14 +140,7 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 				#name {
 					margin: auto 0;
 				}
-				#hsla {
-					display: grid;
-					grid-auto-flow: column;
-					width: 100%;
-					color: var(--text-color);
-					padding: 0 20px;
-					box-sizing: border-box;
-				}
+
 				#container {
 					position: absolute;
 					z-index: 7;
@@ -217,7 +217,54 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 					width: 1em;
 					height: 1em;
 				}
+				#hsla {
+					display: grid;
+					grid-auto-flow: column;
+					width: 100%;
+					color: var(--text-color);
+					padding: 0 20px;
+					box-sizing: border-box;
+				}
 			`}</style>
 		</div>
 	);
+}
+
+function values(hsba, format) {
+	console.log(format, Colors.toString(hsba, format));
+	if (format.startsWith('hex')) return <input value={Colors.toString(hsba, format)} onChange={console.log} />;
+
+	if (format.startsWith('css')) return <input value={Colors.toString(hsba, 'rgba')} onChange={console.log} />;
+
+	switch (format) {
+		case 'hsba':
+			return (
+				<>
+					<div>{Math.round(hsba[0] * 360)}</div>
+					<div>{Math.round(hsba[1] * 100)}</div>
+					<div>{Math.round(hsba[2] * 100)}</div>
+					<div>{Math.round(hsba[3] * 100)}%</div>
+				</>
+			);
+		case 'hsla':
+			const hsla = Colors.hslaToHsba(hsba);
+			return (
+				<>
+					<div>{Math.round(hsla[0] * 360)}</div>
+					<div>{Math.round(hsla[1] * 100)}</div>
+					<div>{Math.round(hsla[2] * 100)}</div>
+					<div>{Math.round(hsla[3] * 100)}%</div>
+				</>
+			);
+		case 'rgba':
+			const rgba = Colors.hslaToHsba(hsba);
+			return (
+				<>
+					<div>{Math.round(rgba[0] * 255)}</div>
+					<div>{Math.round(rgba[1] * 255)}</div>
+					<div>{Math.round(rgba[2] * 255)}</div>
+					<div>{Math.round(rgba[3] * 100)}%</div>
+				</>
+			);
+	}
 }

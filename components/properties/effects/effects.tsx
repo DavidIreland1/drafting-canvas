@@ -88,7 +88,7 @@ export default function Effect({ selected, store, actions, setPicker, width }) {
 				</div>
 
 				<div className="grid" style={{ gap: `8px calc(max(20vw, 15px) / 20)` }}>
-					<Select id="type" label="" value={effect.type} onChange={(event) => updateEffect(event, effect)}>
+					<Select id="type" value={effect.type} onChange={(event) => updateEffect(event, effect)}>
 						<option value="Drop shadow">Drop Shadow</option>
 						<option value="Inner shadow">Inner Shadow</option>
 					</Select>
