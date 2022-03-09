@@ -1,16 +1,22 @@
 // All values are [0-1]
 
+import { round } from '../../utils/utils';
+
 const Colors = {
 	toString: (hsla, type = 'hsla'): string => {
 		switch (type) {
 			case 'hsl':
-				return Colors.hslToString(hsla);
+				return Colors.toHslString(hsla);
 			case 'hsla':
-				return Colors.hslaToString(hsla);
+				return Colors.toHslaString(hsla);
+			case 'hsb':
+				return Colors.toHsbString(hsla);
+			case 'hsba':
+				return Colors.toHsbaString(hsla);
 			case 'rgb':
-				return Colors.rgbToString(Colors.hslaToRgba(hsla));
+				return Colors.toRgbString(Colors.hslaToRgba(hsla));
 			case 'rgba':
-				return Colors.rgbaToString(hsla);
+				return Colors.toRgbaString(Colors.hslaToRgba(hsla));
 			case 'hex3':
 				return Colors.rgbaToHex4(Colors.hslaToRgba(hsla).slice(0, 3));
 			case 'hex4':
@@ -21,19 +27,25 @@ const Colors = {
 				return Colors.rgbaToHex8(Colors.hslaToRgba(hsla).slice(0, 3));
 			case 'name':
 				return names[Colors.toString(hsla, 'hex6')];
-		} // add hsba,
+		}
 	},
-	hslToString: ([h, s, l, a]) => {
-		return `hsla(${Math.floor(h * 360)},${Math.floor(s * 100)}%,${Math.floor(l * 100)}%)`;
+	toHslString: ([h, s, l, a]) => {
+		return `hsl(${Math.floor(h * 360)},${Math.floor(s * 100)}%,${Math.floor(l * 100)}%)`;
 	},
-	hslaToString: ([h, s, l, a]) => {
-		return `hsla(${Math.floor(h * 360)},${Math.floor(s * 100)}%,${Math.floor(l * 100)}%,${a})`;
+	toHslaString: ([h, s, l, a]) => {
+		return `hsla(${Math.floor(h * 360)},${Math.floor(s * 100)}%,${Math.floor(l * 100)}%,${round(a, 2)})`;
 	},
-	rgbToString: ([r, g, b, a]) => {
+	toHsbString: ([h, s, l, a]) => {
+		return `hsb(${Math.floor(h * 360)},${Math.floor(s * 100)}%,${Math.floor(l * 100)}%)`;
+	},
+	toHsbaString: ([h, s, l, a]) => {
+		return `hsba(${Math.floor(h * 360)},${Math.floor(s * 100)}%,${Math.floor(l * 100)}%,${round(a, 2)})`;
+	},
+	toRgbString: ([r, g, b, a]) => {
 		return `rgb(${Math.floor(r * 255)}, ${Math.floor(g * 255)}, ${Math.floor(b * 255)})`;
 	},
-	rgbaToString: ([r, g, b, a]) => {
-		return `rgb(${Math.floor(r * 255)}, ${Math.floor(g * 255)}, ${Math.floor(b * 255)}, ${a})`;
+	toRgbaString: ([r, g, b, a]) => {
+		return `rgba(${Math.floor(r * 255)}, ${Math.floor(g * 255)}, ${Math.floor(b * 255)}, ${round(a, 2)})`;
 	},
 	stringToRgba: (color) => {
 		if (typeof color !== 'string') return color;
@@ -129,9 +141,7 @@ const Colors = {
 		return [r, g, b, a];
 	},
 	isValid: (color: string): boolean => {
-		const option = new Option().style;
-		option.color = color;
-		return option.color !== '';
+		return CSS.supports('color', color);
 	},
 	getFormat: (color: string): string => {
 		color = color.toLowerCase();

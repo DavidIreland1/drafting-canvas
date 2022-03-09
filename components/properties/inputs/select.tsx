@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-export default function Select({ id, label, value, onChange, children }) {
+export default function Select({ id, label = '', value, onChange, children }) {
 	if (value === undefined) return null;
 
 	const input = useRef(null);

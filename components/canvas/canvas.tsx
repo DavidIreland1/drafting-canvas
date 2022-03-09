@@ -47,9 +47,8 @@ function Canvas({ user_id, store, actions }, ref) {
 
 		initCanvas(canvas, user_id, store, actions, active);
 
-		store.subscribe(() => {
-			draw(context, store, actions, active, user_id);
-		});
+		draw(context, store, actions, active, user_id);
+		store.subscribe(() => draw(context, store, actions, active, user_id));
 	}, [canvas_ref.current]);
 
 	const svg = `

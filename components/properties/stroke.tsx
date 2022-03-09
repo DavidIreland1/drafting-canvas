@@ -42,10 +42,10 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 		};
 		setPicker(
 			<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
-				<Select id="type" label="" value={stroke.type} onChange={setType}>
-					<option id="Inner">Inner</option>
-					<option id="Center">Center</option>
-					<option id="Outer">Outer</option>
+				<Select id="type" value={stroke.type} onChange={setType}>
+					<option value="Inner">Inner</option>
+					<option value="Center">Center</option>
+					<option value="Outer">Outer</option>
 				</Select>
 			</Picker>
 		);
@@ -82,7 +82,7 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 				</div>
 				<div className="grid">
 					<Input id="width" label="W" value={stroke.width} min={0} step={0.1} onChange={(event) => changeWidth(event, stroke)} width={width}></Input>
-					<Select id="trpe" label="" value={stroke.type} onChange={(event) => changeType(event, stroke)}>
+					<Select id="trpe" value={stroke.type} onChange={(event) => changeType(event, stroke)}>
 						<option value="Inside">Inside</option>
 						<option value="Center">Center</option>
 						<option value="Outside">Outside</option>
