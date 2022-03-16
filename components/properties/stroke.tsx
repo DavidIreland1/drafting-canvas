@@ -69,7 +69,7 @@ export default function Stroke({ selected, store, actions, setPicker, width }) {
 				<div className="property-row">
 					<div>::</div>
 					<div className="checker-background">
-						<div className="property-color" onClick={(event) => openPicker(event, stroke)} style={{ background: Colors.toString(Colors.hsbaToHsla(stroke.color)) }} />
+						<div className="property-color" onClick={(event) => openPicker(event, stroke)} style={{ background: Colors.toString(stroke.color) }} />
 					</div>
 					<div>
 						<Text id="color" placeholder="Color" onChange={console.log}>

@@ -65,8 +65,6 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 
 	const { color: hsba, format } = property as any;
 
-	console.log(format, hsba);
-
 	const dragFade = (down_event) => {
 		drag(down_event, 'fade', (move_event, bounds) => {
 			const saturation = clamp(0, move_event.clientX - bounds.x - 8, bounds.width - 14);
@@ -231,11 +229,8 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 }
 
 function values(hsba, format) {
-	console.log(format, Colors.toString(hsba, format));
 	if (format.startsWith('hex')) return <input value={Colors.toString(hsba, format)} onChange={console.log} />;
-
 	if (format.startsWith('css')) return <input value={Colors.toString(hsba, 'rgba')} onChange={console.log} />;
-
 	switch (format) {
 		case 'hsba':
 			return (
