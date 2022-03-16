@@ -7,6 +7,7 @@
 		"build": "next build && next export",
 		"start": "next start",
 		"serve": "next serve",
+		"lint": "next lint",
 		"devstart": "NODE_ENV=production node server.js",
 		"reducers": "npx webpack --config webpack.reducers.js"
 	},
@@ -31,6 +32,8 @@
 	},
 	"devDependencies": {
 		"@types/react": "^17.0.13",
+		"eslint": "8.10.0",
+		"eslint-config-next": "12.1.0",
 		"ts-loader": "^9.2.3",
 		"ts-node": "^10.1.0",
 		"typescript": "^4.3.5",

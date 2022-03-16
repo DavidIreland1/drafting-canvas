@@ -7,7 +7,7 @@ import Minus from '../icons/minus';
 import Plus from '../icons/plus';
 import Select from './inputs/select';
 import Text from './inputs/text';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Fill({ selected, store, actions, setPicker }) {
 	const selected_ids = selected.map((element) => element.id);
@@ -17,10 +17,12 @@ export default function Fill({ selected, store, actions, setPicker }) {
 		<div id="property-container">
 			<div className="property-heading">
 				<h4>FILL</h4>
-				<Plus onClick={addFill} />
+				<Plus onClick={() => addFill(selected_ids, store, actions)} />
 			</div>
 
-			{fills.map((fill) => toFill(fill, setPicker, selected_ids, store, actions))}
+			{fills.map((fill) => (
+				<FillInput key={fill.id} fill={fill} setPicker={setPicker} selected_ids={selected_ids} store={store} actions={actions} />
+			))}
 		</div>
 	);
 }
@@ -91,24 +93,22 @@ function dragEnd() {
 	target.parentElement.classList.remove('blank');
 }
 
-let previous_color = '';
-function toFill(fill, setPicker, selected_ids, store, actions) {
+function FillInput({ fill, setPicker, selected_ids, store, actions }) {
 	// const hex = Colors.rgbaToHex8(Colors.hslaToRgba(Colors.hsbaToHsla(fill.color)));
-	const hex = Colors.toString(fill.color, fill.format);
 
+	// console.log(fill.color, fill.format, Colors.toString(fill.color, fill.format));
+	const hex = Colors.toString(fill.color, fill.format);
 	const [color, setColor] = useState(hex);
 
-	if (previous_color !== hex) {
-		previous_color = hex;
+	useEffect(() => {
 		setColor(hex);
-	}
-	// if (color !== hex) setColor(hex);
+	}, [hex]);
 
 	function changeColor(event) {
 		const new_color = event.target.value;
 		setColor(new_color);
 		if (Colors.isValid(new_color)) {
-			console.log(Colors.getFormat(new_color));
+			console.log('format', Colors.getFormat(new_color));
 			store.dispatch(
 				actions.setFill({
 					selected_ids,
@@ -129,7 +129,7 @@ function toFill(fill, setPicker, selected_ids, store, actions) {
 			{fill.type === 'Solid' || fill.type === 'Text' ? (
 				// Color Picker
 				<div className="checker-background">
-					<div className="property-color" onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} style={{ background: Colors.toString(Colors.hsbaToHsla(fill.color)) }} />
+					<div className="property-color" onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} style={{ background: Colors.toString(fill.color) }} />
 				</div>
 			) : (
 				// Image

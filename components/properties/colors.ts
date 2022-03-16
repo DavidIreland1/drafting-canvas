@@ -3,7 +3,8 @@
 import { round } from '../../utils/utils';
 
 const Colors = {
-	toString: (hsla, type = 'hsla'): string => {
+	toString: (hsba, type = 'hsla'): string => {
+		const hsla = Colors.hsbaToHsla(hsba);
 		switch (type) {
 			case 'hsl':
 				return Colors.toHslString(hsla);
@@ -24,22 +25,22 @@ const Colors = {
 			case 'hex6':
 				return Colors.rgbaToHex8(Colors.hslaToRgba(hsla).slice(0, 3));
 			case 'hex8':
-				return Colors.rgbaToHex8(Colors.hslaToRgba(hsla).slice(0, 3));
+				return Colors.rgbaToHex8(Colors.hslaToRgba(hsla));
 			case 'name':
-				return names[Colors.toString(hsla, 'hex6')];
+				return names[Colors.toString(hsba, 'hex6')];
 		}
 	},
 	toHslString: ([h, s, l, a]) => {
-		return `hsl(${Math.floor(h * 360)},${Math.floor(s * 100)}%,${Math.floor(l * 100)}%)`;
+		return `hsl(${Math.floor(h * 360)}, ${Math.floor(s * 100)}%, ${Math.floor(l * 100)}%)`;
 	},
 	toHslaString: ([h, s, l, a]) => {
-		return `hsla(${Math.floor(h * 360)},${Math.floor(s * 100)}%,${Math.floor(l * 100)}%,${round(a, 2)})`;
+		return `hsla(${Math.floor(h * 360)}, ${Math.floor(s * 100)}%, ${Math.floor(l * 100)}%, ${round(a, 2)})`;
 	},
-	toHsbString: ([h, s, l, a]) => {
-		return `hsb(${Math.floor(h * 360)},${Math.floor(s * 100)}%,${Math.floor(l * 100)}%)`;
+	toHsbString: ([h, s, b, a]) => {
+		return `hsb(${Math.floor(h * 360)}, ${Math.floor(s * 100)}%, ${Math.floor(b * 100)}%)`;
 	},
-	toHsbaString: ([h, s, l, a]) => {
-		return `hsba(${Math.floor(h * 360)},${Math.floor(s * 100)}%,${Math.floor(l * 100)}%,${round(a, 2)})`;
+	toHsbaString: ([h, s, b, a]) => {
+		return `hsba(${Math.floor(h * 360)}, ${Math.floor(s * 100)}%, ${Math.floor(b * 100)}%, ${round(a, 2)})`;
 	},
 	toRgbString: ([r, g, b, a]) => {
 		return `rgb(${Math.floor(r * 255)}, ${Math.floor(g * 255)}, ${Math.floor(b * 255)})`;
@@ -149,6 +150,23 @@ const Colors = {
 		if (color.startsWith('#')) return 'hex' + (color.length - 1);
 		if (color.includes('(')) return color.split('(')[0];
 		return 'name';
+	},
+	circle: (color) => {
+		const rgba = Colors.stringToRgba(color);
+		const hsla = Colors.rgbaToHsla(rgba);
+		const hsba = Colors.hslaToHsba(hsla);
+
+		const hsla2 = Colors.hsbaToHsla(hsba);
+		const rgba2 = Colors.hslaToRgba(hsla2);
+		const hex6 = Colors.rgbaToHex8(rgba2.slice(0, 3));
+		const name = names[hex6];
+
+		return name;
+	},
+
+	test: () => {
+		console.log(Object.values(names).length);
+		return Object.values(names).filter((color) => Colors.circle(color) === color);
 	},
 };
 

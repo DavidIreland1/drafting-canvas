@@ -31,7 +31,7 @@ export default function Background({ store, actions, setPicker }) {
 
 				<div className="property-row">
 					<div className="checker-background">
-						<div className="property-color" onClick={(event) => openPicker(event)} style={{ background: Colors.toString(Colors.hsbaToHsla(page.color)) }} />
+						<div className="property-color" onClick={(event) => openPicker(event)} style={{ background: Colors.toString(page.color) }} />
 					</div>
 					<Text id="color" placeholder="Color" onChange={console.log}>
 						{Colors.rgbaToHex8(page.color)}
