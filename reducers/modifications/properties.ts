@@ -1,6 +1,6 @@
 import Elements, { flatten, forEachElement, selected } from '../../components/elements/elements';
 
-export default {
+const property_reducers = {
 	addFill: (state, props) => {
 		const { selected_ids } = props.payload;
 		selected(state.elements, selected_ids).forEach((element) => {
@@ -79,6 +79,8 @@ export default {
 		});
 	},
 	setBackground: (state, props) => {
-		state.page.color = props.payload.color;
+		state.page = props.payload;
 	},
 };
+
+export default property_reducers;

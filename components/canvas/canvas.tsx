@@ -1,14 +1,7 @@
-import { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
+import { useRef, useEffect, useImperativeHandle, forwardRef, useState } from 'react';
+import initCanvas from './init-canvas';
 import draw from './draw';
-
-import { initCanvas } from './init-canvas';
-
 import TextLayer from './text-layer';
-
-// This shading pollyfill for safari and firefox doesn't really work
-// import('./polyfill');
-
-let last_x = 0;
 
 export default forwardRef(Canvas);
 
@@ -21,6 +14,8 @@ function Canvas({ user_id, store, actions }, ref) {
 			onResize(canvas_ref.current, store, actions, user_id);
 		},
 	}));
+
+	const [background, setBackground] = useState('#EEEF');
 
 	useEffect(() => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
@@ -49,7 +44,10 @@ function Canvas({ user_id, store, actions }, ref) {
 
 		draw(context, store, actions, active, user_id);
 		store.subscribe(() => draw(context, store, actions, active, user_id));
-	}, [canvas_ref.current]);
+		setTimeout(() => {
+			setBackground('');
+		}, 100);
+	}, [canvas_ref]);
 
 	const svg = `
 		<svg xmlns="http://www.w3.org/2000/svg"  width='24' height='24' version="1.1" viewBox="0 0 100 100" stroke="white" stroke-width="4" >
@@ -61,7 +59,7 @@ function Canvas({ user_id, store, actions }, ref) {
 	return (
 		<div id="container">
 			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} actions={actions} />
-			<canvas className="checkers" ref={canvas_ref} tabIndex={1} />
+			<canvas className="checkers" ref={canvas_ref} tabIndex={1} style={{ background: background, cursor: cursor }} />
 
 			<style jsx>{`
 				#container {
@@ -70,8 +68,6 @@ function Canvas({ user_id, store, actions }, ref) {
 				canvas {
 					width: 100%;
 					height: 100%;
-					background: var(--off-white);
-					cursor: none;
 					outline: none;
 					cursor: ${cursor};
 					--checker-size: 8px;
@@ -91,6 +87,7 @@ function Canvas({ user_id, store, actions }, ref) {
 	);
 }
 
+let last_x = 0;
 function onResize(canvas, store, actions, user_id) {
 	const { width, height } = canvas.getBoundingClientRect();
 
@@ -106,35 +103,3 @@ function onResize(canvas, store, actions, user_id) {
 		})
 	);
 }
-
-// function observeResize(canvas, store, actions, user_id) {
-// 	let last_x = canvas.getBoundingClientRect().left;
-// 	let observer_started = false;
-
-// 	const resize_observer = new ResizeObserver((entries) => {
-// 		const { width, height } = entries[0].contentRect;
-
-// 		if (observer_started) {
-// 			observer_started = false;
-// 			return;
-// 		}
-// 		observer_started = true;
-
-// 		if (canvas.width === width && canvas.height === height) return;
-
-// 		canvas.width = width * window.devicePixelRatio;
-// 		canvas.height = height * window.devicePixelRatio;
-
-// 		const delta_x = last_x - canvas.getBoundingClientRect().left;
-// 		last_x -= delta_x;
-// 		store.dispatch(
-// 			actions.view({
-// 				user_id: user_id,
-// 				delta_x: delta_x * 2,
-// 			})
-// 		);
-// 	});
-// 	resize_observer.observe(canvas);
-
-// 	return resize_observer;
-// }

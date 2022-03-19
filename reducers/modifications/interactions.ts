@@ -3,10 +3,7 @@ import Elements, { flatten, forEachElement, selected } from '../../components/el
 import { slice } from './../../redux/slice';
 
 import Settings from '../../components/settings';
-
-function clone(data) {
-	return JSON.parse(JSON.stringify(data));
-}
+import { clone } from '../../utils/utils';
 
 const interactions = {
 	resize: (state, props) => {

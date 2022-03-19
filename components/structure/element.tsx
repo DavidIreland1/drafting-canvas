@@ -48,7 +48,7 @@ export default function Element({ store, actions, element, indentation, restruct
 	}
 
 	return (
-		<div id="element" element-id={element.id} draggable="true" onDragStart={drag} className={(element.selected ? 'highlighted' : '') + (element.type === 'group' || element.type === 'frame' ? ' group' : '')}>
+		<div id="element" element-id={element.id} draggable="true" onDragStart={drag} className={(element.selected ? 'highlighted' : '') + (element.type === 'group' || element.type === 'frame' ? ' group' : '')} onKeyPress={(event) => console.log(event, store, actions)}>
 			<div id="label" className={(element.selected ? 'selected' : '') + (element.hover ? ' hover' : '')} style={{ paddingLeft: indentation + 'px' }} onMouseEnter={setHover} onMouseLeave={setHover}>
 				<label onClick={select}>{element.label}</label>
 

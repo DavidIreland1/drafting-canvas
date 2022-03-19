@@ -46,9 +46,9 @@ export default function Properties({ store, actions, setPicker, fonts, onResize 
 					<Text selected={selected} store={store} actions={actions} width={width} fonts={fonts} />
 					<Fill selected={selected} store={store} actions={actions} setPicker={setPicker} />
 					<div className="divider" />
-					<Stroke selected={selected} store={store} actions={actions} setPicker={setPicker} width={width} />
+					<Stroke selected={selected} store={store} actions={actions} setPicker={setPicker} />
 					<div className="divider" />
-					<Effects selected={selected} store={store} actions={actions} setPicker={setPicker} width={width} />
+					<Effects selected={selected} store={store} actions={actions} setPicker={setPicker} />
 				</div>
 			)}
 

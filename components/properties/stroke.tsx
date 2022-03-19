@@ -8,106 +8,123 @@ import Eye from '../icons/eye';
 import Minus from '../icons/minus';
 import Plus from '../icons/plus';
 import Text from './inputs/text';
+import { useEffect, useState } from 'react';
 
-export default function Stroke({ selected, store, actions, setPicker, width }) {
+export default function Stroke({ selected, store, actions, setPicker }) {
 	const selected_ids = selected.map((element) => element.id);
 
-	function addStroke() {
-		store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 1, color: [0.5, 0.5, 1, 1], format: 'hex4', visible: true } }));
-	}
-
-	function removeStroke(stroke) {
-		store.dispatch(actions.removeStroke({ id: stroke.id }));
-	}
-
-	function toggleStroke(stroke) {
-		store.dispatch(actions.setStroke({ selected_ids, props: { id: stroke.id, visible: !stroke.visible } }));
-	}
-
-	const setProperty = (stroke) => {
-		store.dispatch(actions.setStroke({ selected_ids, props: stroke }));
-	};
-
-	function openPicker(event, stroke) {
-		function setType(event) {
-			setProperty({ ...stroke, type: event.target.value });
-		}
-
-		const selector = (state) => {
-			return flatten(state.present.elements)
-				.filter((element) => element.type !== 'group' && element.selected)
-				.map((element) => element.stroke)
-				.flat()
-				.find((prop) => prop.id === stroke.id);
-		};
-		setPicker(
-			<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
-				<Select id="type" value={stroke.type} onChange={setType}>
-					<option value="Inner">Inner</option>
-					<option value="Center">Center</option>
-					<option value="Outer">Outer</option>
-				</Select>
-			</Picker>
-		);
-	}
-
-	function changeWidth(event, stroke) {
-		store.dispatch(actions.setStroke({ selected_ids, props: { id: stroke.id, width: Number(event.target.value) } }));
-	}
-
-	function changeType(event, stroke) {
-		store.dispatch(actions.setStroke({ selected_ids, props: { id: stroke.id, type: event.target.value } }));
-	}
-
-	function getStrokes(selected) {
-		return selected.map((element) => Elements[element.type].getStroke(element)).flat();
-	}
-
-	function toStroke(stroke) {
-		return (
-			<div key={stroke.id}>
-				<div className="property-row">
-					<div>::</div>
-					<div className="checker-background">
-						<div className="property-color" onClick={(event) => openPicker(event, stroke)} style={{ background: Colors.toString(stroke.color) }} />
-					</div>
-					<div>
-						<Text id="color" placeholder="Color" onChange={console.log}>
-							{Colors.rgbaToHex8(stroke.color)}
-						</Text>
-					</div>
-
-					<Eye open={stroke.visible} onClick={() => toggleStroke(stroke)} />
-					<Minus onClick={() => removeStroke(stroke)} />
-				</div>
-				<div className="grid">
-					<Input id="width" label="W" value={stroke.width} min={0} step={0.1} onChange={(event) => changeWidth(event, stroke)} width={width}></Input>
-					<Select id="trpe" value={stroke.type} onChange={(event) => changeType(event, stroke)}>
-						<option value="Inside">Inside</option>
-						<option value="Center">Center</option>
-						<option value="Outside">Outside</option>
-					</Select>
-				</div>
-
-				<style jsx>{`
-					.grid {
-						display: grid;
-						grid-template-columns: auto auto;
-						padding: 0 10px;
-					}
-				`}</style>
-			</div>
-		);
-	}
+	const strokes = selected.map((element) => Elements[element.type].getStroke(element)).flat();
 
 	return (
 		<div id="property-container">
 			<div className="property-heading">
 				<h4>STROKE</h4>
-				<Plus onClick={addStroke} />
+				<Plus onClick={() => addStroke(selected_ids, store, actions)} />
 			</div>
 
-			{getStrokes(selected).map(toStroke)}
+			{strokes.map((stroke) => (
+				<StrokeInput key={stroke.id} stroke={stroke} setPicker={setPicker} selected_ids={selected_ids} store={store} actions={actions} />
+			))}
+		</div>
+	);
+}
+
+function addStroke(selected_ids, store, actions) {
+	store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 1, color: [0.5, 0.5, 1, 1], format: 'hex4', visible: true } }));
+}
+
+function removeStroke(stroke, store, actions) {
+	store.dispatch(actions.removeStroke({ id: stroke.id }));
+}
+
+function toggleStroke(stroke, selected_ids, store, actions) {
+	store.dispatch(actions.setStroke({ selected_ids, props: { id: stroke.id, visible: !stroke.visible } }));
+}
+
+function openPicker(event, stroke, setPicker, selected_ids, store, actions) {
+	const setProperty = (stroke) => {
+		store.dispatch(actions.setStroke({ selected_ids, props: stroke }));
+	};
+
+	const selector = (state) => {
+		return flatten(state.present.elements)
+			.filter((element) => element.type !== 'group' && element.selected)
+			.map((element) => element.stroke)
+			.flat()
+			.find((prop) => prop.id === stroke.id);
+	};
+	setPicker(
+		<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
+			<Select id="type" value={stroke.type} onChange={(event) => setProperty({ ...stroke, type: event.target.value })}>
+				<option value="Inner">Inner</option>
+				<option value="Center">Center</option>
+				<option value="Outer">Outer</option>
+			</Select>
+		</Picker>
+	);
+}
+
+function changeWidth(event, stroke, selected_ids, store, actions) {
+	store.dispatch(actions.setStroke({ selected_ids, props: { id: stroke.id, width: Number(event.target.value) } }));
+}
+
+function changeType(event, stroke, selected_ids, store, actions) {
+	store.dispatch(actions.setStroke({ selected_ids, props: { id: stroke.id, type: event.target.value } }));
+}
+
+function StrokeInput({ stroke, setPicker, selected_ids, store, actions }) {
+	const color_string = Colors.toString(stroke.color, stroke.format);
+	const [color, setColor] = useState(color_string);
+	useEffect(() => setColor(color_string), [color_string]);
+
+	function changeColor(event) {
+		const new_color = event.target.value;
+		setColor(new_color);
+		if (Colors.isValid(new_color)) {
+			store.dispatch(
+				actions.setStroke({
+					selected_ids,
+					props: {
+						...stroke,
+						color: Colors.hslaToHsba(Colors.rgbaToHsla(Colors.stringToRgba(new_color))),
+						format: Colors.getFormat(new_color),
+					},
+				})
+			);
+		}
+	}
+
+	return (
+		<div key={stroke.id}>
+			<div className="property-row">
+				<div>::</div>
+				<div className="checker-background">
+					<div className="property-color" onClick={(event) => openPicker(event, stroke, setPicker, selected_ids, store, actions)} style={{ background: Colors.toString(stroke.color) }} />
+				</div>
+
+				<Text placeholder="Color" className={Colors.isValid(color) || 'invalid'} onChange={changeColor}>
+					{color}
+				</Text>
+
+				<Eye open={stroke.visible} onClick={() => toggleStroke(stroke, selected_ids, store, actions)} />
+				<Minus onClick={() => removeStroke(stroke, store, actions)} />
+			</div>
+			<div className="grid">
+				<Input id="width" label="W" value={stroke.width} min={0} step={0.1} onChange={(event) => changeWidth(event, stroke, selected_ids, store, actions)} />
+				<Select id="trpe" value={stroke.type} onChange={(event) => changeType(event, stroke, selected_ids, store, actions)}>
+					<option value="Inside">Inside</option>
+					<option value="Center">Center</option>
+					<option value="Outside">Outside</option>
+				</Select>
+			</div>
+
+			<style jsx>{`
+				.grid {
+					display: grid;
+					grid-template-columns: auto auto;
+					padding: 0 10px;
+				}
+			`}</style>
 		</div>
 	);
 }

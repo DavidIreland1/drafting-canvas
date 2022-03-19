@@ -8,118 +8,143 @@ import Plus from './../../icons/plus';
 import Input from '../inputs/input';
 import Text from '../inputs/text';
 import Select from '../inputs/select';
+import { useEffect, useState } from 'react';
 
-export default function Effect({ selected, store, actions, setPicker, width }) {
+export default function Effect({ selected, store, actions, setPicker }) {
 	const selected_ids = selected.map((element) => element.id);
 
-	function addEffect() {
-		store.dispatch(
-			actions.addEffect({
-				selected_ids,
-				props: {
-					id: generateID(),
-					type: 'Drop shadow',
-					// type: 'Inner shadow',
-					x: 0,
-					y: 0,
-					blur: 10,
-					spread: 0,
-					color: [0, 0, 0, 1],
-					visible: true,
-				},
-			})
-		);
-	}
-
-	function removeEffect(effect) {
-		store.dispatch(actions.removeEffect({ id: effect.id }));
-	}
-
-	function toggleEffect(effect) {
-		store.dispatch(actions.setEffect({ selected_ids, props: { id: effect.id, visible: !effect.visible } }));
-	}
-
-	function openPicker(event, effect) {
-		const setProperty = (effect) => {
-			store.dispatch(actions.setEffect({ selected_ids, props: effect }));
-		};
-		const selector = (state) => {
-			return flatten(state.present.elements)
-				.filter((element) => element.type !== 'group' && element.selected)
-				.map((element) => element.effect)
-				.flat()
-				.find((prop) => prop.id === effect.id);
-		};
-		setPicker(
-			<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
-				Effect
-			</Picker>
-		);
-	}
-
-	function updateEffect(event, effect) {
-		store.dispatch(
-			actions.setEffect({
-				selected_ids,
-				props: {
-					id: effect.id,
-					[event.target.id]: event.target.value,
-				},
-			})
-		);
-	}
-
-	function getEffects(selected) {
-		return selected.map((element) => Elements[element.type].getEffect(element)).flat();
-	}
-
-	function toEffect(effect) {
-		return (
-			<div key={effect.id}>
-				<div className="property-row">
-					<div>::</div>
-					<div className="checker-background">
-						<div className="property-color" onClick={(event) => openPicker(event, effect)} style={{ background: Colors.toString(effect.color) }} />
-					</div>
-					<Text onChange={console.log}>{Colors.rgbaToHex8(effect.color)}</Text>
-
-					<Eye open={effect.visible} onClick={() => toggleEffect(effect)} />
-					<Minus onClick={() => removeEffect(effect)} />
-				</div>
-
-				<div className="grid" style={{ gap: `8px calc(max(20vw, 15px) / 20)` }}>
-					<Select id="type" value={effect.type} onChange={(event) => updateEffect(event, effect)}>
-						<option value="Drop shadow">Drop Shadow</option>
-						<option value="Inner shadow">Inner Shadow</option>
-					</Select>
-				</div>
-
-				<div className="grid" style={{ gap: `8px calc(max(20vw, 15px) / 20)` }}>
-					<Input id="x" label="X" value={effect.x} onChange={(event) => updateEffect(event, effect)} width={width} />
-					<Input id="y" label="Y" value={effect.y} onChange={(event) => updateEffect(event, effect)} width={width} />
-					<Input id="blur" label="Blur" value={effect.blur} min={0} onChange={(event) => updateEffect(event, effect)} width={width} />
-					<Input id="spread" label="Spread" value={effect.spread} onChange={(event) => updateEffect(event, effect)} width={width} />
-				</div>
-
-				<style jsx>{`
-					.grid {
-						display: grid;
-						grid-template-columns: auto auto;
-						padding: 0 10px;
-					}
-				`}</style>
-			</div>
-		);
-	}
+	const effects = selected.map((element) => Elements[element.type].getEffect(element)).flat();
 
 	return (
 		<div id="property-container">
-			<div className="property-heading" onClick={addEffect}>
+			<div className="property-heading" onClick={() => addEffect(selected_ids, store, actions)}>
 				<h4>EFFECTS</h4>
 				<Plus />
 			</div>
 
-			{getEffects(selected).map(toEffect)}
+			{effects.map((effect) => (
+				<EffectInput key={effect.id} effect={effect} setPicker={setPicker} selected_ids={selected_ids} store={store} actions={actions} />
+			))}
+		</div>
+	);
+}
+
+function addEffect(selected_ids, store, actions) {
+	store.dispatch(
+		actions.addEffect({
+			selected_ids,
+			props: {
+				id: generateID(),
+				type: 'Drop shadow',
+				// type: 'Inner shadow',
+				x: 0,
+				y: 0,
+				blur: 10,
+				spread: 0,
+				color: [0, 0, 0, 1],
+				format: 'hex4',
+				visible: true,
+			},
+		})
+	);
+}
+
+function removeEffect(effect, store, actions) {
+	store.dispatch(actions.removeEffect({ id: effect.id }));
+}
+
+function toggleEffect(effect, selected_ids, store, actions) {
+	store.dispatch(actions.setEffect({ selected_ids, props: { id: effect.id, visible: !effect.visible } }));
+}
+
+function openPicker(event, effect, setPicker, selected_ids, store, actions) {
+	const setProperty = (effect) => {
+		store.dispatch(actions.setEffect({ selected_ids, props: effect }));
+	};
+	const selector = (state) => {
+		return flatten(state.present.elements)
+			.filter((element) => element.type !== 'group' && element.selected)
+			.map((element) => element.effect)
+			.flat()
+			.find((prop) => prop.id === effect.id);
+	};
+	setPicker(
+		<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
+			Effect
+		</Picker>
+	);
+}
+
+function updateEffect(event, effect, selected_ids, store, actions) {
+	store.dispatch(
+		actions.setEffect({
+			selected_ids,
+			props: {
+				id: effect.id,
+				[event.target.id]: event.target.value,
+			},
+		})
+	);
+}
+
+function EffectInput({ effect, setPicker, selected_ids, store, actions }) {
+	const color_string = Colors.toString(effect.color, effect.format);
+	const [color, setColor] = useState(color_string);
+	useEffect(() => setColor(color_string), [color_string]);
+
+	function changeColor(event) {
+		const new_color = event.target.value;
+		setColor(new_color);
+		if (Colors.isValid(new_color)) {
+			store.dispatch(
+				actions.setEffect({
+					selected_ids,
+					props: {
+						...effect,
+						color: Colors.hslaToHsba(Colors.rgbaToHsla(Colors.stringToRgba(new_color))),
+						format: Colors.getFormat(new_color),
+					},
+				})
+			);
+		}
+	}
+
+	return (
+		<div key={effect.id}>
+			<div className="property-row">
+				<div>::</div>
+				<div className="checker-background">
+					<div className="property-color" onClick={(event) => openPicker(event, effect, setPicker, selected_ids, store, actions)} style={{ background: Colors.toString(effect.color) }} />
+				</div>
+				<Text placeholder="Color" className={Colors.isValid(color) || 'invalid'} onChange={changeColor}>
+					{color}
+				</Text>
+
+				<Eye open={effect.visible} onClick={() => toggleEffect(effect, selected_ids, store, actions)} />
+				<Minus onClick={() => removeEffect(effect, store, actions)} />
+			</div>
+
+			<div className="grid" style={{ gap: `8px calc(max(20vw, 15px) / 20)` }}>
+				<Select id="type" value={effect.type} onChange={(event) => updateEffect(event, effect, selected_ids, store, actions)}>
+					<option value="Drop shadow">Drop Shadow</option>
+					<option value="Inner shadow">Inner Shadow</option>
+				</Select>
+			</div>
+
+			<div className="grid" style={{ gap: `8px calc(max(20vw, 15px) / 20)` }}>
+				<Input id="x" label="X" value={effect.x} onChange={(event) => updateEffect(event, effect, selected_ids, store, actions)} />
+				<Input id="y" label="Y" value={effect.y} onChange={(event) => updateEffect(event, effect, selected_ids, store, actions)} />
+				<Input id="blur" label="Blur" value={effect.blur} min={0} onChange={(event) => updateEffect(event, effect, selected_ids, store, actions)} />
+				<Input id="spread" label="Spread" value={effect.spread} onChange={(event) => updateEffect(event, effect, selected_ids, store, actions)} />
+			</div>
+
+			<style jsx>{`
+				.grid {
+					display: grid;
+					grid-template-columns: auto auto;
+					padding: 0 10px;
+				}
+			`}</style>
 		</div>
 	);
 }
