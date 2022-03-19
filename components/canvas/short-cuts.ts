@@ -2,9 +2,12 @@ import { ActionCreators } from 'redux-undo';
 import { generateID } from './../../utils/utils';
 
 export async function shortCuts(event, store, actions): Promise<boolean> {
+	if (event.metaKey === false && event.ctrlKey === false) return;
+
 	switch (event.key) {
 		case 'c':
 			const selected = JSON.stringify(store.getState().present.elements.filter((element) => element.selected));
+			if (selected.length === 0) return false;
 			navigator.clipboard.writeText(selected);
 			return true;
 

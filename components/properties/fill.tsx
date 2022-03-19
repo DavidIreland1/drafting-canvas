@@ -53,7 +53,7 @@ function openPicker(event, fill, setPicker, selected_ids, store, actions) {
 
 	setPicker(
 		<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
-			<Select id="type" value={fill.type} onChange={(event) => setProperty({ ...fill, type: event.target.value })}>
+			<Select id="type" value={fill.type} onChange={(event) => setProperty({ ...fill, type: event.target.value, x: 0, y: 0, src: '/images/draft.svg' })}>
 				<option value="Solid">Solid</option>
 				<option value="Image">Image</option>
 			</Select>
@@ -94,21 +94,14 @@ function dragEnd() {
 }
 
 function FillInput({ fill, setPicker, selected_ids, store, actions }) {
-	// const hex = Colors.rgbaToHex8(Colors.hslaToRgba(Colors.hsbaToHsla(fill.color)));
-
-	// console.log(fill.color, fill.format, Colors.toString(fill.color, fill.format));
-	const hex = Colors.toString(fill.color, fill.format);
-	const [color, setColor] = useState(hex);
-
-	useEffect(() => {
-		setColor(hex);
-	}, [hex]);
+	const color_string = Colors.toString(fill.color, fill.format);
+	const [color, setColor] = useState(color_string);
+	useEffect(() => setColor(color_string), [color_string]);
 
 	function changeColor(event) {
 		const new_color = event.target.value;
 		setColor(new_color);
 		if (Colors.isValid(new_color)) {
-			console.log('format', Colors.getFormat(new_color));
 			store.dispatch(
 				actions.setFill({
 					selected_ids,
@@ -126,17 +119,17 @@ function FillInput({ fill, setPicker, selected_ids, store, actions }) {
 		<div key={fill.id} id="prop" className="property-row" draggable={true} onDragStart={drag} onDragEnd={dragEnd} onMouseDown={setTarget} onDragOver={dragOver}>
 			<div id="handle">::</div>
 
-			{fill.type === 'Solid' || fill.type === 'Text' ? (
-				// Color Picker
-				<div className="checker-background">
+			<div className="checker-background">
+				{fill.type === 'Solid' || fill.type === 'Text' ? (
+					// Color Picker
 					<div className="property-color" onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} style={{ background: Colors.toString(fill.color) }} />
-				</div>
-			) : (
-				// Image
-				<img className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} />
-			)}
+				) : (
+					// Image
+					<img alt="IMG" className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} />
+				)}
+			</div>
 
-			<Text id="color" placeholder="Color" className={Colors.isValid(color) || 'invalid'} onChange={changeColor}>
+			<Text placeholder="Color" className={Colors.isValid(color) || 'invalid'} onChange={changeColor}>
 				{color}
 			</Text>
 			<Eye open={fill.visible} onClick={() => toggleFill(fill, selected_ids, store, actions)} />

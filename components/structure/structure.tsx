@@ -2,6 +2,8 @@ import { useRef, useState } from 'react';
 import Element from './element';
 import { flatten } from '../elements/elements';
 import { useSelector } from 'react-redux';
+import { shortCuts } from '../canvas/short-cuts';
+import { clone } from '../../utils/utils';
 
 export default function Structure({ store, actions, onResize }) {
 	const elements = useSelector(
@@ -52,8 +54,6 @@ export default function Structure({ store, actions, onResize }) {
 			}
 		});
 	};
-
-	const clone = (data) => JSON.parse(JSON.stringify(data));
 
 	return (
 		<div id="container" key={key} style={{ width: width }}>

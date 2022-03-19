@@ -27,7 +27,8 @@ const Colors = {
 			case 'hex8':
 				return Colors.rgbaToHex8(Colors.hslaToRgba(hsla));
 			case 'name':
-				return names[Colors.toString(hsba, 'hex6')];
+				const hex6 = Colors.toString(hsba, 'hex6');
+				return names[hex6] ?? hex6;
 		}
 	},
 	toHslString: ([h, s, l, a]) => {
@@ -142,6 +143,7 @@ const Colors = {
 		return [r, g, b, a];
 	},
 	isValid: (color: string): boolean => {
+		if (typeof CSS === 'undefined' || typeof CSS.supports !== 'function') return true;
 		return CSS.supports('color', color);
 	},
 	getFormat: (color: string): string => {

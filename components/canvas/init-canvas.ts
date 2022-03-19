@@ -1,7 +1,7 @@
 import { onWheel, hover, select } from './interaction';
 import { shortCuts } from './short-cuts';
 
-export function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, active) {
+export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, active) {
 	canvas.onwheel = (event: WheelEvent) => {
 		event.preventDefault();
 		onWheel(event, canvas, user_id, store, actions);
@@ -21,10 +21,8 @@ export function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, a
 			);
 		}
 
-		if (event.metaKey || event.ctrlKey) {
-			if (await shortCuts(event, store, actions)) {
-				event.preventDefault();
-			}
+		if (await shortCuts(event, store, actions)) {
+			event.preventDefault();
 		}
 	};
 

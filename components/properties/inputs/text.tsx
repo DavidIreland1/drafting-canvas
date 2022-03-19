@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-export default function Text({ id = undefined, placeholder = undefined, className = undefined, onChange, children }) {
+export default function Text({ id = undefined, placeholder = undefined, className = undefined, onChange = undefined, children = undefined }) {
 	const input = useRef(null);
 
 	function updateValue(event) {
