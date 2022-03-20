@@ -26,7 +26,7 @@ export default function drawScrollBars(context: CanvasRenderingContext2D, elemen
 	drawXBar(context, screen, x, bar_width, side_space, end_space, speed, min_length);
 	context.closePath();
 	context.fillStyle = '#4448';
-	context.strokeStyle = '#FFF8';
+	// context.strokeStyle = '#FFF8';
 	context.lineWidth = 2;
 	context.stroke();
 	context.fill();

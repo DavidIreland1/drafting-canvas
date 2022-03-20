@@ -76,6 +76,10 @@ Open on localhost
 -   [x] Lockable elements
 -   [x] Hidden elements
 -   [x] Shadow effects
+-   [x] Text
+-   [x] Fonts
+-   [x] Scroll bars
+-   [x] Responsive view port
 
 ### Features in Progress:
 
@@ -83,12 +87,10 @@ Open on localhost
 -   [ ] Spline tool
 -   [ ] Frames
 -   [ ] Image fill
--   [ ] Text
 
 ### Features TODO:
 
 -   [ ] Graient fill
--   [ ] Fonts
 -   [ ] Sortable props
 -   [ ] Export as SVG
 -   [ ] Export as PNG
@@ -96,7 +98,6 @@ Open on localhost
 -   [ ] Fix side resize
 -   [ ] Fix group resize
 -   [ ] Components
--   [ ] Scroll bars
 -   [ ] Right click menu
 -   [ ] Ink drop color selector
 -   [ ] Make Groups collapsable
@@ -105,7 +106,6 @@ Open on localhost
 -   [ ] RGBA color picker
 -   [ ] Touch screens
 -   [ ] Pen support
--   [ ] Responsive view port
 
 Contributions and feature suggestions very welcome!
 
