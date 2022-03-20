@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import DataList from './inputs/datalist';
-import Input from './inputs/input';
-import Select from './inputs/select';
+import DataList from './../inputs/datalist';
+import Input from './../inputs/input';
+import Select from './../inputs/select';
 
 async function importFont(fontFamily, variants = 'regular') {
 	const link = document.createElement('link');
@@ -29,9 +29,7 @@ export default function Text({ selected, store, actions, width, fonts }) {
 		if (!font) return;
 		setWeights(font.variants);
 
-		document.fonts.onloadingdone = (event) => {
-			console.log(event);
-			console.log('hello');
+		document.fonts.onloadingdone = () => {
 			updateText({ target: { id: 'style', value: 'normal' } });
 			updateText({ target: { id: 'family', value: font_family } });
 		};

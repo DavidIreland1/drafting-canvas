@@ -46,7 +46,7 @@ function Canvas({ user_id, store, actions }, ref) {
 		store.subscribe(() => draw(context, store, actions, active, user_id));
 		setTimeout(() => {
 			setBackground('');
-		}, 100);
+		}, 0);
 	}, [canvas_ref]);
 
 	const svg = `
@@ -54,7 +54,7 @@ function Canvas({ user_id, store, actions }, ref) {
 			<path d="M 2 0 l 0 70 l 23 -15 l 32 -3 L 2 0" style="filter: drop-shadow( 2px 3px 2px)" />
 		</svg>
 	`;
-	const cursor = `url("data:image/svg+xml,${encodeURIComponent(svg)}") 0 0, auto;`;
+	const cursor = `url("data:image/svg+xml,${encodeURIComponent(svg)}") 0 0, auto`;
 
 	return (
 		<div id="container">

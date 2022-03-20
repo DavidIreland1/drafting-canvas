@@ -2,12 +2,12 @@ import Picker from '../picker';
 import Elements, { flatten } from '../elements/elements';
 import { generateID } from '../../utils/utils';
 import Colors from './colors';
-import Input from './inputs/input';
-import Select from './inputs/select';
+import Input from '../inputs/input';
+import Select from '../inputs/select';
 import Eye from '../icons/eye';
 import Minus from '../icons/minus';
 import Plus from '../icons/plus';
-import Text from './inputs/text';
+import Text from '../inputs/text';
 import { useEffect, useState } from 'react';
 
 export default function Stroke({ selected, store, actions, setPicker }) {
@@ -30,7 +30,7 @@ export default function Stroke({ selected, store, actions, setPicker }) {
 }
 
 function addStroke(selected_ids, store, actions) {
-	store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 1, color: [0.5, 0.5, 1, 1], format: 'hex4', visible: true } }));
+	store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 10, color: [0.7, 0.5, 1, 1], format: 'hex4', visible: true } }));
 }
 
 function removeStroke(stroke, store, actions) {

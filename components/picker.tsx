@@ -3,8 +3,8 @@ import Cross from './icons/cross';
 import { clamp } from '../utils/utils';
 import { useSelector } from 'react-redux';
 import Colors from './properties/colors';
-import Select from './properties/inputs/select';
-import Text from './properties/inputs/text';
+import Select from './inputs/select';
+import Text from './inputs/text';
 
 export default function Picker({ setProperty, selector, event, setPicker, children }) {
 	const [picker_position, setPickerPosition] = useState({ x: event.clientX - 350, y: event.clientY - 80 });

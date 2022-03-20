@@ -6,7 +6,7 @@ import Background from './background';
 import Dimensions from './dimensions';
 import Fill from './fill';
 import Stroke from './stroke';
-import Effects from './effects/effects';
+import Effects from './effects';
 import Text from './text';
 
 export default function Properties({ store, actions, setPicker, fonts, onResize }) {

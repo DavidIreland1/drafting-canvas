@@ -5,8 +5,8 @@ import Colors from './colors';
 import Eye from '../icons/eye';
 import Minus from '../icons/minus';
 import Plus from '../icons/plus';
-import Select from './inputs/select';
-import Text from './inputs/text';
+import Select from '../inputs/select';
+import Text from '../inputs/text';
 import { useEffect, useState } from 'react';
 
 export default function Fill({ selected, store, actions, setPicker }) {
