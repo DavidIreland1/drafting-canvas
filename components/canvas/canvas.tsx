@@ -30,9 +30,8 @@ function Canvas({ user_id, store, actions }, ref) {
 		(window as any).canvas = canvas;
 		(window as any).context = context;
 
-		window.addEventListener('resize', () => {
-			onResize(canvas, store, actions, user_id);
-		});
+		window.addEventListener('resize', () => onResize(canvas, store, actions, user_id));
+		window.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
 
 		const active = {
 			hovering: [],
@@ -64,10 +63,11 @@ function Canvas({ user_id, store, actions }, ref) {
 			<style jsx>{`
 				#container {
 					position: relative;
+					height: calc(100vh - var(--nav-height));
 				}
 				canvas {
 					width: 100%;
-					height: 100%;
+					height: calc(100vh - var(--nav-height));
 					outline: none;
 					cursor: ${cursor};
 					--checker-size: 8px;
@@ -89,12 +89,13 @@ function Canvas({ user_id, store, actions }, ref) {
 
 let last_x = 0;
 function onResize(canvas, store, actions, user_id) {
-	const { width, height } = canvas.getBoundingClientRect();
+	const { width, height, left } = canvas.getBoundingClientRect();
 
 	canvas.width = width * window.devicePixelRatio;
+
 	canvas.height = height * window.devicePixelRatio;
 
-	const delta_x = last_x - canvas.getBoundingClientRect().left;
+	const delta_x = last_x - left;
 	last_x -= delta_x;
 	store.dispatch(
 		actions.view({

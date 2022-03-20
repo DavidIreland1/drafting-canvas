@@ -56,12 +56,12 @@ export default function Navbar({ store, actions }) {
 					<line x1="50" y1="20" x2="50" y2="80" />
 				</svg>
 
-				{/* <svg id="spline" className={cursor.type === 'spline' ? 'selected' : ''} viewBox="0 0 100 100">
+				<svg id="spline" className={cursor.type === 'spline' ? 'selected' : ''} viewBox="0 0 100 100">
 					<title>Spline</title>
 					<rect x="15" y="15" width="15" height="15" />
 					<path d="M 22.5 30 C 22.5 70, 77.5 30, 77.5 70 " />
 					<rect x="70" y="70" width="15" height="15" />
-				</svg> */}
+				</svg>
 
 				<svg id="frame" className={cursor.type === 'frame' ? 'selected' : ''} viewBox="0 0 100 100">
 					<title>Frame</title>
@@ -82,6 +82,7 @@ export default function Navbar({ store, actions }) {
 				#container {
 					background: #212123;
 					z-index: 2;
+					width: var(--nav-height);
 				}
 				#bar {
 					width: var(--nav-height);

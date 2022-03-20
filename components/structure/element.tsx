@@ -1,4 +1,3 @@
-import { hover } from '../canvas/interaction';
 import Eye from '../icons/eye';
 import Lock from '../icons/lock';
 
@@ -61,13 +60,13 @@ export default function Element({ store, actions, element, indentation, restruct
 				</div>
 			</div>
 
-			{element.type === 'group' || element.type === 'frame' ? (
+			{(element.type === 'group' || element.type === 'frame') && (
 				<div id="elements" onDragOver={(event) => event.preventDefault()}>
 					{element.elements.map((child) => (
 						<Element key={child.id} element={child} indentation={indentation + 15} store={store} actions={actions} restructure={restructure} />
 					))}
 				</div>
-			) : undefined}
+			)}
 			<style jsx>{`
 				#element {
 					width: calc(100% - 2px);

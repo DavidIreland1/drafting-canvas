@@ -1,6 +1,3 @@
-// import Defaults from './../../defaults';
-// const { line, box_size, highlight_color } = Defaults;
-
 import Colors from './../properties/colors';
 
 const images = {};
@@ -161,7 +158,6 @@ export default class Element {
 
 	// Maybe this can be removed
 	static insideBound(element, context: CanvasRenderingContext2D, cursor): boolean {
-		return false;
 		const bounds = this.bound(element);
 		const center = this.center(element);
 

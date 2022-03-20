@@ -26,8 +26,7 @@ export default function drawScrollBars(context: CanvasRenderingContext2D, elemen
 	drawXBar(context, screen, x, bar_width, side_space, end_space, speed, min_length);
 	context.closePath();
 	context.fillStyle = '#4448';
-	// context.strokeStyle = 'none';
-	// context.lineWidth = 2;
+	context.lineWidth = 0;
 	context.stroke();
 	context.fill();
 }
@@ -35,8 +34,8 @@ export default function drawScrollBars(context: CanvasRenderingContext2D, elemen
 function drawYBar(context, screen, y, bar_width, side_space, end_space, speed, min_length) {
 	const x = context.canvas.width - (bar_width + side_space);
 
-	const start_hidden = Math.max(screen.y1 - y.min, 0);
-	const end_hidden = Math.min(screen.y2 - y.max, 0);
+	const start_hidden = Math.max(screen.y1 - y.min, 0) / 10;
+	const end_hidden = Math.min(screen.y2 - y.max, 0) / 10;
 
 	if (start_hidden === 0 && end_hidden === 0) return;
 

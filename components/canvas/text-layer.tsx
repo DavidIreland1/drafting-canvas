@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import Colors from './../properties/colors';
@@ -12,17 +12,6 @@ export default function TextLayer({ canvas, user_id, store, actions }) {
 		(state: RootState) => (state as any).present.views.find((view) => view.id === user_id),
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)
 	);
-
-	const container = useRef(null);
-
-	useEffect(() => {
-		if (container.current === null) return;
-		container.current.addEventListener('wheel', (event) => {
-			event.preventDefault();
-			// Clone the wheel event through to the canvas
-			canvas.current.dispatchEvent(new event.constructor(event.type, event));
-		});
-	}, [container.current]);
 
 	if (editing.length === 0 || editing[0].type !== 'text' || typeof view === 'undefined') return null;
 
@@ -51,10 +40,14 @@ export default function TextLayer({ canvas, user_id, store, actions }) {
 	const rotated = {
 		transform: `rotate(${text.rotation}rad)`,
 	};
+	function propogateWheel(event) {
+		// event.preventDefault();
+		canvas.current.dispatchEvent(new event.nativeEvent.constructor(event.type, event));
+	}
 
 	return (
 		<>
-			<div id="container" ref={container}>
+			<div id="container" onWheel={propogateWheel}>
 				<div id="relative">
 					<div id="transformed" style={transformed}>
 						<div id="rotated" style={rotated}>
@@ -95,32 +88,20 @@ export default function TextLayer({ canvas, user_id, store, actions }) {
 function Editable({ id, element_id, value, style, align, placeholder = '', onChange }) {
 	const div = useRef(null);
 
-	function emitChange() {
-		onChange({
-			target: {
-				id: id,
-				value: div.current.innerText.replaceAll('\n\n', '\n'),
-			},
-		});
+	function updateText() {
+		onChange({ target: { id: id, value: div.current.innerText.replaceAll('\n\n', '\n') } });
 	}
 
 	useEffect(() => {
-		// div.current.focus();
 		window.getSelection().selectAllChildren(div.current);
-	}, [div.current]);
+	}, []);
 
 	return (
 		<>
 			{useMemo(
 				() => (
-					<div
-						id="wrapper"
-						style={{ alignItems: align }}
-						onClick={(event) => {
-							event.preventDefault();
-							div.current.focus();
-						}}>
-						<div id="editable" ref={div} style={style} onInput={emitChange} data-placeholder={placeholder} contentEditable suppressContentEditableWarning>
+					<div id="wrapper" style={{ alignItems: align }} onClick={() => div.current.focus()}>
+						<div id="editable" ref={div} style={style} onInput={updateText} data-placeholder={placeholder} contentEditable suppressContentEditableWarning>
 							{value}
 						</div>
 					</div>

@@ -111,7 +111,7 @@ function StrokeInput({ stroke, setPicker, selected_ids, store, actions }) {
 			</div>
 			<div className="grid">
 				<Input id="width" label="W" value={stroke.width} min={0} step={0.1} onChange={(event) => changeWidth(event, stroke, selected_ids, store, actions)} />
-				<Select id="trpe" value={stroke.type} onChange={(event) => changeType(event, stroke, selected_ids, store, actions)}>
+				<Select id="type" value={stroke.type} onChange={(event) => changeType(event, stroke, selected_ids, store, actions)}>
 					<option value="Inside">Inside</option>
 					<option value="Center">Center</option>
 					<option value="Outside">Outside</option>
@@ -121,7 +121,8 @@ function StrokeInput({ stroke, setPicker, selected_ids, store, actions }) {
 			<style jsx>{`
 				.grid {
 					display: grid;
-					grid-template-columns: auto auto;
+					grid-template-columns: 1fr 1fr;
+					gap: 10px;
 					padding: 0 10px;
 				}
 			`}</style>

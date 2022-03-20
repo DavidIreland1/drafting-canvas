@@ -43,12 +43,6 @@ export default function Text({ selected, store, actions, width, fonts }) {
 		div.style.height = '0';
 		document.body.append(div);
 		requestAnimationFrame(() => div.remove());
-
-		// setTimeout(() => {
-		// 	updateText({ target: { id: 'style', value: 'normal' } });
-		// 	updateText({ target: { id: 'family', value: font_family } });
-		// }, 400);
-		// importFont(font.files.regular);
 	}
 
 	const [weights, setWeights] = useState(['Lighter', 'Normal', 'Bold', 'Bolder']);
