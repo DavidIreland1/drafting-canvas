@@ -35,9 +35,11 @@ export default class Element {
 					if (!images[fill.id]) {
 						images[fill.id] = new Image();
 						images[fill.id].src = fill.src;
+						images[fill.id].onerror = () => (images[fill.id].broken = true);
+					} else if (images[fill.id].complete && !images[fill.id].broken) {
+						context.drawImage(images[fill.id], fill.x - element.width / 2, fill.y - element.height / 2, element.width, element.height);
+						context.restore();
 					}
-					context.drawImage(images[fill.id], fill.x - element.width / 2, fill.y - element.height / 2, element.width, element.height);
-					context.restore();
 				}
 			});
 	}

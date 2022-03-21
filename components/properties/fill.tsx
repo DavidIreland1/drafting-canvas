@@ -53,7 +53,7 @@ function openPicker(event, fill, setPicker, selected_ids, store, actions) {
 
 	setPicker(
 		<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
-			<Select id="type" value={fill.type} onChange={(event) => setProperty({ ...fill, type: event.target.value, x: 0, y: 0, src: '/images/draft.svg' })}>
+			<Select id="type" value={fill.type} onChange={(event) => setProperty({ ...fill, type: event.target.value, x: 0, y: 0, src: '/images/drasft.svg' })}>
 				{fill.type === 'Text' ? (
 					<div style={{ color: 'white', lineHeight: '30px', width: 'max-content' }}>Text</div>
 				) : (
@@ -131,7 +131,7 @@ function FillInput({ fill, setPicker, selected_ids, store, actions }) {
 					<div className="property-color" onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} style={{ background: Colors.toString(fill.color) }} />
 				) : (
 					// Image
-					<img alt="IMG" className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} />
+					<img alt="" className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} />
 				)}
 			</div>
 

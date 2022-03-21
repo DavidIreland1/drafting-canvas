@@ -15,11 +15,11 @@ export default function drawScrollBars(context: CanvasRenderingContext2D, elemen
 
 	const screen = boundScreen(context, user_view);
 
-	const bar_width = 15;
-	const side_space = 10;
+	const bar_width = 12;
+	const side_space = 8;
 	const end_space = 40;
-	const speed = user_view.scale;
-	const min_length = 200;
+	const speed = Math.sqrt(user_view.scale);
+	const min_length = 100;
 
 	context.beginPath();
 	drawYBar(context, screen, y, bar_width, side_space, end_space, speed, min_length);
@@ -34,8 +34,8 @@ export default function drawScrollBars(context: CanvasRenderingContext2D, elemen
 function drawYBar(context, screen, y, bar_width, side_space, end_space, speed, min_length) {
 	const x = context.canvas.width - (bar_width + side_space);
 
-	const start_hidden = Math.max(screen.y1 - y.min, 0) / 10;
-	const end_hidden = Math.min(screen.y2 - y.max, 0) / 10;
+	const start_hidden = Math.max(screen.y1 - y.min, 0);
+	const end_hidden = Math.min(screen.y2 - y.max, 0);
 
 	if (start_hidden === 0 && end_hidden === 0) return;
 
