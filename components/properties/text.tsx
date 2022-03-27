@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import DataList from './inputs/datalist';
-import Input from './inputs/input';
-import Select from './inputs/select';
+import DataList from './../inputs/datalist';
+import Input from './../inputs/input';
+import Select from './../inputs/select';
 
 async function importFont(fontFamily, variants = 'regular') {
 	const link = document.createElement('link');
@@ -29,9 +29,7 @@ export default function Text({ selected, store, actions, width, fonts }) {
 		if (!font) return;
 		setWeights(font.variants);
 
-		document.fonts.onloadingdone = (event) => {
-			console.log(event);
-			console.log('hello');
+		document.fonts.onloadingdone = () => {
 			updateText({ target: { id: 'style', value: 'normal' } });
 			updateText({ target: { id: 'family', value: font_family } });
 		};
@@ -45,12 +43,6 @@ export default function Text({ selected, store, actions, width, fonts }) {
 		div.style.height = '0';
 		document.body.append(div);
 		requestAnimationFrame(() => div.remove());
-
-		// setTimeout(() => {
-		// 	updateText({ target: { id: 'style', value: 'normal' } });
-		// 	updateText({ target: { id: 'family', value: font_family } });
-		// }, 400);
-		// importFont(font.files.regular);
 	}
 
 	const [weights, setWeights] = useState(['Lighter', 'Normal', 'Bold', 'Bolder']);
@@ -137,33 +129,9 @@ export default function Text({ selected, store, actions, width, fonts }) {
 					padding: 0 10px;
 					overflow: hidden;
 				}
-				textarea {
-					width: 100%;
-					resize: none;
-					background: transparent;
-					border: none;
-					color: var(--text-color);
-					font-size: 16px;
-					width: 100%;
-					font-size: inherit;
-					font-weight: inherit;
-					font-family: inherit;
-					background: var(--hover);
-					border-bottom: 1px solid var(--hover);
-				}
-				textarea:focus {
-					outline: none;
-				}
-				textarea:hover {
-					background: var(--hover);
-				}
-				textarea:focus-within {
-					background: var(--hover);
-					border-bottom: 1px solid white;
-				}
 				svg {
 					fill: none;
-					stroke: var(--text-color);
+					stroke: var(--text);
 					stroke-width: 0.5;
 					height: 100%;
 					width: 100%;
@@ -180,8 +148,8 @@ export default function Text({ selected, store, actions, width, fonts }) {
 					background: var(--selected);
 				}
 				.divider {
-					height: 2px;
-					background: var(--selected);
+					height: 1px;
+					background: var(--border);
 					margin: 10px 0;
 				}
 			`}</style>

@@ -6,6 +6,7 @@ export default class Text extends Element {
 		return Object.assign(super.create(id, position, selected), {
 			x: position.x,
 			y: position.y,
+			editing: true,
 			label: 'Text',
 			type: 'text',
 			text: '',
@@ -19,7 +20,7 @@ export default class Text extends Element {
 			width: 0,
 			height: 0,
 			line_height: 1,
-			fill: [{ id: id + '123321', type: 'Text', color: [1, 1, 1, 1], visible: true }],
+			fill: [{ id: id + '123321', type: 'Text', color: [0, 0, 0, 1], format: 'hex4', visible: true }],
 		});
 	}
 

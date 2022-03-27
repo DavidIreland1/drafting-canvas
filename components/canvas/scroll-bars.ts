@@ -15,25 +15,27 @@ export default function drawScrollBars(context: CanvasRenderingContext2D, elemen
 
 	const screen = boundScreen(context, user_view);
 
-	const bar_width = 15;
-	const side_space = 10;
+	const bar = {
+		width: 12,
+		padding: 8,
+	};
 	const end_space = 40;
-	const speed = user_view.scale;
-	const min_length = 200;
+	const speed = Math.sqrt(user_view.scale);
+	const min_length = 100;
 
 	context.beginPath();
-	drawYBar(context, screen, y, bar_width, side_space, end_space, speed, min_length);
-	drawXBar(context, screen, x, bar_width, side_space, end_space, speed, min_length);
+	drawYBar(context, screen, y, bar, end_space, speed, min_length);
+	drawXBar(context, screen, x, bar, end_space, speed, min_length);
 	context.closePath();
 	context.fillStyle = '#4448';
-	context.strokeStyle = '#FFF8';
-	context.lineWidth = 2;
+	context.strokeStyle = '#4448';
+	context.lineWidth = 0;
 	context.stroke();
 	context.fill();
 }
 
-function drawYBar(context, screen, y, bar_width, side_space, end_space, speed, min_length) {
-	const x = context.canvas.width - (bar_width + side_space);
+function drawYBar(context, screen, y, bar, end_space, speed, min_length) {
+	const x = context.canvas.width - (bar.width + bar.padding);
 
 	const start_hidden = Math.max(screen.y1 - y.min, 0);
 	const end_hidden = Math.min(screen.y2 - y.max, 0);
@@ -43,13 +45,13 @@ function drawYBar(context, screen, y, bar_width, side_space, end_space, speed, m
 	const start_y = Math.min(start_hidden * speed + end_space, context.canvas.height - min_length);
 	const end_y = Math.max(context.canvas.height + end_hidden * speed - start_y, min_length) - end_space;
 
-	context.arc(x + bar_width / 2, start_y, bar_width / 2, 0, 2 * Math.PI);
-	context.rect(x, start_y, bar_width, end_y);
-	context.arc(x + bar_width / 2, start_y + end_y, bar_width / 2, 0, 2 * Math.PI);
+	context.arc(x + bar.width / 2, start_y, bar.width / 2, 0, 2 * Math.PI);
+	context.rect(x, start_y, bar.width, end_y);
+	context.arc(x + bar.width / 2, start_y + end_y, bar.width / 2, 0, 2 * Math.PI);
 }
 
-function drawXBar(context, screen, x, bar_width, side_space, end_space, speed, min_length) {
-	const y = context.canvas.height - (bar_width + side_space);
+function drawXBar(context, screen, x, bar, end_space, speed, min_length) {
+	const y = context.canvas.height - (bar.width + bar.padding);
 
 	const start_hidden = Math.max(screen.x1 - x.min, 0);
 	const end_hidden = Math.min(screen.x2 - x.max, 0);
@@ -58,8 +60,8 @@ function drawXBar(context, screen, x, bar_width, side_space, end_space, speed, m
 	const start_x = Math.min(start_hidden * speed + end_space, context.canvas.width - min_length);
 	const end_x = Math.max(context.canvas.width + end_hidden * speed - start_x, min_length) - end_space;
 
-	context.moveTo(start_x, y + bar_width / 2);
-	context.arc(start_x, y + bar_width / 2, bar_width / 2, 0, 2 * Math.PI);
-	context.rect(start_x, y, end_x, bar_width);
-	context.arc(start_x + end_x, y + bar_width / 2, bar_width / 2, 0, 2 * Math.PI);
+	context.moveTo(start_x, y + bar.width / 2);
+	context.arc(start_x, y + bar.width / 2, bar.width / 2, 0, 2 * Math.PI);
+	context.rect(start_x, y, end_x, bar.width);
+	context.arc(start_x + end_x, y + bar.width / 2, bar.width / 2, 0, 2 * Math.PI);
 }

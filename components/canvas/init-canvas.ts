@@ -7,6 +7,8 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 		onWheel(event, canvas, user_id, store, actions);
 	};
 
+	console.log('hello');
+
 	canvas.focus(); // Needed for react?
 	canvas.onkeydown = async (event: KeyboardEvent) => {
 		if (event.key === 'Delete' || event.key === 'Backspace') {

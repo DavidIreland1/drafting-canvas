@@ -2,6 +2,7 @@ import { useRef, useEffect, useImperativeHandle, forwardRef, useState } from 're
 import initCanvas from './init-canvas';
 import draw from './draw';
 import TextLayer from './text-layer';
+import Colors from '../properties/colors';
 
 export default forwardRef(Canvas);
 
@@ -15,7 +16,7 @@ function Canvas({ user_id, store, actions }, ref) {
 		},
 	}));
 
-	const [background, setBackground] = useState('#EEEF');
+	const [background, setBackground] = useState(Colors.toString(store.getState().present.page.color));
 
 	useEffect(() => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
@@ -30,11 +31,11 @@ function Canvas({ user_id, store, actions }, ref) {
 		(window as any).canvas = canvas;
 		(window as any).context = context;
 
-		window.addEventListener('resize', () => {
-			onResize(canvas, store, actions, user_id);
-		});
+		window.addEventListener('resize', () => onResize(canvas, store, actions, user_id));
+		// window.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
 
-		const active = {
+		let active = {
+			editing: [],
 			hovering: [],
 			selected: [],
 			altering: [],
@@ -42,19 +43,19 @@ function Canvas({ user_id, store, actions }, ref) {
 
 		initCanvas(canvas, user_id, store, actions, active);
 
-		draw(context, store, actions, active, user_id);
-		store.subscribe(() => draw(context, store, actions, active, user_id));
-		setTimeout(() => {
-			setBackground('');
-		}, 100);
-	}, [canvas_ref]);
+		draw(context, store.getState().present, active, user_id);
+
+		store.subscribe(() => draw(context, store.getState().present, active, user_id));
+
+		setTimeout(() => setBackground(''), 0);
+	}, [canvas_ref, store, actions, user_id]);
 
 	const svg = `
 		<svg xmlns="http://www.w3.org/2000/svg"  width='24' height='24' version="1.1" viewBox="0 0 100 100" stroke="white" stroke-width="4" >
 			<path d="M 2 0 l 0 70 l 23 -15 l 32 -3 L 2 0" style="filter: drop-shadow( 2px 3px 2px)" />
 		</svg>
 	`;
-	const cursor = `url("data:image/svg+xml,${encodeURIComponent(svg)}") 0 0, auto;`;
+	const cursor = `url("data:image/svg+xml,${encodeURIComponent(svg)}") 0 0, auto`;
 
 	return (
 		<div id="container">
@@ -64,13 +65,16 @@ function Canvas({ user_id, store, actions }, ref) {
 			<style jsx>{`
 				#container {
 					position: relative;
+					height: calc(100vh - var(--nav-height) - var(--grid-gap));
+					border-radius: var(--radius);
 				}
 				canvas {
 					width: 100%;
-					height: 100%;
 					outline: none;
 					cursor: ${cursor};
 					--checker-size: 8px;
+					border-radius: var(--radius);
+					height: 100%;
 				}
 				.checkers {
 					--checker-color-1: white;
@@ -89,12 +93,12 @@ function Canvas({ user_id, store, actions }, ref) {
 
 let last_x = 0;
 function onResize(canvas, store, actions, user_id) {
-	const { width, height } = canvas.getBoundingClientRect();
+	const { width, height, left } = canvas.getBoundingClientRect();
 
 	canvas.width = width * window.devicePixelRatio;
 	canvas.height = height * window.devicePixelRatio;
 
-	const delta_x = last_x - canvas.getBoundingClientRect().left;
+	const delta_x = last_x - left;
 	last_x -= delta_x;
 	store.dispatch(
 		actions.view({

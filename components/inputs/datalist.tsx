@@ -1,10 +1,6 @@
 import { useRef, useState } from 'react';
 
-const click_position = { x: 0, y: 0 };
-
 export default function DataList({ id, label, value, onChange, children }) {
-	if (value === undefined) return null;
-
 	const input = useRef(null);
 	const [_value, setValue] = useState(value);
 
@@ -45,9 +41,8 @@ export default function DataList({ id, label, value, onChange, children }) {
 					background: var(--hover);
 					border-bottom: 1px solid white;
 				}
-
 				input {
-					color: white;
+					color: var(--text);
 					width: 100%;
 					border: 0;
 					font-size: inherit;

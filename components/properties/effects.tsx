@@ -1,10 +1,10 @@
-import Picker from '../../picker';
-import Elements, { flatten } from './../../elements/elements';
-import { generateID } from './../../../utils/utils';
-import Colors from './../colors';
-import Eye from './../../icons/eye';
-import Minus from './../../icons/minus';
-import Plus from './../../icons/plus';
+import Picker from '../picker';
+import Elements, { flatten } from '../elements/elements';
+import { generateID } from '../../utils/utils';
+import Colors from './colors';
+import Eye from '../icons/eye';
+import Minus from '../icons/minus';
+import Plus from '../icons/plus';
 import Input from '../inputs/input';
 import Text from '../inputs/text';
 import Select from '../inputs/select';

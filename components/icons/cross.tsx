@@ -1,7 +1,7 @@
 export default function Cross({ onClick = undefined }) {
 	return (
 		<div onMouseDown={onClick}>
-			<svg viewBox="0 0 10 10" stroke="white" strokeWidth="0.8">
+			<svg viewBox="0 0 10 10" stroke="var(--icon)" strokeWidth="0.8">
 				<line x1="0" y1="0" x2="10" y2="10" />
 				<line x1="0" y1="10" x2="10" y2="0" />
 			</svg>
@@ -21,7 +21,7 @@ export default function Cross({ onClick = undefined }) {
 					box-sizing: border-box;
 				}
 				div:hover {
-					background: var(--nav-background);
+					background: var(--nav);
 				}
 			`}</style>
 		</div>

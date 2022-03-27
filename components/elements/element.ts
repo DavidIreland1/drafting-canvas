@@ -1,6 +1,3 @@
-// import Defaults from './../../defaults';
-// const { line, box_size, highlight_color } = Defaults;
-
 import Colors from './../properties/colors';
 
 const images = {};
@@ -11,8 +8,8 @@ export default class Element {
 			editing: false,
 			selected: selected,
 			hover: false,
-			fill: [{ id: id + '2123', type: 'Solid', color: [0, 0, 0.8, 1], format: 'hex4', visible: true }],
-			// fill: [{ id: id + '2123', type: 'Image', color: [0.8, 0.8, 0.8, 1], alpha: 1, visible: true, x: 0, y: 0, src: '/images/draft.svg' }],
+			fill: [{ id: id + '2123', type: 'Solid', color: [0, 0, 0.5, 1], format: 'hex4', visible: true }],
+			// fill: [{ id: id + '2123', type: 'Image', alpha: 1, visible: true, x: 0, y: 0, src: '/images/draft.svg' }],
 			stroke: [],
 			effect: [],
 			rotation: 0,
@@ -38,9 +35,11 @@ export default class Element {
 					if (!images[fill.id]) {
 						images[fill.id] = new Image();
 						images[fill.id].src = fill.src;
+						images[fill.id].onerror = () => (images[fill.id].broken = true);
+					} else if (images[fill.id].complete && !images[fill.id].broken) {
+						context.drawImage(images[fill.id], fill.x - element.width / 2, fill.y - element.height / 2, element.width, element.height);
+						context.restore();
 					}
-					context.drawImage(images[fill.id], fill.x - element.width / 2, fill.y - element.height / 2, element.width, element.height);
-					context.restore();
 				}
 			});
 	}
@@ -161,7 +160,6 @@ export default class Element {
 
 	// Maybe this can be removed
 	static insideBound(element, context: CanvasRenderingContext2D, cursor): boolean {
-		return false;
 		const bounds = this.bound(element);
 		const center = this.center(element);
 

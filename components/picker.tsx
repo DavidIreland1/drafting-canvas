@@ -3,8 +3,8 @@ import Cross from './icons/cross';
 import { clamp } from '../utils/utils';
 import { useSelector } from 'react-redux';
 import Colors from './properties/colors';
-import Select from './properties/inputs/select';
-import Text from './properties/inputs/text';
+import Select from './inputs/select';
+import Text from './inputs/text';
 
 export default function Picker({ setProperty, selector, event, setPicker, children }) {
 	const [picker_position, setPickerPosition] = useState({ x: event.clientX - 350, y: event.clientY - 80 });
@@ -219,7 +219,7 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 					display: grid;
 					grid-template-columns: min-content 1fr;
 					width: 100%;
-					color: var(--text-color);
+					color: var(--text);
 					padding: 0 20px;
 					box-sizing: border-box;
 				}

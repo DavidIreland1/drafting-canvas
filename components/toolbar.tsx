@@ -56,21 +56,21 @@ export default function Navbar({ store, actions }) {
 					<line x1="50" y1="20" x2="50" y2="80" />
 				</svg>
 
-				{/* <svg id="spline" className={cursor.type === 'spline' ? 'selected' : ''} viewBox="0 0 100 100">
+				<svg id="spline" className={cursor.type === 'spline' ? 'selected' : ''} viewBox="0 0 100 100">
 					<title>Spline</title>
 					<rect x="15" y="15" width="15" height="15" />
 					<path d="M 22.5 30 C 22.5 70, 77.5 30, 77.5 70 " />
 					<rect x="70" y="70" width="15" height="15" />
-				</svg> */}
+				</svg>
 
-				<svg id="frame" className={cursor.type === 'frame' ? 'selected' : ''} viewBox="0 0 100 100">
+				{/* <svg id="frame" className={cursor.type === 'frame' ? 'selected' : ''} viewBox="0 0 100 100">
 					<title>Frame</title>
 					<line x1="33" y1="15" x2="33" y2="85" />
 					<line x1="67" y1="15" x2="67" y2="85" />
 
 					<line x1="15" y1="33" x2="85" y2="33" />
 					<line x1="15" y1="67" x2="85" y2="67" />
-				</svg>
+				</svg> */}
 
 				{/* <svg id="pen" className={cursor.type === 'pen' ? 'selected' : ''} viewBox="0 0 100 100">
 					<title>Pen</title>
@@ -80,31 +80,35 @@ export default function Navbar({ store, actions }) {
 
 			<style jsx>{`
 				#container {
-					background: #212123;
+					background: var(--nav);
 					z-index: 2;
+					width: var(--nav-height);
+					box-sizing: border-box;
+					border-radius: var(--radius);
 				}
 				#bar {
-					width: var(--nav-height);
-					color: var(--text-color);
-					padding: 5px;
+					width: 100%;
+					color: var(--text);
+					padding: 7px 5px;
 					box-sizing: border-box;
 					display: grid;
-					grid-gap: 10px;
+					grid-gap: 4px;
 					height: fit-content;
 				}
 				svg {
 					width: 100%;
 					cursor: pointer;
 					fill: none;
-					stroke: var(--text-color);
+					stroke: var(--text);
 					padding: 2px;
 					box-sizing: border-box;
 					stroke-width: 5;
 					margin: auto;
 					border-radius: 4px;
+					height: 35px;
 				}
 				svg.selected {
-					fill: var(--text-color);
+					fill: var(--text);
 					background: var(--hover);
 				}
 				svg:hover {

@@ -1,4 +1,4 @@
-import Input from './inputs/input';
+import Input from '../inputs/input';
 
 export default function Dimensions({ selected, store, actions, width }) {
 	const selected_ids = selected.map((element) => element.id);
@@ -69,7 +69,7 @@ export default function Dimensions({ selected, store, actions, width }) {
 					fill: none;
 					height: 100%;
 					width: 20px;
-					stroke: white;
+					stroke: var(--text);
 					stroke-width: 0.5px;
 				}
 			`}</style>

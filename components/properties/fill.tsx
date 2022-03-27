@@ -5,8 +5,8 @@ import Colors from './colors';
 import Eye from '../icons/eye';
 import Minus from '../icons/minus';
 import Plus from '../icons/plus';
-import Select from './inputs/select';
-import Text from './inputs/text';
+import Select from '../inputs/select';
+import Text from '../inputs/text';
 import { useEffect, useState } from 'react';
 
 export default function Fill({ selected, store, actions, setPicker }) {
@@ -53,9 +53,15 @@ function openPicker(event, fill, setPicker, selected_ids, store, actions) {
 
 	setPicker(
 		<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
-			<Select id="type" value={fill.type} onChange={(event) => setProperty({ ...fill, type: event.target.value, x: 0, y: 0, src: '/images/draft.svg' })}>
-				<option value="Solid">Solid</option>
-				<option value="Image">Image</option>
+			<Select id="type" value={fill.type} onChange={(event) => setProperty({ ...fill, type: event.target.value, x: 0, y: 0, src: '/images/drasft.svg' })}>
+				{fill.type === 'Text' ? (
+					<div style={{ color: 'white', lineHeight: '30px', width: 'max-content' }}>Text</div>
+				) : (
+					<>
+						<option value="Solid">Solid</option>
+						<option value="Image">Image</option>
+					</>
+				)}
 			</Select>
 		</Picker>
 	);
@@ -125,7 +131,7 @@ function FillInput({ fill, setPicker, selected_ids, store, actions }) {
 					<div className="property-color" onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} style={{ background: Colors.toString(fill.color) }} />
 				) : (
 					// Image
-					<img alt="IMG" className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} />
+					<img alt="" className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} />
 				)}
 			</div>
 

@@ -6,7 +6,7 @@ import Background from './background';
 import Dimensions from './dimensions';
 import Fill from './fill';
 import Stroke from './stroke';
-import Effects from './effects/effects';
+import Effects from './effects';
 import Text from './text';
 
 export default function Properties({ store, actions, setPicker, fonts, onResize }) {
@@ -86,6 +86,8 @@ export default function Properties({ store, actions, setPicker, fonts, onResize 
 					position: absolute;
 					width: 1.5em;
 					height: 1.5em;
+					box-shadow: var(--text) 0px 0px 2px -1px;
+					/*border: 0.5px solid var(--text);*/
 				}
 				.property-row {
 					padding: 0 10px 0 5px;
@@ -111,26 +113,25 @@ export default function Properties({ store, actions, setPicker, fonts, onResize 
 
 			<style jsx>{`
 				#container {
-					color: var(--text-color);
+					color: var(--text);
 					background: var(--panel);
 					position: relative;
 					display: grid;
-					height: 100%;
 					right: 0;
 					padding: 10px 0;
-					overflow-x: hidden;
+					border-radius: var(--radius);
 				}
 				#handle {
 					position: absolute;
 					height: 100%;
 					width: 6px;
 					background: transparent;
-					left: -3px;
+					left: -5px;
 					cursor: ew-resize;
 				}
 				.divider {
-					height: 2px;
-					background: var(--selected);
+					height: 1px;
+					background: var(--border);
 					margin: 10px 0;
 				}
 			`}</style>

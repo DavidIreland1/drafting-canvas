@@ -1,4 +1,4 @@
-import Elements, { flatten } from '../elements/elements';
+import Elements from '../elements/elements';
 
 export default function drawPoints(context, elements, selected, view) {
 	context.beginPath();
@@ -9,7 +9,7 @@ export default function drawPoints(context, elements, selected, view) {
 	context.strokeStyle = 'red';
 	context.lineWidth = 1 / view.scale;
 
-	flatten(elements)
+	elements
 		.filter((element) => !element.selected)
 		.map((element) => Elements[element.type].points(element))
 		.flat()

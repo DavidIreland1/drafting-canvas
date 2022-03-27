@@ -70,23 +70,23 @@ export default function Structure({ store, actions, onResize }) {
 					position: relative;
 					background: var(--panel);
 					display: grid;
-					height: 100%;
-					overflow-y: auto;
-					overflow-x: hidden;
-					border-left: 1px solid var(--selected);
+					height: calc(100vh - var(--nav-height) - var(--grid-gap));
 					z-index: 2;
+					padding: 4px;
+					border-radius: var(--radius);
 				}
 				#structure {
-					overflow-x: hidden;
-					overflow-y: auto;
+					height: 100%;
+					overflow-y: overlay;
 				}
 				#handle {
 					position: absolute;
 					height: 100%;
 					width: 6px;
 					background: transparent;
-					right: -3px;
+					right: -5px;
 					cursor: ew-resize;
+					z-index: 5;
 				}
 			`}</style>
 		</div>

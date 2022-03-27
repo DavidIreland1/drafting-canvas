@@ -2,12 +2,12 @@ import Picker from '../picker';
 import Elements, { flatten } from '../elements/elements';
 import { generateID } from '../../utils/utils';
 import Colors from './colors';
-import Input from './inputs/input';
-import Select from './inputs/select';
+import Input from '../inputs/input';
+import Select from '../inputs/select';
 import Eye from '../icons/eye';
 import Minus from '../icons/minus';
 import Plus from '../icons/plus';
-import Text from './inputs/text';
+import Text from '../inputs/text';
 import { useEffect, useState } from 'react';
 
 export default function Stroke({ selected, store, actions, setPicker }) {
@@ -30,7 +30,7 @@ export default function Stroke({ selected, store, actions, setPicker }) {
 }
 
 function addStroke(selected_ids, store, actions) {
-	store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 1, color: [0.5, 0.5, 1, 1], format: 'hex4', visible: true } }));
+	store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 10, color: [0.7, 0.5, 1, 1], format: 'hex4', visible: true } }));
 }
 
 function removeStroke(stroke, store, actions) {
@@ -111,7 +111,7 @@ function StrokeInput({ stroke, setPicker, selected_ids, store, actions }) {
 			</div>
 			<div className="grid">
 				<Input id="width" label="W" value={stroke.width} min={0} step={0.1} onChange={(event) => changeWidth(event, stroke, selected_ids, store, actions)} />
-				<Select id="trpe" value={stroke.type} onChange={(event) => changeType(event, stroke, selected_ids, store, actions)}>
+				<Select id="type" value={stroke.type} onChange={(event) => changeType(event, stroke, selected_ids, store, actions)}>
 					<option value="Inside">Inside</option>
 					<option value="Center">Center</option>
 					<option value="Outside">Outside</option>
@@ -121,7 +121,8 @@ function StrokeInput({ stroke, setPicker, selected_ids, store, actions }) {
 			<style jsx>{`
 				.grid {
 					display: grid;
-					grid-template-columns: auto auto;
+					grid-template-columns: 1fr 1fr;
+					gap: 10px;
 					padding: 0 10px;
 				}
 			`}</style>

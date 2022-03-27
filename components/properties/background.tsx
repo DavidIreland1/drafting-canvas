@@ -1,4 +1,4 @@
-import Text from './inputs/text';
+import Text from './../inputs/text';
 import Colors from './colors';
 import Eye from '../icons/eye';
 import Picker from '../picker';

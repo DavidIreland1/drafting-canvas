@@ -34,9 +34,6 @@ const store = createStore(
 		: undefined
 );
 
-if (typeof window !== 'undefined') {
-	(window as any).store = store;
-}
 export default store;
 
 export type RootState = ReturnType<typeof store.getState>;
@@ -58,4 +55,8 @@ function groupActions(action) {
 		time: now,
 	};
 	return null;
+}
+
+if (typeof window !== 'undefined') {
+	(window as any).store = store;
 }
