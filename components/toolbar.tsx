@@ -82,17 +82,17 @@ export default function Navbar({ store, actions }) {
 				#container {
 					background: var(--nav);
 					z-index: 2;
-					width: calc(var(--nav-height));
+					width: var(--nav-height);
 					box-sizing: border-box;
 					border-radius: var(--radius);
 				}
 				#bar {
-					width: var(--nav-height);
+					width: 100%;
 					color: var(--text);
-					padding: 5px;
+					padding: 7px 5px;
 					box-sizing: border-box;
 					display: grid;
-					grid-gap: 10px;
+					grid-gap: 4px;
 					height: fit-content;
 				}
 				svg {
@@ -105,6 +105,7 @@ export default function Navbar({ store, actions }) {
 					stroke-width: 5;
 					margin: auto;
 					border-radius: 4px;
+					height: 35px;
 				}
 				svg.selected {
 					fill: var(--text);

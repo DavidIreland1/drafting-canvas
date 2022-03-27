@@ -86,7 +86,8 @@ export default function Properties({ store, actions, setPicker, fonts, onResize 
 					position: absolute;
 					width: 1.5em;
 					height: 1.5em;
-					box-shadow: var(--text) 0px 0px 4px -2px;
+					box-shadow: var(--text) 0px 0px 2px -1px;
+					/*border: 0.5px solid var(--text);*/
 				}
 				.property-row {
 					padding: 0 10px 0 5px;

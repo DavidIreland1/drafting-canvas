@@ -5,6 +5,8 @@ const click_position = { x: 0, y: 0 };
 export default function Input({ id, label, value, step = 1, min = NaN, unit = '', onChange, width = undefined }) {
 	const input = useRef(null);
 
+	if (value === undefined) return null;
+
 	const updateValue = (event) => {
 		event.target.style.width = `max(calc(${width} / 6), ${Math.max(event.target.value.length + 2, 5)}ch)`;
 		event.target.id = id;
@@ -98,6 +100,7 @@ export default function Input({ id, label, value, step = 1, min = NaN, unit = ''
 					color: var(--text);
 					font-size: 16px;
 					text-align: right;
+					font-weight: inherit;
 					-moz-appearance: textfield;
 				}
 				input:hover {

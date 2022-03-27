@@ -20,7 +20,7 @@ export default class Text extends Element {
 			width: 0,
 			height: 0,
 			line_height: 1,
-			fill: [{ id: id + '123321', type: 'Text', color: [0, 1, 1, 1], format: 'hex4', visible: true }],
+			fill: [{ id: id + '123321', type: 'Text', color: [0, 0, 0, 1], format: 'hex4', visible: true }],
 		});
 	}
 

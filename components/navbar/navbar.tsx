@@ -9,6 +9,7 @@ import User from './user';
 import Plus from '../icons/plus';
 
 import Settings from './../settings';
+import Theme from '../icons/theme';
 
 export default function Navbar({ store, actions }) {
 	const router = useRouter();
@@ -46,10 +47,6 @@ export default function Navbar({ store, actions }) {
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)
 	);
 
-	function copyLink() {
-		navigator.clipboard.writeText(location.href);
-	}
-
 	return (
 		<>
 			<div id="nav" onDragOver={droppable}>
@@ -72,7 +69,9 @@ export default function Navbar({ store, actions }) {
 					))}
 				</div>
 
-				<button onClick={copyLink}>Share</button>
+				<Share />
+
+				<Theme />
 
 				<a target="_blank" rel="noreferrer" href="https://github.com/DavidIreland1/drafting-canvas">
 					<svg id="github" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
@@ -88,15 +87,24 @@ export default function Navbar({ store, actions }) {
 
 			<style jsx>{`
 				#nav {
+					--nav: #202021;
+					--panel: #262628;
+					--title: #ffffff;
+					--text: #ffffff;
+					--icon: #f1f1f1;
+					--border: #42414d;
+					--accent: #1a83ee;
+					--hover: #34343a;
+					--selected: #3a3943;
+					--invalid: #6f3939;
+
 					display: grid;
 					grid-auto-flow: column;
-					grid-template-columns: min-content min-content 1fr min-content;
+					grid-template-columns: min-content min-content 1fr min-content min-content min-content;
 					height: var(--nav-height);
 					background: var(--nav);
 					color: var(--text);
 					max-width: 100vw;
-					box-shadow: var(--shadow);
-					border-radius: var(--radius);
 				}
 				img {
 					height: calc(var(--nav-height) - 12px);
@@ -105,7 +113,7 @@ export default function Navbar({ store, actions }) {
 					background: white;
 					padding: 2px;
 					margin: 6px;
-					border-radius: 5px;
+					border-radius: var(--radius);
 				}
 				#title {
 					min-width: max-content;
@@ -141,17 +149,6 @@ export default function Navbar({ store, actions }) {
 					stroke-width: 6;
 				}
 
-				button {
-					margin: 5px;
-					background: var(--accent);
-					border: 0;
-					border-radius: 5px;
-					opacity: 0.8;
-					height: 30px;
-				}
-				button:hover {
-					opacity: 1;
-				}
 				#users {
 					display: grid;
 					grid-auto-flow: column;
@@ -170,9 +167,55 @@ export default function Navbar({ store, actions }) {
 					border-radius: 20px;
 					box-sizing: border-box;
 					fill: var(--icon);
+					opacity: 0.8;
 				}
 				#github:hover {
-					fill: var(--hover);
+					opacity: 1;
+				}
+			`}</style>
+		</>
+	);
+}
+
+function Share() {
+	function copyLink() {
+		navigator.clipboard.writeText(location.href);
+
+		setDisplay('block');
+		setTimeout(() => setDisplay('none'), 3000);
+	}
+
+	const [display, setDisplay] = useState('none');
+	return (
+		<>
+			<button onClick={copyLink}>Share</button>
+
+			<div id="notice" style={{ display, opacity: display ? 1 : 0 }}>
+				Link copied to clipboard
+			</div>
+			<style jsx>{`
+				button {
+					margin: 5px;
+					background: var(--accent);
+					border: 0;
+					border-radius: 5px;
+					opacity: 0.8;
+					height: 30px;
+				}
+				button:hover {
+					opacity: 1;
+				}
+				#notice {
+					position: absolute;
+					bottom: 100px;
+					left: 50%;
+					width: max-content;
+					padding: 4px 10px;
+					background: var(--panel);
+					z-index: 4;
+					transform: translateX(-50%);
+					border-radius: var(--radius);
+					transition: opacity 500ms;
 				}
 			`}</style>
 		</>

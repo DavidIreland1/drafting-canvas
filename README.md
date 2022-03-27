@@ -65,7 +65,7 @@ Open on localhost
 -   [x] Users on document
 -   [x] HSBA color picker
 -   [x] Rectangle tool
--   [x] Elipse tool
+-   [x] Ellipse tool
 -   [x] Shadow effects
 -   [x] Sticky points
 -   [x] Drag and drop tabs

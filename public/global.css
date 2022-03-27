@@ -5,7 +5,7 @@
 	--nav-height: 40px;
 
 	--nav: #1b1b1d;
-	--panel: #262628;
+	--panel: #222222;
 	--title: #ffffff;
 	--text: #ffffff;
 	--icon: #f1f1f1;
@@ -15,11 +15,11 @@
 	--selected: #3a3943;
 	--invalid: #6f3939;
 	--shadow: none;
-	--background: #404040;
+	--background: #181717;
 }
 
 /* Light Theme */
-:root {
+:root.light {
 	--nav: #e7e7e7;
 	--panel: #e2e2e2;
 	--title: #000000;
@@ -41,7 +41,7 @@ body {
 	margin: 0;
 	height: 100vh;
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-	background: var(--icon);
+	background: var(--background);
 	overflow: hidden;
 	font-weight: 200;
 }

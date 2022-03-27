@@ -49,7 +49,7 @@ export default function Element({ store, actions, element, indentation, restruct
 	return (
 		<div id="element" element-id={element.id} draggable="true" onDragStart={drag} className={(element.selected ? 'highlighted' : '') + (element.type === 'group' || element.type === 'frame' ? ' group' : '')} onKeyPress={(event) => console.log(event, store, actions)}>
 			<div id="label" className={(element.selected ? 'selected' : '') + (element.hover ? ' hover' : '')} style={{ paddingLeft: indentation + 'px' }} onMouseEnter={setHover} onMouseLeave={setHover}>
-				<svg viewBox="0 0 100 100" fill="none" stroke="black" strokeWidth="2">
+				<svg viewBox="0 0 100 100" fill="none" stroke="var(--text)" strokeWidth="2">
 					<Icon type={element.type} />
 				</svg>
 
@@ -86,7 +86,6 @@ export default function Element({ store, actions, element, indentation, restruct
 				#element:active {
 					cursor: default !important; //not working
 				}
-
 				#element.blank {
 					opacity: 0;
 				}
@@ -100,14 +99,13 @@ export default function Element({ store, actions, element, indentation, restruct
 					border-radius: var(--radius);
 					margin: 2px;
 				}
-
 				#label {
 					display: grid;
 					grid-template-columns: 30px auto 28px 28px;
 					box-sizing: border-box;
 					padding: 2px 4px;
 					border-radius: var(--radius);
-					margin: 2px;
+					margin: 4px 2px;
 				}
 				#label > label {
 					padding: 6px 4px 6px 0;
@@ -122,18 +120,19 @@ export default function Element({ store, actions, element, indentation, restruct
 				.highlighted > #elements {
 					background: var(--hover);
 				}
-
 				.icon {
 					fill: var(--icon);
 					stroke: var(--icon);
 					z-index: 2;
 					visibility: hidden;
 				}
-
 				.icon.visible,
 				.selected > .icon,
 				.hover > .icon {
 					visibility: visible;
+				}
+				svg {
+					padding: 2px;
 				}
 			`}</style>
 		</div>

@@ -9,7 +9,6 @@ import drawScrollBars from './scroll-bars';
 const { line_width, box_size, highlight } = Settings;
 
 export default function draw(context: CanvasRenderingContext2D, state, active, user_id) {
-	console.log(active.editing);
 	const user_view = state.views.find((view) => view.id === user_id);
 	const user_cursor = state.cursors.find((cursor) => cursor.id === user_id);
 	if (!user_view || !user_cursor) return active;
