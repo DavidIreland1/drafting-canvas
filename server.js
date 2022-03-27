@@ -33,7 +33,7 @@ app.prepare().then(() => {
 		console.log('> Ready on http://localhost:3000');
 	});
 
-	// initStateSync(server);
+	initStateSync(server);
 
 	// Apply all changes
 	// setTimeout(() => {

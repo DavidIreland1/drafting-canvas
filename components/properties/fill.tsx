@@ -53,7 +53,7 @@ function openPicker(event, fill, setPicker, selected_ids, store, actions) {
 
 	setPicker(
 		<Picker setProperty={setProperty} selector={selector} event={event} setPicker={setPicker}>
-			<Select id="type" value={fill.type} onChange={(event) => setProperty({ ...fill, type: event.target.value, x: 0, y: 0, src: '/images/drasft.svg' })}>
+			<Select id="type" value={fill.type} onChange={(event) => setProperty({ ...fill, type: event.target.value, x: 0, y: 0, src: '/images/draft.svg' })}>
 				{fill.type === 'Text' ? (
 					<div style={{ color: 'white', lineHeight: '30px', width: 'max-content' }}>Text</div>
 				) : (
