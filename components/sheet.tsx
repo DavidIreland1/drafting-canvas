@@ -46,7 +46,8 @@ export default function Sheet({ store, actions }) {
 					display: grid;
 					grid-auto-flow: column;
 					grid-template-columns: var(--nav-height) auto auto min-content;
-					height: calc(100vh - var(--nav-height));
+					height: 100%;
+					grid-gap: var(--grid-gap);
 				}
 			`}</style>
 		</div>

@@ -2,6 +2,7 @@ import { useRef, useEffect, useImperativeHandle, forwardRef, useState } from 're
 import initCanvas from './init-canvas';
 import draw from './draw';
 import TextLayer from './text-layer';
+import Colors from '../properties/colors';
 
 export default forwardRef(Canvas);
 
@@ -15,7 +16,7 @@ function Canvas({ user_id, store, actions }, ref) {
 		},
 	}));
 
-	const [background, setBackground] = useState('#EEEF');
+	const [background, setBackground] = useState(Colors.toString(store.getState().present.page.color));
 
 	useEffect(() => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
@@ -31,9 +32,10 @@ function Canvas({ user_id, store, actions }, ref) {
 		(window as any).context = context;
 
 		window.addEventListener('resize', () => onResize(canvas, store, actions, user_id));
-		window.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
+		// window.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
 
-		const active = {
+		let active = {
+			editing: [],
 			hovering: [],
 			selected: [],
 			altering: [],
@@ -41,12 +43,12 @@ function Canvas({ user_id, store, actions }, ref) {
 
 		initCanvas(canvas, user_id, store, actions, active);
 
-		draw(context, store, actions, active, user_id);
-		store.subscribe(() => draw(context, store, actions, active, user_id));
-		setTimeout(() => {
-			setBackground('');
-		}, 0);
-	}, [canvas_ref]);
+		draw(context, store.getState().present, active, user_id);
+
+		store.subscribe(() => draw(context, store.getState().present, active, user_id));
+
+		setTimeout(() => setBackground(''), 0);
+	}, [canvas_ref, store, actions, user_id]);
 
 	const svg = `
 		<svg xmlns="http://www.w3.org/2000/svg"  width='24' height='24' version="1.1" viewBox="0 0 100 100" stroke="white" stroke-width="4" >
@@ -63,14 +65,16 @@ function Canvas({ user_id, store, actions }, ref) {
 			<style jsx>{`
 				#container {
 					position: relative;
-					height: calc(100vh - var(--nav-height));
+					height: calc(100vh - var(--nav-height) - var(--grid-gap));
+					border-radius: var(--radius);
 				}
 				canvas {
 					width: 100%;
-					height: calc(100vh - var(--nav-height));
 					outline: none;
 					cursor: ${cursor};
 					--checker-size: 8px;
+					border-radius: var(--radius);
+					height: 100%;
 				}
 				.checkers {
 					--checker-color-1: white;
@@ -92,7 +96,6 @@ function onResize(canvas, store, actions, user_id) {
 	const { width, height, left } = canvas.getBoundingClientRect();
 
 	canvas.width = width * window.devicePixelRatio;
-
 	canvas.height = height * window.devicePixelRatio;
 
 	const delta_x = last_x - left;

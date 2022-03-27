@@ -16,7 +16,7 @@ export default function Text({ id = undefined, placeholder = undefined, classNam
 				input {
 					background: transparent;
 					border: none;
-					color: var(--text-color);
+					color: var(--text);
 					font-size: 16px;
 					width: 100%;
 				}

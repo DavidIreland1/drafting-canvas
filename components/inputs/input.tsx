@@ -2,9 +2,7 @@ import { useRef } from 'react';
 
 const click_position = { x: 0, y: 0 };
 
-export default function Input({ id, label, step = 1, value, min = NaN, unit = '', onChange, width = undefined }) {
-	if (value === undefined) return null;
-
+export default function Input({ id, label, value, step = 1, min = NaN, unit = '', onChange, width = undefined }) {
 	const input = useRef(null);
 
 	const updateValue = (event) => {
@@ -97,7 +95,7 @@ export default function Input({ id, label, step = 1, value, min = NaN, unit = ''
 					font-weight: inherit;
 					font-family: inherit;
 					min-width: max(100%, 4ch);
-					color: var(--text-color);
+					color: var(--text);
 					font-size: 16px;
 					text-align: right;
 					-moz-appearance: textfield;

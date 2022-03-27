@@ -18,8 +18,8 @@ export default function Eye({ open = true, onClick = undefined }) {
 					display: block;
 					width: 100%;
 					height: 100%;
-					fill: var(--off-white);
-					stroke: var(--off-white);
+					fill: var(--icon);
+					stroke: var(--icon);
 					z-index: 2;
 				}
 

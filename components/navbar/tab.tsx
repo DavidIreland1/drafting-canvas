@@ -39,12 +39,11 @@ export default function Tab({ tab, url, leavePage, closeTab }) {
 					stroke: white;
 					stroke-width: 6;
 				}
-
 				.tab {
+					color: var(--text);
 					padding: 2px 5px 2px 20px;
 					width: max(max-content, 10%);
-					border-radius: 4px;
-					color: white;
+					border-radius: var(--radius);
 					text-decoration: none;
 					box-sizing: border-box;
 					display: flex;
@@ -54,11 +53,9 @@ export default function Tab({ tab, url, leavePage, closeTab }) {
 					grid-template-columns: max-content 23px;
 					height: 100%;
 				}
-
 				.tab:-webkit-any-link {
 					cursor: default;
 				}
-
 				.tab:hover,
 				#plus:hover {
 					background: var(--hover);

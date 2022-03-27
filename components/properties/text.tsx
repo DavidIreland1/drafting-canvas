@@ -129,33 +129,9 @@ export default function Text({ selected, store, actions, width, fonts }) {
 					padding: 0 10px;
 					overflow: hidden;
 				}
-				textarea {
-					width: 100%;
-					resize: none;
-					background: transparent;
-					border: none;
-					color: var(--text-color);
-					font-size: 16px;
-					width: 100%;
-					font-size: inherit;
-					font-weight: inherit;
-					font-family: inherit;
-					background: var(--hover);
-					border-bottom: 1px solid var(--hover);
-				}
-				textarea:focus {
-					outline: none;
-				}
-				textarea:hover {
-					background: var(--hover);
-				}
-				textarea:focus-within {
-					background: var(--hover);
-					border-bottom: 1px solid white;
-				}
 				svg {
 					fill: none;
-					stroke: var(--text-color);
+					stroke: var(--text);
 					stroke-width: 0.5;
 					height: 100%;
 					width: 100%;
@@ -172,8 +148,8 @@ export default function Text({ selected, store, actions, width, fonts }) {
 					background: var(--selected);
 				}
 				.divider {
-					height: 2px;
-					background: var(--selected);
+					height: 1px;
+					background: var(--border);
 					margin: 10px 0;
 				}
 			`}</style>

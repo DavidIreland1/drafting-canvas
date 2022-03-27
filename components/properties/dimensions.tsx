@@ -69,7 +69,7 @@ export default function Dimensions({ selected, store, actions, width }) {
 					fill: none;
 					height: 100%;
 					width: 20px;
-					stroke: white;
+					stroke: var(--text);
 					stroke-width: 0.5px;
 				}
 			`}</style>

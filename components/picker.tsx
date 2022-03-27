@@ -219,7 +219,7 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 					display: grid;
 					grid-template-columns: min-content 1fr;
 					width: 100%;
-					color: var(--text-color);
+					color: var(--text);
 					padding: 0 20px;
 					box-sizing: border-box;
 				}

@@ -34,10 +34,9 @@ export default function Select({ id, value, onChange, children }) {
 					background: var(--hover);
 					border-bottom: 1px solid white;
 				}
-
 				select {
 					padding: 5px 30px 5px 0;
-					color: white;
+					color: var(--text);
 					border: 0;
 					font-size: inherit;
 					font-weight: inherit;

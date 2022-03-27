@@ -64,7 +64,7 @@ Open on localhost
 -   [x] Shareable Links
 -   [x] Users on document
 -   [x] HSBA color picker
--   [x] Rectange tool
+-   [x] Rectangle tool
 -   [x] Elipse tool
 -   [x] Shadow effects
 -   [x] Sticky points
@@ -90,7 +90,7 @@ Open on localhost
 
 ### Features TODO:
 
--   [ ] Graient fill
+-   [ ] Gradient fill
 -   [ ] Sortable props
 -   [ ] Export as SVG
 -   [ ] Export as PNG
@@ -100,7 +100,7 @@ Open on localhost
 -   [ ] Components
 -   [ ] Right click menu
 -   [ ] Ink drop color selector
--   [ ] Make Groups collapsable
+-   [ ] Make Groups collapsible
 -   [ ] Group multi select
 -   [ ] HSVA color picker
 -   [ ] RGBA color picker

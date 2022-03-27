@@ -1,5 +1,5 @@
 // server.js
-const dispatcher = require('./redux-scuttlebutt/lib/server').default;
+const initStateSync = require('./redux-scuttlebutt/lib/server').default;
 
 const { createServer } = require('http');
 const { parse } = require('url');
@@ -33,7 +33,7 @@ app.prepare().then(() => {
 		console.log('> Ready on http://localhost:3000');
 	});
 
-	// dispatcher(server);
+	// initStateSync(server);
 
 	// Apply all changes
 	// setTimeout(() => {
