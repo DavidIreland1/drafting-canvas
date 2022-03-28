@@ -11,7 +11,7 @@ export default class Frame extends Group {
 			rotation: 0,
 			width: 0,
 			height: 0,
-			fill: [{ id: id + '2123', color: [1, 1, 1, 1] }],
+			fill: [{ id: id + '2123', color: [1, 1, 1, 1], format: 'hex4', visible: true }],
 		});
 	}
 

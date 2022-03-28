@@ -4,7 +4,7 @@ const default_state = {
 	elements: [],
 	page: {
 		// color: [1, 0, 0.4, 1],
-		color: [1, 0, 0.8, 1],
+		color: [1, 0, 0.9, 1],
 		format: 'hex4',
 		visible: true,
 	},

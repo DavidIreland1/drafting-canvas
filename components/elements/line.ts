@@ -10,7 +10,7 @@ export default class Line extends Element {
 			label: 'Line',
 			type: 'line',
 			fill: [],
-			stroke: [{ id: id + '564', type: 'center', width: 1, color: [0.2, 0.2, 0.2, 1], visible: true }],
+			stroke: [{ id: id + '564', type: 'center', width: 1, color: [0.2, 0.2, 0.2, 1], format: 'hex4', visible: true }],
 		});
 	}
 
