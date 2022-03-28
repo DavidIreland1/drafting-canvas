@@ -6,8 +6,7 @@ export default function Page({ store, actions }): JSX.Element {
 	return (
 		<>
 			<Head>
-				<title>Drafting Canvas</title>
-				<link rel="icon" href="/favicon.svg" />
+				{/* eslint-disable-next-line @next/next/no-sync-scripts */}
 				<script src="/primus/primus.js"></script>
 			</Head>
 

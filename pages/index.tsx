@@ -1,5 +1,3 @@
-import Head from 'next/head';
-
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { generateID } from '../utils/utils';
@@ -13,15 +11,10 @@ export default function Home(): JSX.Element {
 		} else {
 			router.replace('/' + router.asPath.split('/')[1]);
 		}
-	}, []);
+	}, [router]);
 
 	return (
 		<>
-			<Head>
-				<title>Drafting Canvas</title>
-				<link rel="icon" href="/favicon.svg" />
-			</Head>
-
 			<main>
 				<div>
 					<button onClick={() => router.push('111')}>New Canvas</button>
