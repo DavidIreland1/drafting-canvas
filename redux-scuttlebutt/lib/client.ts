@@ -16,14 +16,14 @@ const defaultOptions = {
 
 // Store enhancer
 // Wraps createStore to inject our history reducer, wraps dispatch to send and
-// receive actions from peers, and FIXME: getState to apparently break everything
+// receive actions from peers, and FIX-ME: getState to apparently break everything
 //
 export default function scuttlebutt(options) {
 	options = { ...defaultOptions, ...options };
 
 	return (createStore) => {
 		// is it more efficient to store previous states, or replay a bunch of
-		// previous actions? (until we have COMMIT checkpointing, the former)
+		// previous actions? (until we have COMMIT check pointing, the former)
 		let dispatcher = new Dispatcher(options.dispatcherOptions);
 
 		dispatcher = connectGossip(dispatcher, options.uri, options.primusOptions, options.primus, options.room);
@@ -71,7 +71,7 @@ function connectStreams(primus, createStream, room) {
 		console.log('[primus] connection open');
 
 		// create fresh stream,
-		// discard the old one (hopefullly .destroy()d on 'end')
+		// discard the old one (hopefully .destroy()d on 'end')
 		const gossip = createStream();
 
 		// Data going out
@@ -82,7 +82,7 @@ function connectStreams(primus, createStream, room) {
 				const type = action[0].type.split('action/')[1];
 				if (tool_actions.includes(type)) return;
 
-				// Stop shareing cursor actions for easier debugging
+				// Stop sharing cursor actions for easier debugging
 				// if (type === 'cursor') return;
 			}
 			primus.write(data);

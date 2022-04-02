@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
-
+import actions from '../redux/slice';
 import Settings from './settings';
 
-export default function Navbar({ store, actions }) {
+export default function Navbar({ store }) {
 	let cursor = useSelector(
 		(state) => (state as any).present.cursors.find((cursor) => cursor.id === Settings.user_id),
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)

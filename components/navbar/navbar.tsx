@@ -10,8 +10,9 @@ import Plus from '../icons/plus';
 
 import Settings from './../settings';
 import Theme from '../icons/theme';
+import actions from '../../redux/slice';
 
-export default function Navbar({ store, actions }) {
+export default function Navbar({ store }) {
 	const router = useRouter();
 	const { page } = router.query;
 

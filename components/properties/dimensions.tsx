@@ -1,6 +1,7 @@
+import actions from '../../redux/slice';
 import Input from '../inputs/input';
 
-export default function Dimensions({ selected, store, actions, width }) {
+export default function Dimensions({ selected, store, width }) {
 	const selected_ids = selected.map((element) => element.id);
 	function updateDimension(event) {
 		if (Number.isNaN(event.target.value) || event.target.value === '') return;

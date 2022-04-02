@@ -1,4 +1,6 @@
-export default function select(store, actions, active, down_event) {
+import actions from '../../../redux/slice';
+
+export default function select(store, active, down_event) {
 	if (active.hovering.length > 0) {
 		if (down_event.shiftKey) {
 			store.dispatch(actions.select({ id: active.hovering[0].id }));

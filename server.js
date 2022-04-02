@@ -67,7 +67,7 @@ app.prepare().then(() => {
 
 // const clone = createStore(slice.reducer, {});
 
-// function updateSnapshot(actions) {
+// function updateSnapshot() {
 // 	actions.forEach((action) => {
 // 		if (!action.type.startsWith('counter')) return;
 // 		const type = action.type.split('/').pop();

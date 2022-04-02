@@ -9,7 +9,7 @@ import Stroke from './stroke';
 import Effects from './effects';
 import Text from './text';
 
-export default function Properties({ store, actions, setPicker, fonts, onResize }) {
+export default function Properties({ store, setPicker, fonts, onResize }) {
 	const [width, setWidth] = useState('max(20vw, 150px)');
 	const selected = useSelector(
 		(state: RootState) => state.present.elements.filter((element) => element.selected),
@@ -38,17 +38,17 @@ export default function Properties({ store, actions, setPicker, fonts, onResize 
 			<div id="handle" onPointerDown={resize}></div>
 
 			{selected.length === 0 ? (
-				<Background store={store} actions={actions} setPicker={setPicker}></Background>
+				<Background store={store} setPicker={setPicker}></Background>
 			) : (
 				<div>
-					<Dimensions selected={selected} store={store} actions={actions} width={width} />
+					<Dimensions selected={selected} store={store} width={width} />
 					<div className="divider" />
-					<Text selected={selected} store={store} actions={actions} width={width} fonts={fonts} />
-					<Fill selected={selected} store={store} actions={actions} setPicker={setPicker} />
+					<Text selected={selected} store={store} width={width} fonts={fonts} />
+					<Fill selected={selected} store={store} setPicker={setPicker} />
 					<div className="divider" />
-					<Stroke selected={selected} store={store} actions={actions} setPicker={setPicker} />
+					<Stroke selected={selected} store={store} setPicker={setPicker} />
 					<div className="divider" />
-					<Effects selected={selected} store={store} actions={actions} setPicker={setPicker} />
+					<Effects selected={selected} store={store} setPicker={setPicker} />
 				</div>
 			)}
 

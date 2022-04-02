@@ -2,7 +2,7 @@ import Head from 'next/head';
 
 import Sheet from './../components/sheet';
 
-export default function Page({ store, actions }): JSX.Element {
+export default function Page({ store }): JSX.Element {
 	return (
 		<>
 			<Head>
@@ -11,7 +11,7 @@ export default function Page({ store, actions }): JSX.Element {
 			</Head>
 
 			<main>
-				<Sheet store={store} actions={actions} />
+				<Sheet store={store} />
 			</main>
 
 			<style jsx>{`

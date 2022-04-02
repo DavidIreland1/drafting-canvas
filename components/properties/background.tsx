@@ -6,8 +6,9 @@ import Picker from '../picker';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { useEffect, useState } from 'react';
+import actions from '../../redux/slice';
 
-export default function Background({ store, actions, setPicker }) {
+export default function Background({ store, setPicker }) {
 	const page = useSelector(
 		(state: RootState) => state.present.page,
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)

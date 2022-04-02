@@ -21,8 +21,8 @@ export default function DraftingCanvas({ Component, pageProps }: AppProps) {
 			</Head>
 			<Provider store={store as any}>
 				<div id="grid">
-					<Navbar store={store} actions={actions} />
-					<Component {...pageProps} store={store} actions={actions} />
+					<Navbar store={store} />
+					<Component {...pageProps} store={store} />
 				</div>
 			</Provider>
 

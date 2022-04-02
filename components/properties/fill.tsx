@@ -8,8 +8,9 @@ import Plus from '../icons/plus';
 import Select from '../inputs/select';
 import Text from '../inputs/text';
 import { useEffect, useState } from 'react';
+import actions from '../../redux/slice';
 
-export default function Fill({ selected, store, actions, setPicker }) {
+export default function Fill({ selected, store, setPicker }) {
 	const selected_ids = selected.map((element) => element.id);
 
 	const fills = selected.map((element) => Elements[element.type].getFill(element)).flat();
@@ -17,29 +18,29 @@ export default function Fill({ selected, store, actions, setPicker }) {
 		<div id="property-container">
 			<div className="property-heading">
 				<h4>FILL</h4>
-				<Plus onClick={() => addFill(selected_ids, store, actions)} />
+				<Plus onClick={() => addFill(selected_ids, store)} />
 			</div>
 
 			{fills.map((fill) => (
-				<FillInput key={fill.id} fill={fill} setPicker={setPicker} selected_ids={selected_ids} store={store} actions={actions} />
+				<FillInput key={fill.id} fill={fill} setPicker={setPicker} selected_ids={selected_ids} store={store} />
 			))}
 		</div>
 	);
 }
 
-function addFill(selected_ids, store, actions) {
+function addFill(selected_ids, store) {
 	store.dispatch(actions.addFill({ selected_ids, props: { id: generateID(), type: 'Solid', color: [0, 0, 0, 1], format: 'hex4', visible: true } }));
 }
 
-function removeFill(fill, store, actions) {
+function removeFill(fill, store) {
 	store.dispatch(actions.removeFill({ id: fill.id }));
 }
 
-function toggleFill(fill, selected_ids, store, actions) {
+function toggleFill(fill, selected_ids, store) {
 	store.dispatch(actions.setFill({ selected_ids, props: { id: fill.id, visible: !fill.visible } }));
 }
 
-function openPicker(event, fill, setPicker, selected_ids, store, actions) {
+function openPicker(event, fill, setPicker, selected_ids, store) {
 	const setProperty = (fill) => {
 		store.dispatch(actions.setFill({ selected_ids, props: fill }));
 	};
@@ -99,7 +100,7 @@ function dragEnd() {
 	target.parentElement.classList.remove('blank');
 }
 
-function FillInput({ fill, setPicker, selected_ids, store, actions }) {
+function FillInput({ fill, setPicker, selected_ids, store }) {
 	const color_string = Colors.toString(fill.color, fill.format);
 	const [color, setColor] = useState(color_string);
 	useEffect(() => setColor(color_string), [color_string]);
@@ -128,18 +129,18 @@ function FillInput({ fill, setPicker, selected_ids, store, actions }) {
 			<div className="checker-background">
 				{fill.type === 'Solid' || fill.type === 'Text' ? (
 					// Color Picker
-					<div className="property-color" onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} style={{ background: Colors.toString(fill.color) }} />
+					<div className="property-color" onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store)} style={{ background: Colors.toString(fill.color) }} />
 				) : (
 					// Image
-					<img alt="" className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store, actions)} />
+					<img alt="" className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store)} />
 				)}
 			</div>
 
 			<Text placeholder="Color" className={Colors.isValid(color) || 'invalid'} onChange={changeColor}>
 				{color}
 			</Text>
-			<Eye open={fill.visible} onClick={() => toggleFill(fill, selected_ids, store, actions)} />
-			<Minus onClick={() => removeFill(fill, store, actions)} />
+			<Eye open={fill.visible} onClick={() => toggleFill(fill, selected_ids, store)} />
+			<Minus onClick={() => removeFill(fill, store)} />
 
 			<style jsx>{`
 					.blank > *,

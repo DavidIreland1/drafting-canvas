@@ -9,8 +9,9 @@ import Minus from '../icons/minus';
 import Plus from '../icons/plus';
 import Text from '../inputs/text';
 import { useEffect, useState } from 'react';
+import actions from '../../redux/slice';
 
-export default function Stroke({ selected, store, actions, setPicker }) {
+export default function Stroke({ selected, store, setPicker }) {
 	const selected_ids = selected.map((element) => element.id);
 
 	const strokes = selected.map((element) => Elements[element.type].getStroke(element)).flat();
@@ -19,29 +20,29 @@ export default function Stroke({ selected, store, actions, setPicker }) {
 		<div id="property-container">
 			<div className="property-heading">
 				<h4>STROKE</h4>
-				<Plus onClick={() => addStroke(selected_ids, store, actions)} />
+				<Plus onClick={() => addStroke(selected_ids, store)} />
 			</div>
 
 			{strokes.map((stroke) => (
-				<StrokeInput key={stroke.id} stroke={stroke} setPicker={setPicker} selected_ids={selected_ids} store={store} actions={actions} />
+				<StrokeInput key={stroke.id} stroke={stroke} setPicker={setPicker} selected_ids={selected_ids} store={store} />
 			))}
 		</div>
 	);
 }
 
-function addStroke(selected_ids, store, actions) {
+function addStroke(selected_ids, store) {
 	store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 10, color: [0.7, 0.5, 1, 1], format: 'hex4', visible: true } }));
 }
 
-function removeStroke(stroke, store, actions) {
+function removeStroke(stroke, store) {
 	store.dispatch(actions.removeStroke({ id: stroke.id }));
 }
 
-function toggleStroke(stroke, selected_ids, store, actions) {
+function toggleStroke(stroke, selected_ids, store) {
 	store.dispatch(actions.setStroke({ selected_ids, props: { id: stroke.id, visible: !stroke.visible } }));
 }
 
-function openPicker(event, stroke, setPicker, selected_ids, store, actions) {
+function openPicker(event, stroke, setPicker, selected_ids, store) {
 	const setProperty = (stroke) => {
 		store.dispatch(actions.setStroke({ selected_ids, props: stroke }));
 	};
@@ -64,15 +65,15 @@ function openPicker(event, stroke, setPicker, selected_ids, store, actions) {
 	);
 }
 
-function changeWidth(event, stroke, selected_ids, store, actions) {
+function changeWidth(event, stroke, selected_ids, store) {
 	store.dispatch(actions.setStroke({ selected_ids, props: { id: stroke.id, width: Number(event.target.value) } }));
 }
 
-function changeType(event, stroke, selected_ids, store, actions) {
+function changeType(event, stroke, selected_ids, store) {
 	store.dispatch(actions.setStroke({ selected_ids, props: { id: stroke.id, type: event.target.value } }));
 }
 
-function StrokeInput({ stroke, setPicker, selected_ids, store, actions }) {
+function StrokeInput({ stroke, setPicker, selected_ids, store }) {
 	const color_string = Colors.toString(stroke.color, stroke.format);
 	const [color, setColor] = useState(color_string);
 	useEffect(() => setColor(color_string), [color_string]);
@@ -99,19 +100,19 @@ function StrokeInput({ stroke, setPicker, selected_ids, store, actions }) {
 			<div className="property-row">
 				<div>::</div>
 				<div className="checker-background">
-					<div className="property-color" onClick={(event) => openPicker(event, stroke, setPicker, selected_ids, store, actions)} style={{ background: Colors.toString(stroke.color) }} />
+					<div className="property-color" onClick={(event) => openPicker(event, stroke, setPicker, selected_ids, store)} style={{ background: Colors.toString(stroke.color) }} />
 				</div>
 
 				<Text placeholder="Color" className={Colors.isValid(color) || 'invalid'} onChange={changeColor}>
 					{color}
 				</Text>
 
-				<Eye open={stroke.visible} onClick={() => toggleStroke(stroke, selected_ids, store, actions)} />
-				<Minus onClick={() => removeStroke(stroke, store, actions)} />
+				<Eye open={stroke.visible} onClick={() => toggleStroke(stroke, selected_ids, store)} />
+				<Minus onClick={() => removeStroke(stroke, store)} />
 			</div>
 			<div className="grid">
-				<Input id="width" label="W" value={stroke.width} min={0} step={0.1} onChange={(event) => changeWidth(event, stroke, selected_ids, store, actions)} />
-				<Select id="type" value={stroke.type} onChange={(event) => changeType(event, stroke, selected_ids, store, actions)}>
+				<Input id="width" label="W" value={stroke.width} min={0} step={0.1} onChange={(event) => changeWidth(event, stroke, selected_ids, store)} />
+				<Select id="type" value={stroke.type} onChange={(event) => changeType(event, stroke, selected_ids, store)}>
 					<option value="Inside">Inside</option>
 					<option value="Center">Center</option>
 					<option value="Outside">Outside</option>

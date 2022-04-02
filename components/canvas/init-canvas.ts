@@ -1,10 +1,12 @@
-import { onWheel, hover, singleClick } from './interaction/interaction';
-import { shortCuts } from './short-cuts';
+import actions from '../../redux/slice';
+import { hover, singleClick } from './interaction/interaction';
+import onWheel from './interaction/wheel';
+import shortCuts from './short-cuts';
 
-export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, active) {
+export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, active) {
 	canvas.onwheel = (event: WheelEvent) => {
 		event.preventDefault();
-		onWheel(event, canvas, user_id, store, actions);
+		onWheel(event, canvas, user_id, store);
 	};
 
 	canvas.focus(); // Needed for react?
@@ -21,7 +23,7 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 			);
 		}
 
-		if (await shortCuts(event, store, actions)) {
+		if (await shortCuts(event, store)) {
 			event.preventDefault();
 		}
 	};
@@ -44,7 +46,7 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 	};
 
 	canvas.onpointermove = (event) => {
-		hover(event, canvas, store, actions, user_id, active);
+		hover(event, canvas, store, user_id, active);
 	};
 
 	canvas.onpointerout = () => {
@@ -62,7 +64,7 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 		if (active.selected.length) store.dispatch(actions.cursor({ user_id: user_id, pressed: true }));
 		event.preventDefault();
 		(event.target as any).setPointerCapture(event.pointerId);
-		singleClick(event, canvas, user_id, store, actions, active);
+		singleClick(event, canvas, user_id, store, active);
 	};
 
 	canvas.onpointerup = () => {

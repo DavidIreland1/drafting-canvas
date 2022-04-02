@@ -1,7 +1,8 @@
+import actions from '../../redux/slice';
 import Eye from '../icons/eye';
 import Lock from '../icons/lock';
 
-export default function Element({ store, actions, element, indentation, restructure }) {
+export default function Element({ store, element, indentation, restructure }) {
 	const select = (event) => {
 		if (element.selected) {
 			store.dispatch(actions.unselect({ id: element.id }));
@@ -47,7 +48,7 @@ export default function Element({ store, actions, element, indentation, restruct
 	}
 
 	return (
-		<div id="element" element-id={element.id} draggable="true" onDragStart={drag} className={(element.selected ? 'highlighted' : '') + (element.type === 'group' || element.type === 'frame' ? ' group' : '')} onKeyPress={(event) => console.log(event, store, actions)}>
+		<div id="element" element-id={element.id} draggable="true" onDragStart={drag} className={(element.selected ? 'highlighted' : '') + (element.type === 'group' || element.type === 'frame' ? ' group' : '')} onKeyPress={(event) => console.log(event, store)}>
 			<div id="label" className={(element.selected ? 'selected' : '') + (element.hover ? ' hover' : '')} style={{ paddingLeft: indentation + 'px' }} onMouseEnter={setHover} onMouseLeave={setHover}>
 				<svg viewBox="0 0 100 100" fill="none" stroke="var(--text)" strokeWidth="2">
 					<Icon type={element.type} />
@@ -67,7 +68,7 @@ export default function Element({ store, actions, element, indentation, restruct
 			{(element.type === 'group' || element.type === 'frame') && (
 				<div id="elements" onDragOver={(event) => event.preventDefault()}>
 					{element.elements.map((child) => (
-						<Element key={child.id} element={child} indentation={indentation + 15} store={store} actions={actions} restructure={restructure} />
+						<Element key={child.id} element={child} indentation={indentation + 15} store={store} restructure={restructure} />
 					))}
 				</div>
 			)}

@@ -8,8 +8,9 @@ import Properties from './properties/properties';
 
 import Settings from './settings';
 import getFonts from '../utils/fonts';
+import actions from '../redux/slice';
 
-export default function Sheet({ store, actions }) {
+export default function Sheet({ store }) {
 	const router = useRouter();
 
 	const [picker, setPicker] = useState(null);
@@ -39,10 +40,10 @@ export default function Sheet({ store, actions }) {
 	return (
 		<div id="sheet">
 			{picker}
-			<Toolbar store={store} actions={actions} />
-			<Structure store={store} actions={actions} onResize={() => canvas.current.onResize()} />
-			<Canvas ref={canvas} user_id={Settings.user_id} store={store} actions={actions} />
-			<Properties store={store} actions={actions} setPicker={setPicker} fonts={fonts} onResize={() => canvas.current.onResize()} />
+			<Toolbar store={store} />
+			<Structure store={store} onResize={() => canvas.current.onResize()} />
+			<Canvas ref={canvas} user_id={Settings.user_id} store={store} />
+			<Properties store={store} setPicker={setPicker} fonts={fonts} onResize={() => canvas.current.onResize()} />
 
 			<style jsx>{`
 				#sheet {

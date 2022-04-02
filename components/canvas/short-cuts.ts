@@ -1,7 +1,8 @@
 import { ActionCreators } from 'redux-undo';
+import actions from '../../redux/slice';
 import { generateID } from './../../utils/utils';
 
-export async function shortCuts(event, store, actions): Promise<boolean> {
+export default async function shortCuts(event, store): Promise<boolean> {
 	if (event.metaKey === false && event.ctrlKey === false) return;
 
 	switch (event.key) {

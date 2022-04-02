@@ -4,8 +4,9 @@ import { flatten } from '../elements/elements';
 import { useSelector } from 'react-redux';
 import { shortCuts } from '../canvas/short-cuts';
 import { clone } from '../../utils/utils';
+import actions from '../../redux/slice';
 
-export default function Structure({ store, actions, onResize }) {
+export default function Structure({ store, onResize }) {
 	const elements = useSelector(
 		(state) => (state as any).present.elements,
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)
@@ -59,7 +60,7 @@ export default function Structure({ store, actions, onResize }) {
 		<div id="container" key={key} style={{ width: width }}>
 			<div id="structure" ref={structure_ref} onDragOver={(event) => event.preventDefault()}>
 				{elements.map((element) => (
-					<Element key={element.id} element={element} indentation={10} store={store} actions={actions} restructure={restructure} />
+					<Element key={element.id} element={element} indentation={10} store={store} restructure={restructure} />
 				))}
 			</div>
 

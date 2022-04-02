@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
+import actions from '../../redux/slice';
 import { RootState } from '../../redux/store';
 import Colors from './../properties/colors';
 
-export default function TextLayer({ canvas, user_id, store, actions }) {
+export default function TextLayer({ canvas, user_id, store }) {
 	const editing = useSelector(
 		(state: RootState) => (state as any).present.elements.filter((element) => element.editing),
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)

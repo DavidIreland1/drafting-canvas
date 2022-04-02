@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import actions from '../../redux/slice';
 import DataList from './../inputs/datalist';
 import Input from './../inputs/input';
 import Select from './../inputs/select';
@@ -16,7 +17,7 @@ async function importFont(fontFamily, variants = 'regular') {
 	});
 }
 
-export default function Text({ selected, store, actions, width, fonts }) {
+export default function Text({ selected, store, width, fonts }) {
 	const selected_ids = selected.map((element) => element.id);
 
 	function updateText(event, alter = (value) => value) {

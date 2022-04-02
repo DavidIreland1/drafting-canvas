@@ -3,16 +3,17 @@ import initCanvas from './init-canvas';
 import draw from './draw';
 import TextLayer from './text-layer';
 import Colors from '../properties/colors';
+import actions from '../../redux/slice';
 
 export default forwardRef(Canvas);
 
-function Canvas({ user_id, store, actions }, ref) {
-	// const { user_id, store, actions } = props as any;
+function Canvas({ user_id, store }, ref) {
+	// const { user_id, store, = props as any;
 	const canvas_ref = useRef(null);
 
 	useImperativeHandle(ref, () => ({
 		onResize() {
-			onResize(canvas_ref.current, store, actions, user_id);
+			onResize(canvas_ref.current, store, user_id);
 		},
 	}));
 
@@ -31,7 +32,7 @@ function Canvas({ user_id, store, actions }, ref) {
 		(window as any).canvas = canvas;
 		(window as any).context = context;
 
-		window.addEventListener('resize', () => onResize(canvas, store, actions, user_id));
+		window.addEventListener('resize', () => onResize(canvas, store, user_id));
 		// window.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
 
 		let active = {
@@ -41,14 +42,14 @@ function Canvas({ user_id, store, actions }, ref) {
 			altering: [],
 		};
 
-		initCanvas(canvas, user_id, store, actions, active);
+		initCanvas(canvas, user_id, store, active);
 
 		draw(context, store.getState().present, active, user_id);
 
 		store.subscribe(() => draw(context, store.getState().present, active, user_id));
 
 		setTimeout(() => setBackground(''), 0);
-	}, [canvas_ref, store, actions, user_id]);
+	}, [canvas_ref, store, user_id]);
 
 	const svg = `
 		<svg xmlns="http://www.w3.org/2000/svg"  width='24' height='24' version="1.1" viewBox="0 0 100 100" stroke="white" stroke-width="4" >
@@ -59,7 +60,7 @@ function Canvas({ user_id, store, actions }, ref) {
 
 	return (
 		<div id="container">
-			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} actions={actions} />
+			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} />
 			<canvas className="checkers" ref={canvas_ref} tabIndex={1} style={{ background: background, cursor: cursor }} />
 
 			<style jsx>{`
@@ -92,7 +93,7 @@ function Canvas({ user_id, store, actions }, ref) {
 }
 
 let last_x = 0;
-function onResize(canvas, store, actions, user_id) {
+function onResize(canvas, store, user_id) {
 	const { width, height, left } = canvas.getBoundingClientRect();
 
 	canvas.width = width * window.devicePixelRatio;

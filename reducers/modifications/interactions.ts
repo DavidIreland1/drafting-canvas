@@ -40,7 +40,7 @@ const interactions = {
 		const selected = Settings.user_id === user_id;
 		state.elements.unshift(Elements[type].create(id, position, selected));
 
-		const props_clone = clone(props);
+		const props_clone: any = clone(props);
 		props_clone.payload = { user_id, mode: 'edit' };
 		slice.caseReducers.cursor(state, props_clone);
 	},

@@ -5,52 +5,16 @@ import resize from './resize';
 import select from './select';
 import { DOMToCanvas, generateID } from '../../../utils/utils';
 import { roundPoint } from './round-point';
+import actions from '../../../redux/slice';
+import rotate from './rotate';
 
-const { max_zoom, min_zoom, pan_sensitivity, zoom_sensitivity } = Settings;
-
-export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, store, actions) {
-	const state = store.getState().present;
-	const view = state.views.find((view) => view.id === user_id);
-
-	if (String(event.deltaY).length < 5) {
-		// Pan
-		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
-		store.dispatch(
-			actions.view({
-				user_id: user_id,
-				delta_x: -event.deltaX * pan_sensitivity,
-				delta_y: -event.deltaY * pan_sensitivity,
-
-				cursor_x: cursor.x + (event.deltaX * pan_sensitivity) / view.scale,
-				cursor_y: cursor.y + (event.deltaY * pan_sensitivity) / view.scale,
-			})
-		);
-	} else {
-		// Zoom
-		const delta_scale = event.deltaY * zoom_sensitivity * view.scale;
-		if (view.scale - delta_scale < min_zoom) return;
-		if (view.scale - delta_scale > max_zoom) return;
-
-		const position = DOMToCanvas(event, canvas, view);
-		store.dispatch(
-			actions.view({
-				user_id: user_id,
-				delta_x: position.x * delta_scale,
-				delta_y: position.y * delta_scale,
-				delta_scale: -delta_scale,
-			})
-		);
-	}
-}
-
-export function hover(event, canvas, store, actions, id, active) {
+export function hover(event, canvas, store, id, active) {
 	const view = store.getState().present.views.find((view) => view.id === id);
 	const cursor = store.getState().present.cursors.find((view) => view.id === id);
 
 	if (!view) return;
 	const position = DOMToCanvas(event, canvas, view);
 
-	//
 	if (cursor.mode === 'create') return store.dispatch(actions.cursor({ user_id: Settings.user_id, ...position }));
 
 	const target = active.altering.length ? active.altering[0].element : undefined;
@@ -73,13 +37,12 @@ export function hover(event, canvas, store, actions, id, active) {
 
 	if (event.buttons) action = undefined;
 
-	// Combine these
 	store.dispatch(actions.hoverOnly({ id: active.hovering.length ? active.hovering[0].id : undefined }));
 	store.dispatch(actions.cursor({ user_id: Settings.user_id, ...position, rotation, type: action, visible: true }));
 }
 
 // Needs refactor to use strategy design pattern
-export function singleClick(down_event, canvas, id, store, actions, active) {
+export function singleClick(down_event, canvas, id, store, active) {
 	const state = store.getState().present;
 	const view = state.views.find((view) => view.id === id);
 	const cursor = state.cursors.find((cursor) => cursor.id === id);
@@ -93,19 +56,21 @@ export function singleClick(down_event, canvas, id, store, actions, active) {
 	position = roundPoint(position, [position], points, view);
 
 	if (cursor.mode === 'create') {
-		create(position, canvas, store, actions, view, cursor, points);
+		create(position, canvas, store, view, cursor, points);
 	} else {
-		select(store, actions, active, down_event);
-		moveOrResize(down_event, position, canvas, store, actions, active, view);
+		select(store, active, down_event);
+		moveOrResize(down_event, position, canvas, store, active, view);
 	}
 }
 
-function moveOrResize(down_event, last_position, canvas, store, actions, active, view) {
+function moveOrResize(down_event, last_position, canvas, store, active, view) {
 	if (active.altering.length > 0) {
 		const action = active.altering[0].action;
 		const target = active.altering[0].element;
 		if (action === 'resize') {
 			resize(canvas, store, view, target, last_position, down_event);
+		} else if (action === 'rotate') {
+			rotate(canvas, store, view, target, last_position, down_event);
 		}
 	} else if (active.hovering.length > 0) {
 		const target = active.hovering[0];
@@ -113,7 +78,7 @@ function moveOrResize(down_event, last_position, canvas, store, actions, active,
 	}
 }
 
-function create(last_position, canvas, store, actions, view, cursor, points) {
+function create(last_position, canvas, store, view, cursor, points) {
 	const id = generateID();
 
 	store.dispatch(actions.createElement({ user_id: Settings.user_id, id: id, type: cursor.type, position: last_position }));
