@@ -1,6 +1,10 @@
-import Elements from './../elements/elements';
-import Settings from '../settings';
-import { generateID } from './../../utils/utils';
+import Settings from '../../settings';
+import Elements from '../../elements/elements';
+import move from './move';
+import resize from './resize';
+import select from './select';
+import { DOMToCanvas, generateID } from '../../../utils/utils';
+import { roundPoint } from './round-point';
 
 const { max_zoom, min_zoom, pan_sensitivity, zoom_sensitivity } = Settings;
 
@@ -11,7 +15,6 @@ export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, s
 	if (String(event.deltaY).length < 5) {
 		// Pan
 		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
-
 		store.dispatch(
 			actions.view({
 				user_id: user_id,
@@ -38,22 +41,6 @@ export function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, s
 			})
 		);
 	}
-}
-
-export function DOMToCanvas(position, canvas, view) {
-	const bounds = canvas.getBoundingClientRect();
-	return {
-		x: ((position.x - bounds.x) * window.devicePixelRatio - view.x) / view.scale,
-		y: ((position.y - bounds.y) * window.devicePixelRatio - view.y) / view.scale,
-	};
-}
-
-export function CanvasToDOM(position, canvas, view) {
-	const bounds = canvas.getBoundingClientRect();
-	return {
-		x: ((position.x + view.x) * view.scale) / window.devicePixelRatio + bounds.x,
-		y: ((position.y + view.y) * view.scale) / window.devicePixelRatio + bounds.y,
-	};
 }
 
 export function hover(event, canvas, store, actions, id, active) {
@@ -92,7 +79,7 @@ export function hover(event, canvas, store, actions, id, active) {
 }
 
 // Needs refactor to use strategy design pattern
-export function select(down_event, canvas, id, store, actions, active) {
+export function singleClick(down_event, canvas, id, store, actions, active) {
 	const state = store.getState().present;
 	const view = state.views.find((view) => view.id === id);
 	const cursor = state.cursors.find((cursor) => cursor.id === id);
@@ -103,63 +90,27 @@ export function select(down_event, canvas, id, store, actions, active) {
 		.flat();
 
 	let position = DOMToCanvas(down_event, canvas, view);
-	position = roundPosition(position, [position], points, view);
+	position = roundPoint(position, [position], points, view);
 
 	if (cursor.mode === 'create') {
 		create(position, canvas, store, actions, view, cursor, points);
 	} else {
+		select(store, actions, active, down_event);
 		moveOrResize(down_event, position, canvas, store, actions, active, view);
 	}
 }
 
 function moveOrResize(down_event, last_position, canvas, store, actions, active, view) {
-	let action = 'move';
-	let target = active.hovering[0];
-
-	if (active.altering.length) {
-		action = active.altering[0].action;
-		target = active.altering[0].element;
-	}
-
-	if (!target) return down_event.shiftKey ? undefined : store.dispatch(actions.unselectAll());
-
-	const was_selected = target.selected;
-
-	if (down_event.shiftKey) {
-		store.dispatch(actions.select({ id: target.id }));
-	} else {
-		store.dispatch(actions.selectOnly({ select: [target.id] }));
-	}
-
-	const move = (move_event) => {
-		let position = DOMToCanvas(move_event, canvas, view);
-
-		const state = store.getState().present;
-		let [selected_points, points] = split(state.elements, (element) => element.selected).map((elements) => elements.map((element) => Elements[element.type].points(element)).flat());
+	if (active.altering.length > 0) {
+		const action = active.altering[0].action;
+		const target = active.altering[0].element;
 		if (action === 'resize') {
-			selected_points = [position];
-		} else {
-			// selected_points = [selected_points[0]];
+			resize(canvas, store, view, target, last_position, down_event);
 		}
-		position = roundPosition(position, [] /*selected_points*/, points, view);
-
-		const selected_ids = state.elements.filter((element) => element.selected).map((element) => element.id);
-
-		store.dispatch(actions[action]({ user_id: Settings.user_id, id: target.id, position, last_position, selected_ids }));
-
-		last_position = roundPosition(position, [], [], view);
-	};
-	down_event.target.addEventListener('pointermove', move);
-
-	const release = (up_event) => {
-		if (down_event.clientX === up_event.clientX && down_event.clientY === up_event.clientY) {
-			if (was_selected) {
-				// store.dispatch(actions.unselect({ id: target.id }));
-			}
-		}
-		down_event.target.removeEventListener('pointermove', move);
-	};
-	down_event.target.addEventListener('pointerup', release, { once: true });
+	} else if (active.hovering.length > 0) {
+		const target = active.hovering[0];
+		move(canvas, store, view, target, last_position, down_event);
+	}
 }
 
 function create(last_position, canvas, store, actions, view, cursor, points) {
@@ -170,66 +121,16 @@ function create(last_position, canvas, store, actions, view, cursor, points) {
 	const action = 'resize';
 	const move = (move_event) => {
 		let position = DOMToCanvas(move_event, canvas, view);
-		position = roundPosition(position, [position], points, view);
+		position = roundPoint(position, [position], points, view);
 		store.dispatch(actions[action]({ user_id: Settings.user_id, id: id, position, last_position, selected_ids: [id] }));
 		last_position = position;
 	};
 	window.addEventListener('pointermove', move);
 
-	const release = () => {
-		window.removeEventListener('pointermove', move);
-	};
+	const release = () => window.removeEventListener('pointermove', move);
 	window.addEventListener('pointerup', release, { once: true });
 }
 
-function roundPosition(position, selected_points, points, view) {
-	if (selected_points.length === 0 || points.length === 0) {
-		return {
-			x: Math.round(position.x),
-			y: Math.round(position.y),
-		};
-	}
-
-	const closest_points = selected_points.map((selected_point) => {
-		const closeest_x = points.map((point) => ({ ...point, delta: selected_point.x - point.x })).sort((point1, point2) => Math.abs(point1.delta) - Math.abs(point2.delta))[0];
-		const closeest_y = points.map((point) => ({ ...point, delta: selected_point.y - point.y })).sort((point1, point2) => Math.abs(point1.delta) - Math.abs(point2.delta))[0];
-		return {
-			x: closeest_x.x,
-			y: closeest_y.y,
-			delta_x: closeest_x.delta,
-			delta_y: closeest_y.delta,
-		};
-	});
-
-	const closeest_x = closest_points.sort((point1, point2) => Math.abs(point1.delta_x) - Math.abs(point2.delta_x))[0];
-	const closeest_y = closest_points.sort((point1, point2) => Math.abs(point1.delta_y) - Math.abs(point2.delta_y))[0];
-
-	const stickness = 60 / view.scale;
-
-	let x = 0;
-	if (Math.abs(closeest_x.delta_x) < stickness) {
-		x = position.x - closeest_x.delta_x;
-	} else {
-		x = Math.round(position.x);
-	}
-
-	let y = 0;
-	if (Math.abs(closeest_y.delta_y) < stickness) {
-		y = position.y - closeest_y.delta_y;
-	} else {
-		y = Math.round(position.y);
-	}
-
-	return {
-		x: x,
-		y: y,
-	};
-}
-
-// Splits array into two arrays
-function split(array, comparison) {
-	return array.reduce(([pass, fail], element) => (comparison(element) ? [[...pass, element], fail] : [pass, [...fail, element]]), [[], []]);
-}
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////

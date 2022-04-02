@@ -6,8 +6,8 @@ export default class Grid {
 
 		const step = Settings.grid_step * view.scale;
 
-		const top = Math.ceil(view.y % step);
-		const left = Math.ceil(view.x % step);
+		const top = Math.floor(view.y % step) - step;
+		const left = Math.floor(view.x % step) - step;
 
 		const bottom = context.canvas.height;
 		const right = context.canvas.width;
@@ -24,6 +24,7 @@ export default class Grid {
 			context.lineTo(right, _y);
 		}
 
+		context.fillStyle = 'transparent';
 		context.shadowColor = 'transparent';
 		context.strokeStyle = `rgba(0, 0, 0, ${0.1 * (view.scale - Settings.grid_min_scale)})`;
 		context.lineWidth = Math.max(Settings.grid_line_width / view.scale, 0.1);

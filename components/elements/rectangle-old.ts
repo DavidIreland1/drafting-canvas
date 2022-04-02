@@ -9,16 +9,15 @@ export default class Rectangle extends Element {
 			label: 'Rectangle',
 			type: 'rectangle',
 			rotation: 0,
-			width: 1,
-			height: 1,
+			width: 0,
+			height: 0,
 			radius: 0,
-			points: this.makePoints({ ...position, width: 1, height: 1, radius: 0 }),
 		});
 	}
 
 	static points(rectangle) {
 		const center = this.center(rectangle);
-		return this.makePoints(rectangle)
+		return this._points(rectangle)
 			.map((point) => ({
 				x: point.x + rectangle.x + rectangle.width / 2,
 				y: point.y + rectangle.y + rectangle.height / 2,
@@ -27,39 +26,56 @@ export default class Rectangle extends Element {
 			.concat(center);
 	}
 
-	static makePoints(rectangle) {
+	static _points(rectangle) {
 		return [
 			{
-				id: rectangle.id,
 				x: -rectangle.width / 2,
 				y: -rectangle.height / 2,
 				radius: rectangle.radius,
 			},
 			{
-				id: rectangle.id,
 				x: rectangle.width / 2,
 				y: -rectangle.height / 2,
 				radius: rectangle.radius,
 			},
 			{
-				id: rectangle.id,
 				x: rectangle.width / 2,
 				y: rectangle.height / 2,
 				radius: rectangle.radius,
 			},
 			{
-				id: rectangle.id,
 				x: -rectangle.width / 2,
 				y: rectangle.height / 2,
 				radius: rectangle.radius,
 			},
-		].map((point, i) => ({ ...point, i }));
+		];
 	}
 
 	static path(rectangle) {
+		const points = this._points(rectangle);
+
+		const delta_x = [0, -1, 0, 1];
+		const delta_y = [1, 0, -1, 0];
+		const cente_x = [1, -1, -1, 1];
+		const cente_y = [1, 1, -1, -1];
+
+		let angle = Math.PI;
+		const delta_angle = Math.PI / 2;
+
 		const path = new Path2D();
-		rectangle.points.forEach((point) => path.lineTo(point.x, point.y));
+		if (rectangle.radius.length || rectangle.radius > 0) {
+			const radius = Math.min(Math.min(Math.abs(rectangle.width), Math.abs(rectangle.height)) / 2, rectangle.radius);
+
+			points.forEach((point, i) => {
+				path.lineTo(point.x + radius * delta_x[i], point.y + radius * delta_y[i]);
+				path.arc(point.x + radius * cente_x[i], point.y + radius * cente_y[i], radius, angle, angle + delta_angle);
+				angle += delta_angle;
+			});
+		} else {
+			points.forEach((point) => path.lineTo(point.x, point.y));
+		}
 		path.closePath();
+
 		return path;
 	}
 
@@ -79,6 +95,7 @@ export default class Rectangle extends Element {
 		this.stroke(rectangle, context, path);
 
 		const hover = context.isPointInPath(path, cursor.x, cursor.y);
+
 		context.restore();
 
 		return hover;
@@ -122,16 +139,12 @@ export default class Rectangle extends Element {
 		const new_opposite = rotatePoint(opposite, new_center, -rectangle.rotation);
 		const new_position = rotatePoint(position, new_center, -rectangle.rotation);
 
+		// rectangle.x = new_opposite.x;
 		rectangle.x = new_opposite.x;
+		// rectangle.y = new_opposite.y)
 		rectangle.y = new_opposite.y;
 		rectangle.width = new_position.x - new_opposite.x;
 		rectangle.height = new_position.y - new_opposite.y;
-
-		rectangle.points.forEach((point) => {
-			// Move each point
-			// const new_opposite = rotatePoint(opposite, new_center, -rectangle.rotation);
-		});
-		rectangle.points = this.makePoints(rectangle);
 	}
 
 	static stretch(rectangle, position, last_position): void {
@@ -154,7 +167,5 @@ export default class Rectangle extends Element {
 		rectangle.y = new_opposite.y;
 		// rectangle.width = new_position.x - new_opposite.x;
 		rectangle.height = new_position.y - new_opposite.y;
-
-		rectangle.points = this.makePoints(rectangle);
 	}
 }

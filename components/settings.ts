@@ -6,7 +6,7 @@ const id = generateID();
 
 console.log(Adjective + ' ' + Animal, id);
 
-export default {
+const Settings = {
 	user_id: id,
 	user_name: Adjective + ' ' + Animal,
 	user_color: pastelColor(),
@@ -15,7 +15,7 @@ export default {
 
 	box_size: 8,
 	// highlight: '#1a83ee',
-	highlight: '#4EB2F4',
+	highlight: '#449ef2',
 
 	max_zoom: 500,
 	min_zoom: 0.0001,
@@ -27,3 +27,5 @@ export default {
 	grid_line_width: 2,
 	grid_min_scale: 5,
 };
+
+export default Settings;

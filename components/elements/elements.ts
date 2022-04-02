@@ -8,7 +8,7 @@ import Arrow from './arrow';
 import Spline from './spline';
 import Text from './text';
 
-export default {
+const Elements = {
 	circle: Circle,
 	ellipse: Ellipse,
 	group: Group,
@@ -19,6 +19,8 @@ export default {
 	spline: Spline,
 	text: Text,
 };
+
+export default Elements;
 
 export function flatten(elements) {
 	return elements.reduce((all, element) => all.concat(element.type === 'group' || element.type === 'frame' ? flatten(element.elements) : [], [element]), []);

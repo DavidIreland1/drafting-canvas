@@ -9,7 +9,6 @@ export default class Element {
 			selected: selected,
 			hover: false,
 			fill: [{ id: id + '2123', type: 'Solid', color: [0, 0, 0.5, 1], format: 'hex4', visible: true }],
-			// fill: [{ id: id + '2123', type: 'Image', alpha: 1, visible: true, x: 0, y: 0, src: '/images/draft.svg' }],
 			stroke: [],
 			effect: [],
 			rotation: 0,
@@ -48,34 +47,26 @@ export default class Element {
 		element.stroke
 			.filter((stroke) => stroke.visible)
 			.forEach((stroke) => {
-				context.strokeStyle = Colors.toString(stroke.color);
 				if (stroke.width === 0) return;
+				context.save();
+				context.strokeStyle = Colors.toString(stroke.color);
 				context.lineWidth = stroke.width;
 				if (stroke.type === 'Inside') {
-					context.save();
 					context.clip(path);
 					context.lineWidth = stroke.width * 2;
-					context.stroke(path);
-					context.restore();
 				} else if (stroke.type === 'Outside') {
-					context.save();
 					const clone = new Path2D(path);
-
 					// Fix for negative widths
 					if ((element.height > 0 && element.width > 0) || (element.height < 0 && element.width < 0)) {
 						clone.rect(10000, -10000, -20000, 20000); // TODO: Need to fix this
 					} else {
 						clone.rect(-10000, -10000, 20000, 20000); // TODO: Need to fix this
 					}
-
 					context.clip(clone);
 					context.lineWidth = stroke.width * 2;
-					context.stroke(path);
-					context.restore();
-				} else {
-					// Center
-					context.stroke(path);
 				}
+				context.stroke(path); // Center
+				context.restore();
 			});
 	}
 
@@ -83,27 +74,21 @@ export default class Element {
 		element.effect
 			.filter((effect) => effect.visible)
 			.forEach((effect) => {
+				context.save();
 				if (effect.type === 'Drop shadow' && before) {
-					context.save();
 					context.filter = `blur(${effect.blur * 0.1 * view.scale}px)`;
 					context.fillStyle = Colors.toString(effect.color);
 					context.translate(effect.x, effect.y);
 					context.scale(Math.exp(effect.spread * 0.005), Math.exp(effect.spread * 0.005));
 					context.rotate(element.rotation);
 					context.fill(path);
-					context.restore();
-					context.filter = 'none';
 				} else if (effect.type === 'Inner shadow' && !before) {
-					context.save();
-
 					context.filter = `blur(${effect.blur * 0.1 * view.scale}px)`;
 					context.fillStyle = Colors.toString(effect.color);
 					context.clip(path);
 					context.translate(effect.x, effect.y);
 					context.scale(Math.exp(-effect.spread * 0.005), Math.exp(-effect.spread * 0.005));
-
 					const clone = new Path2D(path);
-
 					// Fix for negative widths
 					if ((element.height > 0 && element.width > 0) || (element.height < 0 && element.width < 0)) {
 						clone.rect(10000, -10000, -20000, 20000); // TODO: Need to fix this
@@ -112,8 +97,9 @@ export default class Element {
 					}
 					context.fill(clone);
 					context.translate(-effect.x, -effect.y);
-					context.restore();
 				}
+				context.filter = 'none';
+				context.restore();
 			});
 	}
 
@@ -177,6 +163,7 @@ export default class Element {
 		const bounds = this.bound(element);
 		const center = this.center(element);
 
+		context.save();
 		context.translate(center.x, center.y);
 		context.rotate(element.rotation);
 		context.strokeStyle = color;
@@ -186,8 +173,7 @@ export default class Element {
 		const hov = context.isPointInStroke(cursor.x, cursor.y);
 		context.lineWidth = line;
 		context.stroke();
-		context.rotate(-element.rotation);
-		context.translate(-center.x, -center.y);
+		context.restore();
 
 		return hov;
 	}
@@ -196,24 +182,24 @@ export default class Element {
 		const bounds = this.bound(element);
 		const center = this.center(element);
 
+		context.save();
 		context.translate(center.x, center.y);
 		context.rotate(element.rotation);
 
-		if (Math.abs(bounds.width) + Math.abs(bounds.height) > box_size * 4) {
-			bounds.x = -bounds.width / 2;
-			bounds.y = -bounds.height / 2;
-			context.fillStyle = 'white';
-			context.strokeStyle = color;
-			context.lineWidth = line;
+		bounds.x = -bounds.width / 2;
+		bounds.y = -bounds.height / 2;
+		context.fillStyle = 'white';
+		context.strokeStyle = color;
+		context.lineWidth = line;
 
-			context.beginPath();
-			this.boxes(element.id, bounds, box_size).forEach((square) => context.rect(square.x, square.y, square.width, square.height));
+		context.beginPath();
+		this.boxes(element.id, bounds, box_size).forEach((square) => context.rect(square.x, square.y, square.width, square.height));
+		// Check zoom level
+		if (Math.abs(bounds.width) + Math.abs(bounds.height) > box_size * 4) {
 			context.fill();
 			context.stroke();
 		}
-
-		context.rotate(-element.rotation);
-		context.translate(-center.x, -center.y);
+		context.restore();
 
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
@@ -222,6 +208,7 @@ export default class Element {
 		const bounds = this.bound(element);
 		const center = this.center(element);
 
+		context.save();
 		context.translate(center.x, center.y);
 		context.rotate(element.rotation);
 
@@ -232,13 +219,40 @@ export default class Element {
 
 		context.beginPath();
 		this.boxes(element.id, bounds, box_size * 2).forEach((square) => context.rect(square.x, square.y, square.width, square.height));
-		context.rotate(-element.rotation);
-		context.translate(-center.x, -center.y);
+		context.restore();
 
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
 
-	static center(element) {
+	static drawDots(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number) {
+		const center = this.center(element);
+		const bounds = this.bound(element);
+
+		bounds.x = -bounds.width / 2;
+		bounds.y = -bounds.height / 2;
+
+		context.save();
+		context.translate(center.x, center.y);
+		context.rotate(element.rotation);
+
+		context.fillStyle = 'white';
+		context.strokeStyle = color;
+		context.lineWidth = line;
+
+		const hovering = element.points.map((dot) => {
+			context.beginPath();
+			context.arc(dot.x, dot.y, box_size, 0, 2 * Math.PI);
+			const hovering = context.isPointInPath(cursor.x, cursor.y);
+			context.fillStyle = hovering ? color : 'white';
+			context.fill();
+			context.stroke();
+			if (hovering) return dot;
+		});
+		context.restore();
+		return hovering[0];
+	}
+
+	static center(element): { x: number; y: number } {
 		const bounds = this.bound(element);
 		return {
 			x: bounds.x + bounds.width / 2,
@@ -314,13 +328,6 @@ export default class Element {
 	static move(element, position, last_position) {
 		element.x = element.x + position.x - last_position.x;
 		element.y = element.y + position.y - last_position.y;
-	}
-
-	static rotatePoint(position, center, rotation) {
-		return {
-			x: (position.x - center.x) * Math.cos(rotation) - (position.y - center.y) * Math.sin(rotation) + center.x,
-			y: (position.x - center.x) * Math.sin(rotation) + (position.y - center.y) * Math.cos(rotation) + center.y,
-		};
 	}
 
 	static rotate(element, position, last_position) {

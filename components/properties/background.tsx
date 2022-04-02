@@ -20,7 +20,7 @@ export default function Background({ store, actions, setPicker }) {
 		const selector = (state) => state.present.page;
 		setPicker(
 			<Picker setProperty={setBackground} selector={selector} event={event} setPicker={setPicker}>
-				<div style={{ color: 'white', lineHeight: '30px', width: 'max-content' }}>Background</div>
+				<h4 style={{ color: 'var(--font)', lineHeight: '30px', width: 'max-content' }}>Background</h4>
 			</Picker>
 		);
 	}

@@ -133,32 +133,25 @@ export default class Line extends Element {
 		// console.log('Broken');
 		// this.resize(line, position, last_position);
 
-		// const oposite = {
+		// const opposite = {
 		// 	x: center.x - (last_position.x - center.x),
 		// 	y: center.y - (position.y - center.y),
 		// };
 
 		// // const new_center = {
-		// // 	x: (oposite.x + position.x) / 2,
-		// // 	y: (oposite.y + position.y) / 2,
+		// // 	x: (opposite.x + position.x) / 2,
+		// // 	y: (opposite.y + position.y) / 2,
 		// // };
 
-		// const new_oposite = this.rotatePoint({ x: line.x1, y: line.y1 }, center, -rotation);
-		// const new_poistion = this.rotatePoint({ x: line.x2, y: line.y2 }, center, -rotation);
+		// const new_opposite = rotatePoint({ x: line.x1, y: line.y1 }, center, -rotation);
+		// const new_position = rotatePoint({ x: line.x2, y: line.y2 }, center, -rotation);
 
-		// line.x1 = new_oposite.x;
-		// line.y1 = new_oposite.y;
-		// line.x2 = new_poistion.x;
-		// line.y2 = new_poistion.y;
+		// line.x1 = new_opposite.x;
+		// line.y1 = new_opposite.y;
+		// line.x2 = new_position.x;
+		// line.y2 = new_position.y;
 
 		return 0;
-	}
-
-	static rotatePoint(position, center, rotation) {
-		return {
-			x: (position.x - center.x) * Math.cos(rotation) - (position.y - center.y) * Math.sin(rotation) + center.x,
-			y: (position.x - center.x) * Math.sin(rotation) + (position.y - center.y) * Math.cos(rotation) + center.y,
-		};
 	}
 
 	static stretch(line, position, last_position): void {}

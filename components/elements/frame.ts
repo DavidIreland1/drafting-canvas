@@ -1,5 +1,6 @@
 import Group from './group';
 import Elements from './elements';
+import { rotatePoint } from '../../utils/utils';
 
 export default class Frame extends Group {
 	static create(id, position, selected) {
@@ -105,46 +106,46 @@ export default class Frame extends Group {
 	static resize(frame, position, last_position): void {
 		const center = this.center(frame);
 
-		const oposite = {
+		const opposite = {
 			x: center.x - (last_position.x - center.x),
 			y: center.y - (last_position.y - center.y),
 		};
 
 		const new_center = {
-			x: (oposite.x + position.x) / 2,
-			y: (oposite.y + position.y) / 2,
+			x: (opposite.x + position.x) / 2,
+			y: (opposite.y + position.y) / 2,
 		};
 
-		const new_oposite = this.rotatePoint(oposite, new_center, -frame.rotation);
-		const new_poistion = this.rotatePoint(position, new_center, -frame.rotation);
+		const new_opposite = rotatePoint(opposite, new_center, -frame.rotation);
+		const new_position = rotatePoint(position, new_center, -frame.rotation);
 
-		// frame.x = new_oposite.x;
-		frame.x = new_oposite.x;
-		// frame.y = new_oposite.y)
-		frame.y = new_oposite.y;
-		frame.width = new_poistion.x - new_oposite.x;
-		frame.height = new_poistion.y - new_oposite.y;
+		// frame.x = new_opposite.x;
+		frame.x = new_opposite.x;
+		// frame.y = new_opposite.y)
+		frame.y = new_opposite.y;
+		frame.width = new_position.x - new_opposite.x;
+		frame.height = new_position.y - new_opposite.y;
 	}
 
 	static stretch(frame, position, last_position): void {
 		const center = this.center(frame);
 
-		const oposite = {
+		const opposite = {
 			x: center.x - (last_position.x - center.x),
 			y: center.y - (last_position.y - center.y),
 		};
 
 		const new_center = {
-			x: (oposite.x + position.x) / 2,
-			y: (oposite.y + position.y) / 2,
+			x: (opposite.x + position.x) / 2,
+			y: (opposite.y + position.y) / 2,
 		};
 
-		const new_oposite = this.rotatePoint(oposite, new_center, -frame.rotation);
-		const new_poistion = this.rotatePoint(position, new_center, -frame.rotation);
+		const new_opposite = rotatePoint(opposite, new_center, -frame.rotation);
+		const new_position = rotatePoint(position, new_center, -frame.rotation);
 
-		// frame.x = new_oposite.x;
-		frame.y = new_oposite.y;
-		// frame.width = new_poistion.x - new_oposite.x;
-		frame.height = new_poistion.y - new_oposite.y;
+		// frame.x = new_opposite.x;
+		frame.y = new_opposite.y;
+		// frame.width = new_position.x - new_opposite.x;
+		frame.height = new_position.y - new_opposite.y;
 	}
 }

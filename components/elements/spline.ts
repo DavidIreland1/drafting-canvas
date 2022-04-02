@@ -20,6 +20,7 @@ export default class Bezier extends Element {
 					y1: position.y + 20,
 					x1cp: position.x + 10 + 20,
 					y1cp: position.y + 20,
+
 					x2: position.x + 40,
 					y2: position.y + 40,
 					x2cp: position.x + 20,
@@ -30,6 +31,7 @@ export default class Bezier extends Element {
 					y1: position.y + 20,
 					x1cp: position.x + 140 + 20,
 					y1cp: position.y + 20,
+
 					x2: position.x + 80,
 					y2: position.y + 40,
 					x2cp: position.x + 80,
@@ -155,9 +157,9 @@ export default class Bezier extends Element {
 	}
 
 	static resize(line, position, last_position): void {
-		const closeset_curve = this.closesetCurve(line, last_position);
+		const closest_curve = this.closestCurve(line, last_position);
 
-		closeset_curve.forEach((curve) => {
+		closest_curve.forEach((curve) => {
 			const target = line.curves[curve.index];
 
 			const delta_x = Math.round(position.x) - target['x' + curve.point];
@@ -190,7 +192,7 @@ export default class Bezier extends Element {
 		});
 	}
 
-	static closesetCurve(line, position): Array<{ index: number; point: string }> {
+	static closestCurve(line, position): Array<{ index: number; point: string }> {
 		const points = this.boxes(line, 0)
 			.reverse()
 			.map((point) => {
@@ -209,13 +211,6 @@ export default class Bezier extends Element {
 
 	static rotate(line, position, last_position) {
 		return 0;
-	}
-
-	static rotatePoint(position, center, rotation) {
-		return {
-			x: (position.x - center.x) * Math.cos(rotation) - (position.y - center.y) * Math.sin(rotation) + center.x,
-			y: (position.x - center.x) * Math.sin(rotation) + (position.y - center.y) * Math.cos(rotation) + center.y,
-		};
 	}
 
 	static stretch(line, position, last_position): void {}

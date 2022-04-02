@@ -106,6 +106,7 @@ export default function Element({ store, actions, element, indentation, restruct
 					padding: 2px 4px;
 					border-radius: var(--radius);
 					margin: 4px 2px;
+					overflow: hidden;
 				}
 				#label > label {
 					padding: 6px 4px 6px 0;

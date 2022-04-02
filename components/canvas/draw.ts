@@ -1,10 +1,11 @@
 import Elements, { flatten } from './../elements/elements';
 import Cursor from '../cursor/cursor';
 import Grid from './grid';
-import drawPoints from './points';
+import drawCrosses from './crosses';
 import Settings from './../settings';
 import Colors from './../properties/colors';
 import drawScrollBars from './scroll-bars';
+import { screenBounds, transformPoint } from '../../utils/utils';
 
 const { line_width, box_size, highlight } = Settings;
 
@@ -23,7 +24,7 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 	context.translate(user_view.x, user_view.y);
 	context.scale(user_view.scale, user_view.scale);
 
-	const screen = boundScreen(context, user_view);
+	const screen = screenBounds(context, user_view);
 
 	const on_screen = flatten(state.elements.filter((element) => element.visible).filter((element) => Elements[element.type].onScreen(element, screen)));
 
@@ -48,10 +49,12 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 	// Outline hovering
 	if (!user_cursor.pressed) on_screen.filter((element) => element.hover && !element.selected).forEach((element) => Elements[element.type].outline(element, context, highlight, line * 2));
 
-	// active.hovering.slice(0, 1).forEach((element) => (element.selected ? undefined : Elements[element.type].outline(element, context, highlight, line * 2)));
-	if (!user_cursor.pressed || user_cursor.type !== 'select') active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
-
-	if (user_cursor.pressed) drawPoints(context, on_screen, active.selected, user_view);
+	if (active.editing.length > 0) {
+		active.editing.map((element) => Elements[element.type].drawDots(element, context, cursor, highlight, line, box));
+	} else if (!user_cursor.pressed || user_cursor.type !== 'select') {
+		active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
+	}
+	if (user_cursor.pressed) drawCrosses(context, on_screen, active.selected, user_view);
 
 	state.cursors
 		.filter((cursor) => cursor.visible)
@@ -64,20 +67,4 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 	if (Settings.grid_enabled) Grid.draw(context, user_view);
 
 	return active;
-}
-
-function transformPoint(point, transform) {
-	return {
-		x: transform.a * point.x + transform.c * point.y + transform.e,
-		y: transform.b * point.x + transform.d * point.y + transform.f,
-	};
-}
-
-export function boundScreen(context, view) {
-	return {
-		x1: -view.x / view.scale,
-		y1: -view.y / view.scale,
-		x2: -view.x / view.scale + context.canvas.width / view.scale,
-		y2: -view.y / view.scale + context.canvas.height / view.scale,
-	};
 }

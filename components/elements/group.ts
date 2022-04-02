@@ -98,11 +98,11 @@ export default class Group extends Element {
 
 	static resize(group, position, last_position) {
 		// const group_center = this.center(group);
-		// const oposite = {
+		// const opposite = {
 		// 	x: group_center.x - (position.x - group_center.x),
 		// 	y: group_center.y - (position.y - group_center.y),
 		// };
-		// const last_oposite = {
+		// const last_opposite = {
 		// 	x: group_center.x - (last_position.x - group_center.x),
 		// 	y: group_center.y - (last_position.y - group_center.y),
 		// };
@@ -110,12 +110,12 @@ export default class Group extends Element {
 		group.elements.forEach((element) => {
 			// const center = Elements[element.type].center(element);
 			// const position = {
-			// 	x: center.x - (oposite.x - center.x),
-			// 	y: center.y - (oposite.y - center.y),
+			// 	x: center.x - (opposite.x - center.x),
+			// 	y: center.y - (opposite.y - center.y),
 			// };
 			// const last_position = {
-			// 	x: center.x - (last_oposite.x - center.x),
-			// 	y: center.y - (last_oposite.y - center.y),
+			// 	x: center.x - (last_opposite.x - center.x),
+			// 	y: center.y - (last_opposite.y - center.y),
 			// };
 
 			Elements[element.type].resize(element, position, last_position);

@@ -1,5 +1,6 @@
 import Element from './element';
 import Colors from './../properties/colors';
+import { rotatePoint } from '../../utils/utils';
 
 export default class Text extends Element {
 	static create(id, position, selected) {
@@ -91,7 +92,7 @@ export default class Text extends Element {
 				x: point.x + text.x + text.width / 2,
 				y: point.y + text.y + text.height / 2,
 			}))
-			.map((point) => this.rotatePoint(point, center, text.rotation))
+			.map((point) => rotatePoint(point, center, text.rotation))
 			.concat(center);
 	}
 
@@ -169,45 +170,45 @@ export default class Text extends Element {
 	static resize(text, position, last_position): void {
 		const center = this.center(text);
 
-		const oposite = {
+		const opposite = {
 			x: center.x - (last_position.x - center.x),
 			y: center.y - (last_position.y - center.y),
 		};
 
 		const new_center = {
-			x: (oposite.x + position.x) / 2,
-			y: (oposite.y + position.y) / 2,
+			x: (opposite.x + position.x) / 2,
+			y: (opposite.y + position.y) / 2,
 		};
 
-		const new_oposite = this.rotatePoint(oposite, new_center, -text.rotation);
-		const new_poistion = this.rotatePoint(position, new_center, -text.rotation);
+		const new_opposite = rotatePoint(opposite, new_center, -text.rotation);
+		const new_position = rotatePoint(position, new_center, -text.rotation);
 
-		text.x = new_oposite.x;
-		text.y = new_oposite.y;
-		text.width = new_poistion.x - new_oposite.x;
-		text.height = new_poistion.y - new_oposite.y;
+		text.x = new_opposite.x;
+		text.y = new_opposite.y;
+		text.width = new_position.x - new_opposite.x;
+		text.height = new_position.y - new_opposite.y;
 	}
 
 	static stretch(text, position, last_position): void {
 		const center = this.center(text);
 
-		const oposite = {
+		const opposite = {
 			x: center.x - (last_position.x - center.x),
 			y: center.y - (last_position.y - center.y),
 		};
 
 		const new_center = {
-			x: (oposite.x + position.x) / 2,
-			y: (oposite.y + position.y) / 2,
+			x: (opposite.x + position.x) / 2,
+			y: (opposite.y + position.y) / 2,
 		};
 
-		const new_oposite = this.rotatePoint(oposite, new_center, -text.rotation);
-		const new_poistion = this.rotatePoint(position, new_center, -text.rotation);
+		const new_opposite = rotatePoint(opposite, new_center, -text.rotation);
+		const new_position = rotatePoint(position, new_center, -text.rotation);
 
-		// text.x = new_oposite.x;
-		text.y = new_oposite.y;
-		// text.width = new_poistion.x - new_oposite.x;
-		text.height = new_poistion.y - new_oposite.y;
+		// text.x = new_opposite.x;
+		text.y = new_opposite.y;
+		// text.width = new_position.x - new_opposite.x;
+		text.height = new_position.y - new_opposite.y;
 	}
 }
 

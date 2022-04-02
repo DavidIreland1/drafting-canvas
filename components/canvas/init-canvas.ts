@@ -1,4 +1,4 @@
-import { onWheel, hover, select } from './interaction';
+import { onWheel, hover, singleClick } from './interaction/interaction';
 import { shortCuts } from './short-cuts';
 
 export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, actions, active) {
@@ -6,8 +6,6 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 		event.preventDefault();
 		onWheel(event, canvas, user_id, store, actions);
 	};
-
-	console.log('hello');
 
 	canvas.focus(); // Needed for react?
 	canvas.onkeydown = async (event: KeyboardEvent) => {
@@ -64,7 +62,7 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 		if (active.selected.length) store.dispatch(actions.cursor({ user_id: user_id, pressed: true }));
 		event.preventDefault();
 		(event.target as any).setPointerCapture(event.pointerId);
-		select(event, canvas, user_id, store, actions, active);
+		singleClick(event, canvas, user_id, store, actions, active);
 	};
 
 	canvas.onpointerup = () => {

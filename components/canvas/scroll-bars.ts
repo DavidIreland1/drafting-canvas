@@ -1,5 +1,5 @@
+import { screenBounds } from '../../utils/utils';
 import Elements from './../elements/elements';
-import { boundScreen } from './draw';
 
 export default function drawScrollBars(context: CanvasRenderingContext2D, elements, user_view) {
 	const bounds = elements.map((element) => Elements[element.type].positiveBound(element));
@@ -13,7 +13,7 @@ export default function drawScrollBars(context: CanvasRenderingContext2D, elemen
 		max: Math.max(...bounds.map((bound) => bound.y + bound.height)),
 	};
 
-	const screen = boundScreen(context, user_view);
+	const screen = screenBounds(context, user_view);
 
 	const bar = {
 		width: 12,
