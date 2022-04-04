@@ -104,7 +104,7 @@ export default function Navbar({ store }) {
 					box-sizing: border-box;
 					stroke-width: 5;
 					margin: auto;
-					border-radius: 4px;
+					border-radius: var(--radius);
 					height: 35px;
 				}
 				svg.selected {

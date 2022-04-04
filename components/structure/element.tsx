@@ -1,6 +1,10 @@
+import { useState } from 'react';
 import actions from '../../redux/slice';
+import Chevron from '../icons/chevron';
 import Eye from '../icons/eye';
 import Lock from '../icons/lock';
+
+const open_elements = {}; // Local state that maintains on restructure
 
 export default function Element({ store, element, indentation, restructure }) {
 	const select = (event) => {
@@ -43,32 +47,45 @@ export default function Element({ store, element, indentation, restructure }) {
 		event.target.addEventListener('dragend', end, { once: true });
 	};
 
-	function setHover() {
-		store.dispatch(actions.hoverOnly({ id: element.id }));
+	function setHover(hover) {
+		store.dispatch(actions.hoverOnly({ id: hover ? element.id : undefined }));
 	}
 
+	const [open, _setOpen] = useState(open_elements[element.id] ?? true);
+
+	function setOpen(open) {
+		open_elements[element.id] = open;
+		_setOpen(open);
+	}
+
+	const has_children = Array.isArray(element.elements);
+
 	return (
-		<div id="element" element-id={element.id} draggable="true" onDragStart={drag} className={(element.selected ? 'highlighted' : '') + (element.type === 'group' || element.type === 'frame' ? ' group' : '')} onKeyPress={(event) => console.log(event, store)}>
-			<div id="label" className={(element.selected ? 'selected' : '') + (element.hover ? ' hover' : '')} style={{ paddingLeft: indentation + 'px' }} onMouseEnter={setHover} onMouseLeave={setHover}>
+		<div id="element" element-id={element.id} draggable="true" onDragStart={drag} className={element.type === 'group' || element.type === 'frame' ? 'group' : ''}>
+			<div id="label" className={(element.selected ? 'selected' : '') + (element.hover ? ' hover' : '')} style={{ marginLeft: has_children ? 5 : indentation, gridTemplateColumns: `${has_children ? '18px' : ''} 30px auto 28px 28px` }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+				<div style={{ display: has_children ? 'block' : 'none' }}>
+					<Chevron onClick={() => setOpen(!open)} rotated={open} />
+				</div>
+
 				<svg viewBox="0 0 100 100" fill="none" stroke="var(--text)" strokeWidth="2">
 					<Icon type={element.type} />
 				</svg>
 
 				<label onClick={select}>{element.label}</label>
 
-				<div className={'icon ' + (element.locked ? ' visible' : '')}>
+				<div className={'icon ' + (element.locked ? 'visible' : '')}>
 					<Lock locked={element.locked} onClick={toggleLocked} />
 				</div>
 
-				<div className={'icon ' + (element.visible ? '' : ' visible')}>
+				<div className={'icon ' + (element.visible ? '' : 'visible')}>
 					<Eye open={element.visible} onClick={toggleVisible} />
 				</div>
 			</div>
 
-			{(element.type === 'group' || element.type === 'frame') && (
-				<div id="elements" onDragOver={(event) => event.preventDefault()}>
+			{has_children && (
+				<div id="elements" className={element.selected ? 'highlighted' : ''} style={{ display: open ? '' : 'none' }} onDragOver={(event) => event.preventDefault()}>
 					{element.elements.map((child) => (
-						<Element key={child.id} element={child} indentation={indentation + 15} store={store} restructure={restructure} />
+						<Element key={child.id} element={child} indentation={20} store={store} restructure={restructure} />
 					))}
 				</div>
 			)}
@@ -98,15 +115,14 @@ export default function Element({ store, element, indentation, restructure }) {
 				#elements {
 					padding-bottom: 5px;
 					border-radius: var(--radius);
-					margin: 2px;
+					margin: 4px 0 8px 8px;
 				}
 				#label {
 					display: grid;
-					grid-template-columns: 30px auto 28px 28px;
 					box-sizing: border-box;
-					padding: 2px 4px;
+					padding: 2px 3px;
 					border-radius: var(--radius);
-					margin: 4px 2px;
+					margin: 4px 0 4px 2px;
 					overflow: hidden;
 				}
 				#label > label {
@@ -119,7 +135,7 @@ export default function Element({ store, element, indentation, restructure }) {
 				#label.selected {
 					background: var(--selected);
 				}
-				.highlighted > #elements {
+				.highlighted > div > #label {
 					background: var(--hover);
 				}
 				.icon {
@@ -148,6 +164,13 @@ function Icon({ type }) {
 				<>
 					<title>Rectangle</title>
 					<rect x="20" y="20" width="60" height="60" />
+				</>
+			);
+		case 'group':
+			return (
+				<>
+					<title>Group</title>
+					<rect x="20" y="20" width="60" height="60" strokeDasharray="12" strokeWidth="2" />
 				</>
 			);
 		case 'ellipse':

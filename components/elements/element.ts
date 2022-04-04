@@ -8,7 +8,7 @@ export default class Element {
 			editing: false,
 			selected: selected,
 			hover: false,
-			fill: [{ id: id + '2123', type: 'Solid', color: [0, 0, 0.5, 1], format: 'hex4', visible: true }],
+			fill: [{ id: id + '2123', type: 'Solid', color: [0, 0, 0.8, 1], format: 'hex4', visible: true }],
 			stroke: [],
 			effect: [],
 			rotation: 0,
@@ -76,14 +76,14 @@ export default class Element {
 			.forEach((effect) => {
 				context.save();
 				if (effect.type === 'Drop shadow' && before) {
-					context.filter = `blur(${effect.blur * 0.1 * view.scale}px)`;
+					context.filter = `blur(${effect.blur * 0.2 * view.scale}px)`;
 					context.fillStyle = Colors.toString(effect.color);
 					context.translate(effect.x, effect.y);
 					context.scale(Math.exp(effect.spread * 0.005), Math.exp(effect.spread * 0.005));
 					context.rotate(element.rotation);
 					context.fill(path);
 				} else if (effect.type === 'Inner shadow' && !before) {
-					context.filter = `blur(${effect.blur * 0.1 * view.scale}px)`;
+					context.filter = `blur(${effect.blur * 0.5 * view.scale}px)`;
 					context.fillStyle = Colors.toString(effect.color);
 					context.clip(path);
 					context.translate(effect.x, effect.y);

@@ -26,13 +26,13 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 
 	const screen = screenBounds(context, user_view);
 
-	const on_screen = flatten(state.elements.filter((element) => element.visible).filter((element) => Elements[element.type].onScreen(element, screen)));
+	const on_screen = state.elements.filter((element) => element.visible).filter((element) => Elements[element.type].onScreen(element, screen));
 
 	const line = line_width / user_view.scale;
 	const box = box_size / user_view.scale;
 	const cursor = transformPoint(user_cursor, context.getTransform());
 
-	active.selected = on_screen.filter((element) => element.selected);
+	active.selected = flatten(on_screen).filter((element) => element.selected);
 	active.editing = active.selected.filter((element) => element.editing);
 
 	active.hovering = active.selected
@@ -47,11 +47,14 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 		.sort((element1) => (element1.selected ? -1 : 1));
 
 	// Outline hovering
-	if (!user_cursor.pressed) on_screen.filter((element) => element.hover && !element.selected).forEach((element) => Elements[element.type].outline(element, context, highlight, line * 2));
+	if (!user_cursor.pressed)
+		flatten(on_screen)
+			.filter((element) => element.hover && !element.selected)
+			.forEach((element) => Elements[element.type].outline(element, context, highlight, line * 2));
 
 	if (active.editing.length > 0) {
 		active.altering = active.editing.map((element) => Elements[element.type].drawDots(element, context, cursor, highlight, line, box)).filter((element) => element);
-	} else if (!user_cursor.pressed || user_cursor.type !== 'select') {
+	} else if ((!user_cursor.pressed || user_cursor.type !== 'select') && document.activeElement === context.canvas) {
 		active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
 	}
 

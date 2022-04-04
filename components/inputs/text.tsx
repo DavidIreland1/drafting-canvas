@@ -19,6 +19,8 @@ export default function Text({ id = undefined, placeholder = undefined, classNam
 					color: var(--text);
 					font-size: 16px;
 					width: 100%;
+					font-family: inherit;
+					font-weight: inherit;
 				}
 				input:focus {
 					outline: none;

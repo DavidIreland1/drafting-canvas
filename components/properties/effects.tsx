@@ -18,9 +18,9 @@ export default function Effect({ selected, store, setPicker }) {
 
 	return (
 		<div id="property-container">
-			<div className="property-heading" onClick={() => addEffect(selected_ids, store)}>
+			<div className="property-heading">
 				<h4>EFFECTS</h4>
-				<Plus />
+				<Plus onClick={() => addEffect(selected_ids, store)} />
 			</div>
 
 			{effects.map((effect) => (
@@ -38,11 +38,11 @@ function addEffect(selected_ids, store) {
 				id: generateID(),
 				type: 'Drop shadow',
 				// type: 'Inner shadow',
-				x: 0,
-				y: 0,
-				blur: 10,
+				x: 10,
+				y: 10,
+				blur: 20,
 				spread: 0,
-				color: [0, 0, 0, 1],
+				color: [0, 0, 0, 0.6],
 				format: 'hex4',
 				visible: true,
 			},
@@ -76,13 +76,13 @@ function openPicker(event, effect, setPicker, selected_ids, store) {
 	);
 }
 
-function updateEffect(event, effect, selected_ids, store) {
+function updateEffect(event, effect, selected_ids, store, formatter: Function = Number) {
 	store.dispatch(
 		actions.setEffect({
 			selected_ids,
 			props: {
 				id: effect.id,
-				[event.target.id]: event.target.value,
+				[event.target.id]: formatter(event.target.value),
 			},
 		})
 	);
@@ -126,7 +126,7 @@ function EffectInput({ effect, setPicker, selected_ids, store }) {
 			</div>
 
 			<div className="grid" style={{ gap: `8px calc(max(20vw, 15px) / 20)` }}>
-				<Select id="type" value={effect.type} onChange={(event) => updateEffect(event, effect, selected_ids, store)}>
+				<Select id="type" value={effect.type} onChange={(event) => updateEffect(event, effect, selected_ids, store, (val) => val)}>
 					<option value="Drop shadow">Drop Shadow</option>
 					<option value="Inner shadow">Inner Shadow</option>
 				</Select>

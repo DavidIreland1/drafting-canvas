@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import Element from './element';
 import { flatten } from '../elements/elements';
 import { useSelector } from 'react-redux';
-import { shortCuts } from '../canvas/short-cuts';
+import shortCuts from '../canvas/short-cuts';
 import { clone } from '../../utils/utils';
 import actions from '../../redux/slice';
 
@@ -60,7 +60,7 @@ export default function Structure({ store, onResize }) {
 		<div id="container" key={key} style={{ width: width }}>
 			<div id="structure" ref={structure_ref} onDragOver={(event) => event.preventDefault()}>
 				{elements.map((element) => (
-					<Element key={element.id} element={element} indentation={10} store={store} restructure={restructure} />
+					<Element key={element.id} element={element} indentation={5} store={store} restructure={restructure} />
 				))}
 			</div>
 
