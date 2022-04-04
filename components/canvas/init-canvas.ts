@@ -28,9 +28,9 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 		}
 	};
 
-	canvas.ondblclick = (event) => {
+	canvas.ondblclick = () => {
 		if (active.hovering.length) {
-			store.dispatch(actions.edit({ id: active.hovering[0].id }));
+			store.dispatch(actions.editOnly({ id: active.hovering[0].id }));
 		} else {
 			// Reset view
 			const view = store.getState().present.views.find((view) => view.id === user_id);

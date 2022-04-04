@@ -141,7 +141,7 @@ export default class Element {
 		if (this.drawBound(element, context, cursor, highlight, line)) action = 'stretch';
 		if (this.drawRotate(element, context, cursor, box)) action = 'rotate';
 		if (this.drawResize(element, context, cursor, highlight, line, box)) action = 'resize';
-		return action ? { action: action, element: element } : undefined;
+		return action ? { action, element } : undefined;
 	}
 
 	// Maybe this can be removed
@@ -239,17 +239,19 @@ export default class Element {
 		context.strokeStyle = color;
 		context.lineWidth = line;
 
-		const hovering = element.points.map((dot) => {
-			context.beginPath();
-			context.arc(dot.x, dot.y, box_size, 0, 2 * Math.PI);
-			const hovering = context.isPointInPath(cursor.x, cursor.y);
-			context.fillStyle = hovering ? color : 'white';
-			context.fill();
-			context.stroke();
-			if (hovering) return dot;
-		});
+		const hovering = element.points
+			.map((dot) => {
+				context.beginPath();
+				context.arc(dot.x, dot.y, box_size, 0, 2 * Math.PI);
+				const hovering = context.isPointInPath(cursor.x, cursor.y);
+				context.fillStyle = hovering ? color : 'white';
+				context.fill();
+				context.stroke();
+				if (hovering) return dot;
+			})
+			.filter((dot) => dot);
 		context.restore();
-		return hovering[0];
+		return hovering.length ? { element, action: 'edit', dot: hovering[0] } : undefined;
 	}
 
 	static center(element): { x: number; y: number } {
@@ -326,15 +328,24 @@ export default class Element {
 	}
 
 	static move(element, position, last_position) {
-		element.x = element.x + position.x - last_position.x;
-		element.y = element.y + position.y - last_position.y;
+		element.x += position.x - last_position.x;
+		element.y += position.y - last_position.y;
 	}
 
 	static rotate(element, position, last_position) {
 		const center = this.center(element);
 		const rotation = Math.atan2(center.y - position.y, center.x - position.x) - Math.atan2(center.y - last_position.y, center.x - last_position.x);
 		element.rotation += rotation;
-		return rotation;
+	}
+
+	static edit(element, position, last_position) {
+		const center = this.center(element);
+		const points = element.points;
+		const point = points.find((point) => (center.x + point.x - last_position.x) ** 2 + (center.y + point.y - last_position.y) ** 2 < 30);
+		console.log(JSON.stringify(points));
+		console.log(JSON.stringify(point));
+		point.x += position.x - last_position.x;
+		point.y += position.y - last_position.y;
 	}
 
 	static boxes(id, bounds, box_size) {

@@ -25,12 +25,16 @@ const interactions = {
 		const { position, last_position, selected_ids } = props.payload;
 		selected(state.elements, selected_ids).forEach((element) => Elements[element.type].move(element, position, last_position));
 	},
+	edit: (state, props) => {
+		const { position, last_position, selected_ids } = props.payload;
+		console.log(selected_ids);
+		selected(state.elements, selected_ids).forEach((element) => Elements[element.type].edit(element, position, last_position));
+	},
 
 	createElements: (state, props) => {
 		slice.caseReducers.unselectAll(state);
 		state.elements = props.payload.elements.concat(state.elements);
 	},
-
 	createElement: (state, props) => {
 		const { user_id, id, type, position } = props.payload;
 
@@ -60,7 +64,6 @@ const interactions = {
 			element.selected = !element.locked;
 		}
 	},
-
 	group: (state, props) => {
 		const { id, selected_ids } = props.payload;
 		console.log(id, selected_ids);

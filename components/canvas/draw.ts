@@ -50,10 +50,11 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 	if (!user_cursor.pressed) on_screen.filter((element) => element.hover && !element.selected).forEach((element) => Elements[element.type].outline(element, context, highlight, line * 2));
 
 	if (active.editing.length > 0) {
-		active.altering = active.editing.map((element) => Elements[element.type].drawDots(element, context, cursor, highlight, line, box));
+		active.altering = active.editing.map((element) => Elements[element.type].drawDots(element, context, cursor, highlight, line, box)).filter((element) => element);
 	} else if (!user_cursor.pressed || user_cursor.type !== 'select') {
 		active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
 	}
+
 	if (user_cursor.pressed) drawCrosses(context, on_screen, active.selected, user_view);
 
 	state.cursors

@@ -27,7 +27,7 @@ const tools = {
 			element.editing = false;
 		});
 	},
-	edit: (state, props) => {
+	editOnly: (state, props) => {
 		const element = flatten(state.elements).find((element) => element.id === props.payload.id);
 		if (element) element.editing = true;
 	},

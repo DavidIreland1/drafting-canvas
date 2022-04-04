@@ -7,8 +7,9 @@ import { DOMToCanvas, generateID } from '../../../utils/utils';
 import { roundPoint } from './round-point';
 import actions from '../../../redux/slice';
 import rotate from './rotate';
+import edit from './edit';
 
-export function hover(event, canvas, store, id, active) {
+export function hover(event: PointerEvent, canvas, store, id, active) {
 	const view = store.getState().present.views.find((view) => view.id === id);
 	const cursor = store.getState().present.cursors.find((view) => view.id === id);
 
@@ -17,28 +18,23 @@ export function hover(event, canvas, store, id, active) {
 
 	if (cursor.mode === 'create') return store.dispatch(actions.cursor({ user_id: Settings.user_id, ...position }));
 
-	const target = active.altering.length ? active.altering[0].element : undefined;
-	let action = active.altering.length ? active.altering[0].action : 'select';
-
-	let rotation = 0;
-	if (target && ['resize', 'rotate'].includes(action)) {
-		const center = Elements[target.type].center(target);
-		rotation = Math.atan2(center.y - position.y, center.x - position.x);
-	} else if (target && action === 'stretch') {
-		const center = Elements[target.type].center(target);
-		rotation = Math.atan2(center.y - position.y, center.x - position.x);
-
-		let sign = -1;
-		if (Math.abs(rotation) < Math.PI / 4 || Math.abs(rotation) > (3 * Math.PI) / 4) {
-			sign = 1;
-		}
-		rotation = target.rotation + (Math.PI / 4) * sign - Math.PI / 4;
-	}
-
-	if (event.buttons) action = undefined;
-
-	store.dispatch(actions.hoverOnly({ id: active.hovering.length ? active.hovering[0].id : undefined }));
+	const target = active.altering[0]?.element;
+	const action = active.altering[0]?.action ?? (event.buttons ? undefined : 'select');
+	const rotation = cursorRotation(target, action, position);
 	store.dispatch(actions.cursor({ user_id: Settings.user_id, ...position, rotation, type: action, visible: true }));
+	store.dispatch(actions.hoverOnly({ id: active.hovering[0]?.id }));
+}
+
+function cursorRotation(target, action, position) {
+	if (!target) return 0;
+	const center = Elements[target.type].center(target);
+	const rotation = Math.atan2(center.y - position.y, center.x - position.x);
+	if (action === 'resize' || action === 'rotate') return rotation;
+	if (action === 'stretch') {
+		const sign = Math.abs(rotation) < Math.PI / 4 || Math.abs(rotation) > (3 * Math.PI) / 4 ? 1 : -1;
+		return target.rotation + (Math.PI / 4) * sign - Math.PI / 4;
+	}
+	return 0;
 }
 
 // Needs refactor to use strategy design pattern
@@ -67,10 +63,13 @@ function moveOrResize(down_event, last_position, canvas, store, active, view) {
 	if (active.altering.length > 0) {
 		const action = active.altering[0].action;
 		const target = active.altering[0].element;
+		console.log(action);
 		if (action === 'resize') {
 			resize(canvas, store, view, target, last_position, down_event);
 		} else if (action === 'rotate') {
 			rotate(canvas, store, view, target, last_position, down_event);
+		} else if (action === 'edit') {
+			edit(canvas, store, view, target, last_position, down_event);
 		}
 	} else if (active.hovering.length > 0) {
 		const target = active.hovering[0];

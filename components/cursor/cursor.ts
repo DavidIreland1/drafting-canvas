@@ -9,6 +9,7 @@ import Settings from './../settings';
 const Cursors = {
 	select: Select,
 	move: Select,
+	edit: Select,
 
 	pen: Select,
 
