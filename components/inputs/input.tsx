@@ -62,7 +62,7 @@ export default function Input({ id, label, value, step = 1, min = NaN, unit = ''
 					type="number"
 					step={step}
 					value={value}
-					min={min || undefined}
+					min={isNaN(min) ? undefined : min}
 					style={{
 						maxWidth: `calc(${width} / 2 - 20px)`,
 						width: `max(calc(${width} / 6), 5ch)`,

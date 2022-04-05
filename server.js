@@ -5,6 +5,8 @@ const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
 
+const port = 3001
+
 const app = next({ dev: process.env.NODE_ENV !== 'production' });
 const handle = app.getRequestHandler();
 
@@ -29,8 +31,8 @@ app.prepare().then(() => {
 		// 	res.setHeader('Content-Type', 'application/json');
 		// 	res.end(JSON.stringify(load(page_id) || initial_state));
 		// }
-	}).listen(3000, () => {
-		console.log('> Ready on http://localhost:3000');
+	}).listen(port, () => {
+		console.log('> Ready on http://localhost:' + port);
 	});
 
 	// initStateSync(server);

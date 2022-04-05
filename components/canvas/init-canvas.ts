@@ -33,15 +33,15 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 			store.dispatch(actions.editOnly({ id: active.hovering[0].id }));
 		} else {
 			// Reset view
-			const view = store.getState().present.views.find((view) => view.id === user_id);
-			store.dispatch(
-				actions.view({
-					user_id: user_id,
-					delta_x: canvas.width / 2 - view.x,
-					delta_y: canvas.height / 2 - view.y,
-					delta_scale: 1 - view.scale,
-				})
-			);
+			// const view = store.getState().present.views.find((view) => view.id === user_id);
+			// store.dispatch(
+			// 	actions.view({
+			// 		user_id: user_id,
+			// 		delta_x: canvas.width / 2 - view.x,
+			// 		delta_y: canvas.height / 2 - view.y,
+			// 		delta_scale: 1 - view.scale,
+			// 	})
+			// );
 		}
 	};
 
@@ -60,7 +60,6 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 
 	canvas.onpointerdown = (event) => {
 		if (event.button !== 0) return;
-		// console.log('single click');
 		if (active.selected.length) store.dispatch(actions.cursor({ user_id: user_id, pressed: true }));
 		event.preventDefault();
 		(event.target as any).setPointerCapture(event.pointerId);

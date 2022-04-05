@@ -10,13 +10,13 @@ export default function resize(canvas, store, view, target, last_position, down_
 
 		const state = store.getState().present;
 		let [, points] = split(state.elements, (element) => element.selected).map((elements) => elements.map((element) => Elements[element.type].points(element)).flat());
-
 		position = roundPoint(position, [] /*[position]*/, points, view);
 
 		const selected_ids = state.elements.filter((element) => element.selected).map((element) => element.id);
 
 		store.dispatch(actions.resize({ user_id: Settings.user_id, id: target.id, position, last_position, selected_ids }));
 
+		last_position = position;
 		last_position = roundPoint(position, [], [], view);
 	};
 	down_event.target.addEventListener('pointermove', move);

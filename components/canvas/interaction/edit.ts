@@ -5,6 +5,7 @@ import { roundPoint } from './round-point';
 import { DOMToCanvas, split } from '../../../utils/utils';
 
 export default function edit(canvas, store, view, target, last_position, down_event) {
+	const { user_id, box_size } = Settings;
 	const move = (move_event) => {
 		let position = DOMToCanvas(move_event, canvas, view);
 
@@ -15,7 +16,7 @@ export default function edit(canvas, store, view, target, last_position, down_ev
 
 		const selected_ids = state.elements.filter((element) => element.editing).map((element) => element.id);
 
-		store.dispatch(actions.edit({ user_id: Settings.user_id, id: target.id, position, last_position, selected_ids }));
+		store.dispatch(actions.edit({ user_id, id: target.id, position, last_position, selected_ids, box_size }));
 
 		last_position = roundPoint(position, [], [], view);
 	};

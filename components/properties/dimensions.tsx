@@ -51,6 +51,7 @@ export default function Dimensions({ selected, store, width }) {
 							<path d="M 2 8 L 2 5 A 3 3 0 0 1 5 2 L 8 2 " />
 						</svg>
 					}
+					min={0}
 					value={selected[0].radius}
 					onChange={updateDimension}
 					width={width}

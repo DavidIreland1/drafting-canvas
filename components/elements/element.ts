@@ -149,12 +149,12 @@ export default class Element {
 		const bounds = this.bound(element);
 		const center = this.center(element);
 
+		context.save();
 		context.translate(center.x, center.y);
 		context.rotate(element.rotation);
 		context.beginPath();
 		context.rect(-bounds.width / 2, -bounds.height / 2, bounds.width, bounds.height);
-		context.rotate(-element.rotation);
-		context.translate(-center.x, -center.y);
+		context.restore();
 
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
@@ -330,6 +330,13 @@ export default class Element {
 	static move(element, position, last_position) {
 		element.x += position.x - last_position.x;
 		element.y += position.y - last_position.y;
+
+		// const delta_x = position.x - last_position.x;
+		// const delta_y = position.y - last_position.y;
+		// element.points.forEach((point) => {
+		// 	point.x += delta_x;
+		// 	point.y += delta_y;
+		// });
 	}
 
 	static rotate(element, position, last_position) {
@@ -338,12 +345,11 @@ export default class Element {
 		element.rotation += rotation;
 	}
 
-	static edit(element, position, last_position) {
+	static edit(element, position, last_position, box_size) {
 		const center = this.center(element);
 		const points = element.points;
-		const point = points.find((point) => (center.x + point.x - last_position.x) ** 2 + (center.y + point.y - last_position.y) ** 2 < 30);
-		console.log(JSON.stringify(points));
-		console.log(JSON.stringify(point));
+		const min_distance = Math.min(points.map((point) => (center.x + point.x - last_position.x) ** 2 + (center.y + point.y - last_position.y) ** 2));
+		const point = points.sort((point) => (center.x + point.x - last_position.x) ** 2 + (center.y + point.y - last_position.y) ** 2 === min_distance);
 		point.x += position.x - last_position.x;
 		point.y += position.y - last_position.y;
 	}
