@@ -53,6 +53,7 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 			.forEach((element) => Elements[element.type].outline(element, context, highlight, line * 2));
 
 	if (active.editing.length > 0) {
+		active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
 		active.altering = active.editing.map((element) => Elements[element.type].drawDots(element, context, cursor, highlight, line, box)).filter((element) => element);
 	} else if ((!user_cursor.pressed || user_cursor.type !== 'select') && document.activeElement === context.canvas) {
 		active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);

@@ -1,4 +1,6 @@
-import { rotatePoint } from '../../utils/utils';
+import { Bound } from '../../types/box-types';
+import { ElementType } from '../../types/element-types';
+import { clamp, rotatePoint } from '../../utils/utils';
 import Element from './element';
 
 export default class Rectangle extends Element {
@@ -9,10 +11,8 @@ export default class Rectangle extends Element {
 			label: 'Rectangle',
 			type: 'rectangle',
 			rotation: 0,
-			width: 10,
-			height: 10,
 			radius: 0,
-			points: this.makePoints({ ...position, width: 10, height: 10, radius: 0 }),
+			points: this.makePoints({ ...position, width: 1, height: 1, radius: 0 }),
 		});
 	}
 
@@ -20,8 +20,8 @@ export default class Rectangle extends Element {
 		const center = this.center(rectangle);
 		return rectangle.points
 			.map((point) => ({
-				x: point.x + rectangle.x + rectangle.width / 2,
-				y: point.y + rectangle.y + rectangle.height / 2,
+				x: point.x,
+				y: point.y,
 			}))
 			.map((point) => rotatePoint(point, center, rectangle.rotation))
 			.concat(center);
@@ -31,26 +31,26 @@ export default class Rectangle extends Element {
 		return [
 			{
 				id: rectangle.id,
-				x: 0,
-				y: 0,
+				x: rectangle.x, //-rectangle.width / 2,
+				y: rectangle.y, //-rectangle.height / 2,
 				// radius: rectangle.radius,
 			},
 			{
 				id: rectangle.id,
-				x: rectangle.width,
-				y: 0,
+				x: rectangle.x + rectangle.width, // / 2,
+				y: rectangle.y, //-rectangle.height / 2,
 				// radius: rectangle.radius,
 			},
 			{
 				id: rectangle.id,
-				x: rectangle.width,
-				y: rectangle.height,
+				x: rectangle.x + rectangle.width, // / 2,
+				y: rectangle.y + rectangle.height, // / 2,
 				// radius: rectangle.radius,
 			},
 			{
 				id: rectangle.id,
-				x: 0,
-				y: rectangle.height,
+				x: rectangle.x, //-rectangle.width / 2,
+				y: rectangle.y + rectangle.height, // / 2,
 				// radius: rectangle.radius,
 			},
 		].map((point, i) => ({ ...point, i }));
@@ -67,7 +67,7 @@ export default class Rectangle extends Element {
 		context.fillStyle = rectangle.color;
 
 		context.save();
-		context.translate(rectangle.x, rectangle.y);
+		// context.translate(rectangle.x, rectangle.y); //.translate(center.x, center.y);
 		this.effect(rectangle, context, path, true, view);
 
 		context.rotate(rectangle.rotation);
@@ -83,18 +83,17 @@ export default class Rectangle extends Element {
 
 	static outline(rectangle, context, color, line_width): void {
 		const center = this.center(rectangle);
-
 		context.strokeStyle = color;
 		context.lineWidth = line_width;
 		context.save();
-		context.translate(rectangle.x, rectangle.y);
+		// context.translate(rectangle.x, rectangle.y); //.translate(center.x, center.y);
 		context.rotate(rectangle.rotation);
 		const path = this.path(rectangle);
 		context.stroke(path);
 		context.restore();
 	}
 
-	static bound(rectangle): { x: number; y: number; width: number; height: number } {
+	static bound(rectangle: ElementType): Bound {
 		const xs = rectangle.points.map((point) => point.x);
 		const ys = rectangle.points.map((point) => point.y);
 		const x_min = Math.min(...xs);
@@ -103,22 +102,25 @@ export default class Rectangle extends Element {
 		const y_max = Math.max(...ys);
 
 		const test = {
-			x: x_min + rectangle.x,
-			y: y_min + rectangle.y,
+			x: x_min, // + rectangle.x, // + rectangle.width / 2,
+			y: y_min, //+ rectangle.y, // + rectangle.height / 2,
 			width: x_max - x_min,
 			height: y_max - y_min,
 		};
-		// const test = {
+		// console.log(test);
+		return test;
+
+		// return {
 		// 	x: rectangle.x,
 		// 	y: rectangle.y,
 		// 	width: rectangle.width,
 		// 	height: rectangle.height,
 		// };
-		return test;
 	}
 
 	static resize(rectangle, position, last_position): void {
 		const center = this.center(rectangle);
+		const bounds = this.bound(rectangle);
 
 		const opposite = {
 			x: center.x - (last_position.x - center.x),
@@ -133,22 +135,37 @@ export default class Rectangle extends Element {
 		const new_opposite = rotatePoint(opposite, new_center, -rectangle.rotation);
 		const new_position = rotatePoint(position, new_center, -rectangle.rotation);
 
-		const old_width = rectangle.width;
-		const old_height = rectangle.height;
+		const old_width = bounds.width;
+		const old_height = bounds.height;
 
-		rectangle.x = Math.min(new_position.x, new_opposite.x);
-		rectangle.width = Math.abs(new_position.x - new_opposite.x);
-		rectangle.y = Math.min(new_position.y, new_opposite.y);
-		rectangle.height = Math.abs(new_position.y - new_opposite.y);
+		const new_width = Math.abs(new_position.x - new_opposite.x);
+		const new_height = Math.abs(new_position.y - new_opposite.y);
 
-		const new_width = rectangle.width;
-		const new_height = rectangle.height;
+		if (old_width === 0 || old_height === 0) return;
+
+		const width_ratio = new_width / old_width;
+		const height_ratio = new_height / old_height;
+
+		const x_min = Math.min(...rectangle.points.map((point) => point.x));
+		const y_min = Math.min(...rectangle.points.map((point) => point.y));
 
 		rectangle.points.forEach((point) => {
-			if (old_width === 0 || old_height === 0) return;
-			point.x = point.x * (new_width / old_width);
-			point.y = point.y * (new_height / old_height);
+			point.x = (point.x - x_min) * width_ratio + x_min;
+			point.y = (point.y - y_min) * height_ratio + y_min;
 		});
+
+		const x_min2 = Math.min(...rectangle.points.map((point) => point.x));
+		const y_min2 = Math.min(...rectangle.points.map((point) => point.y));
+
+		const delta_x = Math.min(new_position.x, new_opposite.x) - x_min2;
+		const delta_y = Math.min(new_position.y, new_opposite.y) - y_min2;
+
+		console.log(Math.min(new_position.x, new_opposite.x), x_min2);
+
+		// rectangle.points.forEach((point) => {
+		// 	point.x -= delta_x;
+		// 	point.y -= delta_y;
+		// });
 	}
 
 	static stretch(rectangle, position, last_position): void {
@@ -167,9 +184,9 @@ export default class Rectangle extends Element {
 		const new_opposite = rotatePoint(opposite, new_center, -rectangle.rotation);
 		const new_position = rotatePoint(position, new_center, -rectangle.rotation);
 
-		// rectangle.x = new_opposite.x;
+		rectangle.x = new_opposite.x;
 		rectangle.y = new_opposite.y;
-		// rectangle.width = new_position.x - new_opposite.x;
+		rectangle.width = new_position.x - new_opposite.x;
 		rectangle.height = new_position.y - new_opposite.y;
 
 		rectangle.points = this.makePoints(rectangle);
@@ -226,7 +243,7 @@ function calcRadius(vector_1, vector_2) {
 	const sinA00 = vector_1.x * vector_2.y - vector_1.y * vector_2.x;
 	const sinA90 = vector_1.x * vector_2.x + vector_1.y * vector_2.y;
 
-	const angle = Math.asin(sinA00 < -1 ? -1 : sinA00 > 1 ? 1 : sinA00);
+	const angle = Math.asin(clamp(-1, sinA00, 1));
 
 	if (sinA90 < 0) {
 		if (angle < 0) {

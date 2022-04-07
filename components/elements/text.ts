@@ -183,10 +183,10 @@ export default class Text extends Element {
 		const new_opposite = rotatePoint(opposite, new_center, -text.rotation);
 		const new_position = rotatePoint(position, new_center, -text.rotation);
 
-		text.x = new_opposite.x;
-		text.y = new_opposite.y;
-		text.width = new_position.x - new_opposite.x;
-		text.height = new_position.y - new_opposite.y;
+		text.x = Math.min(new_position.x, new_opposite.x);
+		text.y = Math.min(new_position.y, new_opposite.y);
+		text.width = Math.abs(new_position.x - new_opposite.x);
+		text.height = Math.abs(new_position.y - new_opposite.y);
 	}
 
 	static stretch(text, position, last_position): void {

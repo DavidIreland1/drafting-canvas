@@ -1,8 +1,10 @@
+import { Bound, Position } from '../../types/box-types';
+import { Effect, ElementType, Fill, Stroke } from '../../types/element-types';
 import Colors from './../properties/colors';
 
 const images = {};
 export default class Element {
-	static create(id, position, selected): Object {
+	static create(id: string, position: Position, selected: boolean): ElementType {
 		return {
 			id: id,
 			editing: false,
@@ -11,13 +13,16 @@ export default class Element {
 			fill: [{ id: id + '2123', type: 'Solid', color: [0, 0, 0.8, 1], format: 'hex4', visible: true }],
 			stroke: [],
 			effect: [],
+			points: [],
 			rotation: 0,
 			visible: true,
 			locked: false,
+			x: position.x,
+			y: position.y,
 		};
 	}
 
-	static path(element) {
+	static path(element: ElementType) {
 		return new Path2D();
 	}
 
@@ -70,7 +75,7 @@ export default class Element {
 			});
 	}
 
-	static effect(element, context: CanvasRenderingContext2D, path: Path2D, before, view) {
+	static effect(element, context: CanvasRenderingContext2D, path: Path2D, before: boolean, view) {
 		element.effect
 			.filter((effect) => effect.visible)
 			.forEach((effect) => {
@@ -194,7 +199,7 @@ export default class Element {
 
 		context.beginPath();
 		this.boxes(element.id, bounds, box_size).forEach((square) => context.rect(square.x, square.y, square.width, square.height));
-		// Check zoom level
+		// Check if zoomed in enough
 		if (Math.abs(bounds.width) + Math.abs(bounds.height) > box_size * 4) {
 			context.fill();
 			context.stroke();
@@ -225,14 +230,9 @@ export default class Element {
 	}
 
 	static drawDots(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number) {
-		const center = this.center(element);
-		const bounds = this.bound(element);
-
-		bounds.x = -bounds.width / 2;
-		bounds.y = -bounds.height / 2;
-
+		// const center = this.center(element);
 		context.save();
-		context.translate(center.x, center.y);
+		// context.translate(element.x, element.y); //.translate(center.x, center.y);
 		context.rotate(element.rotation);
 
 		context.fillStyle = 'white';
@@ -254,7 +254,7 @@ export default class Element {
 		return hovering.length ? { element, action: 'edit', dot: hovering[0] } : undefined;
 	}
 
-	static center(element): { x: number; y: number } {
+	static center(element: ElementType): Position {
 		const bounds = this.bound(element);
 		return {
 			x: bounds.x + bounds.width / 2,
@@ -262,7 +262,7 @@ export default class Element {
 		};
 	}
 
-	static bound(element): { x: number; y: number; width: number; height: number } {
+	static bound(element): Bound {
 		return {
 			x: element.x,
 			y: element.y,
@@ -271,7 +271,7 @@ export default class Element {
 		};
 	}
 
-	static getFill(element) {
+	static getFill(element): Array<Fill> {
 		return element.fill;
 	}
 
@@ -285,7 +285,7 @@ export default class Element {
 		});
 	}
 
-	static getStroke(element) {
+	static getStroke(element): Array<Stroke> {
 		return element.stroke;
 	}
 
@@ -299,7 +299,7 @@ export default class Element {
 		});
 	}
 
-	static getEffect(element) {
+	static getEffect(element): Array<Effect> {
 		return element.effect;
 	}
 
@@ -313,7 +313,7 @@ export default class Element {
 		});
 	}
 
-	static positiveBound(element): { x: number; y: number; width: number; height: number } {
+	static positiveBound(element): Bound {
 		const bounds = this.bound(element);
 		return {
 			x: Math.min(bounds.x, bounds.x + bounds.width),
@@ -328,15 +328,15 @@ export default class Element {
 	}
 
 	static move(element, position, last_position) {
-		element.x += position.x - last_position.x;
-		element.y += position.y - last_position.y;
+		// element.x += position.x - last_position.x;
+		// element.y += position.y - last_position.y;
 
-		// const delta_x = position.x - last_position.x;
-		// const delta_y = position.y - last_position.y;
-		// element.points.forEach((point) => {
-		// 	point.x += delta_x;
-		// 	point.y += delta_y;
-		// });
+		const delta_x = position.x - last_position.x;
+		const delta_y = position.y - last_position.y;
+		element.points.forEach((point) => {
+			point.x += delta_x;
+			point.y += delta_y;
+		});
 	}
 
 	static rotate(element, position, last_position) {
@@ -345,13 +345,21 @@ export default class Element {
 		element.rotation += rotation;
 	}
 
-	static edit(element, position, last_position, box_size) {
-		const center = this.center(element);
-		const points = element.points;
-		const min_distance = Math.min(points.map((point) => (center.x + point.x - last_position.x) ** 2 + (center.y + point.y - last_position.y) ** 2));
-		const point = points.sort((point) => (center.x + point.x - last_position.x) ** 2 + (center.y + point.y - last_position.y) ** 2 === min_distance);
-		point.x += position.x - last_position.x;
-		point.y += position.y - last_position.y;
+	static edit(element: ElementType, position: Position, last_position: Position, dot) {
+		//This doesn't work when rotated
+		element.points[dot.i].x += position.x - last_position.x;
+		element.points[dot.i].y += position.y - last_position.y;
+
+		// if (element.points[dot.i].x < 0) {
+		// 	const delta_x = -element.points[dot.i].x;
+		// 	element.x -= delta_x;
+		// 	element.points.forEach((point) => (point.x += delta_x));
+		// }
+		// if (element.points[dot.i].y < 0) {
+		// 	const delta_y = -element.points[dot.i].y;
+		// 	element.y -= delta_y;
+		// 	element.points.forEach((point) => (point.y += delta_y));
+		// }
 	}
 
 	static boxes(id, bounds, box_size) {

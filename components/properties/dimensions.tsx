@@ -52,6 +52,7 @@ export default function Dimensions({ selected, store, width }) {
 						</svg>
 					}
 					min={0}
+					step={0.1}
 					value={selected[0].radius}
 					onChange={updateDimension}
 					width={width}

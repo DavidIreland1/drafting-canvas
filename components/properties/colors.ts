@@ -1,9 +1,9 @@
 // All values are [0-1]
-
+import { Color, ColorFormat } from '../../types/color-types';
 import { round } from '../../utils/utils';
 
 const Colors = {
-	toString: (hsba, type = 'hsla'): string => {
+	toString: (hsba: Color, type: ColorFormat = 'hsla'): string => {
 		const hsla = Colors.hsbaToHsla(hsba);
 		switch (type) {
 			case 'hsl':
@@ -31,25 +31,25 @@ const Colors = {
 				return names[hex6] ?? hex6;
 		}
 	},
-	toHslString: ([h, s, l, a]) => {
+	toHslString: ([h, s, l, a]: Color): string => {
 		return `hsl(${Math.floor(h * 360)}, ${Math.floor(s * 100)}%, ${Math.floor(l * 100)}%)`;
 	},
-	toHslaString: ([h, s, l, a]) => {
+	toHslaString: ([h, s, l, a]: Color): string => {
 		return `hsla(${Math.floor(h * 360)}, ${Math.floor(s * 100)}%, ${Math.floor(l * 100)}%, ${round(a, 2)})`;
 	},
-	toHsbString: ([h, s, b, a]) => {
+	toHsbString: ([h, s, b, a]: Color): string => {
 		return `hsb(${Math.floor(h * 360)}, ${Math.floor(s * 100)}%, ${Math.floor(b * 100)}%)`;
 	},
-	toHsbaString: ([h, s, b, a]) => {
+	toHsbaString: ([h, s, b, a]: Color): string => {
 		return `hsba(${Math.floor(h * 360)}, ${Math.floor(s * 100)}%, ${Math.floor(b * 100)}%, ${round(a, 2)})`;
 	},
-	toRgbString: ([r, g, b, a]) => {
+	toRgbString: ([r, g, b, a]: Color): string => {
 		return `rgb(${Math.floor(r * 255)}, ${Math.floor(g * 255)}, ${Math.floor(b * 255)})`;
 	},
-	toRgbaString: ([r, g, b, a]) => {
+	toRgbaString: ([r, g, b, a]: Color): string => {
 		return `rgba(${Math.floor(r * 255)}, ${Math.floor(g * 255)}, ${Math.floor(b * 255)}, ${round(a, 2)})`;
 	},
-	stringToRgba: (color) => {
+	stringToRgba: (color: string): Color => {
 		if (typeof color !== 'string') return color;
 		const div = document.createElement('div');
 		div.style.background = color;
@@ -57,16 +57,16 @@ const Colors = {
 		color = getComputedStyle(div).backgroundColor;
 		div.remove();
 
-		color = color
+		const color_array = color
 			.split('(')[1]
 			.slice(0, -1)
 			.split(',')
 			.map(Number)
-			.map((color, i) => (i < 3 ? color / 255 : color));
+			.map((color, i) => (i < 3 ? color / 255 : color)) as any;
 
-		if (color.length < 4) color.push(1);
+		if (color_array.length < 4) color_array.push(1);
 
-		return color;
+		return color_array;
 	},
 	rgbaToHex4: (rgba) => {
 		return `#${rgba.map((color) => Math.round(15 * color).toString(16)).join('')}`.toUpperCase();
@@ -80,7 +80,7 @@ const Colors = {
 			)
 			.join('')}`.toUpperCase();
 	},
-	hslaToRgba: ([h, s, l, a]): [number, number, number, number] => {
+	hslaToRgba: ([h, s, l, a]: Color): Color => {
 		const b = s * Math.min(l, 1 - l);
 		const f = (n) => {
 			const k = (n + h * 12) % 12;
@@ -88,7 +88,7 @@ const Colors = {
 		};
 		return [f(0), f(8), f(4), a];
 	},
-	hsbaToHsla: ([h, s, b, a]): [number, number, number, number] => {
+	hsbaToHsla: ([h, s, b, a]: Color): Color => {
 		const l = ((2 - s) * b) / 2;
 		if (l !== 0) {
 			if (l === 1) {
@@ -101,13 +101,13 @@ const Colors = {
 		}
 		return [h, s, l, a];
 	},
-	hslaToHsba: ([h, s, l, a]): [number, number, number, number] => {
+	hslaToHsba: ([h, s, l, a]: Color): Color => {
 		const hsb1 = s * (l < 0.5 ? l : 1 - l);
 		const hsbS = hsb1 === 0 ? 0 : (2 * hsb1) / (l + hsb1);
 		const hsbV = l + hsb1;
 		return [h, hsbS, hsbV, a];
 	},
-	rgbaToHsla: ([r, g, b, a]): [number, number, number, number] => {
+	rgbaToHsla: ([r, g, b, a]: Color): Color => {
 		const max = Math.max(r, g, b);
 		const min = Math.min(r, g, b);
 		let h;
@@ -134,26 +134,26 @@ const Colors = {
 		}
 		return [h, s, l, a];
 	},
-	hexToRgba: (hex): [number, number, number, number] => {
-		const r = parseInt(hex.substr(1, 2), 16) / 255;
-		const g = parseInt(hex.substr(3, 2), 16) / 255;
-		const b = parseInt(hex.substr(5, 2), 16) / 255;
-		const a = hex.length > 7 ? parseInt(hex.substr(7, 2), 16) / 255 : 1;
-
+	hexToRgba: (hex: string): Color => {
+		const r = parseInt(hex.slice(1, 2), 16) / 255;
+		const g = parseInt(hex.slice(3, 2), 16) / 255;
+		const b = parseInt(hex.slice(5, 2), 16) / 255;
+		const a = hex.length > 7 ? parseInt(hex.slice(7, 2), 16) / 255 : 1;
 		return [r, g, b, a];
 	},
 	isValid: (color: string): boolean => {
 		if (typeof CSS === 'undefined' || typeof CSS.supports !== 'function') return true;
 		return CSS.supports('color', color);
 	},
-	getFormat: (color: string): string => {
+	getFormat: (color: string): ColorFormat => {
 		color = color.toLowerCase();
 		if (Colors.isValid(color) === false) return '';
-		if (color.startsWith('#')) return 'hex' + (color.length - 1);
-		if (color.includes('(')) return color.split('(')[0];
+		if (color.startsWith('#')) return ('hex' + (color.length - 1)) as ColorFormat;
+		if (color.includes('(')) return color.split('(')[0] as ColorFormat;
 		return 'name';
 	},
-	circle: (color) => {
+	// Used only for testing
+	circle: (color: string): string => {
 		const rgba = Colors.stringToRgba(color);
 		const hsla = Colors.rgbaToHsla(rgba);
 		const hsba = Colors.hslaToHsba(hsla);
@@ -162,7 +162,6 @@ const Colors = {
 		const rgba2 = Colors.hslaToRgba(hsla2);
 		const hex6 = Colors.rgbaToHex8(rgba2.slice(0, 3));
 		const name = names[hex6];
-
 		return name;
 	},
 

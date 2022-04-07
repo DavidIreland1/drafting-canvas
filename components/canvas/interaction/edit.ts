@@ -4,8 +4,8 @@ import actions from '../../../redux/slice';
 import { roundPoint } from './round-point';
 import { DOMToCanvas, split } from '../../../utils/utils';
 
-export default function edit(canvas, store, view, target, last_position, down_event) {
-	const { user_id, box_size } = Settings;
+export default function edit(canvas, store, view, target, last_position, down_event, dot) {
+	const { user_id } = Settings;
 	const move = (move_event) => {
 		let position = DOMToCanvas(move_event, canvas, view);
 
@@ -16,7 +16,7 @@ export default function edit(canvas, store, view, target, last_position, down_ev
 
 		const selected_ids = state.elements.filter((element) => element.editing).map((element) => element.id);
 
-		store.dispatch(actions.edit({ user_id, id: target.id, position, last_position, selected_ids, box_size }));
+		store.dispatch(actions.edit({ user_id, id: target.id, position, last_position, selected_ids, dot }));
 
 		last_position = roundPoint(position, [], [], view);
 	};
