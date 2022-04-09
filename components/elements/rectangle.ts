@@ -1,4 +1,4 @@
-import { Bound } from '../../types/box-types';
+import { Bound, Position } from '../../types/box-types';
 import { ElementType } from '../../types/element-types';
 import { clamp, rotatePoint } from '../../utils/utils';
 import Element from './element';
@@ -17,38 +17,27 @@ export default class Rectangle extends Element {
 	}
 
 	static points(rectangle) {
-		const center = this.center(rectangle);
-		return rectangle.points
-			.map((point) => ({
-				x: point.x,
-				y: point.y,
-			}))
-			.map((point) => rotatePoint(point, center, rectangle.rotation))
-			.concat(center);
+		return rectangle.points.concat(this.center(rectangle));
 	}
 
 	static makePoints(rectangle) {
 		return [
 			{
-				id: rectangle.id,
 				x: rectangle.x, //-rectangle.width / 2,
 				y: rectangle.y, //-rectangle.height / 2,
 				// radius: rectangle.radius,
 			},
 			{
-				id: rectangle.id,
 				x: rectangle.x + rectangle.width, // / 2,
 				y: rectangle.y, //-rectangle.height / 2,
 				// radius: rectangle.radius,
 			},
 			{
-				id: rectangle.id,
 				x: rectangle.x + rectangle.width, // / 2,
 				y: rectangle.y + rectangle.height, // / 2,
 				// radius: rectangle.radius,
 			},
 			{
-				id: rectangle.id,
 				x: rectangle.x, //-rectangle.width / 2,
 				y: rectangle.y + rectangle.height, // / 2,
 				// radius: rectangle.radius,
@@ -56,125 +45,143 @@ export default class Rectangle extends Element {
 		].map((point, i) => ({ ...point, i }));
 	}
 
-	static path(rectangle) {
-		return roundedPoly(rectangle.points, rectangle.radius);
+	static path(rectangle): Path2D {
+		const path = new Path2D();
+		return roundedPoly(path, rectangle.points, rectangle.radius);
 	}
 
 	static draw(rectangle, context: CanvasRenderingContext2D, cursor, view) {
-		const center = this.center(rectangle);
 		const path = this.path(rectangle);
-
-		context.fillStyle = rectangle.color;
-
-		context.save();
-		// context.translate(rectangle.x, rectangle.y); //.translate(center.x, center.y);
 		this.effect(rectangle, context, path, true, view);
-
-		context.rotate(rectangle.rotation);
 		this.fill(rectangle, context, path);
 		this.effect(rectangle, context, path, false, view);
 		this.stroke(rectangle, context, path);
-
-		const hover = context.isPointInPath(path, cursor.x, cursor.y);
-		context.restore();
-
-		return hover;
+		return context.isPointInPath(path, cursor.x, cursor.y);
 	}
 
 	static outline(rectangle, context, color, line_width): void {
-		const center = this.center(rectangle);
 		context.strokeStyle = color;
 		context.lineWidth = line_width;
-		context.save();
-		// context.translate(rectangle.x, rectangle.y); //.translate(center.x, center.y);
-		context.rotate(rectangle.rotation);
 		const path = this.path(rectangle);
 		context.stroke(path);
-		context.restore();
 	}
 
-	static bound(rectangle: ElementType): Bound {
-		const xs = rectangle.points.map((point) => point.x);
-		const ys = rectangle.points.map((point) => point.y);
+	static centroid(rectangle: ElementType): Position {
+		return {
+			x: average(rectangle.points.map((point) => point.x)),
+			y: average(rectangle.points.map((point) => point.y)),
+		};
+	}
+
+	static center(rectangle: ElementType): Position {
+		const points = rectangle.points.map((point) => rotatePoint(point, { x: 0, y: 0 }, -rectangle.rotation));
+		const xs = points.map((point) => point.x);
+		const ys = points.map((point) => point.y);
 		const x_min = Math.min(...xs);
 		const x_max = Math.max(...xs);
 		const y_min = Math.min(...ys);
 		const y_max = Math.max(...ys);
 
-		const test = {
-			x: x_min, // + rectangle.x, // + rectangle.width / 2,
-			y: y_min, //+ rectangle.y, // + rectangle.height / 2,
+		return rotatePoint(
+			{
+				x: x_min + (x_max - x_min) / 2,
+				y: y_min + (y_max - y_min) / 2,
+			},
+			{ x: 0, y: 0 },
+			rectangle.rotation
+		);
+	}
+
+	static bound(rectangle: ElementType): Bound {
+		const center = this.center(rectangle);
+
+		const points = rectangle.points.map((point) => rotatePoint(point, center, -rectangle.rotation));
+
+		const xs = points.map((point) => point.x);
+		const ys = points.map((point) => point.y);
+		const x_min = Math.min(...xs);
+		const x_max = Math.max(...xs);
+		const y_min = Math.min(...ys);
+		const y_max = Math.max(...ys);
+
+		return {
+			x: x_min,
+			y: y_min,
 			width: x_max - x_min,
 			height: y_max - y_min,
 		};
-		// console.log(test);
-		return test;
+	}
 
-		// return {
-		// 	x: rectangle.x,
-		// 	y: rectangle.y,
-		// 	width: rectangle.width,
-		// 	height: rectangle.height,
-		// };
+	static rotate(rectangle, position, last_position) {
+		const center = this.center(rectangle);
+		console.log(center);
+		const rotation = Math.atan2(center.y - position.y, center.x - position.x) - Math.atan2(center.y - last_position.y, center.x - last_position.x);
+		rectangle.rotation += rotation;
+
+		rectangle.points.forEach((point) => {
+			const rotated = rotatePoint(point, center, rotation);
+			point.x = rotated.x;
+			point.y = rotated.y;
+		});
+	}
+
+	static move(element, position, last_position) {
+		const delta_x = position.x - last_position.x;
+		const delta_y = position.y - last_position.y;
+		element.points.forEach((point) => {
+			point.x += delta_x;
+			point.y += delta_y;
+		});
 	}
 
 	static resize(rectangle, position, last_position): void {
 		const center = this.center(rectangle);
 		const bounds = this.bound(rectangle);
 
-		const opposite = {
-			x: center.x - (last_position.x - center.x),
-			y: center.y - (last_position.y - center.y),
-		};
+		if (bounds.width === 0 || bounds.height === 0) return; // This might be an issue
 
-		const new_center = {
-			x: (opposite.x + position.x) / 2,
-			y: (opposite.y + position.y) / 2,
-		};
+		// Find opposite corner
+		const opposite = reflectPoint(last_position, center);
 
-		const new_opposite = rotatePoint(opposite, new_center, -rectangle.rotation);
-		const new_position = rotatePoint(position, new_center, -rectangle.rotation);
-
-		const old_width = bounds.width;
-		const old_height = bounds.height;
-
-		const new_width = Math.abs(new_position.x - new_opposite.x);
-		const new_height = Math.abs(new_position.y - new_opposite.y);
-
-		if (old_width === 0 || old_height === 0) return;
-
-		const width_ratio = new_width / old_width;
-		const height_ratio = new_height / old_height;
-
-		const x_min = Math.min(...rectangle.points.map((point) => point.x));
-		const y_min = Math.min(...rectangle.points.map((point) => point.y));
-
+		// Rotate all points to 0 deg
+		const new_opposite = rotatePoint(opposite, center, -rectangle.rotation);
+		const new_position = rotatePoint(position, center, -rectangle.rotation);
 		rectangle.points.forEach((point) => {
-			point.x = (point.x - x_min) * width_ratio + x_min;
-			point.y = (point.y - y_min) * height_ratio + y_min;
+			const rotated = rotatePoint(point, center, -rectangle.rotation);
+			point.x = rotated.x;
+			point.y = rotated.y;
 		});
 
-		const x_min2 = Math.min(...rectangle.points.map((point) => point.x));
-		const y_min2 = Math.min(...rectangle.points.map((point) => point.y));
+		// Get change ratio in width and height
+		const width_ratio = Math.abs(new_position.x - new_opposite.x) / bounds.width;
+		const height_ratio = Math.abs(new_position.y - new_opposite.y) / bounds.height;
 
-		const delta_x = Math.min(new_position.x, new_opposite.x) - x_min2;
-		const delta_y = Math.min(new_position.y, new_opposite.y) - y_min2;
+		// Top left of bounding box
+		const x_min_old = Math.min(...rectangle.points.map((point) => point.x));
+		const y_min_old = Math.min(...rectangle.points.map((point) => point.y));
 
-		console.log(Math.min(new_position.x, new_opposite.x), x_min2);
+		// Top left of resize box
+		const x_min_new = Math.min(new_opposite.x, new_position.x);
+		const y_min_new = Math.min(new_opposite.y, new_position.y);
 
-		// rectangle.points.forEach((point) => {
-		// 	point.x -= delta_x;
-		// 	point.y -= delta_y;
-		// });
+		// Scale point positions
+		rectangle.points.forEach((point) => {
+			point.x = (point.x - x_min_old) * width_ratio + x_min_new;
+			point.y = (point.y - y_min_old) * height_ratio + y_min_new;
+		});
+
+		// Rotate points back
+		rectangle.points.forEach((point) => {
+			const rotated = rotatePoint(point, center, rectangle.rotation);
+			point.x = rotated.x;
+			point.y = rotated.y;
+		});
 	}
 
 	static stretch(rectangle, position, last_position): void {
 		const center = this.center(rectangle);
 
-		const opposite = {
-			x: center.x - (last_position.x - center.x),
-			y: center.y - (last_position.y - center.y),
-		};
+		const opposite = reflectPoint(last_position, center);
 
 		const new_center = {
 			x: (opposite.x + position.x) / 2,
@@ -205,9 +212,7 @@ function unitVector(point1, point2) {
 	};
 }
 
-function roundedPoly(points, radiusAll) {
-	const path = new Path2D();
-
+function roundedPoly(path, points, radiusAll): Path2D {
 	const num_points = points.length;
 
 	points.forEach((last_point, i, points) => {
@@ -217,7 +222,7 @@ function roundedPoly(points, radiusAll) {
 		const vector_1 = unitVector(this_point, last_point);
 		const vector_2 = unitVector(this_point, next_point);
 
-		const { angle, radius_sign, counter_clockwise } = calcRadius(vector_1, vector_2);
+		const { angle, radius_sign, counter_clockwise } = calculateRadius(vector_1, vector_2);
 
 		const radius = this_point.radius ?? radiusAll;
 
@@ -239,7 +244,7 @@ function roundedPoly(points, radiusAll) {
 	return path;
 }
 
-function calcRadius(vector_1, vector_2) {
+function calculateRadius(vector_1, vector_2) {
 	const sinA00 = vector_1.x * vector_2.y - vector_1.y * vector_2.x;
 	const sinA90 = vector_1.x * vector_2.x + vector_1.y * vector_2.y;
 
@@ -279,6 +284,16 @@ function getClosest(points, position) {
 	return points.map((point) => ({ ...point, delta: Math.abs(point.x - position.x) + Math.abs(point.y - position.y) })).sort((point1, point2) => point1.delta + point2.delta)[0];
 }
 
+function reflectPoint(point, reflect) {
+	return {
+		x: reflect.x - (point.x - reflect.x),
+		y: reflect.y - (point.y - reflect.y),
+	};
+}
+
+function average(arr) {
+	return arr.reduce((a, b) => a + b, 0) / arr.length;
+}
 // const distance = (last_point, this_point) => Math.sqrt((last_point.x - this_point.x) ** 2 + (last_point.y - this_point.y) ** 2);
 // const linearInterpolation = (a, b, x) => a + (b - a) * x;
 // const linearInterpolation2D = (last_point, this_point, t) => ({

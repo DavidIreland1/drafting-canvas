@@ -230,15 +230,9 @@ export default class Element {
 	}
 
 	static drawDots(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number) {
-		// const center = this.center(element);
-		context.save();
-		// context.translate(element.x, element.y); //.translate(center.x, center.y);
-		context.rotate(element.rotation);
-
 		context.fillStyle = 'white';
 		context.strokeStyle = color;
 		context.lineWidth = line;
-
 		const hovering = element.points
 			.map((dot) => {
 				context.beginPath();
@@ -250,7 +244,6 @@ export default class Element {
 				if (hovering) return dot;
 			})
 			.filter((dot) => dot);
-		context.restore();
 		return hovering.length ? { element, action: 'edit', dot: hovering[0] } : undefined;
 	}
 
@@ -328,15 +321,8 @@ export default class Element {
 	}
 
 	static move(element, position, last_position) {
-		// element.x += position.x - last_position.x;
-		// element.y += position.y - last_position.y;
-
-		const delta_x = position.x - last_position.x;
-		const delta_y = position.y - last_position.y;
-		element.points.forEach((point) => {
-			point.x += delta_x;
-			point.y += delta_y;
-		});
+		element.x += position.x - last_position.x;
+		element.y += position.y - last_position.y;
 	}
 
 	static rotate(element, position, last_position) {
@@ -346,7 +332,6 @@ export default class Element {
 	}
 
 	static edit(element: ElementType, position: Position, last_position: Position, dot) {
-		//This doesn't work when rotated
 		element.points[dot.i].x += position.x - last_position.x;
 		element.points[dot.i].y += position.y - last_position.y;
 
