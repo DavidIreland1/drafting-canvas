@@ -29,7 +29,7 @@ export default function Sheet({ store }) {
 		window.addEventListener('beforeunload', () => {
 			store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
 		});
-	}, [router.query.page]);
+	}, [router.query, store]);
 
 	useEffect(() => {
 		getFonts().then(setFonts);
