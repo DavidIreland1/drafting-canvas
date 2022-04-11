@@ -3,9 +3,11 @@ import modifications from './modifications/modifications';
 import tools from './tools';
 import user from './user';
 
-export default {
+const reducers = {
 	...creation,
 	...modifications,
 	...tools,
 	...user,
 };
+
+export default reducers;
