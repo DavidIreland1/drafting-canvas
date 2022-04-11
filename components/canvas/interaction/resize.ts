@@ -17,7 +17,6 @@ export default function resize(canvas, store, view, target, last_position, down_
 		store.dispatch(actions.resize({ user_id: Settings.user_id, id: target.id, position, last_position, selected_ids }));
 
 		last_position = position;
-		last_position = roundPoint(position, [], [], view);
 	};
 	down_event.target.addEventListener('pointermove', move);
 

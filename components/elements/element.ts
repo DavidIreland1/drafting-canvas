@@ -1,5 +1,6 @@
 import { Bound, Position } from '../../types/box-types';
 import { Effect, ElementType, Fill, Stroke } from '../../types/element-types';
+import { reflectPoint, rotatePoint } from '../../utils/utils';
 import Colors from './../properties/colors';
 
 const images = {};
@@ -49,30 +50,33 @@ export default class Element {
 	}
 
 	static stroke(element, context: CanvasRenderingContext2D, path: Path2D) {
-		element.stroke
-			.filter((stroke) => stroke.visible)
-			.forEach((stroke) => {
-				if (stroke.width === 0) return;
-				context.save();
-				context.strokeStyle = Colors.toString(stroke.color);
-				context.lineWidth = stroke.width;
-				if (stroke.type === 'Inside') {
-					context.clip(path);
-					context.lineWidth = stroke.width * 2;
-				} else if (stroke.type === 'Outside') {
-					const clone = new Path2D(path);
-					// Fix for negative widths
-					if ((element.height > 0 && element.width > 0) || (element.height < 0 && element.width < 0)) {
-						clone.rect(10000, -10000, -20000, 20000); // TODO: Need to fix this
-					} else {
-						clone.rect(-10000, -10000, 20000, 20000); // TODO: Need to fix this
+		return Math.max(
+			...element.stroke
+				.filter((stroke) => stroke.visible)
+				.map((stroke) => {
+					if (stroke.width === 0) return;
+					context.save();
+					context.strokeStyle = Colors.toString(stroke.color);
+					context.lineWidth = stroke.width;
+					if (stroke.type === 'Inside') {
+						context.clip(path);
+						context.lineWidth = stroke.width * 2;
+					} else if (stroke.type === 'Outside') {
+						const clone = new Path2D(path);
+						// Fix for negative widths
+						if ((element.height > 0 && element.width > 0) || (element.height < 0 && element.width < 0)) {
+							clone.rect(10000, -10000, -20000, 20000); // TODO: Need to fix this
+						} else {
+							clone.rect(-10000, -10000, 20000, 20000); // TODO: Need to fix this
+						}
+						context.clip(clone);
+						context.lineWidth = stroke.width * 2;
 					}
-					context.clip(clone);
-					context.lineWidth = stroke.width * 2;
-				}
-				context.stroke(path); // Center
-				context.restore();
-			});
+					context.stroke(path); // Center
+					context.restore();
+					return stroke.width;
+				})
+		);
 	}
 
 	static effect(element, context: CanvasRenderingContext2D, path: Path2D, before: boolean, view) {
@@ -110,29 +114,68 @@ export default class Element {
 
 	static draw(element, context: CanvasRenderingContext2D, cursor, view): boolean {
 		const path = this.path(element);
-
 		this.effect(element, context, path, true, view);
 		this.fill(element, context, path);
 		this.effect(element, context, path, false, view);
-
 		const fill = element.fill.length && context.isPointInPath(path, cursor.x, cursor.y);
-
-		this.stroke(element, context, path);
+		context.lineWidth = this.stroke(element, context, path);
 		const stroke = element.stroke.length && context.isPointInStroke(path, cursor.x, cursor.y);
-
 		return fill || stroke;
 	}
 
 	static resize(element, position, last_position): void {
-		return;
+		const center = this.center(element);
+		const bounds = this.bound(element);
+
+		if (bounds.width === 0 || bounds.height === 0) return; // This might be an issue
+
+		// Find opposite corner
+		const opposite = reflectPoint(last_position, center);
+
+		// Rotate all points to 0 deg
+		const new_opposite = rotatePoint(opposite, center, -element.rotation);
+		const new_position = rotatePoint(position, center, -element.rotation);
+		element.points.forEach((point) => {
+			const rotated = rotatePoint(point, center, -element.rotation);
+			point.x = rotated.x;
+			point.y = rotated.y;
+		});
+
+		// Get change ratio in width and height
+		const width_ratio = Math.abs(new_position.x - new_opposite.x) / bounds.width;
+		const height_ratio = Math.abs(new_position.y - new_opposite.y) / bounds.height;
+
+		// Top left of bounding box
+		const x_min_old = Math.min(...element.points.map((point) => point.x));
+		const y_min_old = Math.min(...element.points.map((point) => point.y));
+
+		// Top left of resize box
+		const x_min_new = Math.min(new_opposite.x, new_position.x);
+		const y_min_new = Math.min(new_opposite.y, new_position.y);
+
+		// Scale point positions
+		element.points.forEach((point) => {
+			point.x = (point.x - x_min_old) * width_ratio + x_min_new;
+			point.y = (point.y - y_min_old) * height_ratio + y_min_new;
+		});
+
+		// Rotate points back
+		element.points.forEach((point) => {
+			const rotated = rotatePoint(point, center, element.rotation);
+			point.x = rotated.x;
+			point.y = rotated.y;
+		});
 	}
 
 	static stretch(element, position, last_position): void {
 		return;
 	}
 
-	static outline(element, context: CanvasRenderingContext2D, color: string, line: number): void {
-		return;
+	static outline(element, context: CanvasRenderingContext2D, color: string, line_width: number): void {
+		context.strokeStyle = color;
+		context.lineWidth = line_width;
+		const path = this.path(element);
+		context.stroke(path);
 	}
 
 	static onScreen(element, screen) {
@@ -182,6 +225,8 @@ export default class Element {
 
 		return hov;
 	}
+
+	// context.setTransform(horizontal_scaling, horizontal_skewing, vertical_skewing, vertical_scaling, horizontal_translation, vertical_translation);
 
 	static drawResize(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number): boolean {
 		const bounds = this.bound(element);
@@ -241,26 +286,48 @@ export default class Element {
 				context.fillStyle = hovering ? color : 'white';
 				context.fill();
 				context.stroke();
-				if (hovering) return dot;
+				if (hovering) return dot; //can replace this for index
 			})
 			.filter((dot) => dot);
 		return hovering.length ? { element, action: 'edit', dot: hovering[0] } : undefined;
 	}
 
 	static center(element: ElementType): Position {
-		const bounds = this.bound(element);
-		return {
-			x: bounds.x + bounds.width / 2,
-			y: bounds.y + bounds.height / 2,
-		};
+		const points = element.points.map((point) => rotatePoint(point, { x: 0, y: 0 }, -element.rotation));
+		const xs = points.map((point) => point.x);
+		const ys = points.map((point) => point.y);
+		const x_min = Math.min(...xs);
+		const x_max = Math.max(...xs);
+		const y_min = Math.min(...ys);
+		const y_max = Math.max(...ys);
+
+		return rotatePoint(
+			{
+				x: x_min + (x_max - x_min) / 2,
+				y: y_min + (y_max - y_min) / 2,
+			},
+			{ x: 0, y: 0 },
+			element.rotation
+		);
 	}
 
-	static bound(element): Bound {
+	static bound(element: ElementType): Bound {
+		const center = this.center(element);
+
+		const points = element.points.map((point) => rotatePoint(point, center, -element.rotation));
+
+		const xs = points.map((point) => point.x);
+		const ys = points.map((point) => point.y);
+		const x_min = Math.min(...xs);
+		const x_max = Math.max(...xs);
+		const y_min = Math.min(...ys);
+		const y_max = Math.max(...ys);
+
 		return {
-			x: element.x,
-			y: element.y,
-			width: element.width,
-			height: element.height,
+			x: x_min,
+			y: y_min,
+			width: x_max - x_min,
+			height: y_max - y_min,
 		};
 	}
 
@@ -317,12 +384,16 @@ export default class Element {
 	}
 
 	static points(element) {
-		return [this.center(element)];
+		return element.points.concat(this.center(element));
 	}
 
 	static move(element, position, last_position) {
-		element.x += position.x - last_position.x;
-		element.y += position.y - last_position.y;
+		const delta_x = position.x - last_position.x;
+		const delta_y = position.y - last_position.y;
+		element.points.forEach((point) => {
+			point.x += delta_x;
+			point.y += delta_y;
+		});
 	}
 
 	static rotate(element, position, last_position) {
@@ -334,17 +405,6 @@ export default class Element {
 	static edit(element: ElementType, position: Position, last_position: Position, dot) {
 		element.points[dot.i].x += position.x - last_position.x;
 		element.points[dot.i].y += position.y - last_position.y;
-
-		// if (element.points[dot.i].x < 0) {
-		// 	const delta_x = -element.points[dot.i].x;
-		// 	element.x -= delta_x;
-		// 	element.points.forEach((point) => (point.x += delta_x));
-		// }
-		// if (element.points[dot.i].y < 0) {
-		// 	const delta_y = -element.points[dot.i].y;
-		// 	element.y -= delta_y;
-		// 	element.points.forEach((point) => (point.y += delta_y));
-		// }
 	}
 
 	static boxes(id, bounds, box_size) {

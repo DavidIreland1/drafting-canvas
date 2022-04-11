@@ -1,4 +1,3 @@
-import { rotatePoint } from '../../utils/utils';
 import Element from './element';
 
 export default class Ellipse extends Element {
@@ -8,101 +7,143 @@ export default class Ellipse extends Element {
 			type: 'ellipse',
 			x: position.x,
 			y: position.y,
-			radius_x: 0,
-			radius_y: 0,
 			rotation: 0,
-			start_angle: 0,
-			end_angle: 6.283185307179586,
+			// start_angle: 0,
+			// end_angle: 6.283185307179586,
+			points: this.makePoints(position.x, position.y, 1, 1),
 		});
 	}
 
-	static points(ellipse) {
-		const center = this.center(ellipse);
+	static makePoints(x, y, width, height) {
 		return [
 			{
-				x: ellipse.x,
-				y: ellipse.y,
+				x: x + width,
+				y: y + height / 2,
+				to: {
+					x: x + width,
+					y: y + height / 2,
+				},
+				from: {
+					x: x + width,
+					y: y + height / 2,
+				},
 			},
 			{
-				x: ellipse.x - ellipse.radius_x,
-				y: ellipse.y - ellipse.radius_y,
+				x: x + width / 2,
+				y: y + height,
+				to: {
+					x: x + width / 2,
+					y: y + height,
+				},
+				from: {
+					x: x + width / 2,
+					y: y + height,
+				},
 			},
 			{
-				x: ellipse.x - ellipse.radius_x,
-				y: ellipse.y + ellipse.radius_y,
+				x: x,
+				y: y + height / 2,
+				to: {
+					x: x,
+					y: y + height / 2,
+				},
+				from: {
+					x: x,
+					y: y + height / 2,
+				},
 			},
 			{
-				x: ellipse.x + ellipse.radius_x,
-				y: ellipse.y - ellipse.radius_y,
+				x: x + width / 2,
+				y: y,
+				to: {
+					x: x + width / 2,
+					y: y,
+				},
+				from: {
+					x: x + width / 2,
+					y: y,
+				},
 			},
-			{
-				x: ellipse.x + ellipse.radius_x,
-				y: ellipse.y + ellipse.radius_y,
-			},
-		].map((point) => rotatePoint(point, center, ellipse.rotation));
+		].map((point, i) => ({ ...point, i }));
 	}
 
-	static path(ellipse) {
+	// static points(ellipse) {
+	// 	const center = this.center(ellipse);
+	// 	return [
+	// 		{
+	// 			x: ellipse.x,
+	// 			y: ellipse.y,
+	// 		},
+	// 		{
+	// 			x: ellipse.x - ellipse.radius_x,
+	// 			y: ellipse.y - ellipse.radius_y,
+	// 		},
+	// 		{
+	// 			x: ellipse.x - ellipse.radius_x,
+	// 			y: ellipse.y + ellipse.radius_y,
+	// 		},
+	// 		{
+	// 			x: ellipse.x + ellipse.radius_x,
+	// 			y: ellipse.y - ellipse.radius_y,
+	// 		},
+	// 		{
+	// 			x: ellipse.x + ellipse.radius_x,
+	// 			y: ellipse.y + ellipse.radius_y,
+	// 		},
+	// 	].map((point) => rotatePoint(point, center, ellipse.rotation));
+	// }
+
+	static path(line) {
 		const path = new Path2D();
-		path.ellipse(ellipse.x, ellipse.y, Math.abs(ellipse.radius_x), Math.abs(ellipse.radius_y), ellipse.rotation, ellipse.start_angle, ellipse.end_angle, ellipse.counter_clockwise);
+
+		const num_points = line.points.length;
+
+		path.moveTo(line.points[0].x, line.points[0].y);
+		line.points.forEach((point, i, points) => {
+			const next = points[(i + 1) % num_points];
+			console.log(point.from.x, point.from.y, next.to.x, next.to.y, next.x, next.y);
+			path.bezierCurveTo(point.from.x, point.from.y, next.to.x, next.to.y, next.x, next.y);
+		});
+
+		path.closePath();
+
+		// let last_curve = { x2: undefined, y2: undefined };
+
+		// line.curves.forEach((curve) => {
+		// 	if (!curve.x2) return;
+		// 	if (last_curve.x2 !== curve.x1 || last_curve.y2 !== curve.y1) path.moveTo(curve.x1, curve.y1);
+		// 	path.bezierCurveTo(curve.x1cp, curve.y1cp, curve.x2cp, curve.y2cp, curve.x2, curve.y2);
+		// 	last_curve = curve;
+		// });
+
 		return path;
 	}
 
-	static draw(ellipse, context: CanvasRenderingContext2D, cursor, view) {
-		context.beginPath();
-		const path = this.path(ellipse);
+	// static path(line) {
+	// 	const path = new Path2D();
+	// 	line.points.forEach((point) => path.lineTo(point.x, point.y));
+	// 	return path;
+	// }
 
-		this.effect(ellipse, context, path, true, view);
-		this.fill(ellipse, context, path);
-		this.effect(ellipse, context, path, false, view);
-		this.stroke(ellipse, context, path);
+	// static draw(ellipse, context: CanvasRenderingContext2D, cursor, view) {
+	// 	context.beginPath();
+	// 	const path = this.path(ellipse);
 
-		// context.shadowColor = 'transparent';
-		return context.isPointInPath(path, cursor.x, cursor.y);
-	}
+	// 	this.effect(ellipse, context, path, true, view);
+	// 	this.fill(ellipse, context, path);
+	// 	this.effect(ellipse, context, path, false, view);
+	// 	this.stroke(ellipse, context, path);
 
-	static outline(ellipse, context, color, line_width): void {
-		context.strokeStyle = color;
-		context.lineWidth = line_width;
-		const path = this.path(ellipse);
-		context.stroke(path);
-	}
+	// 	// context.shadowColor = 'transparent';
+	// 	return context.isPointInPath(path, cursor.x, cursor.y);
+	// }
 
-	static center(ellipse) {
-		return {
-			x: ellipse.x,
-			y: ellipse.y,
-		};
-	}
-
-	static bound(ellipse): { x: number; y: number; width: number; height: number } {
-		return {
-			x: ellipse.x - ellipse.radius_x,
-			y: ellipse.y - ellipse.radius_y,
-			width: ellipse.radius_x * 2,
-			height: ellipse.radius_y * 2,
-		};
-	}
-
-	static resize(ellipse, position, last_position): void {
-		const center = this.center(ellipse);
-
-		const opposite = {
-			x: center.x - (last_position.x - center.x),
-			y: center.y - (last_position.y - center.y),
-		};
-
-		const new_center = {
-			x: (opposite.x + position.x) / 2,
-			y: (opposite.y + position.y) / 2,
-		};
-
-		const new_opposite = rotatePoint(opposite, new_center, -ellipse.rotation);
-		const new_position = rotatePoint(position, new_center, -ellipse.rotation);
-
-		ellipse.x = new_center.x;
-		ellipse.y = new_center.y;
-		ellipse.radius_x = (new_position.x - new_opposite.x) / 2;
-		ellipse.radius_y = (new_position.y - new_opposite.y) / 2;
-	}
+	// static bound(ellipse): { x: number; y: number; width: number; height: number } {
+	// 	return {
+	// 		x: ellipse.x - ellipse.radius_x,
+	// 		y: ellipse.y - ellipse.radius_y,
+	// 		width: ellipse.radius_x * 2,
+	// 		height: ellipse.radius_y * 2,
+	// 	};
+	// }
 }

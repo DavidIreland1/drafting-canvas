@@ -1,6 +1,8 @@
 import Element from './element';
 import Colors from './../properties/colors';
 import { rotatePoint } from '../../utils/utils';
+import { ElementType } from '../../types/element-types';
+import { Bound, Position } from '../../types/box-types';
 
 export default class Text extends Element {
 	static create(id, position, selected) {
@@ -8,6 +10,7 @@ export default class Text extends Element {
 			x: position.x,
 			y: position.y,
 			editing: true,
+			selected: true,
 			label: 'Text',
 			type: 'text',
 			text: '',
@@ -31,11 +34,9 @@ export default class Text extends Element {
 
 	static fill(element, context: CanvasRenderingContext2D, path) {
 		this.setFont(element, context);
-		// Splitup text into many lines
+		// Split up text into many lines
 		const lines = breakText(element, context);
 		const offsets = calculateOffsets(element, context, lines);
-		// console.log(lines);
-		// console.log(offsets);
 
 		element.fill
 			.filter((fill) => fill.visible)
@@ -48,7 +49,7 @@ export default class Text extends Element {
 	static stroke(element, context: CanvasRenderingContext2D, path: Path2D) {
 		this.setFont(element, context);
 
-		// Splitup text into many lines
+		// Split up text into many lines
 		const lines = breakText(element, context);
 		const offsets = calculateOffsets(element, context, lines);
 
@@ -87,7 +88,7 @@ export default class Text extends Element {
 
 	static points(text) {
 		const center = this.center(text);
-		return this._points(text)
+		return this.makePoints(text)
 			.map((point) => ({
 				x: point.x + text.x + text.width / 2,
 				y: point.y + text.y + text.height / 2,
@@ -96,7 +97,7 @@ export default class Text extends Element {
 			.concat(center);
 	}
 
-	static _points(text) {
+	static makePoints(text) {
 		return [
 			{
 				x: -text.width / 2,
@@ -118,7 +119,7 @@ export default class Text extends Element {
 	}
 
 	static path(text) {
-		const points = this._points(text);
+		const points = this.makePoints(text);
 		const path = new Path2D();
 		points.forEach((point) => path.lineTo(point.x, point.y));
 		path.closePath();
@@ -126,6 +127,7 @@ export default class Text extends Element {
 	}
 
 	static draw(text, context: CanvasRenderingContext2D, cursor, view) {
+		if (text.editing) return false;
 		const center = this.center(text);
 		const path = this.path(text);
 
@@ -145,9 +147,25 @@ export default class Text extends Element {
 		return hover;
 	}
 
+	static center(element: ElementType): Position {
+		const bounds = this.bound(element);
+		return {
+			x: bounds.x + bounds.width / 2,
+			y: bounds.y + bounds.height / 2,
+		};
+	}
+
+	static bound(element): Bound {
+		return {
+			x: element.x,
+			y: element.y,
+			width: element.width,
+			height: element.height,
+		};
+	}
+
 	static outline(text, context, color, line_width): void {
 		const center = this.center(text);
-
 		context.strokeStyle = color;
 		context.lineWidth = line_width;
 		context.save();
@@ -158,13 +176,9 @@ export default class Text extends Element {
 		context.restore();
 	}
 
-	static bound(text): { x: number; y: number; width: number; height: number } {
-		return {
-			x: text.x,
-			y: text.y,
-			width: text.width,
-			height: text.height,
-		};
+	static move(element, position, last_position) {
+		element.x += position.x - last_position.x;
+		element.y += position.y - last_position.y;
 	}
 
 	static resize(text, position, last_position): void {
@@ -213,7 +227,7 @@ export default class Text extends Element {
 }
 
 function breakText(element, context) {
-	// Add placehoder Text...
+	// Add placeholder Text...
 	if (element.text === '') return ['Text...'];
 
 	// Add space to create extra line for trailing new line character

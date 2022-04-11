@@ -65,3 +65,10 @@ export function CanvasToDOM(position, canvas, view) {
 		y: ((position.y + view.y) * view.scale) / window.devicePixelRatio + bounds.y,
 	};
 }
+
+export function reflectPoint(point, reflect) {
+	return {
+		x: reflect.x - (point.x - reflect.x),
+		y: reflect.y - (point.y - reflect.y),
+	};
+}

@@ -17,7 +17,7 @@ export default function rotate(canvas, store, view, target, last_position, down_
 
 		store.dispatch(actions.rotate({ user_id: Settings.user_id, id: target.id, position, last_position, selected_ids }));
 
-		last_position = roundPoint(position, [], [], view);
+		last_position = position;
 	};
 	down_event.target.addEventListener('pointermove', move);
 

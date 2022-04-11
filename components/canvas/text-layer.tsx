@@ -41,14 +41,14 @@ export default function TextLayer({ canvas, user_id, store }) {
 	const rotated = {
 		transform: `rotate(${text.rotation}rad)`,
 	};
-	function propogateWheel(event) {
+	function propagateWheel(event) {
 		// event.preventDefault();
 		canvas.current.dispatchEvent(new event.nativeEvent.constructor(event.type, event));
 	}
 
 	return (
 		<>
-			<div id="container" onWheel={propogateWheel}>
+			<div id="container" onWheel={propagateWheel}>
 				<div id="relative">
 					<div id="transformed" style={transformed}>
 						<div id="rotated" style={rotated}>

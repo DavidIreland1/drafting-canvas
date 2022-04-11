@@ -66,9 +66,21 @@ const property_reducers = {
 
 	property: (state, props) => {
 		const { selected_ids } = props.payload;
+
+		const entry = Object.entries(props.payload.props);
 		selected(state.elements, selected_ids).forEach((element) => {
-			Object.entries(props.payload.props).forEach(([key, value]) => {
-				element[key] = value;
+			entry.forEach(([key, value]) => {
+				if (key === 'x' || key === 'y') {
+					const bound = Elements[element.type].bound(element);
+					const delta = Number(value) - bound[key];
+					element.points.forEach((point) => {
+						point[key] += delta;
+					});
+				} else if (key === 'radius') {
+					element.points.forEach((point) => (point[key] = value));
+				} else {
+					element[key] = value;
+				}
 			});
 		});
 	},

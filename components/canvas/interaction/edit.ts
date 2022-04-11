@@ -18,7 +18,7 @@ export default function edit(canvas, store, view, target, last_position, down_ev
 
 		store.dispatch(actions.edit({ user_id, id: target.id, position, last_position, selected_ids, dot }));
 
-		last_position = roundPoint(position, [], [], view);
+		last_position = position;
 	};
 	down_event.target.addEventListener('pointermove', move);
 

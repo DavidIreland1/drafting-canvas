@@ -1,5 +1,9 @@
 export function roundPoint(point, selected_points, points, view) {
-	if (selected_points.length === 0 || points.length === 0) return point;
+	if (selected_points.length === 0 || points.length === 0)
+		return {
+			x: point.x, //Math.ceil(point.x),
+			y: point.y, //Math.ceil(point.y),
+		};
 
 	const closest_points = selected_points.map((selected_point) => {
 		const closest_x = points.map((point) => ({ ...point, delta: selected_point.x - point.x })).sort((point1, point2) => Math.abs(point1.delta) - Math.abs(point2.delta))[0];
@@ -32,7 +36,7 @@ export function roundPoint(point, selected_points, points, view) {
 	}
 
 	return {
-		x: x,
-		y: y,
+		x: x, //Math.round(x),
+		y: y, //Math.round(y),
 	};
 }

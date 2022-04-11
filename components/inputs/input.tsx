@@ -2,7 +2,7 @@ import { useRef } from 'react';
 
 const click_position = { x: 0, y: 0 };
 
-export default function Input({ id, label, value, step = 1, min = NaN, unit = '', onChange, width = undefined }) {
+export default function Input({ id, label, value, type = 'number', step = 1, min = NaN, unit = '', onChange, width = undefined }) {
 	const input = useRef(null);
 
 	if (value === undefined) return null;
@@ -59,7 +59,7 @@ export default function Input({ id, label, value, step = 1, min = NaN, unit = ''
 				<label onPointerDown={dragProperty}>{label}</label>
 				<input
 					ref={input}
-					type="number"
+					type={type}
 					step={step}
 					value={value}
 					min={isNaN(min) ? undefined : min}

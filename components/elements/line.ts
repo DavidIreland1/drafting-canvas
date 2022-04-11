@@ -3,41 +3,27 @@ import Element from './element';
 export default class Line extends Element {
 	static create(id, position, selected) {
 		return Object.assign(super.create(id, position, selected), {
-			x1: position.x,
-			y1: position.y,
-			x2: position.x,
-			y2: position.y,
 			label: 'Line',
 			type: 'line',
 			fill: [],
-			stroke: [{ id: id + '564', type: 'center', width: 1, color: [0.2, 0.2, 0.2, 1], format: 'hex4', visible: true }],
+			stroke: [{ id: id + '564', type: 'Center', width: 2, color: [0.2, 0.2, 0.2, 1], format: 'hex4', visible: true }],
+			points: [
+				{ x: position.x, y: position.y, i: 0 },
+				{ x: position.x, y: position.y, i: 1 },
+			],
 		});
 	}
 
-	static draw(line, context: CanvasRenderingContext2D, cursor, view) {
-		context.beginPath();
-		// context.moveTo(line.x1, line.y1);
-		// context.lineTo(line.x2, line.y2);
-
+	static path(line) {
 		const path = new Path2D();
-		path.moveTo(line.x1, line.y1);
-		path.lineTo(line.x2, line.y2);
-
-		this.fill(line, context, path);
-		this.stroke(line, context, path);
-
-		// context.lineWidth = line.stroke.reduce((max, stroke) => Math.max(max, stroke.width), 0);
-
-		return context.isPointInStroke(path, cursor.x, cursor.y);
+		line.points.forEach((point) => path.lineTo(point.x, point.y));
+		return path;
 	}
 
-	static outline(line, context: CanvasRenderingContext2D, color, line_width) {
-		context.strokeStyle = color;
-		context.lineWidth = line_width;
-		context.beginPath();
-		context.moveTo(line.x1, line.y1);
-		context.lineTo(line.x2, line.y2);
-		context.stroke();
+	static draw(line, context: CanvasRenderingContext2D, cursor, view) {
+		const path = this.path(line);
+		context.lineWidth = this.stroke(line, context, path);
+		return context.isPointInStroke(path, cursor.x, cursor.y);
 	}
 
 	static highlight(line, context, cursor, highlight, line_width, box_size) {
@@ -54,15 +40,14 @@ export default class Line extends Element {
 	}
 
 	static drawRotate(line, context, cursor, box_size) {
-		// context.fillStyle = 'grey';
 		// context.beginPath();
-		// const angle = rotation(line);
-		// this.boxes(line, box_size * 2).forEach((square) => {
-		// 	context.translate(square.x, square.y);
+		// const angle = Math.atan2(line.points[0].y - line.points[1].y, line.points[0].x - line.points[1].x);
+		// this.boxes(line, box_size * 2).forEach((box) => {
+		// 	context.translate(box.x, box.y);
 		// 	context.rotate(angle);
-		// 	context.rect(-square.width, -square.width, square.width * 2, square.height * 2);
+		// 	context.rect(-box.width, -box.width, box.width * 2, box.height * 2);
 		// 	context.rotate(-angle);
-		// 	context.translate(-square.x, -square.y);
+		// 	context.translate(-box.x, -box.y);
 		// });
 		// context.fill();
 		// context.stroke();
@@ -75,13 +60,13 @@ export default class Line extends Element {
 		context.strokeStyle = highlight;
 		context.lineWidth = line_width;
 		context.beginPath();
-		const angle = rotation(line);
-		this.boxes(line, box_size).forEach((square) => {
-			context.translate(square.x, square.y);
+		const angle = Math.atan2(line.points[0].y - line.points[1].y, line.points[0].x - line.points[1].x);
+		this.boxes(line, box_size).forEach((box) => {
+			context.translate(box.x, box.y);
 			context.rotate(angle);
-			context.rect(-square.width, -square.width, square.width * 2, square.height * 2);
+			context.rect(-box.width, -box.width, box.width * 2, box.height * 2);
 			context.rotate(-angle);
-			context.translate(-square.x, -square.y);
+			context.translate(-box.x, -box.y);
 		});
 		context.fill();
 		context.stroke();
@@ -90,38 +75,38 @@ export default class Line extends Element {
 
 	static center(line): { x: number; y: number } {
 		return {
-			x: line.x1 + (line.x1 + line.x2) / 2,
-			y: line.y1 + (line.y1 + line.y2) / 2,
+			x: line.points[0].x + (line.points[0].x + line.points[1].x) / 2,
+			y: line.points[0].y + (line.points[0].y + line.points[1].y) / 2,
 		};
 	}
 
 	static bound(line): { x: number; y: number; width: number; height: number } {
-		const x = Math.min(line.x1, line.x2);
-		const y = Math.min(line.y1, line.y2);
+		const x = Math.min(line.points[0].x, line.points[1].x);
+		const y = Math.min(line.points[0].y, line.points[1].y);
 		return {
 			x: x,
 			y: y,
-			width: Math.max(line.x1, line.x2) - x,
-			height: Math.max(line.y1, line.y2) - y,
+			width: Math.max(line.points[0].x, line.points[1].x) - x,
+			height: Math.max(line.points[0].y, line.points[1].y) - y,
 		};
 	}
 
-	static move(element, position, last_position) {
-		const delta_x = position.x - last_position.x;
-		const delta_y = position.y - last_position.y;
-		element.x1 += delta_x;
-		element.y1 += delta_y;
-		element.x2 += delta_x;
-		element.y2 += delta_y;
-	}
+	// static move(element, position, last_position) {
+	// 	const delta_x = position.x - last_position.x;
+	// 	const delta_y = position.y - last_position.y;
+	// 	element.x1 += delta_x;
+	// 	element.y1 += delta_y;
+	// 	element.x2 += delta_x;
+	// 	element.y2 += delta_y;
+	// }
 
 	static resize(line, position, last_position): void {
-		if (closesetPoint(line, last_position)) {
-			line.x1 = Math.round(position.x);
-			line.y1 = Math.round(position.y);
+		if (closestPoint(line, last_position)) {
+			line.points[0].x = Math.round(position.x);
+			line.points[0].y = Math.round(position.y);
 		} else {
-			line.x2 = Math.round(position.x);
-			line.y2 = Math.round(position.y);
+			line.points[1].x = Math.round(position.x);
+			line.points[1].y = Math.round(position.y);
 		}
 	}
 
@@ -143,13 +128,13 @@ export default class Line extends Element {
 		// // 	y: (opposite.y + position.y) / 2,
 		// // };
 
-		// const new_opposite = rotatePoint({ x: line.x1, y: line.y1 }, center, -rotation);
-		// const new_position = rotatePoint({ x: line.x2, y: line.y2 }, center, -rotation);
+		// const new_opposite = rotatePoint({ x: line.points[0].x, y: line.points[0].y }, center, -rotation);
+		// const new_position = rotatePoint({ x: line.points[1].x, y: line.points[1].y }, center, -rotation);
 
-		// line.x1 = new_opposite.x;
-		// line.y1 = new_opposite.y;
-		// line.x2 = new_position.x;
-		// line.y2 = new_position.y;
+		// line.points[0].x = new_opposite.x;
+		// line.points[0].y = new_opposite.y;
+		// line.points[1].x = new_position.x;
+		// line.points[1].y = new_position.y;
 
 		return 0;
 	}
@@ -159,40 +144,27 @@ export default class Line extends Element {
 	static points(line) {
 		return [
 			{
-				x: line.x1,
-				y: line.y1,
+				x: line.points[0].x,
+				y: line.points[0].y,
 			},
 			{
-				x: line.x2,
-				y: line.y2,
+				x: line.points[1].x,
+				y: line.points[1].y,
 			},
 		];
 	}
 
 	static boxes(line, box_size) {
-		return [
-			{
-				id: line.id,
-				x: line.x1,
-				y: line.y1,
-				width: box_size,
-				height: box_size,
-			},
-			{
-				id: line.id,
-				x: line.x2,
-				y: line.y2,
-				width: box_size,
-				height: box_size,
-			},
-		];
+		return line.points.map((point) => ({
+			id: line.id,
+			x: point.x,
+			y: point.y,
+			width: box_size,
+			height: box_size,
+		}));
 	}
 }
 
-function closesetPoint(line, position) {
-	return (line.x1 - position.x) ** 2 + (line.y1 - position.y) ** 2 < (line.x2 - position.x) ** 2 + (line.y2 - position.y) ** 2;
-}
-
-function rotation(line) {
-	return Math.atan2(line.y1 - line.y2, line.x1 - line.x2);
+function closestPoint(line, position) {
+	return (line.points[0].x - position.x) ** 2 + (line.points[0].y - position.y) ** 2 < (line.points[1].x - position.x) ** 2 + (line.points[1].y - position.y) ** 2;
 }
