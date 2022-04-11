@@ -1,4 +1,3 @@
-
 # redux-scuttlebutt
 
 <!--
@@ -46,22 +45,26 @@ Our default export is the store enhancer. You use it like this:
 ```js
 // configureStore.js
 
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware } from 'redux';
 
-import rootReducer from '../reducers'
-import scuttlebutt from 'redux-scuttlebutt'
+import rootReducer from '../reducers';
+import scuttlebutt from 'redux-scuttlebutt';
 
 export default (initialState) => {
-  return createStore(rootReducer, initialState, scuttlebutt({
-    uri: 'http://localhost:3000',
-  }))
-}
+	return createStore(
+		rootReducer,
+		initialState,
+		scuttlebutt({
+			uri: 'http://localhost:3001',
+		})
+	);
+};
 ```
 
 It wraps your store's root reducer (to store history), `getState` (to return the
 current state in history) and `dispatch` (to connect to peers).
 
-If you're using the redux dev-tools enhancer, it must come *after* the redux-
+If you're using the redux dev-tools enhancer, it must come _after_ the redux-
 scuttlebutt enhancer (or scuttlebutt will emit `PERFORM_ACTION` actions over the
 network).
 
@@ -72,47 +75,47 @@ The store enhancer takes an options object, including the key
 
 ```js
 scuttlebutt({
-  // uri of a scuttlebutt peer or server
-  uri: `${window.location.protocol}//${window.location.host}`,
+	// uri of a scuttlebutt peer or server
+	uri: `${window.location.protocol}//${window.location.host}`,
 
-  // options for primus.io <https://github.com/primus/primus#getting-started>
-  primusOptions: {},
+	// options for primus.io <https://github.com/primus/primus#getting-started>
+	primusOptions: {},
 
-  // the Primus object, can be switched out with any compatible transport.
-  primus: (typeof window === 'object' && window.Primus),
+	// the Primus object, can be switched out with any compatible transport.
+	primus: typeof window === 'object' && window.Primus,
 
-  // options passed through to the dispatcher (and their defaults)
-  dispatcherOptions: {
-    customDispatch: function getDelayedDispatch(dispatcher) {
-      return function (action) {
-        // the default will batch-reduce actions by the hundred, firing redux's
-        // subscribe method on the last one, triggering the actual rendering on
-        // the next animationFrame.
-        // see: https://github.com/grrowl/redux-scuttlebutt/blob/master/src/dispatcher.js#L22
-      }
-    },
+	// options passed through to the dispatcher (and their defaults)
+	dispatcherOptions: {
+		customDispatch: function getDelayedDispatch(dispatcher) {
+			return function (action) {
+				// the default will batch-reduce actions by the hundred, firing redux's
+				// subscribe method on the last one, triggering the actual rendering on
+				// the next animationFrame.
+				// see: https://github.com/grrowl/redux-scuttlebutt/blob/master/src/dispatcher.js#L22
+			};
+		},
 
-    isGossipType: function(actionType) {
-      // returns a boolean representing whether an action's type should be
-      // broadcast to the network.
-      // (by default, returns false for actions prefixed with @@, such as @@INIT
-      // and internal @@scuttlebutt-prefixed action types)
-    },
+		isGossipType: function (actionType) {
+			// returns a boolean representing whether an action's type should be
+			// broadcast to the network.
+			// (by default, returns false for actions prefixed with @@, such as @@INIT
+			// and internal @@scuttlebutt-prefixed action types)
+		},
 
-    verifyAsync: function(callback, action, getStateHistory) {
-      // if specified, the verifyAsync function must call callback(false) if the
-      // action is invalid, or callback(true) if the action is valid.
-      // getStateHistory() will return an array of ordered updates
-    },
+		verifyAsync: function (callback, action, getStateHistory) {
+			// if specified, the verifyAsync function must call callback(false) if the
+			// action is invalid, or callback(true) if the action is valid.
+			// getStateHistory() will return an array of ordered updates
+		},
 
-    signAsync: function(callback, action, getStateHistory) {
-      // if specified, the signAsync will be called for every locally dispatched
-      // action. must call callback(action) and can mutate the action if
-      // desired.
-      // getStateHistory() will return an array of ordered updates
-    },
-  }
-})
+		signAsync: function (callback, action, getStateHistory) {
+			// if specified, the signAsync will be called for every locally dispatched
+			// action. must call callback(action) and can mutate the action if
+			// desired.
+			// getStateHistory() will return an array of ordered updates
+		},
+	},
+});
 ```
 
 ### signAsync & verifyAsync
@@ -134,7 +137,7 @@ import { Ed25519, verifyAction, signAction } from 'redux-signatures'
 const identity = new Ed25519()
 
 scuttlebutt({
-  uri: 'http://localhost:3000',
+  uri: 'http://localhost:3001',
   signAsync: signAction.bind(this, identity),
   verifyAsync: verifyAction.bind(this, identity),
 }))
@@ -157,69 +160,69 @@ must be strictly pure, without side effects or non-deterministic mutations.
 In a complex real-time multi-user app, this is easier said than done. Some
 strategies may be,
 
-* Avoid preconditions. The Game Of Life example only dispatches TOGGLE and STEP.
-  Neither have preconditions, there's no "illegal" way to dispatch them, and
-  they'll always successfully mutate state.
-* Only allow peers (action sources) control over their own domain (entity). An
-  entity might request something of another entity, which that entity would then
-  dispatch its own action to mutate its own domain.
-* Implement a Conflict-free data type, which only allows certain operations in
-  exchange for never conflicting.
-  See: https://github.com/pfrazee/crdt_notes#portfolio-of-basic-crdts
-  * We'd love to expose the most useful and common ones from this library to
-    assist with development.
+-   Avoid preconditions. The Game Of Life example only dispatches TOGGLE and STEP.
+    Neither have preconditions, there's no "illegal" way to dispatch them, and
+    they'll always successfully mutate state.
+-   Only allow peers (action sources) control over their own domain (entity). An
+    entity might request something of another entity, which that entity would then
+    dispatch its own action to mutate its own domain.
+-   Implement a Conflict-free data type, which only allows certain operations in
+    exchange for never conflicting.
+    See: https://github.com/pfrazee/crdt_notes#portfolio-of-basic-crdts
+    -   We'd love to expose the most useful and common ones from this library to
+        assist with development.
 
 ## example
 
 Examples are found under `examples/`.
 
-* `counter`:
-  [redux counter example](https://github.com/reactjs/redux/tree/master/examples/counter)
-  with the addition of redux-scuttlebutt.
-* `chat`: A very basic chat application.
-* `grrowl/redux-game-of-life-scuttlebutt`:
-  [Conway's Game Of Life](https://github.com/grrowl/redux-game-of-life-scuttlebutt)
-  multiplayer edition.
+-   `counter`:
+    [redux counter example](https://github.com/reactjs/redux/tree/master/examples/counter)
+    with the addition of redux-scuttlebutt.
+-   `chat`: A very basic chat application.
+-   `grrowl/redux-game-of-life-scuttlebutt`:
+    [Conway's Game Of Life](https://github.com/grrowl/redux-game-of-life-scuttlebutt)
+    multiplayer edition.
 
 ## roadmap and thoughts
 
-* message validation on top of our existing scuttlebutt library
-  * robust crypto in the browser comes with a number of performance and security
-    tradeoffs, which we don't want to bake into the library itself.
-  * our recommendation is to implement what's right for your implementation in
-    userland.
-  * have released an example of message signing with ed25519 signatures and
-    asyncronous message validation
-    [in this gist](https://gist.github.com/grrowl/ca94e47a6da2062e9bd6dad211588597).
-  * released [redux-signatures](https://github.com/grrowl/redux-signatures)
-    which plugs directly into the dispatcher.
-    * Allows flexible implementation, e.g. in a client-server topology you may
-      only want to use `sign` on the client and `verify` on the server only.
-      This avoids running the most processor intensive part on the clients with
-      no loss of security.
-* underlying `scuttlebutt` implementation
-  * currently depends on our
-    [own scuttlebutt fork](https://github.com/grrowl/scuttlebutt#logical-timestamps),
-    not yet published to npm, I'm not sure if dominictarr wants to accept these
-    changes upstream.
-  * should probably republish as `scuttlebutt-logical`
-* add a `@@scuttlebutt/COMPACTION` action
-  * reducers would receive the whole history array as `state`
-  * enables removing multiple actions from history which are inconsequential —
-    such as multiple "SET_VALUE" actions, when only the last one applies.
-  * also enables forgetting, and therefore not replaying to other clients,
-    actions after a certain threshold.
-* implement CRDT helpers for reducers to easily implement complex shared data
-  types.
-* tests
-  * simulate a multi-hop distributed network with delay, ensure consistency
-  * ensure rewind/reordering works
-  * ensure API
-* allow pluggable socket library/transport
-* more example applications! something real-time, event driven.
-* WebRTC support
-  * Genericize server into websockets and webrtc versions
-  * Write client modules to support either
+-   message validation on top of our existing scuttlebutt library
+    -   robust crypto in the browser comes with a number of performance and security
+        tradeoffs, which we don't want to bake into the library itself.
+    -   our recommendation is to implement what's right for your implementation in
+        userland.
+    -   have released an example of message signing with ed25519 signatures and
+        asyncronous message validation
+        [in this gist](https://gist.github.com/grrowl/ca94e47a6da2062e9bd6dad211588597).
+    -   released [redux-signatures](https://github.com/grrowl/redux-signatures)
+        which plugs directly into the dispatcher.
+        -   Allows flexible implementation, e.g. in a client-server topology you may
+            only want to use `sign` on the client and `verify` on the server only.
+            This avoids running the most processor intensive part on the clients with
+            no loss of security.
+-   underlying `scuttlebutt` implementation
+    -   currently depends on our
+        [own scuttlebutt fork](https://github.com/grrowl/scuttlebutt#logical-timestamps),
+        not yet published to npm, I'm not sure if dominictarr wants to accept these
+        changes upstream.
+    -   should probably republish as `scuttlebutt-logical`
+-   add a `@@scuttlebutt/COMPACTION` action
+    -   reducers would receive the whole history array as `state`
+    -   enables removing multiple actions from history which are inconsequential —
+        such as multiple "SET_VALUE" actions, when only the last one applies.
+    -   also enables forgetting, and therefore not replaying to other clients,
+        actions after a certain threshold.
+-   implement CRDT helpers for reducers to easily implement complex shared data
+    types.
+-   tests
+    -   simulate a multi-hop distributed network with delay, ensure consistency
+    -   ensure rewind/reordering works
+    -   ensure API
+-   allow pluggable socket library/transport
+-   more example applications! something real-time, event driven.
+-   WebRTC support
+    -   Genericize server into websockets and webrtc versions
+    -   Write client modules to support either
 
 ## contributions
 

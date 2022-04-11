@@ -9,8 +9,7 @@ export default class Text extends Element {
 		return Object.assign(super.create(id, position, selected), {
 			x: position.x,
 			y: position.y,
-			editing: true,
-			selected: true,
+			editing: false, //true
 			label: 'Text',
 			type: 'text',
 			text: '',
@@ -53,17 +52,20 @@ export default class Text extends Element {
 		const lines = breakText(element, context);
 		const offsets = calculateOffsets(element, context, lines);
 
-		element.stroke
-			.filter((stroke) => stroke.visible)
-			.forEach((stroke) => {
-				if (stroke.width === 0) return;
+		return Math.max(
+			...element.stroke
+				.filter((stroke) => stroke.visible)
+				.map((stroke) => {
+					if (stroke.width === 0) return 0;
 
-				console.log(stroke.color);
-				context.lineWidth = stroke.width;
-				context.strokeStyle = Colors.toString(stroke.color);
-				// Inside, Center and Outsize
-				lines.forEach((line, i) => context.strokeText(line, offsets[i].x, offsets[i].y));
-			});
+					console.log(stroke.color);
+					context.lineWidth = stroke.width;
+					context.strokeStyle = Colors.toString(stroke.color);
+					// Inside, Center and Outsize
+					lines.forEach((line, i) => context.strokeText(line, offsets[i].x, offsets[i].y));
+					return stroke.width;
+				})
+		);
 	}
 
 	static effect(element, context: CanvasRenderingContext2D, path: Path2D, before, view) {

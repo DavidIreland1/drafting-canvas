@@ -7,10 +7,6 @@ const Dispatcher = require('./dispatcher').default;
 
 const Rooms = require('primus-rooms');
 
-const INFILE = process.env['INFILE'];
-const OUTFILE = process.env['OUTFILE'];
-const REMOTE_SB = process.env['REMOTE_SB'];
-
 const defaultOptions = {
 	getStatistics: getStatistics,
 	primusOptions: {},
@@ -81,8 +77,6 @@ exports.default = function scuttlebuttServer(server, options) {
 	const primus = new Primus(server, options.primusOptions);
 	primus.plugin('rooms', Rooms);
 
-	// console.log('hello');
-
 	// const onStatistic = options.getStatistics();
 
 	primus.on('connection', (spark) => {
@@ -103,7 +97,7 @@ exports.default = function scuttlebuttServer(server, options) {
 		});
 	});
 
-	// Seems to be deleteing / saving too often
+	// Seems to be deleting / saving too often
 	primus.on('disconnection', (spark) => {
 		removeUser(spark, rooms[spark.id]);
 	});

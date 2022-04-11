@@ -8,16 +8,13 @@
 		"start": "next start",
 		"serve": "next serve",
 		"lint": "next lint",
-		"devstart": "NODE_ENV=production node server.js",
+		"prod": "NODE_ENV=production node server.js",
 		"reducers": "npx webpack --config webpack.reducers.js"
 	},
 	"dependencies": {
-		"@aws-sdk/client-dynamodb": "^3.44.0",
 		"@reduxjs/toolkit": "^1.6.0",
-		"aws-sdk": "^2.1046.0",
-		"bufferutil": "^4.0.3",
 		"fs": "0.0.1-security",
-		"next": "^10.0.0",
+		"next": "^12.1.4",
 		"primus": "^8.0.4",
 		"primus-rooms": "^3.4.1",
 		"react": "17.0.1",
@@ -25,10 +22,7 @@
 		"react-redux": "^7.2.4",
 		"redux": "^3.7.2",
 		"redux-scuttlebutt": "^0.3.5",
-		"redux-undo": "^1.0.1",
-		"tls": "^0.0.1",
-		"utf-8-validate": "^5.0.5",
-		"ws": "^1.1.5"
+		"redux-undo": "^1.0.1"
 	},
 	"devDependencies": {
 		"@types/react": "^17.0.13",
