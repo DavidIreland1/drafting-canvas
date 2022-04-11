@@ -35,17 +35,20 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 	active.selected = flatten(on_screen).filter((element) => element.selected);
 	active.editing = active.selected.filter((element) => element.editing);
 
-	active.hovering = active.selected
-		.filter((element) => Elements[element.type].insideBound(element, context, cursor)) // Check if we are hovering over the box of the selected
-		.concat(
-			[...on_screen] // Draw all onscreen elements and filter for hovering
-				.reverse()
-				.filter((element) => Elements[element.type].draw(element, context, cursor, user_view))
-				.reverse()
-		)
-		.filter((element) => !element.locked)
-		.sort((element1) => (element1.selected ? -1 : 1));
-
+	if (active.editing.length === 0) {
+		active.hovering = active.selected
+			.filter((element) => Elements[element.type].insideBound(element, context, cursor)) // Check if we are hovering over the box of the selected
+			.concat(
+				[...on_screen] // Draw all onscreen elements and filter for hovering
+					.reverse()
+					.filter((element) => Elements[element.type].draw(element, context, cursor, user_view))
+					.reverse()
+			)
+			.filter((element) => !element.locked)
+			.sort((element1) => (element1.selected ? -1 : 1));
+	} else {
+		active.hovering = on_screen.reverse().filter((element) => Elements[element.type].draw(element, context, cursor, user_view) && element.editing);
+	}
 	// Outline hovering
 	if (!user_cursor.pressed)
 		flatten(on_screen)
@@ -53,8 +56,10 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 			.forEach((element) => Elements[element.type].outline(element, context, highlight, line * 2));
 
 	if (active.editing.length > 0) {
-		// Draw dots on editing elements
-		active.altering = active.editing.map((element) => Elements[element.type].drawDots(element, context, cursor, highlight, line, box)).filter((element) => element);
+		// Outline editing
+		active.editing.forEach((element) => Elements[element.type].outline(element, context, highlight, line));
+		// Draw points on editing elements
+		active.altering = active.editing.map((element) => Elements[element.type].drawPoints(element, context, cursor, highlight, line, box)).filter((element) => element);
 	} else if ((!user_cursor.pressed || user_cursor.type !== 'select') && document.activeElement === context.canvas) {
 		// Draw highlight on selected elements
 		active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);

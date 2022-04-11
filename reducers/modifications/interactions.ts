@@ -26,8 +26,8 @@ const interactions = {
 		selected(state.elements, selected_ids).forEach((element) => Elements[element.type].move(element, position, last_position));
 	},
 	edit: (state, props) => {
-		const { position, last_position, selected_ids, dot } = props.payload;
-		selected(state.elements, selected_ids).forEach((element) => Elements[element.type].edit(element, position, last_position, dot));
+		const { position, last_position, selected_ids, point } = props.payload;
+		selected(state.elements, selected_ids).forEach((element) => Elements[element.type].edit(element, position, last_position, point));
 	},
 
 	createElements: (state, props) => {

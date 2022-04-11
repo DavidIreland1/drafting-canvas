@@ -120,6 +120,8 @@ export default function Properties({ store, setPicker, fonts, onResize }) {
 					right: 0;
 					padding: 10px 0;
 					border-radius: var(--radius);
+					height: calc(100vh - var(--nav-height) - var(--grid-gap));
+					overflow-y: overlay;
 				}
 				#handle {
 					position: absolute;

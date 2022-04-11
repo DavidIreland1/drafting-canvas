@@ -13,42 +13,11 @@ export default class Rectangle extends Element {
 
 	static makePoints(x, y, width, height, radius) {
 		return [
-			{
-				x: x,
-				y: y,
-				radius: radius,
-			},
-			{
-				x: x + width,
-				y: y,
-				radius: radius,
-			},
-			{
-				x: x + width,
-				y: y + height,
-				radius: radius,
-			},
-			{
-				x: x,
-				y: y + height,
-				radius: radius,
-			},
-		].map((point, i) => ({ ...point, i }));
-	}
-
-	static path(rectangle): Path2D {
-		return roundedPoly(new Path2D(), rectangle.points);
-	}
-
-	static rotate(rectangle, position, last_position) {
-		const center = this.center(rectangle);
-		const rotation = Math.atan2(center.y - position.y, center.x - position.x) - Math.atan2(center.y - last_position.y, center.x - last_position.x);
-		rectangle.rotation += rotation;
-		rectangle.points.forEach((point) => {
-			const rotated = rotatePoint(point, center, rotation);
-			point.x = rotated.x;
-			point.y = rotated.y;
-		});
+			{ x: x, y: y },
+			{ x: x + width, y: y },
+			{ x: x + width, y: y + height },
+			{ x: x, y: y + height },
+		].map((point, i) => ({ ...point, i, radius, controls: [] }));
 	}
 
 	static stretch(rectangle, position, last_position): void {
@@ -79,36 +48,6 @@ function unitVector(point1, point2) {
 		angle: Math.atan2(delta_y, delta_x),
 		length,
 	};
-}
-
-function roundedPoly(path, points): Path2D {
-	const num_points = points.length;
-
-	points.forEach((last_point, i, points) => {
-		const this_point = points[(i + 1) % num_points];
-		const next_point = points[(i + 2) % num_points];
-
-		const vector_1 = unitVector(this_point, last_point);
-		const vector_2 = unitVector(this_point, next_point);
-
-		const { angle, radius_sign, counter_clockwise } = calculateRadius(vector_1, vector_2);
-
-		const half_angle = angle / 2;
-		let length_out = Math.abs((Math.cos(half_angle) * this_point.radius) / Math.sin(half_angle));
-		let radius = this_point.radius;
-
-		const min_length = Math.min(vector_1.length, vector_2.length) / 2;
-
-		if (length_out > min_length) {
-			length_out = min_length;
-			radius = Math.abs((length_out * Math.sin(half_angle)) / Math.cos(half_angle));
-		}
-		const x = this_point.x + vector_2.x * length_out - vector_2.y * radius * radius_sign;
-		const y = this_point.y + vector_2.y * length_out + vector_2.x * radius * radius_sign;
-		path.arc(x, y, radius, vector_1.angle + (Math.PI / 2) * radius_sign, vector_2.angle - (Math.PI / 2) * radius_sign, counter_clockwise);
-	});
-	path.closePath();
-	return path;
 }
 
 function calculateRadius(vector_1, vector_2) {
@@ -145,6 +84,36 @@ function calculateRadius(vector_1, vector_2) {
 			counter_clockwise: true,
 		};
 	}
+}
+
+function roundedPoly(path, points): Path2D {
+	const num_points = points.length;
+
+	points.forEach((last_point, i, points) => {
+		const this_point = points[(i + 1) % num_points];
+		const next_point = points[(i + 2) % num_points];
+
+		const vector_1 = unitVector(this_point, last_point);
+		const vector_2 = unitVector(this_point, next_point);
+
+		const { angle, radius_sign, counter_clockwise } = calculateRadius(vector_1, vector_2);
+
+		const half_angle = angle / 2;
+		let length_out = Math.abs((Math.cos(half_angle) * this_point.radius) / Math.sin(half_angle));
+		let radius = this_point.radius;
+
+		const min_length = Math.min(vector_1.length, vector_2.length) / 2;
+
+		if (length_out > min_length) {
+			length_out = min_length;
+			radius = Math.abs((length_out * Math.sin(half_angle)) / Math.cos(half_angle));
+		}
+		const x = this_point.x + vector_2.x * length_out - vector_2.y * radius * radius_sign;
+		const y = this_point.y + vector_2.y * length_out + vector_2.x * radius * radius_sign;
+		path.arc(x, y, radius, vector_1.angle + (Math.PI / 2) * radius_sign, vector_2.angle - (Math.PI / 2) * radius_sign, counter_clockwise);
+	});
+	path.closePath();
+	return path;
 }
 
 // function getClosest(points, position) {

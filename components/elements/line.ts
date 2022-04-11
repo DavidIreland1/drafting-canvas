@@ -8,8 +8,8 @@ export default class Line extends Element {
 			fill: [],
 			stroke: [{ id: id + '564', type: 'Center', width: 2, color: [0.2, 0.2, 0.2, 1], format: 'hex4', visible: true }],
 			points: [
-				{ x: position.x, y: position.y, i: 0 },
-				{ x: position.x, y: position.y, i: 1 },
+				{ x: position.x, y: position.y, i: 0, controls: [] },
+				{ x: position.x, y: position.y, i: 1, controls: [] },
 			],
 		});
 	}

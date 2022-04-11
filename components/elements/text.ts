@@ -205,6 +205,12 @@ export default class Text extends Element {
 		text.height = Math.abs(new_position.y - new_opposite.y);
 	}
 
+	static rotate(element, position, last_position) {
+		const center = this.center(element);
+		const rotation = Math.atan2(center.y - position.y, center.x - position.x) - Math.atan2(center.y - last_position.y, center.x - last_position.x);
+		element.rotation += rotation;
+	}
+
 	static stretch(text, position, last_position): void {
 		const center = this.center(text);
 

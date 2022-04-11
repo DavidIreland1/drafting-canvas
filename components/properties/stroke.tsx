@@ -31,7 +31,7 @@ export default function Stroke({ selected, store, setPicker }) {
 }
 
 function addStroke(selected_ids, store) {
-	store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 10, color: [0.7, 0.5, 1, 1], format: 'hex4', visible: true } }));
+	store.dispatch(actions.addStroke({ selected_ids, props: { id: generateID(), type: 'Center', width: 3, color: [0, 0, 0, 1], format: 'hex4', visible: true } }));
 }
 
 function removeStroke(stroke, store) {

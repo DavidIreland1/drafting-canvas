@@ -34,6 +34,8 @@ export type Point = {
 	x: number;
 	y: number;
 	i: number;
+	mirror: string;
+	controls: Array<{ x: number; y: number }>;
 };
 
 export type ElementType = {

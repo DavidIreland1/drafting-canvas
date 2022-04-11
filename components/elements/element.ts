@@ -1,6 +1,7 @@
 import { Bound, Position } from '../../types/box-types';
 import { Effect, ElementType, Fill, Stroke } from '../../types/element-types';
 import { reflectPoint, rotatePoint } from '../../utils/utils';
+import roundedPoly from '../canvas/rounded-poly';
 import Colors from './../properties/colors';
 
 const images = {};
@@ -23,8 +24,8 @@ export default class Element {
 		};
 	}
 
-	static path(element: ElementType) {
-		return new Path2D();
+	static path(rectangle): Path2D {
+		return roundedPoly(rectangle.points);
 	}
 
 	static fill(element, context: CanvasRenderingContext2D, path) {
@@ -63,12 +64,7 @@ export default class Element {
 						context.lineWidth = stroke.width * 2;
 					} else if (stroke.type === 'Outside') {
 						const clone = new Path2D(path);
-						// Fix for negative widths
-						if ((element.height > 0 && element.width > 0) || (element.height < 0 && element.width < 0)) {
-							clone.rect(10000, -10000, -20000, 20000); // TODO: Need to fix this
-						} else {
-							clone.rect(-10000, -10000, 20000, 20000); // TODO: Need to fix this
-						}
+						clone.rect(Number.MAX_SAFE_INTEGER / 2, -Number.MAX_SAFE_INTEGER / 2, -Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
 						context.clip(clone);
 						context.lineWidth = stroke.width * 2;
 					}
@@ -92,18 +88,13 @@ export default class Element {
 					context.rotate(element.rotation);
 					context.fill(path);
 				} else if (effect.type === 'Inner shadow' && !before) {
-					context.filter = `blur(${effect.blur * 0.5 * view.scale}px)`;
+					context.filter = `blur(${effect.blur * 0.2 * view.scale}px)`;
 					context.fillStyle = Colors.toString(effect.color);
 					context.clip(path);
 					context.translate(effect.x, effect.y);
 					context.scale(Math.exp(-effect.spread * 0.005), Math.exp(-effect.spread * 0.005));
 					const clone = new Path2D(path);
-					// Fix for negative widths
-					if ((element.height > 0 && element.width > 0) || (element.height < 0 && element.width < 0)) {
-						clone.rect(10000, -10000, -20000, 20000); // TODO: Need to fix this
-					} else {
-						clone.rect(-10000, -10000, 20000, 20000); // TODO: Need to fix this
-					}
+					clone.rect(Number.MAX_SAFE_INTEGER / 2, -Number.MAX_SAFE_INTEGER / 2, -Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
 					context.fill(clone);
 					context.translate(-effect.x, -effect.y);
 				}
@@ -139,6 +130,12 @@ export default class Element {
 			const rotated = rotatePoint(point, center, -element.rotation);
 			point.x = rotated.x;
 			point.y = rotated.y;
+
+			point.controls.forEach((control) => {
+				const rotated = rotatePoint(control, center, -element.rotation);
+				control.x = rotated.x;
+				control.y = rotated.y;
+			});
 		});
 
 		// Get change ratio in width and height
@@ -157,6 +154,11 @@ export default class Element {
 		element.points.forEach((point) => {
 			point.x = (point.x - x_min_old) * width_ratio + x_min_new;
 			point.y = (point.y - y_min_old) * height_ratio + y_min_new;
+
+			point.controls.forEach((control) => {
+				control.x = (control.x - x_min_old) * width_ratio + x_min_new;
+				control.y = (control.y - y_min_old) * height_ratio + y_min_new;
+			});
 		});
 
 		// Rotate points back
@@ -164,6 +166,12 @@ export default class Element {
 			const rotated = rotatePoint(point, center, element.rotation);
 			point.x = rotated.x;
 			point.y = rotated.y;
+
+			point.controls.forEach((control) => {
+				const rotated = rotatePoint(control, center, element.rotation);
+				control.x = rotated.x;
+				control.y = rotated.y;
+			});
 		});
 	}
 
@@ -274,22 +282,74 @@ export default class Element {
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
 
-	static drawDots(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number) {
-		context.fillStyle = 'white';
+	static drawPoints(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number) {
 		context.strokeStyle = color;
 		context.lineWidth = line;
+
+		const diamond_size = box_size * 0.7;
+
 		const hovering = element.points
-			.map((dot) => {
+			.map((point) => {
+				context.fillStyle = 'white';
+				const control = point.controls
+					.map((control, i) => {
+						const angle = Math.atan2(control.y - point.y, control.x - point.x) - Math.PI / 4;
+						context.beginPath();
+						context.moveTo(point.x, point.y);
+						context.lineTo(control.x, control.y);
+						context.stroke();
+						context.beginPath();
+						context.translate(control.x, control.y);
+						context.rotate(angle);
+						context.rect(-diamond_size, -diamond_size, diamond_size * 2, diamond_size * 2);
+						context.rotate(-angle);
+						context.translate(-control.x, -control.y);
+						const hovering = context.isPointInPath(cursor.x, cursor.y);
+						context.fillStyle = hovering ? color : 'white';
+						context.fill();
+						context.stroke();
+						if (hovering) return i;
+					})
+					.filter((control) => control !== undefined)
+					.pop();
+
 				context.beginPath();
-				context.arc(dot.x, dot.y, box_size, 0, 2 * Math.PI);
+				context.moveTo(point.x + box_size, point.y);
+				context.arc(point.x, point.y, box_size, 0, 2 * Math.PI);
 				const hovering = context.isPointInPath(cursor.x, cursor.y);
 				context.fillStyle = hovering ? color : 'white';
 				context.fill();
 				context.stroke();
-				if (hovering) return dot; //can replace this for index
+
+				if (hovering || control !== undefined) return { ...point, control }; //can replace this for index
 			})
-			.filter((dot) => dot);
-		return hovering.length ? { element, action: 'edit', dot: hovering[0] } : undefined;
+			.filter((point) => point)
+			.pop();
+		return hovering ? { element, action: 'edit', point: hovering } : undefined;
+	}
+
+	static edit(element: ElementType, position: Position, last_position: Position, point) {
+		const delta_x = position.x - last_position.x;
+		const delta_y = position.y - last_position.y;
+
+		if (point.control !== undefined) {
+			element.points[point.i].controls[point.control].x += delta_x;
+			element.points[point.i].controls[point.control].y += delta_y;
+
+			if (true || element.points[point.i].mirror === '') {
+				const opposite = point.control === 0 ? 1 : 0;
+				element.points[point.i].controls[opposite].x -= delta_x;
+				element.points[point.i].controls[opposite].y -= delta_y;
+			}
+		} else {
+			element.points[point.i].x += delta_x;
+			element.points[point.i].y += delta_y;
+
+			element.points[point.i].controls.forEach((control) => {
+				control.x += delta_x;
+				control.y += delta_y;
+			});
+		}
 	}
 
 	static center(element: ElementType): Position {
@@ -393,18 +453,29 @@ export default class Element {
 		element.points.forEach((point) => {
 			point.x += delta_x;
 			point.y += delta_y;
+
+			point.controls.forEach((control) => {
+				control.x += delta_x;
+				control.y += delta_y;
+			});
 		});
 	}
 
-	static rotate(element, position, last_position) {
-		const center = this.center(element);
+	static rotate(rectangle, position, last_position) {
+		const center = this.center(rectangle);
 		const rotation = Math.atan2(center.y - position.y, center.x - position.x) - Math.atan2(center.y - last_position.y, center.x - last_position.x);
-		element.rotation += rotation;
-	}
+		rectangle.rotation += rotation;
+		rectangle.points.forEach((point) => {
+			const rotated = rotatePoint(point, center, rotation);
+			point.x = rotated.x;
+			point.y = rotated.y;
 
-	static edit(element: ElementType, position: Position, last_position: Position, dot) {
-		element.points[dot.i].x += position.x - last_position.x;
-		element.points[dot.i].y += position.y - last_position.y;
+			point.controls.forEach((control) => {
+				const rotated = rotatePoint(control, center, rotation);
+				control.x = rotated.x;
+				control.y = rotated.y;
+			});
+		});
 	}
 
 	static boxes(id, bounds, box_size) {

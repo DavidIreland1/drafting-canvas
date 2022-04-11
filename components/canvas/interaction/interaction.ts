@@ -69,7 +69,7 @@ function moveOrResize(down_event, last_position, canvas, store, active, view) {
 		} else if (action === 'rotate') {
 			rotate(canvas, store, view, target, last_position, down_event);
 		} else if (action === 'edit') {
-			edit(canvas, store, view, target, last_position, down_event, active.altering[0].dot);
+			edit(canvas, store, view, target, last_position, down_event, active.altering[0].point);
 		}
 	} else if (active.hovering.length > 0) {
 		const target = active.hovering[0];
