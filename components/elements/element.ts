@@ -1,6 +1,7 @@
 import { Bound, Position } from '../../types/box-types';
 import { Effect, ElementType, Fill, Stroke } from '../../types/element-types';
 import { reflectPoint, rotatePoint } from '../../utils/utils';
+import boundBezier from '../canvas/bound-bezier';
 import roundedPoly from '../canvas/rounded-poly';
 import Colors from './../properties/colors';
 
@@ -285,7 +286,6 @@ export default class Element {
 	static drawPoints(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number) {
 		context.strokeStyle = color;
 		context.lineWidth = line;
-
 		const diamond_size = box_size * 0.7;
 
 		const hovering = element.points
@@ -353,7 +353,15 @@ export default class Element {
 	}
 
 	static center(element: ElementType): Position {
-		const points = element.points.map((point) => rotatePoint(point, { x: 0, y: 0 }, -element.rotation));
+		// const points = element.points.map((point) => rotatePoint(point, { x: 0, y: 0 }, -element.rotation));
+		const points = element.points
+			.map((point) => ({
+				...rotatePoint(point, { x: 0, y: 0 }, -element.rotation),
+				controls: point.controls.map((control) => rotatePoint(control, { x: 0, y: 0 }, -element.rotation)),
+			}))
+			.map((point, i, points) => boundBezier(point, points[(i + 1) % points.length]))
+			.flat();
+
 		const xs = points.map((point) => point.x);
 		const ys = points.map((point) => point.y);
 		const x_min = Math.min(...xs);
@@ -374,7 +382,13 @@ export default class Element {
 	static bound(element: ElementType): Bound {
 		const center = this.center(element);
 
-		const points = element.points.map((point) => rotatePoint(point, center, -element.rotation));
+		const points = element.points
+			.map((point) => ({
+				...rotatePoint(point, center, -element.rotation),
+				controls: point.controls.map((control) => rotatePoint(control, center, -element.rotation)),
+			}))
+			.map((point, i, points) => boundBezier(point, points[(i + 1) % points.length]))
+			.flat();
 
 		const xs = points.map((point) => point.x);
 		const ys = points.map((point) => point.y);

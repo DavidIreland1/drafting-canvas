@@ -9,7 +9,7 @@ export default class Text extends Element {
 		return Object.assign(super.create(id, position, selected), {
 			x: position.x,
 			y: position.y,
-			editing: false, //true
+			editing: true, //true
 			label: 'Text',
 			type: 'text',
 			text: '',
