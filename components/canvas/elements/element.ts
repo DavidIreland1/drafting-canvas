@@ -1,9 +1,9 @@
-import { Bound, Position } from '../../types/box-types';
-import { Effect, ElementType, Fill, Stroke } from '../../types/element-types';
-import { reflectPoint, rotatePoint } from '../../utils/utils';
-import boundBezier from '../canvas/bound-bezier';
-import roundedPoly from '../canvas/rounded-poly';
-import Colors from './../properties/colors';
+import { Bound, Position } from '../../../types/box-types';
+import { Effect, ElementType, Fill, Stroke } from '../../../types/element-types';
+import { reflectPoint, rotatePoint } from '../../../utils/utils';
+import boundBezier from '../bound-bezier';
+import roundedPoly from '../rounded-poly';
+import Colors from './../../properties/colors';
 
 const images = {};
 export default class Element {
@@ -44,7 +44,7 @@ export default class Element {
 						images[fill.id].src = fill.src;
 						images[fill.id].onerror = () => (images[fill.id].broken = true);
 					} else if (images[fill.id].complete && !images[fill.id].broken) {
-						context.drawImage(images[fill.id], fill.x - element.width / 2, fill.y - element.height / 2, element.width, element.height);
+						context.drawImage(images[fill.id], element.x + fill.x - element.width / 2, element.y + fill.y - element.height / 2, element.width, element.height);
 						context.restore();
 					}
 				}

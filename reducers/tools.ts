@@ -1,4 +1,4 @@
-import { flatten } from '../components/elements/elements';
+import { flatten } from '../components/canvas/elements/elements';
 
 const tools = {
 	hoverOnly: (state, props) => {
