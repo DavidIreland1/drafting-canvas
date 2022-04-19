@@ -1,8 +1,8 @@
 import Element from './element';
-import Colors from './../properties/colors';
-import { rotatePoint } from '../../utils/utils';
-import { ElementType } from '../../types/element-types';
-import { Bound, Position } from '../../types/box-types';
+import Colors from './../../properties/colors';
+import { rotatePoint } from '../../../utils/utils';
+import { ElementType } from '../../../types/element-types';
+import { Bound, Position } from '../../../types/box-types';
 
 export default class Text extends Element {
 	static create(id, position, selected) {

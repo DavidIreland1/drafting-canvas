@@ -1,10 +1,10 @@
-import Elements, { flatten } from './../elements/elements';
+import Elements, { flatten } from './elements/elements';
 import Cursor from '../cursor/cursor';
 import Grid from './grid';
 import drawCrosses from './crosses';
 import Settings from './../settings';
 import Colors from './../properties/colors';
-import drawScrollBars from './scroll-bars';
+import scrollBars from './scroll-bars';
 import { screenBounds, transformPoint } from '../../utils/utils';
 
 const { line_width, box_size, highlight } = Settings;
@@ -73,7 +73,7 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 		.forEach((cursor) => Cursor.draw(cursor, context, user_view));
 
 	context.resetTransform();
-	drawScrollBars(context, state.elements, user_view);
+	scrollBars(context, state.elements, user_view);
 
 	if (Settings.grid_enabled) Grid.draw(context, user_view);
 

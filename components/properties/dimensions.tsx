@@ -1,5 +1,5 @@
 import actions from '../../redux/slice';
-import Elements from '../elements/elements';
+import Elements from '../canvas/elements/elements';
 import Input from '../inputs/input';
 
 export default function Dimensions({ selected, store, width }) {

@@ -1,4 +1,4 @@
-import Elements, { flatten, forEachElement, selected } from '../../components/elements/elements';
+import Elements, { flatten, forEachElement, selected } from '../../components/canvas/elements/elements';
 
 import { slice } from './../../redux/slice';
 

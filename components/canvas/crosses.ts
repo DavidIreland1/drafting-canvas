@@ -1,4 +1,4 @@
-import Elements from '../elements/elements';
+import Elements from './elements/elements';
 
 export default function drawCrosses(context, elements, selected, view) {
 	context.beginPath();

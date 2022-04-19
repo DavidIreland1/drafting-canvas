@@ -1,5 +1,5 @@
 import Settings from '../../settings';
-import Elements from '../../elements/elements';
+import Elements from '../elements/elements';
 import actions from '../../../redux/slice';
 import { roundPoint } from './round-point';
 import { DOMToCanvas, split } from '../../../utils/utils';

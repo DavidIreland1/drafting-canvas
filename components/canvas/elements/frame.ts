@@ -1,6 +1,6 @@
 import Group from './group';
 import Elements from './elements';
-import { rotatePoint } from '../../utils/utils';
+import { rotatePoint } from '../../../utils/utils';
 
 export default class Frame extends Group {
 	static create(id, position, selected) {

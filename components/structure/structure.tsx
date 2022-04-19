@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react';
 import Element from './element';
-import { flatten } from '../elements/elements';
 import { useSelector } from 'react-redux';
 import shortCuts from '../canvas/short-cuts';
 import { clone } from '../../utils/utils';
 import actions from '../../redux/slice';
+import { flatten } from '../canvas/elements/elements';
 
 export default function Structure({ store, onResize }) {
 	const elements = useSelector(

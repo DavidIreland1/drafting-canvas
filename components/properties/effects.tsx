@@ -1,5 +1,4 @@
 import Picker from '../picker';
-import Elements, { flatten } from '../elements/elements';
 import { generateID } from '../../utils/utils';
 import Colors from './colors';
 import Eye from '../icons/eye';
@@ -10,6 +9,7 @@ import Text from '../inputs/text';
 import Select from '../inputs/select';
 import { useEffect, useState } from 'react';
 import actions from '../../redux/slice';
+import Elements, { flatten } from '../canvas/elements/elements';
 
 export default function Effect({ selected, store, setPicker }) {
 	const selected_ids = selected.map((element) => element.id);

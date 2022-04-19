@@ -1,5 +1,5 @@
 import Picker from '../picker';
-import Elements, { flatten } from '../elements/elements';
+import Elements, { flatten } from '../canvas/elements/elements';
 import { generateID } from '../../utils/utils';
 import Colors from './colors';
 import Eye from '../icons/eye';

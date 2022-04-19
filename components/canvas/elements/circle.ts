@@ -1,4 +1,4 @@
-import { rotatePoint } from '../../utils/utils';
+import { rotatePoint } from '../../../utils/utils';
 import Element from './element';
 
 export default class Circle extends Element {

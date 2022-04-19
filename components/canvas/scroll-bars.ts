@@ -1,7 +1,7 @@
 import { screenBounds } from '../../utils/utils';
-import Elements from './../elements/elements';
+import Elements from './elements/elements';
 
-export default function drawScrollBars(context: CanvasRenderingContext2D, elements, user_view) {
+export default function scrollBars(context: CanvasRenderingContext2D, elements, user_view) {
 	const bounds = elements.map((element) => Elements[element.type].positiveBound(element));
 
 	const x = {
