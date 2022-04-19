@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import actions from '../../redux/slice';
+import shortCuts from '../canvas/short-cuts';
 import Chevron from '../icons/chevron';
 import Eye from '../icons/eye';
 import Lock from '../icons/lock';
@@ -64,7 +65,7 @@ export default function Element({ store, element, indentation, restructure }) {
 	const has_children = Array.isArray(element.elements);
 
 	return (
-		<div id="element" element-id={element.id} draggable={!editing} onDragStart={drag} className={element.type === 'group' || element.type === 'frame' ? 'group' : ''}>
+		<div id="element" element-id={element.id} onClick={select} draggable={!editing} onDragStart={drag} className={element.type === 'group' || element.type === 'frame' ? 'group' : ''} onKeyDown={(event) => shortCuts(event, store) && event.preventDefault()}>
 			<div id="label" className={(element.selected ? 'selected' : '') + (element.hover ? ' hover' : '')} style={{ marginLeft: has_children ? 5 : indentation, gridTemplateColumns: `${has_children ? '18px' : ''} 30px auto 28px 28px` }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
 				<div style={{ display: has_children ? 'block' : 'none' }}>
 					<Chevron onClick={() => setOpen(!open)} rotated={open} />
@@ -135,7 +136,8 @@ export default function Element({ store, element, indentation, restructure }) {
 					overflow: hidden;
 				}
 				#label > label {
-					padding: 6px 2px 7px 2px;
+					padding: 5px 2px 5px 2px;
+					border-bottom: 1px solid transparent;
 				}
 				#label:hover,
 				#label.hover {

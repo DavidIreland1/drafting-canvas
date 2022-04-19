@@ -53,7 +53,10 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 	// 	}
 	// }
 
-	const length = Math.min(('.' + Math.abs(value).toPrecision(12).split('.')[1]).replaceAll('0', ' ').trim().length - 1, 2);
+	if (!isNaN(value)) {
+		const length = Math.min(('.' + Math.abs(value).toPrecision(12).split('.')[1]).replaceAll('0', ' ').trim().length - 1, 2);
+		value = value.toFixed(length);
+	}
 
 	return (
 		<>
@@ -61,9 +64,9 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 				<label onPointerDown={dragProperty}>{label}</label>
 				<input
 					ref={input}
-					type={type}
+					type={isNaN(value) ? '' : type}
 					step={step}
-					value={value.toFixed(length) ?? value}
+					value={value}
 					min={isNaN(min) ? undefined : min}
 					style={{
 						maxWidth: `calc(${width} / 2 - 20px)`,

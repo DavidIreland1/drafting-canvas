@@ -74,19 +74,19 @@ const properties = {
 				if (key === 'x' || key === 'y') {
 					const bound = Elements[element.type].bound(element);
 					const delta = Number(value) - bound[key];
-					element.points.forEach((point) => {
+					Elements[element.type].getPoints(element).forEach((point) => {
 						point[key] += delta;
 						point.controls.forEach((control) => {
 							control[key] += delta;
 						});
 					});
 				} else if (key === 'radius') {
-					element.points.forEach((point) => (point[key] = value));
+					Elements[element.type].getPoints(element).forEach((point) => (point[key] = value));
 				} else if (key === 'rotation') {
 					const center = Elements[element.type].center(element);
 					const delta = Number(value) - element.rotation;
 					element.rotation = Number(value);
-					element.points.forEach((point) => {
+					Elements[element.type].getPoints(element).forEach((point) => {
 						const rotated = rotatePoint(point, center, delta);
 						point.x = rotated.x;
 						point.y = rotated.y;
@@ -103,7 +103,7 @@ const properties = {
 
 					const axis = key === 'width' ? 'x' : 'y';
 
-					element.points.forEach((point) => {
+					Elements[element.type].getPoints(element).forEach((point) => {
 						const rotated = rotatePoint(point, center, -element.rotation);
 						point.x = rotated.x;
 						point.y = rotated.y;

@@ -40,6 +40,7 @@ export type Point = {
 
 export type ElementType = {
 	id: string;
+	type: string;
 	editing: boolean;
 	selected: boolean;
 	hover: boolean;

@@ -65,9 +65,10 @@ const interactions = {
 	},
 	group: (state, props) => {
 		const { id, selected_ids } = props.payload;
-		console.log(id, selected_ids);
 
 		const location_id = selected_ids[0];
+
+		slice.caseReducers.unselectAll(state);
 
 		forEachElement(state.elements, (element, i, elements) => {
 			if (element.id === location_id)
@@ -75,7 +76,7 @@ const interactions = {
 					id: id,
 					label: 'Group',
 					type: 'group',
-					selected: false,
+					selected: true,
 					hover: false,
 					rotation: 0,
 					visible: true,

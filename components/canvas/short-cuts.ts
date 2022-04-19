@@ -2,7 +2,7 @@ import { ActionCreators } from 'redux-undo';
 import actions from '../../redux/slice';
 import { generateID } from './../../utils/utils';
 
-export default async function shortCuts(event, store): Promise<boolean> {
+export default function shortCuts(event, store): boolean {
 	if (event.metaKey === false && event.ctrlKey === false) return;
 
 	switch (event.key) {
@@ -22,10 +22,7 @@ export default async function shortCuts(event, store): Promise<boolean> {
 			store.dispatch(ActionCreators.redo());
 			return true;
 		case 'v':
-			// console.log('paste');
-			const data = await navigator.clipboard.readText();
-
-			try {
+			navigator.clipboard.readText().then((data) => {
 				const new_elements = JSON.parse(data);
 				new_elements.forEach((element) => {
 					element.id = generateID();
@@ -34,10 +31,7 @@ export default async function shortCuts(event, store): Promise<boolean> {
 					element.effect.forEach((effect) => (effect.id = generateID()));
 				});
 				store.dispatch(actions.createElements({ elements: new_elements }));
-			} catch {
-				return false;
-			}
-			// console.log(data);
+			});
 
 			return true;
 

@@ -10,7 +10,7 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 	};
 
 	canvas.focus(); // Needed for react?
-	canvas.onkeydown = async (event: KeyboardEvent) => {
+	canvas.onkeydown = (event: KeyboardEvent) => {
 		if (event.key === 'Delete' || event.key === 'Backspace') {
 			event.preventDefault();
 			store.dispatch(
@@ -23,7 +23,7 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 			);
 		}
 
-		if (await shortCuts(event, store)) {
+		if (shortCuts(event, store)) {
 			event.preventDefault();
 		}
 	};

@@ -10,7 +10,7 @@ export default function Dimensions({ selected, store, width }) {
 
 	const bounds = Elements[selected[0].type].bound(selected[0]);
 
-	const points = selected[0].points;
+	const points = Elements[selected[0].type].getPoints(selected[0]);
 	const radii = points.map((point) => point.radius);
 	const radius = radii.every((v) => v === radii[0]) ? radii[0] : 'Mixed';
 

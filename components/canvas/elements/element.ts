@@ -4,12 +4,14 @@ import { reflectPoint, rotatePoint } from '../../../utils/utils';
 import boundBezier from '../bound-bezier';
 import roundedPoly from '../rounded-poly';
 import Colors from './../../properties/colors';
+import Elements from './elements';
 
 const images = {};
 export default class Element {
 	static create(id: string, position: Position, selected: boolean): ElementType {
 		return {
 			id: id,
+			type: '',
 			editing: false,
 			selected: selected,
 			hover: false,
@@ -25,8 +27,8 @@ export default class Element {
 		};
 	}
 
-	static path(rectangle): Path2D {
-		return roundedPoly(rectangle.points);
+	static path(element): Path2D {
+		return roundedPoly(element.points);
 	}
 
 	static fill(element, context: CanvasRenderingContext2D, path) {
@@ -128,7 +130,7 @@ export default class Element {
 		// Rotate all points to 0 deg
 		const new_opposite = rotatePoint(opposite, center, -element.rotation);
 		const new_position = rotatePoint(position, center, -element.rotation);
-		element.points.forEach((point) => {
+		Elements[element.type].getPoints(element).forEach((point) => {
 			const rotated = rotatePoint(point, center, -element.rotation);
 			point.x = rotated.x;
 			point.y = rotated.y;
@@ -145,15 +147,15 @@ export default class Element {
 		const height_ratio = Math.abs(new_position.y - new_opposite.y) / bounds.height;
 
 		// Top left of bounding box
-		const x_min_old = Math.min(...element.points.map((point) => point.x));
-		const y_min_old = Math.min(...element.points.map((point) => point.y));
+		const x_min_old = Math.min(...Elements[element.type].getPoints(element).map((point) => point.x));
+		const y_min_old = Math.min(...Elements[element.type].getPoints(element).map((point) => point.y));
 
 		// Top left of resize box
 		const x_min_new = Math.min(new_opposite.x, new_position.x);
 		const y_min_new = Math.min(new_opposite.y, new_position.y);
 
 		// Scale point positions
-		element.points.forEach((point) => {
+		Elements[element.type].getPoints(element).forEach((point) => {
 			point.x = (point.x - x_min_old) * width_ratio + x_min_new;
 			point.y = (point.y - y_min_old) * height_ratio + y_min_new;
 
@@ -164,7 +166,7 @@ export default class Element {
 		});
 
 		// Rotate points back
-		element.points.forEach((point) => {
+		Elements[element.type].getPoints(element).forEach((point) => {
 			const rotated = rotatePoint(point, center, element.rotation);
 			point.x = rotated.x;
 			point.y = rotated.y;
@@ -289,7 +291,8 @@ export default class Element {
 		context.lineWidth = line;
 		const diamond_size = box_size * 0.7;
 
-		const hovering = element.points
+		const hovering = Elements[element.type]
+			.getPoints(element)
 			.map((point) => {
 				context.fillStyle = 'white';
 				const control = point.controls
@@ -334,19 +337,19 @@ export default class Element {
 		const delta_y = position.y - last_position.y;
 
 		if (point.control !== undefined) {
-			element.points[point.i].controls[point.control].x += delta_x;
-			element.points[point.i].controls[point.control].y += delta_y;
+			Elements[element.type].getPoints(element)[point.i].controls[point.control].x += delta_x;
+			Elements[element.type].getPoints(element)[point.i].controls[point.control].y += delta_y;
 
-			if (true || element.points[point.i].mirror === '') {
+			if (true || Elements[element.type].getPoints(element)[point.i].mirror === '') {
 				const opposite = point.control === 0 ? 1 : 0;
-				element.points[point.i].controls[opposite].x -= delta_x;
-				element.points[point.i].controls[opposite].y -= delta_y;
+				Elements[element.type].getPoints(element)[point.i].controls[opposite].x -= delta_x;
+				Elements[element.type].getPoints(element)[point.i].controls[opposite].y -= delta_y;
 			}
 		} else {
-			element.points[point.i].x += delta_x;
-			element.points[point.i].y += delta_y;
+			Elements[element.type].getPoints(element)[point.i].x += delta_x;
+			Elements[element.type].getPoints(element)[point.i].y += delta_y;
 
-			element.points[point.i].controls.forEach((control) => {
+			Elements[element.type].getPoints(element)[point.i].controls.forEach((control) => {
 				control.x += delta_x;
 				control.y += delta_y;
 			});
@@ -354,8 +357,9 @@ export default class Element {
 	}
 
 	static center(element: ElementType): Position {
-		// const points = element.points.map((point) => rotatePoint(point, { x: 0, y: 0 }, -element.rotation));
-		const points = element.points
+		// const points = Elements[element.type].getPoints(element).map((point) => rotatePoint(point, { x: 0, y: 0 }, -element.rotation));
+		const points = Elements[element.type]
+			.getPoints(element)
 			.map((point) => ({
 				...rotatePoint(point, { x: 0, y: 0 }, -element.rotation),
 				controls: point.controls.map((control) => rotatePoint(control, { x: 0, y: 0 }, -element.rotation)),
@@ -383,7 +387,8 @@ export default class Element {
 	static bound(element: ElementType): Bound {
 		const center = this.center(element);
 
-		const points = element.points
+		const points = Elements[element.type]
+			.getPoints(element)
 			.map((point) => ({
 				...rotatePoint(point, center, -element.rotation),
 				controls: point.controls.map((control) => rotatePoint(control, center, -element.rotation)),
@@ -448,6 +453,10 @@ export default class Element {
 		});
 	}
 
+	static getPoints(element) {
+		return element.points;
+	}
+
 	static positiveBound(element): Bound {
 		const bounds = this.bound(element);
 		return {
@@ -459,13 +468,13 @@ export default class Element {
 	}
 
 	static points(element) {
-		return element.points.concat(this.center(element));
+		return Elements[element.type].getPoints(element).concat(this.center(element));
 	}
 
 	static move(element, position, last_position) {
 		const delta_x = position.x - last_position.x;
 		const delta_y = position.y - last_position.y;
-		element.points.forEach((point) => {
+		Elements[element.type].getPoints(element).forEach((point) => {
 			point.x += delta_x;
 			point.y += delta_y;
 
@@ -476,11 +485,14 @@ export default class Element {
 		});
 	}
 
-	static rotate(rectangle, position, last_position) {
-		const center = this.center(rectangle);
+	static rotate(element, position, last_position) {
+		const center = this.center(element);
 		const rotation = Math.atan2(center.y - position.y, center.x - position.x) - Math.atan2(center.y - last_position.y, center.x - last_position.x);
-		rectangle.rotation += rotation;
-		rectangle.points.forEach((point) => {
+		element.rotation += rotation;
+
+		if (Array.isArray(element.elements)) element.elements.forEach((element) => (element.rotation += rotation));
+
+		Elements[element.type].getPoints(element).forEach((point) => {
 			const rotated = rotatePoint(point, center, rotation);
 			point.x = rotated.x;
 			point.y = rotated.y;

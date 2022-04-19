@@ -1,6 +1,6 @@
 import Elements from './elements/elements';
 
-export default function drawCrosses(context, elements, selected, view) {
+export default function crosses(context, elements, selected, view) {
 	context.beginPath();
 
 	const selected_points = selected.map((element) => Elements[element.type].points(element)).flat();

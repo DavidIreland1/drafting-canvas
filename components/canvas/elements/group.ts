@@ -10,9 +10,9 @@ export default class Group extends Element {
 
 	static draw(group, context, cursor, view) {
 		const center = this.center(group);
-		context.translate(center.x, center.y);
-		context.rotate(group.rotation);
-		context.translate(-center.x, -center.y);
+		// context.translate(center.x, center.y);
+		// context.rotate(group.rotation);
+		// context.translate(-center.x, -center.y);
 
 		const hovering = group.elements
 			.filter((element) => element.visible)
@@ -20,25 +20,25 @@ export default class Group extends Element {
 			.filter((element) => Elements[element.type].draw(element, context, cursor, view))
 			.filter((element) => !element.locked);
 
-		context.translate(center.x, center.y);
-		context.rotate(-group.rotation);
-		context.translate(-center.x, -center.y);
+		// context.translate(center.x, center.y);
+		// context.rotate(-group.rotation);
+		// context.translate(-center.x, -center.y);
 
 		return hovering.length > 0;
 	}
 
-	static bound(group) {
-		const positions = group.elements.map((element) => Elements[element.type].bound(element));
+	// static bound(group) {
+	// 	const positions = group.elements.map((element) => Elements[element.type].bound(element));
 
-		const min_x = positions.reduce((x, position) => Math.min(x, position.x), Number.MAX_SAFE_INTEGER);
-		const min_y = positions.reduce((y, position) => Math.min(y, position.y), Number.MAX_SAFE_INTEGER);
-		return {
-			x: min_x,
-			y: min_y,
-			width: positions.reduce((x, position) => Math.max(x, position.x + position.width), Number.MIN_SAFE_INTEGER) - min_x,
-			height: positions.reduce((y, position) => Math.max(y, position.y + position.height), Number.MIN_SAFE_INTEGER) - min_y,
-		};
-	}
+	// 	const min_x = positions.reduce((x, position) => Math.min(x, position.x), Number.MAX_SAFE_INTEGER);
+	// 	const min_y = positions.reduce((y, position) => Math.min(y, position.y), Number.MAX_SAFE_INTEGER);
+	// 	return {
+	// 		x: min_x,
+	// 		y: min_y,
+	// 		width: positions.reduce((x, position) => Math.max(x, position.x + position.width), Number.MIN_SAFE_INTEGER) - min_x,
+	// 		height: positions.reduce((y, position) => Math.max(y, position.y + position.height), Number.MIN_SAFE_INTEGER) - min_y,
+	// 	};
+	// }
 
 	static outline(group, context, color, line_width): void {
 		const bounds = this.bound(group);
@@ -69,7 +69,7 @@ export default class Group extends Element {
 	}
 
 	static setFill(group, colors) {
-		group.elements.map((element) => Elements[element.type].setFill(element, colors));
+		group.elements.forEach((element) => Elements[element.type].setFill(element, colors));
 	}
 
 	static getStroke(group) {
@@ -77,7 +77,7 @@ export default class Group extends Element {
 	}
 
 	static setStroke(group, colors) {
-		group.elements.map((element) => Elements[element.type].setStroke(element, colors));
+		group.elements.forEach((element) => Elements[element.type].setStroke(element, colors));
 	}
 
 	static getEffect(group) {
@@ -85,40 +85,44 @@ export default class Group extends Element {
 	}
 
 	static setEffect(group, colors) {
-		group.elements.map((element) => Elements[element.type].setEffect(element, colors));
+		group.elements.forEach((element) => Elements[element.type].setEffect(element, colors));
 	}
 
-	static move(group, position, last_position) {
-		group.elements
-			.filter((element) => !element.selected)
-			.forEach((element) => {
-				Elements[element.type].move(element, position, last_position);
-			});
+	static getPoints(group) {
+		return group.elements.map((element) => Elements[element.type].getPoints(element)).flat();
 	}
 
-	static resize(group, position, last_position) {
-		// const group_center = this.center(group);
-		// const opposite = {
-		// 	x: group_center.x - (position.x - group_center.x),
-		// 	y: group_center.y - (position.y - group_center.y),
-		// };
-		// const last_opposite = {
-		// 	x: group_center.x - (last_position.x - group_center.x),
-		// 	y: group_center.y - (last_position.y - group_center.y),
-		// };
+	// static move(group, position, last_position) {
+	// 	group.elements
+	// 		.filter((element) => !element.selected)
+	// 		.forEach((element) => {
+	// 			Elements[element.type].move(element, position, last_position);
+	// 		});
+	// }
 
-		group.elements.forEach((element) => {
-			// const center = Elements[element.type].center(element);
-			// const position = {
-			// 	x: center.x - (opposite.x - center.x),
-			// 	y: center.y - (opposite.y - center.y),
-			// };
-			// const last_position = {
-			// 	x: center.x - (last_opposite.x - center.x),
-			// 	y: center.y - (last_opposite.y - center.y),
-			// };
+	// static resize(group, position, last_position) {
+	// 	// const group_center = this.center(group);
+	// 	// const opposite = {
+	// 	// 	x: group_center.x - (position.x - group_center.x),
+	// 	// 	y: group_center.y - (position.y - group_center.y),
+	// 	// };
+	// 	// const last_opposite = {
+	// 	// 	x: group_center.x - (last_position.x - group_center.x),
+	// 	// 	y: group_center.y - (last_position.y - group_center.y),
+	// 	// };
 
-			Elements[element.type].resize(element, position, last_position);
-		});
-	}
+	// 	group.elements.forEach((element) => {
+	// 		// const center = Elements[element.type].center(element);
+	// 		// const position = {
+	// 		// 	x: center.x - (opposite.x - center.x),
+	// 		// 	y: center.y - (opposite.y - center.y),
+	// 		// };
+	// 		// const last_position = {
+	// 		// 	x: center.x - (last_opposite.x - center.x),
+	// 		// 	y: center.y - (last_opposite.y - center.y),
+	// 		// };
+
+	// 		Elements[element.type].resize(element, position, last_position);
+	// 	});
+	// }
 }
