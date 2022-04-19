@@ -1,6 +1,6 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
-export default function Text({ id = undefined, placeholder = undefined, className = undefined, onChange = undefined, children = undefined }) {
+export default function Text({ id = undefined, placeholder = undefined, highlight = false, className = undefined, onChange = undefined, onBlur = undefined, children = undefined }) {
 	const input = useRef(null);
 
 	function updateValue(event) {
@@ -8,9 +8,13 @@ export default function Text({ id = undefined, placeholder = undefined, classNam
 		onChange(event);
 	}
 
+	useEffect(() => {
+		if (highlight) input.current.select();
+	}, []);
+
 	return (
 		<>
-			<input id={id} ref={input} className={className} placeholder={placeholder} onChange={updateValue} value={String(children || '')} />
+			<input id={id} ref={input} className={className} placeholder={placeholder} onChange={updateValue} onBlur={onBlur} value={String(children || '')} />
 
 			<style jsx>{`
 				input {

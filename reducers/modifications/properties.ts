@@ -1,7 +1,7 @@
 import Elements, { flatten, forEachElement, selected } from '../../components/canvas/elements/elements';
-import { rotatePoint, rotateWithControls } from '../../utils/utils';
+import { rotatePoint } from '../../utils/utils';
 
-const property_reducers = {
+const properties = {
 	addFill: (state, props) => {
 		const { selected_ids } = props.payload;
 		selected(state.elements, selected_ids).forEach((element) => {
@@ -144,4 +144,4 @@ const property_reducers = {
 	},
 };
 
-export default property_reducers;
+export default properties;
