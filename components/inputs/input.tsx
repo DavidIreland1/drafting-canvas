@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-const click_position = { x: 0, y: 0 };
+// const click_position = { x: 0, y: 0 };
 
 export default function Input({ id, label, value, type = 'number', step = 1, min = NaN, unit = '', onChange, width = undefined }) {
 	const input = useRef(null);
@@ -8,7 +8,7 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 	if (value === undefined) return null;
 
 	const updateValue = (event) => {
-		event.target.style.width = `max(calc(${width} / 6), ${Math.max(event.target.value.length + 2, 5)}ch)`;
+		// event.target.style.width = `max(calc(${width} / 6), ${Math.max(event.target.value.length + 2, 5)}ch)`;
 		event.target.id = id;
 		onChange(event);
 	};
@@ -43,15 +43,17 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 		down_event.target.addEventListener('pointerup', end, { once: true });
 	};
 
-	function mouseDown(event) {
-		click_position.x = event.clientX;
-		click_position.y = event.clientY;
-	}
-	function mouseUp(event) {
-		if (event.clientX == click_position.x && event.clientY === click_position.y) {
-			event.target.select();
-		}
-	}
+	// function mouseDown(event) {
+	// 	click_position.x = event.clientX;
+	// 	click_position.y = event.clientY;
+	// }
+	// function mouseUp(event) {
+	// 	if (event.clientX == click_position.x && event.clientY === click_position.y) {
+	// 		event.target.select();
+	// 	}
+	// }
+
+	const length = Math.min(('.' + Math.abs(value).toPrecision(12).split('.')[1]).replaceAll('0', ' ').trim().length - 1, 2);
 
 	return (
 		<>
@@ -61,15 +63,15 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 					ref={input}
 					type={type}
 					step={step}
-					value={value}
+					value={value.toFixed(length) ?? value}
 					min={isNaN(min) ? undefined : min}
 					style={{
 						maxWidth: `calc(${width} / 2 - 20px)`,
 						width: `max(calc(${width} / 6), 5ch)`,
 					}}
 					onChange={updateValue}
-					onMouseDown={mouseDown}
-					onMouseUp={mouseUp}
+					// onMouseDown={mouseDown}
+					// onMouseUp={mouseUp}
 				/>
 			</div>
 
@@ -77,7 +79,7 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 				.dimension {
 					display: grid;
 					grid-template-columns: auto 1fr;
-					padding: 5px 0;
+					padding: 5px 5px 5px 0;
 					border-bottom: 1px solid transparent;
 				}
 				.dimension:hover {

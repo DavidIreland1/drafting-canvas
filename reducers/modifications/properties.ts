@@ -1,4 +1,5 @@
 import Elements, { flatten, forEachElement, selected } from '../../components/canvas/elements/elements';
+import { rotatePoint, rotateWithControls } from '../../utils/utils';
 
 const property_reducers = {
 	addFill: (state, props) => {
@@ -75,9 +76,57 @@ const property_reducers = {
 					const delta = Number(value) - bound[key];
 					element.points.forEach((point) => {
 						point[key] += delta;
+						point.controls.forEach((control) => {
+							control[key] += delta;
+						});
 					});
 				} else if (key === 'radius') {
 					element.points.forEach((point) => (point[key] = value));
+				} else if (key === 'rotation') {
+					const center = Elements[element.type].center(element);
+					const delta = Number(value) - element.rotation;
+					element.rotation = Number(value);
+					element.points.forEach((point) => {
+						const rotated = rotatePoint(point, center, delta);
+						point.x = rotated.x;
+						point.y = rotated.y;
+						point.controls.forEach((control) => {
+							const rotated = rotatePoint(control, center, delta);
+							control.x = rotated.x;
+							control.y = rotated.y;
+						});
+					});
+				} else if (key === 'width' || key === 'height') {
+					const bound = Elements[element.type].bound(element);
+					const center = Elements[element.type].center(element);
+					const ratio = Number(value) / bound[key];
+
+					const axis = key === 'width' ? 'x' : 'y';
+
+					element.points.forEach((point) => {
+						const rotated = rotatePoint(point, center, -element.rotation);
+						point.x = rotated.x;
+						point.y = rotated.y;
+						point.controls.forEach((control) => {
+							const rotated = rotatePoint(control, center, -element.rotation);
+							control.x = rotated.x;
+							control.y = rotated.y;
+						});
+						point[axis] = (point[axis] - bound[axis]) * ratio + bound[axis];
+
+						point.controls.forEach((control) => {
+							control[axis] = (control[axis] - bound[axis]) * ratio + bound[axis];
+						});
+
+						const un_rotated = rotatePoint(point, center, element.rotation);
+						point.x = un_rotated.x;
+						point.y = un_rotated.y;
+						point.controls.forEach((control) => {
+							const rotated = rotatePoint(control, center, element.rotation);
+							control.x = rotated.x;
+							control.y = rotated.y;
+						});
+					});
 				} else {
 					element[key] = value;
 				}

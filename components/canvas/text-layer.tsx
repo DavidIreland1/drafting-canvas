@@ -6,11 +6,11 @@ import Colors from './../properties/colors';
 
 export default function TextLayer({ canvas, user_id, store }) {
 	const editing = useSelector(
-		(state: RootState) => (state as any).present.elements.filter((element) => element.editing),
+		(state) => (state as RootState).present.elements.filter((element) => element.editing),
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)
 	);
 	const view = useSelector(
-		(state: RootState) => (state as any).present.views.find((view) => view.id === user_id),
+		(state) => (state as RootState).present.views.find((view) => view.id === user_id),
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)
 	);
 

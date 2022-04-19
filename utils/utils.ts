@@ -38,10 +38,17 @@ export function screenBounds(context: CanvasRenderingContext2D, view: { x: numbe
 	};
 }
 
-export function rotatePoint(position, center, rotation) {
+export function rotateWithControls(point, center, rotation) {
 	return {
-		x: (position.x - center.x) * Math.cos(rotation) - (position.y - center.y) * Math.sin(rotation) + center.x,
-		y: (position.x - center.x) * Math.sin(rotation) + (position.y - center.y) * Math.cos(rotation) + center.y,
+		...rotatePoint(point, center, rotation),
+		controls: point.controls.map((control) => rotatePoint(control, center, rotation)),
+	};
+}
+
+export function rotatePoint(point, center, rotation) {
+	return {
+		x: (point.x - center.x) * Math.cos(rotation) - (point.y - center.y) * Math.sin(rotation) + center.x,
+		y: (point.x - center.x) * Math.sin(rotation) + (point.y - center.y) * Math.cos(rotation) + center.y,
 	};
 }
 
