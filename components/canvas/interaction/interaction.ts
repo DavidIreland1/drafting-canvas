@@ -1,5 +1,5 @@
 import Settings from '../../settings';
-import Elements from '../../elements/elements';
+import Elements from '../../canvas/elements/elements';
 import move from './move';
 import resize from './resize';
 import select from './select';

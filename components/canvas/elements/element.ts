@@ -37,14 +37,15 @@ export default class Element {
 					context.fillStyle = Colors.toString(fill.color);
 					context.fill(path);
 				} else if (fill.type === 'Image') {
-					context.save();
-					context.clip(path);
 					if (!images[fill.id]) {
 						images[fill.id] = new Image();
 						images[fill.id].src = fill.src;
 						images[fill.id].onerror = () => (images[fill.id].broken = true);
 					} else if (images[fill.id].complete && !images[fill.id].broken) {
-						context.drawImage(images[fill.id], element.x + fill.x - element.width / 2, element.y + fill.y - element.height / 2, element.width, element.height);
+						const bounds = this.bound(element);
+						context.save();
+						context.clip(path);
+						context.drawImage(images[fill.id], bounds.x + fill.x, bounds.y + fill.y, bounds.width, bounds.height);
 						context.restore();
 					}
 				}
