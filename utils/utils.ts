@@ -9,7 +9,7 @@ export function clamp(min: number, num: number, max: number): number {
 export function generateID(length: number = 10): string {
 	return Array(length)
 		.fill(null)
-		.map((ele) => Math.random().toString(36).slice(2, 3))
+		.map(() => Math.random().toString(36).slice(2, 3))
 		.join('')
 		.toUpperCase();
 }

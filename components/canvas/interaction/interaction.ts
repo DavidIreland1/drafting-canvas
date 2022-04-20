@@ -82,11 +82,10 @@ function create(last_position, canvas, store, view, cursor, points) {
 
 	store.dispatch(actions.createElement({ user_id: Settings.user_id, id: id, type: cursor.type, position: last_position }));
 
-	const action = 'resize';
 	const move = (move_event) => {
 		let position = DOMToCanvas(move_event, canvas, view);
 		position = roundPoint(position, [position], points, view);
-		store.dispatch(actions[action]({ user_id: Settings.user_id, id: id, position, last_position, selected_ids: [id] }));
+		store.dispatch(actions.resize({ user_id: Settings.user_id, id: id, position, last_position, selected_ids: [id] }));
 		last_position = position;
 	};
 	window.addEventListener('pointermove', move);

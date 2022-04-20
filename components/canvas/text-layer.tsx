@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import actions from '../../redux/slice';
 import { RootState } from '../../redux/store';
 import Colors from './../properties/colors';
+import Text from './elements/text';
 
 export default function TextLayer({ canvas, user_id, store }) {
 	const editing = useSelector(
@@ -14,6 +15,21 @@ export default function TextLayer({ canvas, user_id, store }) {
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)
 	);
 
+	const container_ref = useRef(null);
+
+	useEffect(() => {
+		const container = container_ref.current;
+		if (!container) return;
+
+		function propagateWheel(event) {
+			event.preventDefault();
+			canvas.current.dispatchEvent(new event.nativeEvent.constructor(event.type, event));
+		}
+		container.addEventListener('wheel', propagateWheel);
+
+		return () => container.current.removeEventListener('wheel', propagateWheel);
+	}, [canvas, container_ref]);
+
 	if (editing.length === 0 || editing[0].type !== 'text' || typeof view === 'undefined') return null;
 
 	const text = editing[0];
@@ -21,6 +37,8 @@ export default function TextLayer({ canvas, user_id, store }) {
 	function updateText(event, alter = (value) => value) {
 		store.dispatch(actions.property({ selected_ids: [text.id], props: { [event.target.id]: alter(event.target.value) } }));
 	}
+
+	const bounds = Text.bound(text);
 
 	const style = {
 		fontFamily: text.family,
@@ -33,22 +51,18 @@ export default function TextLayer({ canvas, user_id, store }) {
 	};
 
 	const transformed = {
-		height: Math.abs(text.height) + 'px',
-		width: Math.abs(text.width) + 'px',
-		transform: `translate(${(text.x * view.scale + view.x) / window.devicePixelRatio}px, ${(text.y * view.scale + view.y) / window.devicePixelRatio}px) scale(${view.scale / window.devicePixelRatio})`,
+		height: Math.abs(bounds.height) + 'px',
+		width: Math.abs(bounds.width) + 'px',
+		transform: `translate(${(bounds.x * view.scale + view.x) / window.devicePixelRatio}px, ${(bounds.y * view.scale + view.y) / window.devicePixelRatio}px) scale(${view.scale / window.devicePixelRatio})`,
 	};
 
 	const rotated = {
 		transform: `rotate(${text.rotation}rad)`,
 	};
-	function propagateWheel(event) {
-		// event.preventDefault();
-		canvas.current.dispatchEvent(new event.nativeEvent.constructor(event.type, event));
-	}
 
 	return (
 		<>
-			<div id="container" onWheel={propagateWheel}>
+			<div id="container" ref={container_ref}>
 				<div id="relative">
 					<div id="transformed" style={transformed}>
 						<div id="rotated" style={rotated}>
@@ -90,7 +104,16 @@ function Editable({ id, element_id, value, style, align, placeholder = '', onCha
 	const div = useRef(null);
 
 	function updateText() {
-		onChange({ target: { id: id, value: div.current.innerText.replaceAll('\n\n', '\n') } });
+		onChange({ target: { id: id, value: removeLastBreak(div.current.innerText) } });
+	}
+
+	function removeLastBreak(text) {
+		return text.replaceAll('\n\n', '\n');
+
+		// return text
+		// 	.split('\n')
+		// 	.filter((line, i, lines) => !(i < lines.length && line === '\n' && lines[i + 1] !== '\n'))
+		// 	.join('\n');
 	}
 
 	useEffect(() => {

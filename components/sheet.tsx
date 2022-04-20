@@ -7,7 +7,7 @@ import Structure from './structure/structure';
 import Properties from './properties/properties';
 
 import Settings from './settings';
-import getFonts from '../utils/fonts';
+import getFonts from '../utils/get-fonts';
 import actions from '../redux/slice';
 
 export default function Sheet({ store }) {

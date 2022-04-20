@@ -196,7 +196,6 @@ export default class Element {
 	}
 
 	static highlight(element, context, cursor, highlight, line, box) {
-		this.outline(element, context, highlight, line);
 		let action = undefined;
 		if (this.drawBound(element, context, cursor, highlight, line)) action = 'stretch';
 		if (this.drawRotate(element, context, cursor, box)) action = 'rotate';
