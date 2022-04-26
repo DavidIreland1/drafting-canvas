@@ -1,27 +1,34 @@
 import { useEffect, useState } from 'react';
 
 export default function Theme() {
-	function toggleTheme() {
-		const theme = document.getElementsByTagName('html')[0].classList.toggle('light') ? 'light' : 'dark';
-		localStorage.setItem('drafting-canvas-theme', theme);
-		setTheme(theme);
-	}
-
 	const [theme, setTheme] = useState('light');
 	const [transition_duration, setTransitionDuration] = useState('');
 
 	useEffect(() => {
-		const theme = localStorage.getItem('drafting-canvas-theme');
-		if (typeof theme === 'string') setTheme(theme);
-		if (theme === 'light') document.getElementsByTagName('html')[0].classList.add(theme);
+		const theme_media = window.matchMedia('(prefers-color-scheme: dark)');
+		const theme_default = localStorage.getItem('drafting-canvas-theme') ?? (theme_media.matches ? 'dark' : 'light');
+		setTheme(theme_default);
+		if (theme_default === 'light') document.getElementsByTagName('html')[0].classList.add(theme_default);
 		setTimeout(() => {
 			setTransitionDuration('500ms');
 		}, 100);
+
+		theme_media.addEventListener('change', (event) => {
+			const theme_changed = event.matches ? 'dark' : 'light';
+			setTheme(theme_changed);
+			document.getElementsByTagName('html')[0].classList.add(theme_changed);
+		});
 	}, []);
+
+	function toggleTheme() {
+		const theme_toggled = document.getElementsByTagName('html')[0].classList.toggle('light') ? 'light' : 'dark';
+		localStorage.setItem('drafting-canvas-theme', theme_toggled);
+		setTheme(theme_toggled);
+	}
 
 	return (
 		<div onClick={toggleTheme}>
-			<input type="checkbox" checked={theme === 'light'} onChange={() => {}} />
+			<input type="checkbox" checked={theme === 'light'} onChange={null} />
 
 			<style jsx>{`
 				div {

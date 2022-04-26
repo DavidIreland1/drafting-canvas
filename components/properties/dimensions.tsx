@@ -5,7 +5,7 @@ import Input from '../inputs/input';
 export default function Dimensions({ selected, store, width }) {
 	function updateDimension(event, formatter: Function = Number) {
 		if (Number.isNaN(event.target.value) || event.target.value === '') return;
-		store.dispatch(actions.property({ selected_ids: selected.map((element) => element.id), props: { [event.target.id]: formatter(event.target.value) } }));
+		store.dispatch(actions.property({ selected_ids: selected.map((element) => element.id), props: { [event.target.id]: formatter(event.target.value), last: formatter(event.target.last) } }));
 	}
 
 	const bounds = Elements[selected[0].type].bound(selected[0]);

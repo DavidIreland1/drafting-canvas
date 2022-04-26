@@ -10,6 +10,7 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 	const updateValue = (event) => {
 		// event.target.style.width = `max(calc(${width} / 6), ${Math.max(event.target.value.length + 2, 5)}ch)`;
 		event.target.id = id;
+		event.target.last = value;
 		onChange(event);
 	};
 

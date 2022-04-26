@@ -27,6 +27,15 @@ export default class Element {
 		};
 	}
 
+	static makePoints(x, y, width, height, radius) {
+		return [
+			{ x: x, y: y },
+			{ x: x + width, y: y },
+			{ x: x + width, y: y + height },
+			{ x: x, y: y + height },
+		].map((point, i) => ({ ...point, i, radius, controls: [] }));
+	}
+
 	static path(element): Path2D {
 		return roundedPoly(element.points);
 	}
@@ -473,6 +482,7 @@ export default class Element {
 	static move(element, position, last_position) {
 		const delta_x = position.x - last_position.x;
 		const delta_y = position.y - last_position.y;
+
 		Elements[element.type].getPoints(element).forEach((point) => {
 			point.x += delta_x;
 			point.y += delta_y;
@@ -482,14 +492,13 @@ export default class Element {
 				control.y += delta_y;
 			});
 		});
+
+		if (Array.isArray(element.elements)) element.elements.forEach((element) => Elements[element.type].move(element, position, last_position));
 	}
 
 	static rotate(element, position, last_position) {
 		const center = this.center(element);
 		const rotation = Math.atan2(center.y - position.y, center.x - position.x) - Math.atan2(center.y - last_position.y, center.x - last_position.x);
-		element.rotation += rotation;
-
-		if (Array.isArray(element.elements)) element.elements.forEach((element) => (element.rotation += rotation));
 
 		Elements[element.type].getPoints(element).forEach((point) => {
 			const rotated = rotatePoint(point, center, rotation);
@@ -502,6 +511,12 @@ export default class Element {
 				control.y = rotated.y;
 			});
 		});
+		this.addRotation(element, rotation);
+	}
+
+	static addRotation(element, rotation) {
+		element.rotation += rotation;
+		if (Array.isArray(element.elements)) element.elements.forEach((element) => Elements[element.type].addRotation(element, rotation));
 	}
 
 	static boxes(id, bounds, box_size) {

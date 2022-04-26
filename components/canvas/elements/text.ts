@@ -21,15 +21,6 @@ export default class Text extends Element {
 		});
 	}
 
-	static makePoints(x, y, width, height, radius) {
-		return [
-			{ x: x, y: y },
-			{ x: x + width, y: y },
-			{ x: x + width, y: y + height },
-			{ x: x, y: y + height },
-		].map((point, i) => ({ ...point, i, radius, controls: [] }));
-	}
-
 	static setFont(element, context: CanvasRenderingContext2D) {
 		context.font = `${element.style} normal ${element.weight} ${Math.abs(element.size)}px ${element.family.toLowerCase()}`;
 	}
