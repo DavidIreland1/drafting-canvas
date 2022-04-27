@@ -6,7 +6,7 @@ Try it out [draftingcanvas.com](https://www.draftingcanvas.com/)
 
 ## Development
 
-### Development Enviroment Setup
+### Development Environment Setup
 
 Clone the repo
 
@@ -58,14 +58,14 @@ Open on localhost
 -   Storage: [AWS DynamodB](https://aws.amazon.com/dynamodb/) - In Progress
 -   Image Storage: [AWS S3](https://aws.amazon.com/s3/) - In Progress
 
-### Complete Features:
+### Features:
 
 -   [x] Real Time Collaboration
 -   [x] Shareable Links
 -   [x] Users on document
 -   [x] HSBA color picker
--   [x] Rectangle tool
--   [x] Ellipse tool
+-   [x] Rectangle shape
+-   [x] Ellipse shape
 -   [x] Shadow effects
 -   [x] Sticky points
 -   [x] Drag and drop tabs
@@ -77,35 +77,12 @@ Open on localhost
 -   [x] Hidden elements
 -   [x] Shadow effects
 -   [x] Text
--   [x] Fonts
+-   [x] Google Fonts
 -   [x] Scroll bars
--   [x] Responsive view port
 
-### Features in Progress:
+## Features Progress
 
--   [ ] Projects page
--   [ ] Spline tool
--   [ ] Frames
--   [ ] Image fill
-
-### Features TODO:
-
--   [ ] Gradient fill
--   [ ] Sortable props
--   [ ] Export as SVG
--   [ ] Export as PNG
--   [ ] Editable shapes (Double click)
--   [ ] Fix side resize
--   [ ] Fix group resize
--   [ ] Components
--   [ ] Right click menu
--   [ ] Ink drop color selector
--   [ ] Make Groups collapsible
--   [ ] Group multi select
--   [ ] HSVA color picker
--   [ ] RGBA color picker
--   [ ] Touch screens
--   [ ] Pen support
+[Trello](https://trello.com/invite/b/tAtFUG1o/837dc2a7dbb80ef8bd9c59add09e007f/drafting-canvas)
 
 Contributions and feature suggestions very welcome!
 
