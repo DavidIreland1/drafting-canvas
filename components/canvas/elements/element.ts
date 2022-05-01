@@ -22,8 +22,6 @@ export default class Element {
 			rotation: 0,
 			visible: true,
 			locked: false,
-			x: position.x,
-			y: position.y,
 		};
 	}
 

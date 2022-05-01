@@ -8,7 +8,6 @@ import actions from '../../redux/slice';
 export default forwardRef(Canvas);
 
 function Canvas({ user_id, store }, ref) {
-	// const { user_id, store, = props as any;
 	const canvas_ref = useRef(null);
 
 	useImperativeHandle(ref, () => ({
@@ -33,7 +32,7 @@ function Canvas({ user_id, store }, ref) {
 		(window as any).context = context;
 
 		window.addEventListener('resize', () => onResize(canvas, store, user_id));
-		// window.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
+		window.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
 
 		let active = {
 			editing: [],
@@ -58,10 +57,33 @@ function Canvas({ user_id, store }, ref) {
 	`;
 	const cursor = `url("data:image/svg+xml,${encodeURIComponent(svg)}") 0 0, auto`;
 
+	function dropImage(event) {
+		// TODO: Make this function work
+		event.preventDefault();
+		for (const item of event.itemsTransfer.items) {
+			if (item.kind == 'string' && item.type.match('^text/plain')) {
+				// This item is the target node
+				item.getAsString((s) => {
+					event.target.appendChild(document.getElementById(s));
+				});
+			} else if (item.kind == 'string' && item.type.match('^text/html')) {
+				// Drag items item is HTML
+				console.log('... Drop: HTML');
+			} else if (item.kind == 'string' && item.type.match('^text/uri-list')) {
+				// Drag items item is URI
+				console.log('... Drop: URI');
+			} else if (item.kind == 'file' && item.type.match('^image/')) {
+				// Drag items item is an image file
+				const file = item.getAsFile();
+				console.log('... Drop: File ');
+			}
+		}
+	}
+
 	return (
 		<div id="container">
 			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} />
-			<canvas className="checkers" ref={canvas_ref} tabIndex={1} style={{ background: background, cursor: cursor }} />
+			<canvas className="checkers" ref={canvas_ref} tabIndex={1} style={{ background: background, cursor: cursor }} onDragOver={(event) => event.preventDefault()} onDrop={dropImage} />
 
 			<style jsx>{`
 				#container {

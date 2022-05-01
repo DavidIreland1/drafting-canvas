@@ -28,7 +28,7 @@ export default function Theme() {
 
 	return (
 		<div onClick={toggleTheme}>
-			<input type="checkbox" checked={theme === 'light'} onChange={null} />
+			<input type="checkbox" checked={theme === 'light'} onChange={() => null} />
 
 			<style jsx>{`
 				div {

@@ -23,6 +23,7 @@ export default function shortCuts(event, store): boolean {
 			return true;
 		case 'v':
 			navigator.clipboard.readText().then((data) => {
+				console.log(data);
 				const new_elements = JSON.parse(data);
 				new_elements.forEach((element) => {
 					element.id = generateID();

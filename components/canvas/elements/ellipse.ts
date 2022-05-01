@@ -10,11 +10,11 @@ export default class Ellipse extends Element {
 			rotation: 0,
 			// start_angle: 0,
 			// end_angle: 6.283185307179586,
-			points: this.makePoints(position.x, position.y, 1, 1),
+			points: this.makePoints(position.x, position.y, 1, 1, 0),
 		});
 	}
 
-	static makePoints(x, y, width, height) {
+	static makePoints(x, y, width, height, radius) {
 		const kappa = 0.5522848; // Constant to define a ellipse with bezier curves
 
 		const middle_y = y + height / 2;
@@ -25,6 +25,7 @@ export default class Ellipse extends Element {
 			{
 				x: x + width,
 				y: middle_y,
+				radius,
 				controls: [
 					{ x: x + width, y: middle_y + control_y },
 					{ x: x + width, y: middle_y - control_y },
@@ -33,6 +34,7 @@ export default class Ellipse extends Element {
 			{
 				x: middle_x,
 				y: y + height,
+				radius,
 				controls: [
 					{ x: middle_x - control_x, y: y + height },
 					{ x: middle_x + control_x, y: y + height },
@@ -41,6 +43,7 @@ export default class Ellipse extends Element {
 			{
 				x: x,
 				y: middle_y,
+				radius,
 				controls: [
 					{ x: x, y: middle_y - control_y },
 					{ x: x, y: middle_y + control_y },
@@ -49,6 +52,7 @@ export default class Ellipse extends Element {
 			{
 				x: middle_x,
 				y: y,
+				radius,
 				controls: [
 					{ x: middle_x + control_x, y: y },
 					{ x: middle_x - control_x, y: y },

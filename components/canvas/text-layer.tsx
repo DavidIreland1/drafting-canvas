@@ -19,11 +19,14 @@ export default function TextLayer({ canvas, user_id, store }) {
 
 	useEffect(() => {
 		const container = container_ref.current;
-		if (!container) return;
 
-		function propagateWheel(event) {
+		if (!container) return;
+		console.log(container); // TODO: This is broke
+
+		function propagateWheel(event: WheelEvent) {
+			console.log(event, canvas.current);
 			event.preventDefault();
-			canvas.current.dispatchEvent(new event.nativeEvent.constructor(event.type, event));
+			canvas.current.dispatchEvent(new WheelEvent(event.type, event));
 		}
 		container.addEventListener('wheel', propagateWheel);
 
@@ -47,7 +50,7 @@ export default function TextLayer({ canvas, user_id, store }) {
 		fontWeight: text.weight,
 		fontStyle: text.style,
 		lineHeight: text.line_height,
-		color: Colors.toString(text.fill[0].color),
+		color: Colors.toString(text.fill[0]?.color || [0, 0, 0, 0]),
 	};
 
 	const transformed = {
@@ -109,7 +112,6 @@ function Editable({ id, element_id, value, style, align, placeholder = '', onCha
 
 	function removeLastBreak(text) {
 		return text.replaceAll('\n\n', '\n');
-
 		// return text
 		// 	.split('\n')
 		// 	.filter((line, i, lines) => !(i < lines.length && line === '\n' && lines[i + 1] !== '\n'))

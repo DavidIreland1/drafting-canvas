@@ -6,14 +6,16 @@ const id = generateID();
 
 console.log(Adjective + ' ' + Animal, id);
 
+const devicePixelRatio = typeof window === 'undefined' ? 1 : window.devicePixelRatio;
+
 const Settings = {
 	user_id: id,
 	user_name: Adjective + ' ' + Animal,
 	user_color: pastelColor(),
 
-	line_width: 2,
+	line_width: 1 * devicePixelRatio,
 
-	box_size: 8,
+	box_size: 4 * devicePixelRatio,
 	// highlight: '#1a83ee',
 	highlight: '#449ef2',
 
