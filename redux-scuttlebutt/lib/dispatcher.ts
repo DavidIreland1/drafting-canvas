@@ -1,21 +1,18 @@
-'use strict';
-
 import Scuttlebutt from 'scuttlebutt-vector';
-const filter = Scuttlebutt.filter;
 
-import orderedHistory from './orderedHistory.js';
+import orderedHistory from './orderedHistory';
 
-import getDelayedDispatch from './getDelayedDispatch.js';
+import getDelayedDispatch from './getDelayedDispatch';
 
 import { UPDATE_ACTION, META_TIMESTAMP, META_SOURCE } from './constants';
 
+const filter = Scuttlebutt.filter;
+
 // ignore actiontypes beginning with @
 // by default just pass through missing types (redux will blow up later)
-function isGossipType(type = '') {
+export function isGossipType(type = '') {
 	return type.substr(0, 1) !== '@';
 }
-
-exports.isGossipType = isGossipType;
 
 const defaultOptions = {
 	customDispatch: getDelayedDispatch,
@@ -25,6 +22,14 @@ const defaultOptions = {
 };
 
 export default class Dispatcher extends Scuttlebutt {
+	options;
+	_customDispatch;
+	_isGossipType;
+	_verifyAsync;
+	_signAsync;
+	_reduxDispatch;
+	_reduxGetState;
+	_historyReducer;
 	constructor(options) {
 		super();
 

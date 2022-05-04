@@ -1,5 +1,5 @@
 // server.js
-import initStateSync from '../redux-scuttlebutt/lib/server.js';
+import initStateSync from '../redux-scuttlebutt/lib/initStateSync';
 
 import { createServer } from 'http';
 import { parse } from 'url';
@@ -25,11 +25,7 @@ app.prepare().then(() => {
 		console.log('> Ready on http://localhost:' + port);
 	});
 
-	try {
-		initStateSync(server);
-	} catch (error) {
-		console.trace(error);
-	}
+	initStateSync(server);
 
 	// Get snapshot of current state
 	setInterval(() => {

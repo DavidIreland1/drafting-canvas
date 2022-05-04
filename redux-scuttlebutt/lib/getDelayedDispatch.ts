@@ -1,9 +1,3 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-	value: true,
-});
-
 // queue a _reduxDispatch call, debounced by animation frame.
 // configurable, but requires use of private methods at the moment
 // keep a reference to dispatcher because methods will change over time

@@ -1,5 +1,5 @@
 import Primus from 'primus';
-import Dispatcher from './dispatcher.js';
+import Dispatcher from './dispatcher';
 
 import Rooms from 'primus-rooms';
 
@@ -8,10 +8,10 @@ const defaultOptions = {
 	primusOptions: {},
 };
 
-import save from '../../server/database/save.js';
-import load from '../../server/database/load.js';
+import save from '../../server/database/save';
+import load from '../../server/database/load';
 import snapshot from '../snapshot';
-import Redux from 'redux';
+import { createStore } from 'redux';
 
 let documents = {};
 let rooms = {};
@@ -81,7 +81,7 @@ function removeUser(spark, room) {
 	}
 }
 
-export default function initStateSync(server, options) {
+export default function initStateSync(server, options = { primusOptions: {} }) {
 	options = Object.assign(defaultOptions, options);
 
 	const primus = new Primus(server, options.primusOptions);
@@ -125,7 +125,7 @@ function connectRedux(gossip, initial_state) {
 		return state.concat(action);
 	};
 
-	const store = Redux.createStore(gossip.wrapReducer(reducer), initial_state);
+	const store = createStore(gossip.wrapReducer(reducer), initial_state);
 	const dispatch = gossip.wrapDispatch(store.dispatch);
 	const getState = gossip.wrapGetState(store.getState);
 
@@ -160,11 +160,11 @@ function getStatistics() {
 	let statisticsDirty = true;
 
 	// prime statistics for when spark.id is undefined, presumably server messages
-	statistics[undefined] = {
-		recv: 0,
-		sent: 0,
-		s: 'other',
-	};
+	// statistics[undefined] = {
+	// 	recv: 0,
+	// 	sent: 0,
+	// 	s: 'other',
+	// };
 
 	setInterval(function () {
 		if (!statisticsDirty) return;

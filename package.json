@@ -1,10 +1,10 @@
 {
 	"name": "drafting-canvas",
 	"version": "0.1.0",
-	"type": "module",
 	"private": true,
 	"scripts": {
-		"dev": "node --experimental-specifier-resolution=node --loader ts-node/esm server/server.js",
+		"dev": "node --experimental-specifier-resolution=node --loader ts-node/esm server/test",
+		"tsdev": "ts-node server/server",
 		"build": "next build && next export",
 		"start": "next start",
 		"serve": "next serve",
