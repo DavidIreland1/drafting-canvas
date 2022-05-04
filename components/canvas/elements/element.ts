@@ -86,39 +86,54 @@ export default class Element {
 		);
 	}
 
-	static effect(element, context: CanvasRenderingContext2D, path: Path2D, before: boolean, view) {
+	static underEffect(element, context: CanvasRenderingContext2D, path: Path2D, view) {
+		const center = this.center(element);
 		element.effect
 			.filter((effect) => effect.visible)
 			.forEach((effect) => {
-				context.save();
-				if (effect.type === 'Drop shadow' && before) {
+				if (effect.type === 'Drop shadow') {
+					context.save();
 					context.filter = `blur(${effect.blur * 0.2 * view.scale}px)`;
 					context.fillStyle = Colors.toString(effect.color);
+					context.translate(center.x, center.y);
+					const spread = Math.exp(effect.spread * 0.005);
+					context.scale(spread, spread);
+					context.translate(-center.x, -center.y);
 					context.translate(effect.x, effect.y);
-					context.scale(Math.exp(effect.spread * 0.005), Math.exp(effect.spread * 0.005));
-					context.rotate(element.rotation);
 					context.fill(path);
-				} else if (effect.type === 'Inner shadow' && !before) {
+					context.restore();
+				}
+			});
+	}
+
+	static overEffect(element, context: CanvasRenderingContext2D, path: Path2D, view) {
+		const center = this.center(element);
+		element.effect
+			.filter((effect) => effect.visible)
+			.forEach((effect) => {
+				if (effect.type === 'Inner shadow') {
+					context.save();
 					context.filter = `blur(${effect.blur * 0.2 * view.scale}px)`;
 					context.fillStyle = Colors.toString(effect.color);
 					context.clip(path);
 					context.translate(effect.x, effect.y);
-					context.scale(Math.exp(-effect.spread * 0.005), Math.exp(-effect.spread * 0.005));
+					const spread = Math.exp(-effect.spread * 0.005);
+					context.translate(center.x, center.y);
+					context.scale(spread, spread);
+					context.translate(-center.x, -center.y);
 					const clone = new Path2D(path);
 					clone.rect(Number.MAX_SAFE_INTEGER / 2, -Number.MAX_SAFE_INTEGER / 2, -Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
 					context.fill(clone);
-					context.translate(-effect.x, -effect.y);
+					context.restore();
 				}
-				context.filter = 'none';
-				context.restore();
 			});
 	}
 
 	static draw(element, context: CanvasRenderingContext2D, cursor, view): boolean {
 		const path = this.path(element);
-		this.effect(element, context, path, true, view);
+		this.underEffect(element, context, path, view);
 		this.fill(element, context, path);
-		this.effect(element, context, path, false, view);
+		this.overEffect(element, context, path, view);
 		const fill = element.fill.length && context.isPointInPath(path, cursor.x, cursor.y);
 		context.lineWidth = this.stroke(element, context, path);
 		const stroke = element.stroke.length && context.isPointInStroke(path, cursor.x, cursor.y);

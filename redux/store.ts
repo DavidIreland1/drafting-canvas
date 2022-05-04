@@ -39,21 +39,20 @@ export default store;
 export type RootState = ReturnType<typeof store.getState>;
 
 function filterActions(action) {
-	return modification_actions.includes(action.type.slice(8));
+	return modification_actions.includes(action.type.slice(7));
 }
 
-let last_action = { type: '', time: Date.now() };
+const last_action = { type: '', time: Date.now() };
 
 function groupActions(action) {
 	const now = Date.now();
-	if (interaction_actions.includes(action.type.slice(8)) && last_action.type === action.type && last_action.time > now - 500) {
+	if (interaction_actions.includes(action.type.slice(7)) && last_action.type === action.type && last_action.time > now - 500) {
 		last_action.time = now;
 		return action.type;
 	}
-	last_action = {
-		type: action.type,
-		time: now,
-	};
+	last_action.type = action.type;
+	last_action.time = now;
+
 	return null;
 }
 
