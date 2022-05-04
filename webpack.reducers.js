@@ -1,25 +1,20 @@
 module.exports = {
-	target: "node",
-	mode: "production",
-	entry: {
-		algorithms: "./reducers/reducers.ts",
-	},
+	target: 'node',
+	mode: 'production',
+	entry: './reducers/reducers.ts',
 	output: {
-		path: __dirname + "/reducers/",
-		filename: "reducers.min.js",
-		library: "reducer",
-		libraryTarget: "umd",
+		path: __dirname + '/reducers/',
+		filename: 'reducers.min.js',
+		library: 'reducer',
+		libraryTarget: 'umd',
 	},
 	optimization: {
-		minimize: true,
+		minimize: false,
 	},
 	resolve: {
-		extensions: [".ts", ".tsx", ".js"],
+		extensions: ['.ts', '.js'],
 	},
 	module: {
-		rules: [
-			{ test: /\.tsx?$/, loader: "ts-loader" },
-			{ test: /\.svg$/, loader: "svg-inline-loader" },
-		],
+		rules: [{ test: /\.tsx?$/, loader: 'ts-loader' }],
 	},
 };

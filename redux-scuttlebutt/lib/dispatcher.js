@@ -1,18 +1,13 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
-const Scuttlebutt = require('scuttlebutt-vector');
+import Scuttlebutt from 'scuttlebutt-vector';
 const filter = Scuttlebutt.filter;
 
-const orderedHistory = require('./orderedHistory');
+import orderedHistory from './orderedHistory.js';
 
-const getDelayedDispatch = require('./getDelayedDispatch').default;
+import getDelayedDispatch from './getDelayedDispatch.js';
 
-const constants = require('./constants');
-const UPDATE_ACTION = constants.UPDATE_ACTION;
-const META_TIMESTAMP = constants.META_TIMESTAMP;
-const META_SOURCE = constants.META_SOURCE;
+import { UPDATE_ACTION, META_TIMESTAMP, META_SOURCE } from './constants';
 
 // ignore actiontypes beginning with @
 // by default just pass through missing types (redux will blow up later)
@@ -29,7 +24,7 @@ const defaultOptions = {
 	signAsync: undefined,
 };
 
-class Dispatcher extends Scuttlebutt {
+export default class Dispatcher extends Scuttlebutt {
 	constructor(options) {
 		super();
 
@@ -156,5 +151,3 @@ class Dispatcher extends Scuttlebutt {
 		}
 	}
 }
-
-exports.default = Dispatcher;

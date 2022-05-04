@@ -7,7 +7,7 @@ Object.defineProperty(exports, '__esModule', {
 // queue a _reduxDispatch call, debounced by animation frame.
 // configurable, but requires use of private methods at the moment
 // keep a reference to dispatcher because methods will change over time
-exports.default = function getDelayedDispatch(dispatcher) {
+export default function getDelayedDispatch(dispatcher) {
 	// This just returns false atm
 	if (typeof window === 'undefined' || typeof window.requestAnimationFrame !== 'function') {
 		return false;
@@ -45,4 +45,4 @@ exports.default = function getDelayedDispatch(dispatcher) {
 			window.requestAnimationFrame(drainQueue);
 		}
 	};
-};
+}

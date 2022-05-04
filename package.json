@@ -1,14 +1,15 @@
 {
 	"name": "drafting-canvas",
 	"version": "0.1.0",
+	"type": "module",
 	"private": true,
 	"scripts": {
-		"dev": "node server.js",
+		"dev": "node --experimental-specifier-resolution=node --loader ts-node/esm server/server.js",
 		"build": "next build && next export",
 		"start": "next start",
 		"serve": "next serve",
 		"lint": "next lint",
-		"prod": "NODE_ENV=production node server.js",
+		"prod": "NODE_ENV=production node server/server.js",
 		"reducers": "npx webpack --config webpack.reducers.js"
 	},
 	"dependencies": {

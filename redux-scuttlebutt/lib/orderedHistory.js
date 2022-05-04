@@ -1,16 +1,4 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-	value: true,
-});
-
-const constants = require('./constants');
-const META_TIMESTAMP = constants.META_TIMESTAMP;
-const META_SOURCE = constants.META_SOURCE;
-const UPDATE_ACTION = constants.UPDATE_ACTION;
-const UPDATE_TIMESTAMP = constants.UPDATE_TIMESTAMP;
-const UPDATE_SOURCE = constants.UPDATE_SOURCE;
-const UPDATE_SNAPSHOT = constants.UPDATE_SNAPSHOT;
+import { META_TIMESTAMP, META_SOURCE, UPDATE_ACTION, UPDATE_TIMESTAMP, UPDATE_SOURCE, UPDATE_SNAPSHOT } from './constants';
 
 // Formats an initial state
 const getInitialState = (state) => {
@@ -22,7 +10,6 @@ const getInitialState = (state) => {
 		return [wrappedState];
 	}
 };
-exports.getInitialState = getInitialState;
 
 // Returns the state at this point in time
 const getState = (state) => {
@@ -30,7 +17,6 @@ const getState = (state) => {
 
 	return lastState && lastState[UPDATE_SNAPSHOT];
 };
-exports.getState = getState;
 
 // sort by timestamp, then by source
 const sort = (t1, t2, s1, s2) => {
@@ -39,7 +25,6 @@ const sort = (t1, t2, s1, s2) => {
 	}
 	return t1 > t2 ? 1 : -1;
 };
-exports.sort = sort;
 
 // wrap the root reducer to track history and rewind occasionally
 // currentState is our higher-order form, an array of [snapshot, timestamp]
@@ -104,4 +89,11 @@ const reducer = (reducer) => {
 	};
 };
 
-exports.reducer = reducer;
+const orderedHistory = {
+	getInitialState,
+	getState,
+	sort,
+	reducer,
+};
+
+export default orderedHistory;

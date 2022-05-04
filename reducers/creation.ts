@@ -1,4 +1,4 @@
-export default {
+const creation = {
 	overwrite: (state, props) => {
 		Object.entries(props.payload.state).forEach(([key, value]) => {
 			// if (!state[key] || state[key].length === 0) state[key] = value;
@@ -7,3 +7,5 @@ export default {
 		});
 	},
 };
+
+export default creation;

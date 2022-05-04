@@ -1,28 +1,25 @@
-'use strict';
+import Primus from 'primus';
+import Dispatcher from './dispatcher.js';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
-const Primus = require('primus');
-const Dispatcher = require('./dispatcher').default;
-
-const Rooms = require('primus-rooms');
+import Rooms from 'primus-rooms';
 
 const defaultOptions = {
 	getStatistics: getStatistics,
 	primusOptions: {},
 };
 
-const save = require('./database/save').default;
-const load = require('./database/load').default;
+import save from '../../server/database/save.js';
+import load from '../../server/database/load.js';
+import snapshot from '../snapshot';
+import Redux from 'redux';
 
 let documents = {};
 let rooms = {};
 
-function openDocument(room, options) {
-	console.log('opened room: ', room);
-
+function openDocument(room) {
 	const gossip = new Dispatcher({});
 
+	console.log('Loading Room: ', room);
 	const document_state = load(room);
 
 	const { store, dispatch, getState } = connectRedux(gossip, undefined);
@@ -46,8 +43,7 @@ function addUser(spark, room) {
 	documents[room].streams[spark.id] = documents[room].gossip.createStream();
 
 	documents[room].streams[spark.id].on('data', function (data) {
-		// spark.room(room).write(data);
-		spark.write(data); // Might be sending this to all clients but line above breaks
+		spark.write(data);
 	});
 
 	documents[room].streams[spark.id].on('error', function (error) {
@@ -66,12 +62,26 @@ function removeUser(spark, room) {
 
 	const num_streams = Object.keys(documents[room].streams).length;
 	if (num_streams === 0) {
-		save(room, documents[room].getState());
+		const snap = [
+			{
+				meta: {
+					'@@scuttlebutt/TIMESTAMP': 0,
+					'@@scuttlebutt/SOURCE': '',
+				},
+				type: 'action/overwrite',
+				payload: {
+					state: snapshot(documents[room].getState()),
+				},
+			},
+		];
+		console.log('Saving Room: ', room);
+		save(room, snap);
+		// save(room, documents[room].getState());
 		delete documents[room];
 	}
 }
 
-exports.default = function scuttlebuttServer(server, options) {
+export default function initStateSync(server, options) {
 	options = Object.assign(defaultOptions, options);
 
 	const primus = new Primus(server, options.primusOptions);
@@ -101,13 +111,9 @@ exports.default = function scuttlebuttServer(server, options) {
 	primus.on('disconnection', (spark) => {
 		removeUser(spark, rooms[spark.id]);
 	});
-
-	// return { primus, store, dispatch, getState };
-};
+}
 
 function connectRedux(gossip, initial_state) {
-	const Redux = require('redux');
-
 	const reducer = function reducer() {
 		const state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 		const action = arguments[1];

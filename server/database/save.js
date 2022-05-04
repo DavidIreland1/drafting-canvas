@@ -1,5 +1,5 @@
-const fs = require('fs');
+import fs from 'fs';
 
-exports.default = function save(name, data) {
+export default function save(name, data) {
 	fs.writeFile('./datastate/' + name + '.json', JSON.stringify(data, null, '\t'), 'utf8', () => {});
-};
+}

@@ -1,9 +1,9 @@
-const fs = require('fs');
+import fs from 'fs';
 
-exports.default = function load(name) {
+export default function load(name) {
 	try {
 		return JSON.parse(fs.readFileSync('./datastate/' + name + '.json'));
 	} catch (error) {
 		return undefined;
 	}
-};
+}
