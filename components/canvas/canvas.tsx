@@ -45,6 +45,8 @@ function Canvas({ user_id, store }, ref) {
 
 		draw(context, store.getState().present, active, user_id);
 
+		(window as any).redraw = () => draw(context, store.getState().present, active, user_id);
+
 		store.subscribe(() => draw(context, store.getState().present, active, user_id));
 
 		setTimeout(() => setBackground(''), 0);
@@ -57,33 +59,10 @@ function Canvas({ user_id, store }, ref) {
 	`;
 	const cursor = `url("data:image/svg+xml,${encodeURIComponent(svg)}") 0 0, auto`;
 
-	function dropImage(event) {
-		// TODO: Make this function work
-		event.preventDefault();
-		for (const item of event.itemsTransfer.items) {
-			if (item.kind == 'string' && item.type.match('^text/plain')) {
-				// This item is the target node
-				item.getAsString((s) => {
-					event.target.appendChild(document.getElementById(s));
-				});
-			} else if (item.kind == 'string' && item.type.match('^text/html')) {
-				// Drag items item is HTML
-				console.log('... Drop: HTML');
-			} else if (item.kind == 'string' && item.type.match('^text/uri-list')) {
-				// Drag items item is URI
-				console.log('... Drop: URI');
-			} else if (item.kind == 'file' && item.type.match('^image/')) {
-				// Drag items item is an image file
-				const file = item.getAsFile();
-				console.log('... Drop: File ');
-			}
-		}
-	}
-
 	return (
 		<div id="container">
 			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} />
-			<canvas className="checkers" ref={canvas_ref} tabIndex={1} style={{ background: background, cursor: cursor }} onDragOver={(event) => event.preventDefault()} onDrop={dropImage} />
+			<canvas className="checkers" ref={canvas_ref} tabIndex={1} style={{ background: background, cursor: cursor }} />
 
 			<style jsx>{`
 				#container {
@@ -108,6 +87,19 @@ function Canvas({ user_id, store }, ref) {
 					background-image: var(--checker-gradient), var(--checker-gradient);
 					background-position: 0 0, var(--checker-size) var(--checker-size);
 					background-size: calc(var(--checker-size) * 2) calc(var(--checker-size) * 2);
+				}
+				canvas.dragging: {
+					background: red;
+				}
+				canvas::after {
+					content: 'Drop Here';
+					position: absolute;
+					background: red;
+					display: block;
+					width: 100px;
+					height: 100px;
+					background: #ff0000;
+					margin-left: 5px;
 				}
 			`}</style>
 		</div>

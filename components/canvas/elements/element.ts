@@ -46,15 +46,19 @@ export default class Element {
 					context.fillStyle = Colors.toString(fill.color);
 					context.fill(path);
 				} else if (fill.type === 'Image') {
-					if (!images[fill.id]) {
-						images[fill.id] = new Image();
-						images[fill.id].src = fill.src;
-						images[fill.id].onerror = () => (images[fill.id].broken = true);
-					} else if (images[fill.id].complete && !images[fill.id].broken) {
+					if (!images[fill.src]) {
+						images[fill.src] = new Image();
+						images[fill.src].src = fill.src;
+						images[fill.src].onerror = () => (images[fill.src].broken = true);
+						images[fill.src].onload = () => (window as any).redraw();
+					} else if (images[fill.src].complete && !images[fill.src].broken) {
 						const bounds = this.bound(element);
+						const center = this.center(element);
 						context.save();
 						context.clip(path);
-						context.drawImage(images[fill.id], bounds.x + fill.x, bounds.y + fill.y, bounds.width, bounds.height);
+						context.translate(center.x, center.y);
+						context.rotate(element.rotation);
+						context.drawImage(images[fill.src], fill.x - bounds.width / 2, fill.y - bounds.height / 2, bounds.width, bounds.height);
 						context.restore();
 					}
 				}

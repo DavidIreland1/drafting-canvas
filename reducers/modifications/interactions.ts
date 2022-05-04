@@ -4,17 +4,25 @@ import { slice } from './../../redux/slice';
 
 import Settings from '../../components/settings';
 import { clone } from '../../utils/utils';
+import Group from '../../components/canvas/elements/group';
 
 const interactions = {
 	resize: (state, props) => {
 		const { position, last_position, selected_ids } = props.payload;
-
-		selected(state.elements, selected_ids).forEach((element) => Elements[element.type].resize(element, position, last_position));
+		if (selected_ids.length === 1) {
+			selected(state.elements, selected_ids).forEach((element) => Elements[element.type].resize(element, position, last_position));
+		} else {
+			Group.resize({ elements: selected(state.elements, selected_ids), type: 'group', rotation: 0 }, position, last_position);
+		}
 	},
 	rotate: (state, props) => {
 		const { position, last_position, selected_ids } = props.payload;
 
-		selected(state.elements, selected_ids).forEach((element) => Elements[element.type].rotate(element, position, last_position));
+		if (selected_ids.length === 1) {
+			selected(state.elements, selected_ids).forEach((element) => Elements[element.type].rotate(element, position, last_position));
+		} else {
+			Group.rotate({ elements: selected(state.elements, selected_ids), type: 'group', rotation: 0 }, position, last_position);
+		}
 	},
 	stretch: (state, props) => {
 		const { position, last_position, selected_ids } = props.payload;

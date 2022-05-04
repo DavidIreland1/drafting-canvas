@@ -13,19 +13,14 @@ export default function shortCuts(event, store): boolean {
 			return true;
 
 		case 'z':
-			console.log(store.getState().past.length, 'undo');
-			if (store.getState().past.length > 1) {
-				store.dispatch(ActionCreators.undo());
-			}
+			if (store.getState().past.length) store.dispatch(ActionCreators.undo());
 			return true;
 
 		case 'y':
-			console.log('redo');
 			store.dispatch(ActionCreators.redo());
 			return true;
 		case 'v':
 			navigator.clipboard.readText().then((data) => {
-				console.log(data);
 				const new_elements = JSON.parse(data);
 				new_elements.forEach((element) => {
 					element.id = generateID();

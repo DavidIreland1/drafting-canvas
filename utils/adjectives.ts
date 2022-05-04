@@ -1,4 +1,4 @@
-const asjectives = [
+const adjectives = [
 	'Dead',
 	'Hairless',
 	'Sadistic',
@@ -121,4 +121,4 @@ const asjectives = [
 	'Mentally impaired',
 ];
 
-export default asjectives[Math.floor(Math.random() * asjectives.length)];
+export default adjectives[Math.floor(Math.random() * adjectives.length)];

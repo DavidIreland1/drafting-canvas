@@ -8,7 +8,8 @@ import undoable from 'redux-undo';
 // import Primus from './../node_modules/redux-scuttlebutt/lib/primus';
 // import Primus from 'primus/primus';
 
-import initial_state from './../state/initial';
+import { filterActions, groupActions } from './undo';
+import initial_state from './initial-state';
 
 let Primus;
 let room;
@@ -18,12 +19,13 @@ if (typeof window !== 'undefined') {
 	room = location.pathname.split('/')[1];
 }
 
-import { modification_actions } from '../reducers/modifications/modifications';
-import { interaction_actions } from '../reducers/modifications/interactions';
-
 const store = createStore(
 	undoable(slice.reducer, { filter: filterActions, groupBy: groupActions }),
-	{ past: [], present: initial_state, future: [] },
+	{
+		past: [],
+		present: initial_state,
+		future: [],
+	},
 	typeof Primus !== 'undefined'
 		? (scuttlebutt({
 				primus: Primus,
@@ -37,24 +39,6 @@ const store = createStore(
 export default store;
 
 export type RootState = ReturnType<typeof store.getState>;
-
-function filterActions(action) {
-	return modification_actions.includes(action.type.slice(7));
-}
-
-const last_action = { type: '', time: Date.now() };
-
-function groupActions(action) {
-	const now = Date.now();
-	if (interaction_actions.includes(action.type.slice(7)) && last_action.type === action.type && last_action.time > now - 500) {
-		last_action.time = now;
-		return action.type;
-	}
-	last_action.type = action.type;
-	last_action.time = now;
-
-	return null;
-}
 
 if (typeof window !== 'undefined') {
 	(window as any).store = store;

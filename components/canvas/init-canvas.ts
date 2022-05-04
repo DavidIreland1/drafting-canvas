@@ -1,4 +1,5 @@
 import actions from '../../redux/slice';
+import drop from './interaction/drop';
 import { hover, singleClick } from './interaction/interaction';
 import onWheel from './interaction/wheel';
 import shortCuts from './short-cuts';
@@ -43,6 +44,15 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 			// 	})
 			// );
 		}
+	};
+
+	canvas.ondragover = (event) => {
+		event.preventDefault();
+		canvas.classList.add('dragging');
+	};
+
+	canvas.ondrop = (event: any) => {
+		drop(event, canvas, store, user_id);
 	};
 
 	canvas.onpointermove = (event) => {

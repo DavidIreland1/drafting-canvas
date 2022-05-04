@@ -1,13 +1,12 @@
-const default_state = {
+const initial_state = {
 	cursors: [],
 	views: [],
 	elements: [],
 	page: {
-		// color: [1, 0, 0.4, 1],
 		color: [1, 0, 0.9, 1],
 		format: 'hex4',
 		visible: true,
 	},
 };
 
-export default default_state;
+export default initial_state;

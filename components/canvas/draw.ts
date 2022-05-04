@@ -6,6 +6,7 @@ import Settings from './../settings';
 import Colors from './../properties/colors';
 import scrollBars from './scroll-bars';
 import { screenBounds, transformPoint } from '../../utils/utils';
+import Group from './elements/group';
 
 const { line_width, box_size, highlight } = Settings;
 
@@ -62,7 +63,11 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 		active.altering = active.editing.map((element) => Elements[element.type].drawPoints(element, context, cursor, highlight, line, box)).filter((element) => element);
 	} else if (!user_cursor.pressed || user_cursor.type !== 'select' /*&& document.activeElement === context.canvas*/) {
 		// Draw highlight on selected elements
-		active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
+		if (active.selected.length === 1) {
+			active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
+		} else {
+			active.altering = [Group.highlight({ elements: active.selected, type: 'group', rotation: 0 }, context, cursor, highlight, line, box)].filter((element) => element);
+		}
 	}
 
 	if (user_cursor.pressed) crosses(context, on_screen, active.selected, user_view);

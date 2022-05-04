@@ -5,6 +5,7 @@ export default class Rectangle extends Element {
 		return Object.assign(super.create(id, position, selected), {
 			label: 'Rectangle',
 			type: 'rectangle',
+			selected: true,
 			rotation: 0,
 			points: this.makePoints(position.x, position.y, 1, 1, 0),
 		});
