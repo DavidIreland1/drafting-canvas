@@ -11,7 +11,6 @@
 # next.js
 /.next/
 /out/
-/datastate/*
 
 # production
 /build
@@ -29,6 +28,10 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+
+# database
+/server/database/data
+
 
 #rust
 /target

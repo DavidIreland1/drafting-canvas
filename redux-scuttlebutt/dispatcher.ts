@@ -1,8 +1,8 @@
 import Scuttlebutt from 'scuttlebutt-vector';
 
-import orderedHistory from './orderedHistory';
+import orderedHistory from './ordered-history';
 
-import getDelayedDispatch from './getDelayedDispatch';
+import getDelayedDispatch from './get-delayed-dispatch';
 
 import { UPDATE_ACTION, META_TIMESTAMP, META_SOURCE } from './constants';
 

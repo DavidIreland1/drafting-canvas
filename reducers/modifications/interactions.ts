@@ -1,9 +1,5 @@
 import Elements, { flatten, forEachElement, selected } from '../../components/canvas/elements/elements';
-
-import { slice } from './../../redux/slice';
-
 import Settings from '../../components/settings';
-import { clone } from '../../utils/utils';
 import Group from '../../components/canvas/elements/group';
 
 const interactions = {
@@ -39,21 +35,27 @@ const interactions = {
 	},
 
 	createElements: (state, props) => {
-		slice.caseReducers.unselectAll(state);
+		flatten(state.elements).forEach((element) => {
+			element.selected = false;
+			element.editing = false;
+		});
 		state.elements = props.payload.elements.concat(state.elements);
 	},
 	createElement: (state, props) => {
 		const { user_id, id, type, position } = props.payload;
 
-		slice.caseReducers.unselectAll(state);
+		flatten(state.elements).forEach((element) => {
+			element.selected = false;
+			element.editing = false;
+		});
 		// console.log(props.payload); // Sync error created here from bad payload
 
 		const selected = Settings.user_id === user_id;
 		state.elements.unshift(Elements[type].create(id, position, selected));
 
-		const props_clone: any = clone(props);
-		props_clone.payload = { user_id, mode: 'edit' };
-		slice.caseReducers.cursor(state, props_clone);
+		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
+		if (!cursor) return; // Not great
+		cursor.mode = 'edit';
 	},
 	toggleVisible: (state, props) => {
 		const { id } = props.payload;
@@ -76,7 +78,10 @@ const interactions = {
 
 		const location_id = selected_ids[0];
 
-		slice.caseReducers.unselectAll(state);
+		flatten(state.elements).forEach((element) => {
+			element.selected = false;
+			element.editing = false;
+		});
 
 		forEachElement(state.elements, (element, i, elements) => {
 			if (element.id === location_id)

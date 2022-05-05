@@ -55,15 +55,14 @@ export function singleClick(down_event, canvas, id, store, active) {
 		create(position, canvas, store, view, cursor, points);
 	} else {
 		select(store, active, down_event);
-		moveOrResize(down_event, position, canvas, store, active, view);
+		applyAction(down_event, position, canvas, store, active, view);
 	}
 }
 
-function moveOrResize(down_event, last_position, canvas, store, active, view) {
+function applyAction(down_event, last_position, canvas, store, active, view) {
 	if (active.altering.length > 0) {
 		const action = active.altering[0].action;
 		const target = active.altering[0].element;
-		console.log(action);
 		if (action === 'resize') {
 			resize(canvas, store, view, target, last_position, down_event);
 		} else if (action === 'rotate') {

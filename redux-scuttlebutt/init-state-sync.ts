@@ -8,23 +8,62 @@ const defaultOptions = {
 	primusOptions: {},
 };
 
-import save from '../../server/database/save';
-import load from '../../server/database/load';
-import snapshot from '../snapshot';
+import save from '../server/database/save';
+import load from '../server/database/load';
+import snapshot from './snapshot';
 import { createStore } from 'redux';
 
 let documents = {};
 let rooms = {};
 
+export default function initStateSync(server, options = { primusOptions: {} }) {
+	options = Object.assign(defaultOptions, options);
+
+	const primus = new Primus(server, options.primusOptions);
+	primus.plugin('rooms', Rooms);
+
+	// const onStatistic = options.getStatistics();
+
+	primus.on('connection', (spark) => {
+		spark.on('data', (data) => {
+			if (data.action === 'join') {
+				rooms[spark.id] = data.room;
+				if (!documents[rooms[spark.id]]) documents[rooms[spark.id]] = openDocument(rooms[spark.id]);
+				addUser(spark, rooms[spark.id]);
+
+				console.log('added user: ', spark.id);
+			} else if (data.action === 'leave') {
+				removeUser(spark, rooms[spark.id]);
+			} else {
+				// console.log('data', rooms[spark.id])
+				// console.log(data)
+				documents[rooms[spark.id]].streams[spark.id].write(data);
+			}
+		});
+	});
+
+	// Seems to be deleting / saving too often
+	primus.on('disconnection', (spark) => {
+		removeUser(spark, rooms[spark.id]);
+	});
+}
+
 function openDocument(room) {
 	const gossip = new Dispatcher({});
 
 	console.log('Loading Room: ', room);
-	const document_state = load(room);
 
+	const document_state = load(room);
 	const { store, dispatch, getState } = connectRedux(gossip, undefined);
 
-	if (document_state) document_state.forEach((action) => dispatch(action));
+	if (document_state) {
+		dispatch({
+			type: 'action/overwrite',
+			payload: {
+				state: document_state,
+			},
+		});
+	}
 
 	return {
 		gossip,
@@ -62,55 +101,13 @@ function removeUser(spark, room) {
 
 	const num_streams = Object.keys(documents[room].streams).length;
 	if (num_streams === 0) {
-		const snap = [
-			{
-				meta: {
-					'@@scuttlebutt/TIMESTAMP': 0,
-					'@@scuttlebutt/SOURCE': '',
-				},
-				type: 'action/overwrite',
-				payload: {
-					state: snapshot(documents[room].getState()),
-				},
-			},
-		];
-		console.log('Saving Room: ', room);
-		save(room, snap);
+		const snap = snapshot(documents[room].getState());
+
+		console.log('Saving Room: ', room, snap);
+		save(room, snapshot(documents[room].getState()));
 		// save(room, documents[room].getState());
 		delete documents[room];
 	}
-}
-
-export default function initStateSync(server, options = { primusOptions: {} }) {
-	options = Object.assign(defaultOptions, options);
-
-	const primus = new Primus(server, options.primusOptions);
-	primus.plugin('rooms', Rooms);
-
-	// const onStatistic = options.getStatistics();
-
-	primus.on('connection', (spark) => {
-		spark.on('data', (data) => {
-			if (data.action === 'join') {
-				rooms[spark.id] = data.room;
-				if (!documents[rooms[spark.id]]) documents[rooms[spark.id]] = openDocument(rooms[spark.id]);
-				addUser(spark, rooms[spark.id]);
-
-				console.log('added user: ', spark.id);
-			} else if (data.action === 'leave') {
-				removeUser(spark, rooms[spark.id]);
-			} else {
-				// console.log('data', rooms[spark.id])
-				// console.log(data)
-				documents[rooms[spark.id]].streams[spark.id].write(data);
-			}
-		});
-	});
-
-	// Seems to be deleting / saving too often
-	primus.on('disconnection', (spark) => {
-		removeUser(spark, rooms[spark.id]);
-	});
 }
 
 function connectRedux(gossip, initial_state) {

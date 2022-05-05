@@ -4,7 +4,7 @@ import { UPDATE_SNAPSHOT } from './constants';
 export { isGossipType } from './dispatcher';
 export { META_SOURCE, META_TIMESTAMP, UPDATE_ACTION, UPDATE_TIMESTAMP, UPDATE_SOURCE, UPDATE_SNAPSHOT } from './constants';
 
-import { tool_actions } from './../../reducers/tools';
+import { tool_actions } from '../reducers/tools';
 
 // Applies default options.
 const defaultOptions = {

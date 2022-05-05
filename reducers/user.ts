@@ -1,4 +1,4 @@
-export default {
+const user = {
 	addUser: (state, props) => {
 		const { user_id, label, color } = props.payload;
 		state.views.push({ id: user_id, label: label, x: 1000, y: 1000, scale: 5 });
@@ -33,15 +33,11 @@ export default {
 		const { user_id } = props.payload;
 		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
 		if (!cursor) return; // Not great
-		// if (x) cursor.x = x;
-		// if (y) cursor.y = y;
-		// if (rotation) cursor.rotation = rotation;
-		// if (type) cursor.type = type;
-		// if (mode) cursor.mode = mode;
-		// if (visible) cursor.visible = visible;
 		cursor.id = user_id;
 		Object.entries(props.payload).forEach(([key, value]) => {
 			if (value !== undefined) cursor[key] = value;
 		});
 	},
 };
+
+export default user;
