@@ -1,10 +1,10 @@
 export default class Resize {
-	static draw(cursor, context, view) {
+	static draw(cursor, context, scale) {
 		const body_length = 17;
 		const width = 3;
 
 		context.translate(cursor.x, cursor.y);
-		context.scale(1 / view.scale, 1 / view.scale);
+		context.scale(1 / scale, 1 / scale);
 		context.translate(-cursor.x, -cursor.y);
 
 		context.beginPath();
@@ -22,7 +22,7 @@ export default class Resize {
 		context.fill();
 
 		context.translate(cursor.x, cursor.y);
-		context.scale(view.scale, view.scale);
+		context.scale(scale, scale);
 		context.translate(-cursor.x, -cursor.y);
 	}
 }

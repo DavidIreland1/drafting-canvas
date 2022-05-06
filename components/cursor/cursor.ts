@@ -28,24 +28,24 @@ const Cursors = {
 
 export default class Cursor {
 	static draw(cursor, context, view) {
+		const scale = (view.scale / window.devicePixelRatio) * 2;
 		if (cursor.id === Settings.user_id) {
 			if (cursor.type === 'select') {
 				context.canvas.style.cursor = '';
 			} else {
 				context.canvas.style.cursor = 'none';
-				Cursors[cursor.type].draw(cursor, context, view);
+				Cursors[cursor.type].draw(cursor, context, scale);
 			}
-			return;
+		} else {
+			Select.draw(cursor, context, scale);
+			drawLabel(cursor, context, scale);
 		}
-
-		Select.draw(cursor, context, view);
-		drawLabel(cursor, context, view);
 	}
 }
 
-function drawLabel(cursor, context, view) {
+function drawLabel(cursor, context, scale) {
 	context.translate(cursor.x, cursor.y);
-	context.scale(1 / view.scale, 1 / view.scale);
+	context.scale(1 / scale, 1 / scale);
 	context.translate(-cursor.x, -cursor.y);
 	context.beginPath();
 
@@ -58,6 +58,6 @@ function drawLabel(cursor, context, view) {
 	context.fillText(cursor.label, cursor.x + 20, cursor.y + 60);
 
 	context.translate(cursor.x, cursor.y);
-	context.scale(view.scale, view.scale);
+	context.scale(scale, scale);
 	context.translate(-cursor.x, -cursor.y);
 }

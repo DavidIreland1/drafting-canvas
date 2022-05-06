@@ -1,7 +1,7 @@
 export default class Select {
-	static draw(cursor, context: CanvasRenderingContext2D, view) {
+	static draw(cursor, context: CanvasRenderingContext2D, scale) {
 		context.translate(cursor.x, cursor.y);
-		context.scale(1 / view.scale, 1 / view.scale);
+		context.scale(1 / scale, 1 / scale);
 		context.translate(-cursor.x, -cursor.y);
 
 		context.beginPath();
@@ -24,7 +24,7 @@ export default class Select {
 		context.fill();
 
 		context.translate(cursor.x, cursor.y);
-		context.scale(view.scale, view.scale);
+		context.scale(scale, scale);
 		context.translate(-cursor.x, -cursor.y);
 	}
 }

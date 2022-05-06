@@ -1,12 +1,12 @@
 export default class Resize {
-	static draw(cursor, context, view) {
+	static draw(cursor, context, scale) {
 		const head_length = 5;
 		const body_length = 15;
 		const width = 3;
 		const rotation = Math.PI / 8;
 
 		context.translate(cursor.x, cursor.y);
-		context.scale(1 / view.scale, 1 / view.scale);
+		context.scale(1 / scale, 1 / scale);
 		context.rotate(cursor.rotation + rotation);
 		context.translate(-cursor.x, -cursor.y);
 
@@ -33,7 +33,7 @@ export default class Resize {
 
 		context.translate(cursor.x, cursor.y);
 		context.rotate(-cursor.rotation - rotation);
-		context.scale(view.scale, view.scale);
+		context.scale(scale, scale);
 		context.translate(-cursor.x, -cursor.y);
 	}
 }

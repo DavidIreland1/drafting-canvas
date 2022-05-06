@@ -12,24 +12,22 @@ export default function scrollBars(context: CanvasRenderingContext2D, elements, 
 		min: Math.min(...bounds.map((bound) => bound.y)),
 		max: Math.max(...bounds.map((bound) => bound.y + bound.height)),
 	};
-
 	const screen = screenBounds(context, user_view);
+	const speed = Math.sqrt(user_view.scale);
 
 	const bar = {
-		width: 12,
-		padding: 8,
+		width: 6 * window.devicePixelRatio,
+		padding: 4 * window.devicePixelRatio,
 	};
-	const end_space = 40;
-	const speed = Math.sqrt(user_view.scale);
-	const min_length = 100;
+	const end_space = 20 * window.devicePixelRatio;
+	const min_length = 50 * window.devicePixelRatio;
 
 	context.beginPath();
 	drawYBar(context, screen, y, bar, end_space, speed, min_length);
 	drawXBar(context, screen, x, bar, end_space, speed, min_length);
 	context.closePath();
 	context.fillStyle = '#4448';
-	context.strokeStyle = '#4448';
-	context.lineWidth = 0;
+	context.strokeStyle = 'transparent';
 	context.stroke();
 	context.fill();
 }

@@ -1,3 +1,3 @@
 export default class None {
-	static draw(cursor, context, view) {}
+	static draw(cursor, context, scale) {}
 }
