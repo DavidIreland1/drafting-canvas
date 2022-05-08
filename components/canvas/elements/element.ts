@@ -1,10 +1,12 @@
 import { Bound, Position } from '../../../types/box-types';
 import { Effect, ElementType, Fill, Stroke } from '../../../types/element-types';
-import { reflectPoint, rotatePoint } from '../../../utils/utils';
+import { rotatePoint } from '../../../utils/utils';
 import boundBezier from '../bound-bezier';
 import roundedPoly from '../rounded-poly';
 import Colors from './../../properties/colors';
 import Elements from './elements';
+
+// context.setTransform(horizontal_scaling, horizontal_skewing, vertical_skewing, vertical_scaling, horizontal_translation, vertical_translation);
 
 const images = {};
 export default class Element {
@@ -150,55 +152,59 @@ export default class Element {
 
 		if (bounds.width === 0 || bounds.height === 0) return; // This might be an issue
 
-		// Find opposite corner
-		const opposite = reflectPoint(last_position, center);
+		const sin = Math.sin(element.rotation);
+		const cos = Math.cos(element.rotation);
 
 		// Rotate all points to 0 deg
-		const new_opposite = rotatePoint(opposite, center, -element.rotation);
-		const new_position = rotatePoint(position, center, -element.rotation);
+		const normal_last_position = rotatePoint(last_position, center, -sin, cos);
+		const normal_position = rotatePoint(position, center, -sin, cos);
+
 		Elements[element.type].getPoints(element).forEach((point) => {
-			const rotated = rotatePoint(point, center, -element.rotation);
+			const rotated = rotatePoint(point, center, -sin, cos);
 			point.x = rotated.x;
 			point.y = rotated.y;
 
 			point.controls.forEach((control) => {
-				const rotated = rotatePoint(control, center, -element.rotation);
+				const rotated = rotatePoint(control, center, -sin, cos);
 				control.x = rotated.x;
 				control.y = rotated.y;
 			});
 		});
 
+		const delta_x = (normal_last_position.x - normal_position.x) * (normal_last_position.x < center.x ? 1 : -1);
+		const delta_y = (normal_last_position.y - normal_position.y) * (normal_last_position.y < center.y ? 1 : -1);
+
 		// Get change ratio in width and height
-		const width_ratio = Math.abs(new_position.x - new_opposite.x) / bounds.width;
-		const height_ratio = Math.abs(new_position.y - new_opposite.y) / bounds.height;
+		const width_ratio = (bounds.width + delta_x) / bounds.width;
+		const height_ratio = (bounds.height + delta_y) / bounds.height;
 
 		// Top left of bounding box
 		const x_min_old = Math.min(...Elements[element.type].getPoints(element).map((point) => point.x));
 		const y_min_old = Math.min(...Elements[element.type].getPoints(element).map((point) => point.y));
 
 		// Top left of resize box
-		const x_min_new = Math.min(new_opposite.x, new_position.x);
-		const y_min_new = Math.min(new_opposite.y, new_position.y);
+		const x_min = normal_last_position.x < center.x ? x_min_old - delta_x : x_min_old;
+		const y_min = normal_last_position.y < center.y ? y_min_old - delta_y : y_min_old;
 
 		// Scale point positions
 		Elements[element.type].getPoints(element).forEach((point) => {
-			point.x = (point.x - x_min_old) * width_ratio + x_min_new;
-			point.y = (point.y - y_min_old) * height_ratio + y_min_new;
+			point.x = (point.x - x_min_old) * width_ratio + x_min;
+			point.y = (point.y - y_min_old) * height_ratio + y_min;
 
 			point.controls.forEach((control) => {
-				control.x = (control.x - x_min_old) * width_ratio + x_min_new;
-				control.y = (control.y - y_min_old) * height_ratio + y_min_new;
+				control.x = (control.x - x_min_old) * width_ratio + x_min;
+				control.y = (control.y - y_min_old) * height_ratio + y_min;
 			});
 		});
 
 		// Rotate points back
 		Elements[element.type].getPoints(element).forEach((point) => {
-			const rotated = rotatePoint(point, center, element.rotation);
+			const rotated = rotatePoint(point, center, sin, cos);
 			point.x = rotated.x;
 			point.y = rotated.y;
 
 			point.controls.forEach((control) => {
-				const rotated = rotatePoint(control, center, element.rotation);
+				const rotated = rotatePoint(control, center, sin, cos);
 				control.x = rotated.x;
 				control.y = rotated.y;
 			});
@@ -223,7 +229,8 @@ export default class Element {
 
 	static highlight(element, context, cursor, highlight, line, box) {
 		let action = undefined;
-		if (this.drawBound(element, context, cursor, highlight, line)) action = 'stretch';
+		if (this.drawStretch(element, context, cursor, highlight, line)) action = 'stretch';
+		// if (this.drawSpread(element, context, cursor, highlight, line)) action = 'spread';
 		if (this.drawRotate(element, context, cursor, box)) action = 'rotate';
 		if (this.drawResize(element, context, cursor, highlight, line, box)) action = 'resize';
 		return action ? { action, element } : undefined;
@@ -244,10 +251,9 @@ export default class Element {
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
 
-	static drawBound(element, context: CanvasRenderingContext2D, cursor, color: string, line: number): boolean {
+	static drawStretch(element, context: CanvasRenderingContext2D, cursor, color: string, line: number): boolean {
 		const bounds = this.bound(element);
 		const center = this.center(element);
-
 		context.save();
 		context.translate(center.x, center.y);
 		context.rotate(element.rotation);
@@ -259,11 +265,8 @@ export default class Element {
 		context.lineWidth = line;
 		context.stroke();
 		context.restore();
-
 		return hov;
 	}
-
-	// context.setTransform(horizontal_scaling, horizontal_skewing, vertical_skewing, vertical_scaling, horizontal_translation, vertical_translation);
 
 	static drawResize(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number): boolean {
 		const bounds = this.bound(element);
@@ -382,12 +385,14 @@ export default class Element {
 	}
 
 	static center(element: ElementType): Position {
-		// const points = Elements[element.type].getPoints(element).map((point) => rotatePoint(point, { x: 0, y: 0 }, -element.rotation));
+		const sin = Math.sin(element.rotation);
+		const cos = Math.cos(element.rotation);
+
 		const points = Elements[element.type]
 			.getPoints(element)
 			.map((point) => ({
-				...rotatePoint(point, { x: 0, y: 0 }, -element.rotation),
-				controls: point.controls.map((control) => rotatePoint(control, { x: 0, y: 0 }, -element.rotation)),
+				...rotatePoint(point, { x: 0, y: 0 }, -sin, cos),
+				controls: point.controls.map((control) => rotatePoint(control, { x: 0, y: 0 }, -sin, cos)),
 			}))
 			.map((point, i, points) => boundBezier(point, points[(i + 1) % points.length]))
 			.flat();
@@ -399,24 +404,20 @@ export default class Element {
 		const y_min = Math.min(...ys);
 		const y_max = Math.max(...ys);
 
-		return rotatePoint(
-			{
-				x: x_min + (x_max - x_min) / 2,
-				y: y_min + (y_max - y_min) / 2,
-			},
-			{ x: 0, y: 0 },
-			element.rotation
-		);
+		return rotatePoint({ x: x_min + (x_max - x_min) / 2, y: y_min + (y_max - y_min) / 2 }, { x: 0, y: 0 }, sin, cos);
 	}
 
 	static bound(element: ElementType): Bound {
 		const center = this.center(element);
 
+		const sin = Math.sin(element.rotation);
+		const cos = Math.cos(element.rotation);
+
 		const points = Elements[element.type]
 			.getPoints(element)
 			.map((point) => ({
-				...rotatePoint(point, center, -element.rotation),
-				controls: point.controls.map((control) => rotatePoint(control, center, -element.rotation)),
+				...rotatePoint(point, center, -sin, cos),
+				controls: point.controls.map((control) => rotatePoint(control, center, -sin, cos)),
 			}))
 			.map((point, i, points) => boundBezier(point, points[(i + 1) % points.length]))
 			.flat();
@@ -510,20 +511,23 @@ export default class Element {
 			});
 		});
 
-		if (Array.isArray(element.elements)) element.elements.forEach((element) => Elements[element.type].move(element, position, last_position));
+		// if (Array.isArray(element.elements)) element.elements.forEach((element) => Elements[element.type].move(element, position, last_position));
 	}
 
 	static rotate(element, position, last_position) {
 		const center = this.center(element);
 		const rotation = Math.atan2(center.y - position.y, center.x - position.x) - Math.atan2(center.y - last_position.y, center.x - last_position.x);
 
+		const sin = Math.sin(rotation);
+		const cos = Math.cos(rotation);
+
 		Elements[element.type].getPoints(element).forEach((point) => {
-			const rotated = rotatePoint(point, center, rotation);
+			const rotated = rotatePoint(point, center, sin, cos);
 			point.x = rotated.x;
 			point.y = rotated.y;
 
 			point.controls.forEach((control) => {
-				const rotated = rotatePoint(control, center, rotation);
+				const rotated = rotatePoint(control, center, sin, cos);
 				control.x = rotated.x;
 				control.y = rotated.y;
 			});

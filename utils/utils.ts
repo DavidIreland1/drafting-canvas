@@ -38,10 +38,12 @@ export function screenBounds(context: CanvasRenderingContext2D, view: { x: numbe
 	};
 }
 
-export function rotatePoint(point, center, rotation) {
+export function rotatePoint(point, center, sin, cos) {
+	const delta_x = point.x - center.x;
+	const delta_y = point.y - center.y;
 	return {
-		x: (point.x - center.x) * Math.cos(rotation) - (point.y - center.y) * Math.sin(rotation) + center.x,
-		y: (point.x - center.x) * Math.sin(rotation) + (point.y - center.y) * Math.cos(rotation) + center.y,
+		x: delta_x * cos - delta_y * sin + center.x,
+		y: delta_x * sin + delta_y * cos + center.y,
 	};
 }
 
@@ -66,9 +68,9 @@ export function CanvasToDOM(position, canvas, view) {
 	};
 }
 
-export function reflectPoint(point, reflect) {
-	return {
-		x: reflect.x - (point.x - reflect.x),
-		y: reflect.y - (point.y - reflect.y),
-	};
-}
+// export function reflectPoint(point, reflect) {
+// 	return {
+// 		x: reflect.x - (point.x - reflect.x),
+// 		y: reflect.y - (point.y - reflect.y),
+// 	};
+// }

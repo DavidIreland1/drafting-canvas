@@ -208,15 +208,15 @@ function Icon({ type }) {
 					<line x1="50" y1="20" x2="50" y2="80" />
 				</>
 			);
-		case 'spline':
-			return (
-				<>
-					<title>Spline</title>
-					<rect x="15" y="15" width="15" height="15" />
-					<path d="M 22.5 30 C 22.5 70, 77.5 30, 77.5 70 " />
-					<rect x="70" y="70" width="15" height="15" />
-				</>
-			);
+		// case 'spline':
+		// 	return (
+		// 		<>
+		// 			<title>Spline</title>
+		// 			<rect x="15" y="15" width="15" height="15" />
+		// 			<path d="M 22.5 30 C 22.5 70, 77.5 30, 77.5 70 " />
+		// 			<rect x="70" y="70" width="15" height="15" />
+		// 		</>
+		// 	);
 
 		default:
 			return <></>;

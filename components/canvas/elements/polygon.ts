@@ -1,6 +1,7 @@
+import { rotatePoint } from '../../../utils/utils';
 import Element from './element';
 
-export default class Rectangle extends Element {
+export default class Polygon extends Element {
 	static create(id, position, selected) {
 		return Object.assign(super.create(id, position, selected), {
 			x: position.x,
@@ -14,44 +15,48 @@ export default class Rectangle extends Element {
 		});
 	}
 
-	// static points(rectangle) {
-	// 	const center = this.center(rectangle);
-	// 	return this._points(rectangle)
+	// static points(polygon) {
+	// 	const center = this.center(polygon);
+
+	// 	const sin = Math.sin(polygon.rotation);
+	// 	const cos = Math.cos(polygon.rotation);
+
+	// 	return this._points(polygon)
 	// 		.map((point) => ({
-	// 			x: point.x + rectangle.x + rectangle.width / 2,
-	// 			y: point.y + rectangle.y + rectangle.height / 2,
+	// 			x: point.x + polygon.x + polygon.width / 2,
+	// 			y: point.y + polygon.y + polygon.height / 2,
 	// 		}))
-	// 		.map((point) => rotatePoint(point, center, rectangle.rotation))
+	// 		.map((point) => rotatePoint(point, center, sin, cos))
 	// 		.concat(center);
 	// }
 
-	// static _points(rectangle) {
+	// static _points(polygon) {
 	// 	return [
 	// 		{
-	// 			x: -rectangle.width / 2,
-	// 			y: -rectangle.height / 2,
-	// 			radius: rectangle.radius,
+	// 			x: -polygon.width / 2,
+	// 			y: -polygon.height / 2,
+	// 			radius: polygon.radius,
 	// 		},
 	// 		{
-	// 			x: rectangle.width / 2,
-	// 			y: -rectangle.height / 2,
-	// 			radius: rectangle.radius,
+	// 			x: polygon.width / 2,
+	// 			y: -polygon.height / 2,
+	// 			radius: polygon.radius,
 	// 		},
 	// 		{
-	// 			x: rectangle.width / 2,
-	// 			y: rectangle.height / 2,
-	// 			radius: rectangle.radius,
+	// 			x: polygon.width / 2,
+	// 			y: polygon.height / 2,
+	// 			radius: polygon.radius,
 	// 		},
 	// 		{
-	// 			x: -rectangle.width / 2,
-	// 			y: rectangle.height / 2,
-	// 			radius: rectangle.radius,
+	// 			x: -polygon.width / 2,
+	// 			y: polygon.height / 2,
+	// 			radius: polygon.radius,
 	// 		},
 	// 	];
 	// }
 
-	// static path(rectangle) {
-	// 	const points = this._points(rectangle);
+	// static path(polygon) {
+	// 	const points = this._points(polygon);
 
 	// 	const delta_x = [0, -1, 0, 1];
 	// 	const delta_y = [1, 0, -1, 0];
@@ -62,8 +67,8 @@ export default class Rectangle extends Element {
 	// 	const delta_angle = Math.PI / 2;
 
 	// 	const path = new Path2D();
-	// 	if (rectangle.radius.length || rectangle.radius > 0) {
-	// 		const radius = Math.min(Math.min(Math.abs(rectangle.width), Math.abs(rectangle.height)) / 2, rectangle.radius);
+	// 	if (polygon.radius.length || polygon.radius > 0) {
+	// 		const radius = Math.min(Math.min(Math.abs(polygon.width), Math.abs(polygon.height)) / 2, polygon.radius);
 
 	// 		points.forEach((point, i) => {
 	// 			path.lineTo(point.x + radius * delta_x[i], point.y + radius * delta_y[i]);
@@ -78,52 +83,32 @@ export default class Rectangle extends Element {
 	// 	return path;
 	// }
 
-	// static draw(rectangle, context: CanvasRenderingContext2D, cursor, view) {
-	// 	const center = this.center(rectangle);
-	// 	const path = this.path(rectangle);
-
-	// 	context.fillStyle = rectangle.color;
-
-	// 	context.save();
-	// 	context.translate(center.x, center.y);
-	// 	this.effect(rectangle, context, path, true, view);
-
-	// 	context.rotate(rectangle.rotation);
-	// 	this.fill(rectangle, context, path);
-	// 	this.effect(rectangle, context, path, false, view);
-	// 	this.stroke(rectangle, context, path);
-
-	// 	const hover = context.isPointInPath(path, cursor.x, cursor.y);
-
-	// 	context.restore();
-
-	// 	return hover;
-	// }
-
-	// static outline(rectangle, context, color, line_width): void {
-	// 	const center = this.center(rectangle);
+	// static outline(polygon, context, color, line_width): void {
+	// 	const center = this.center(polygon);
 
 	// 	context.strokeStyle = color;
 	// 	context.lineWidth = line_width;
 	// 	context.save();
 	// 	context.translate(center.x, center.y);
-	// 	context.rotate(rectangle.rotation);
-	// 	const path = this.path(rectangle);
+	// 	context.rotate(polygon.rotation);
+	// 	const path = this.path(polygon);
 	// 	context.stroke(path);
 	// 	context.restore();
 	// }
 
-	// static bound(rectangle): { x: number; y: number; width: number; height: number } {
+	// static bound(polygon): { x: number; y: number; width: number; height: number } {
 	// 	return {
-	// 		x: rectangle.x,
-	// 		y: rectangle.y,
-	// 		width: rectangle.width,
-	// 		height: rectangle.height,
+	// 		x: polygon.x,
+	// 		y: polygon.y,
+	// 		width: polygon.width,
+	// 		height: polygon.height,
 	// 	};
 	// }
 
-	// static resize(rectangle, position, last_position): void {
-	// 	const center = this.center(rectangle);
+	// static resize(polygon, position, last_position): void {
+	// 	const center = this.center(polygon);
+	// 	const sin = Math.sin(polygon.rotation);
+	// 	const cos = Math.cos(polygon.rotation);
 
 	// 	const opposite = {
 	// 		x: center.x - (last_position.x - center.x),
@@ -135,19 +120,21 @@ export default class Rectangle extends Element {
 	// 		y: (opposite.y + position.y) / 2,
 	// 	};
 
-	// 	const new_opposite = rotatePoint(opposite, new_center, -rectangle.rotation);
-	// 	const new_position = rotatePoint(position, new_center, -rectangle.rotation);
+	// 	const new_opposite = rotatePoint(opposite, new_center, -sin, cos);
+	// 	const new_position = rotatePoint(position, new_center, -sin, cos);
 
-	// 	// rectangle.x = new_opposite.x;
-	// 	rectangle.x = new_opposite.x;
-	// 	// rectangle.y = new_opposite.y)
-	// 	rectangle.y = new_opposite.y;
-	// 	rectangle.width = new_position.x - new_opposite.x;
-	// 	rectangle.height = new_position.y - new_opposite.y;
+	// 	// polygon.x = new_opposite.x;
+	// 	polygon.x = new_opposite.x;
+	// 	// polygon.y = new_opposite.y)
+	// 	polygon.y = new_opposite.y;
+	// 	polygon.width = new_position.x - new_opposite.x;
+	// 	polygon.height = new_position.y - new_opposite.y;
 	// }
 
-	// static stretch(rectangle, position, last_position): void {
-	// 	const center = this.center(rectangle);
+	// static stretch(polygon, position, last_position): void {
+	// 	const center = this.center(polygon);
+	// 	const sin = Math.sin(polygon.rotation);
+	// 	const cos = Math.cos(polygon.rotation);
 
 	// 	const opposite = {
 	// 		x: center.x - (last_position.x - center.x),
@@ -159,12 +146,12 @@ export default class Rectangle extends Element {
 	// 		y: (opposite.y + position.y) / 2,
 	// 	};
 
-	// 	const new_opposite = rotatePoint(opposite, new_center, -rectangle.rotation);
-	// 	const new_position = rotatePoint(position, new_center, -rectangle.rotation);
+	// 	const new_opposite = rotatePoint(opposite, new_center, -sin, cos);
+	// 	const new_position = rotatePoint(position, new_center, -sin, cos);
 
-	// 	// rectangle.x = new_opposite.x;
-	// 	rectangle.y = new_opposite.y;
-	// 	// rectangle.width = new_position.x - new_opposite.x;
-	// 	rectangle.height = new_position.y - new_opposite.y;
+	// 	// polygon.x = new_opposite.x;
+	// 	polygon.y = new_opposite.y;
+	// 	// polygon.width = new_position.x - new_opposite.x;
+	// 	polygon.height = new_position.y - new_opposite.y;
 	// }
 }

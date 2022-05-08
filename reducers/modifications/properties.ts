@@ -85,13 +85,17 @@ const properties = {
 				} else if (key === 'rotation') {
 					const center = Elements[element.type].center(element);
 					const delta = Number(value) - element.rotation;
+
+					const sin = Math.sin(delta);
+					const cos = Math.cos(delta);
+
 					element.rotation = Number(value);
 					Elements[element.type].getPoints(element).forEach((point) => {
-						const rotated = rotatePoint(point, center, delta);
+						const rotated = rotatePoint(point, center, sin, cos);
 						point.x = rotated.x;
 						point.y = rotated.y;
 						point.controls.forEach((control) => {
-							const rotated = rotatePoint(control, center, delta);
+							const rotated = rotatePoint(control, center, sin, cos);
 							control.x = rotated.x;
 							control.y = rotated.y;
 						});
@@ -103,12 +107,15 @@ const properties = {
 
 					const axis = key === 'width' ? 'x' : 'y';
 
+					const sin = Math.sin(element.rotation);
+					const cos = Math.cos(element.rotation);
+
 					Elements[element.type].getPoints(element).forEach((point) => {
-						const rotated = rotatePoint(point, center, -element.rotation);
+						const rotated = rotatePoint(point, center, -sin, cos);
 						point.x = rotated.x;
 						point.y = rotated.y;
 						point.controls.forEach((control) => {
-							const rotated = rotatePoint(control, center, -element.rotation);
+							const rotated = rotatePoint(control, center, -sin, cos);
 							control.x = rotated.x;
 							control.y = rotated.y;
 						});
@@ -118,11 +125,11 @@ const properties = {
 							control[axis] = (control[axis] - bound[axis]) * ratio + bound[axis];
 						});
 
-						const un_rotated = rotatePoint(point, center, element.rotation);
+						const un_rotated = rotatePoint(point, center, sin, cos);
 						point.x = un_rotated.x;
 						point.y = un_rotated.y;
 						point.controls.forEach((control) => {
-							const rotated = rotatePoint(control, center, element.rotation);
+							const rotated = rotatePoint(control, center, sin, cos);
 							control.x = rotated.x;
 							control.y = rotated.y;
 						});

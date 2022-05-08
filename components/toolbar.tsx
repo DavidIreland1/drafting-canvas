@@ -9,7 +9,7 @@ export default function Navbar({ store }) {
 	);
 
 	// Need a default cursor when there is no users
-	if (!cursor || !['rectangle', 'line', 'ellipse', 'pen', 'spline', 'frame', 'text'].includes(cursor.type)) cursor = { type: 'select' };
+	if (!cursor || !['rectangle', 'line', 'ellipse', 'pen', 'frame', 'text'].includes(cursor.type)) cursor = { type: 'select' };
 
 	const selectTool = (event) => {
 		event.preventDefault();

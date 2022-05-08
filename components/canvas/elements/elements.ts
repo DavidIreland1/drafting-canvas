@@ -1,22 +1,18 @@
-import Circle from './circle';
 import Ellipse from './ellipse';
 import Group from './group';
 import Rectangle from './rectangle';
 import Frame from './frame';
 import Line from './line';
 import Arrow from './arrow';
-import Spline from './spline';
 import Text from './text';
 
 const Elements = {
-	circle: Circle,
 	ellipse: Ellipse,
 	group: Group,
 	rectangle: Rectangle,
 	frame: Frame,
 	line: Line,
 	arrow: Arrow,
-	spline: Spline,
 	text: Text,
 };
 

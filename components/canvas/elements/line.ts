@@ -29,67 +29,67 @@ export default class Line extends Element {
 	static highlight(line, context, cursor, highlight, line_width, box_size) {
 		this.outline(line, context, highlight, line_width);
 		let action = undefined;
-		if (this.drawBound(line, context, cursor, highlight, line_width)) action = 'stretch';
+		if (this.drawStretch(line, context, cursor, highlight, line_width)) action = 'stretch';
 		if (this.drawRotate(line, context, cursor, box_size)) action = 'rotate';
 		if (this.drawResize(line, context, cursor, highlight, line_width, box_size)) action = 'resize';
 		return action ? { action: action, element: line } : undefined;
 	}
 
-	static drawBound(element, context, cursor, color, line) {
-		return false;
-	}
+	// static drawStretch(element, context, cursor, color, line) {
+	// 	return false;
+	// }
 
-	static drawRotate(line, context, cursor, box_size) {
-		// context.beginPath();
-		// const angle = Math.atan2(line.points[0].y - line.points[1].y, line.points[0].x - line.points[1].x);
-		// this.boxes(line, box_size * 2).forEach((box) => {
-		// 	context.translate(box.x, box.y);
-		// 	context.rotate(angle);
-		// 	context.rect(-box.width, -box.width, box.width * 2, box.height * 2);
-		// 	context.rotate(-angle);
-		// 	context.translate(-box.x, -box.y);
-		// });
-		// context.fill();
-		// context.stroke();
-		// return context.isPointInPath(cursor.x, cursor.y);
-		return false;
-	}
+	// static drawRotate(line, context, cursor, box_size) {
+	// 	// context.beginPath();
+	// 	// const angle = Math.atan2(line.points[0].y - line.points[1].y, line.points[0].x - line.points[1].x);
+	// 	// this.boxes(line, box_size * 2).forEach((box) => {
+	// 	// 	context.translate(box.x, box.y);
+	// 	// 	context.rotate(angle);
+	// 	// 	context.rect(-box.width, -box.width, box.width * 2, box.height * 2);
+	// 	// 	context.rotate(-angle);
+	// 	// 	context.translate(-box.x, -box.y);
+	// 	// });
+	// 	// context.fill();
+	// 	// context.stroke();
+	// 	// return context.isPointInPath(cursor.x, cursor.y);
+	// 	return false;
+	// }
 
-	static drawResize(line, context, cursor, highlight, line_width, box_size) {
-		context.fillStyle = 'white';
-		context.strokeStyle = highlight;
-		context.lineWidth = line_width;
-		context.beginPath();
-		const angle = Math.atan2(line.points[0].y - line.points[1].y, line.points[0].x - line.points[1].x);
-		this.boxes(line, box_size).forEach((box) => {
-			context.translate(box.x, box.y);
-			context.rotate(angle);
-			context.rect(-box.width, -box.width, box.width * 2, box.height * 2);
-			context.rotate(-angle);
-			context.translate(-box.x, -box.y);
-		});
-		context.fill();
-		context.stroke();
-		return context.isPointInPath(cursor.x, cursor.y);
-	}
+	// static drawResize(line, context, cursor, highlight, line_width, box_size) {
+	// 	context.fillStyle = 'white';
+	// 	context.strokeStyle = highlight;
+	// 	context.lineWidth = line_width;
+	// 	context.beginPath();
+	// 	const angle = Math.atan2(line.points[0].y - line.points[1].y, line.points[0].x - line.points[1].x);
+	// 	this.boxes(line, box_size).forEach((box) => {
+	// 		context.translate(box.x, box.y);
+	// 		context.rotate(angle);
+	// 		context.rect(-box.width, -box.width, box.width * 2, box.height * 2);
+	// 		context.rotate(-angle);
+	// 		context.translate(-box.x, -box.y);
+	// 	});
+	// 	context.fill();
+	// 	context.stroke();
+	// 	return context.isPointInPath(cursor.x, cursor.y);
+	// }
 
-	static center(line): { x: number; y: number } {
-		return {
-			x: line.points[0].x + (line.points[0].x + line.points[1].x) / 2,
-			y: line.points[0].y + (line.points[0].y + line.points[1].y) / 2,
-		};
-	}
+	// static center(line): { x: number; y: number } {
+	// 	return {
+	// 		x: line.points[0].x + (line.points[0].x + line.points[1].x) / 2,
+	// 		y: line.points[0].y + (line.points[0].y + line.points[1].y) / 2,
+	// 	};
+	// }
 
-	static bound(line): { x: number; y: number; width: number; height: number } {
-		const x = Math.min(line.points[0].x, line.points[1].x);
-		const y = Math.min(line.points[0].y, line.points[1].y);
-		return {
-			x: x,
-			y: y,
-			width: Math.max(line.points[0].x, line.points[1].x) - x,
-			height: Math.max(line.points[0].y, line.points[1].y) - y,
-		};
-	}
+	// static bound(line): { x: number; y: number; width: number; height: number } {
+	// 	const x = Math.min(line.points[0].x, line.points[1].x);
+	// 	const y = Math.min(line.points[0].y, line.points[1].y);
+	// 	return {
+	// 		x: x,
+	// 		y: y,
+	// 		width: Math.max(line.points[0].x, line.points[1].x) - x,
+	// 		height: Math.max(line.points[0].y, line.points[1].y) - y,
+	// 	};
+	// }
 
 	// static move(element, position, last_position) {
 	// 	const delta_x = position.x - last_position.x;
@@ -100,46 +100,15 @@ export default class Line extends Element {
 	// 	element.y2 += delta_y;
 	// }
 
-	static resize(line, position, last_position): void {
-		if (closestPoint(line, last_position)) {
-			line.points[0].x = Math.round(position.x);
-			line.points[0].y = Math.round(position.y);
-		} else {
-			line.points[1].x = Math.round(position.x);
-			line.points[1].y = Math.round(position.y);
-		}
-	}
-
-	static rotate(line, position, last_position) {
-		// const center = this.center(line);
-
-		// const rotation = Math.atan2(center.y - position.y, center.x - position.x) - Math.atan2(center.y - last_position.y, center.x - last_position.x);
-
-		// console.log('Broken');
-		// this.resize(line, position, last_position);
-
-		// const opposite = {
-		// 	x: center.x - (last_position.x - center.x),
-		// 	y: center.y - (position.y - center.y),
-		// };
-
-		// // const new_center = {
-		// // 	x: (opposite.x + position.x) / 2,
-		// // 	y: (opposite.y + position.y) / 2,
-		// // };
-
-		// const new_opposite = rotatePoint({ x: line.points[0].x, y: line.points[0].y }, center, -rotation);
-		// const new_position = rotatePoint({ x: line.points[1].x, y: line.points[1].y }, center, -rotation);
-
-		// line.points[0].x = new_opposite.x;
-		// line.points[0].y = new_opposite.y;
-		// line.points[1].x = new_position.x;
-		// line.points[1].y = new_position.y;
-
-		return 0;
-	}
-
-	static stretch(line, position, last_position): void {}
+	// static resize(line, position, last_position): void {
+	// 	if (closestPoint(line, last_position)) {
+	// 		line.points[0].x = Math.round(position.x);
+	// 		line.points[0].y = Math.round(position.y);
+	// 	} else {
+	// 		line.points[1].x = Math.round(position.x);
+	// 		line.points[1].y = Math.round(position.y);
+	// 	}
+	// }
 
 	static points(line) {
 		return [

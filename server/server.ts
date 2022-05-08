@@ -24,5 +24,5 @@ app.prepare().then(() => {
 		console.log('> Ready on http://localhost:' + port);
 	});
 
-	initStateSync(server);
+	// initStateSync(server);
 });
