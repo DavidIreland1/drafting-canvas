@@ -80,16 +80,16 @@ export default class Line extends Element {
 	// 	};
 	// }
 
-	static bound(line): { x: number; y: number; width: number; height: number } {
-		const x = Math.min(line.points[0].x, line.points[1].x);
-		const y = Math.min(line.points[0].y, line.points[1].y);
-		return {
-			x: x,
-			y: y,
-			width: Math.max(line.points[0].x, line.points[1].x) - x,
-			height: Math.max(line.points[0].y, line.points[1].y) - y,
-		};
-	}
+	// static bound(line): { x: number; y: number; width: number; height: number } {
+	// 	const x = Math.min(line.points[0].x, line.points[1].x);
+	// 	const y = Math.min(line.points[0].y, line.points[1].y);
+	// 	return {
+	// 		x: x,
+	// 		y: y,
+	// 		width: Math.max(line.points[0].x, line.points[1].x) - x,
+	// 		height: Math.max(line.points[0].y, line.points[1].y) - y,
+	// 	};
+	// }
 
 	// static move(element, position, last_position) {
 	// 	const delta_x = position.x - last_position.x;
