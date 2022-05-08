@@ -22,8 +22,19 @@ const interactions = {
 	},
 	stretch: (state, props) => {
 		const { position, last_position, selected_ids } = props.payload;
-
-		selected(state.elements, selected_ids).forEach((element) => Elements[element.type].stretch(element, position, last_position));
+		if (selected_ids.length === 1) {
+			selected(state.elements, selected_ids).forEach((element) => Elements[element.type].stretch(element, position, last_position));
+		} else {
+			Group.stretch({ elements: selected(state.elements, selected_ids), type: 'group', rotation: 0 }, position, last_position);
+		}
+	},
+	spread: (state, props) => {
+		const { position, last_position, selected_ids } = props.payload;
+		if (selected_ids.length === 1) {
+			selected(state.elements, selected_ids).forEach((element) => Elements[element.type].spread(element, position, last_position));
+		} else {
+			Group.spread({ elements: selected(state.elements, selected_ids), type: 'group', rotation: 0 }, position, last_position);
+		}
 	},
 	move: (state, props) => {
 		const { position, last_position, selected_ids } = props.payload;

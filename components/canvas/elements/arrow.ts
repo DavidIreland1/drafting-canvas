@@ -39,8 +39,4 @@ export default class Arrow extends Line {
 		context.lineTo(arrow.x2 - arrow.head_length * Math.cos(theta + arrow.head_angle), arrow.y2 - arrow.head_length * Math.sin(theta + arrow.head_angle));
 		context.fill();
 	}
-
-	static resize(arrow, position, last_position): void {}
-
-	static stretch(arrow, position, last_position): void {}
 }

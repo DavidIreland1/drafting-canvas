@@ -36,17 +36,14 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 	active.selected = flatten(on_screen).filter((element) => element.selected);
 	active.editing = active.selected.filter((element) => element.editing);
 
+	// Draw all onscreen elements and filter for hovering
 	if (active.editing.length === 0) {
-		active.hovering = active.selected
-			.filter((element) => Elements[element.type].insideBound(element, context, cursor)) // Check if we are hovering over the box of the selected
-			.concat(
-				[...on_screen] // Draw all onscreen elements and filter for hovering
-					.reverse()
-					.filter((element) => Elements[element.type].draw(element, context, cursor, user_view))
-					.reverse()
-			)
+		active.hovering = on_screen
+			.reverse()
+			.filter((element) => Elements[element.type].draw(element, context, cursor, user_view))
 			.filter((element) => !element.locked)
-			.sort((element1) => (element1.selected ? -1 : 1));
+			.sort((element1) => (element1.selected ? 1 : -1))
+			.reverse();
 	} else {
 		active.hovering = on_screen.reverse().filter((element) => Elements[element.type].draw(element, context, cursor, user_view) && element.editing);
 	}
@@ -63,12 +60,23 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 		active.altering = active.editing.map((element) => Elements[element.type].drawPoints(element, context, cursor, highlight, line, box)).filter((element) => element);
 	} else if (!user_cursor.pressed || user_cursor.type !== 'select' /*&& document.activeElement === context.canvas*/) {
 		// Draw highlight on selected elements
-		if (active.selected.length === 1) {
-			active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
+		if (user_cursor.pressed) {
+			if (active.selected.length === 1) {
+				active.selected.forEach((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box));
+			} else {
+				Group.highlight({ elements: active.selected, type: 'group', rotation: 0 }, context, cursor, highlight, line, box);
+			}
 		} else {
-			active.altering = [Group.highlight({ elements: active.selected, type: 'group', rotation: 0 }, context, cursor, highlight, line, box)].filter((element) => element);
+			if (active.selected.length === 1) {
+				active.altering = active.selected.map((element) => Elements[element.type].highlight(element, context, cursor, highlight, line, box)).filter((element) => element);
+			} else {
+				active.altering = [Group.highlight({ elements: active.selected, type: 'group', rotation: 0 }, context, cursor, highlight, line, box)].filter((element) => element);
+			}
 		}
 	}
+
+	// Can only hover selected elements if about to alter
+	if (active.altering.length) active.hovering = active.hovering.filter((element) => element.selected);
 
 	if (user_cursor.pressed) crosses(context, on_screen, active.selected, user_view);
 

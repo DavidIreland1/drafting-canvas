@@ -14,6 +14,7 @@ const Cursors = {
 	pen: Select,
 
 	stretch: Stretch,
+	spread: Stretch,
 	resize: Resize,
 	rotate: Rotate,
 
@@ -21,7 +22,6 @@ const Cursors = {
 	line: Create,
 	ellipse: Create,
 	bezier: Create,
-	spline: Create,
 	frame: Create,
 	text: Create,
 };

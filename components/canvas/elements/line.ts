@@ -26,14 +26,14 @@ export default class Line extends Element {
 		return context.isPointInStroke(path, cursor.x, cursor.y);
 	}
 
-	static highlight(line, context, cursor, highlight, line_width, box_size) {
-		this.outline(line, context, highlight, line_width);
-		let action = undefined;
-		if (this.drawStretch(line, context, cursor, highlight, line_width)) action = 'stretch';
-		if (this.drawRotate(line, context, cursor, box_size)) action = 'rotate';
-		if (this.drawResize(line, context, cursor, highlight, line_width, box_size)) action = 'resize';
-		return action ? { action: action, element: line } : undefined;
-	}
+	// static highlight(line, context, cursor, highlight, line_width, box_size) {
+	// 	this.outline(line, context, highlight, line_width);
+	// 	let action = undefined;
+	// 	if (this.drawStretch(line, context, cursor, highlight, line_width)) action = 'stretch';
+	// 	if (this.drawRotate(line, context, cursor, box_size)) action = 'rotate';
+	// 	if (this.drawResize(line, context, cursor, highlight, line_width, box_size)) action = 'resize';
+	// 	return action ? { action: action, element: line } : undefined;
+	// }
 
 	// static drawStretch(element, context, cursor, color, line) {
 	// 	return false;
@@ -80,16 +80,16 @@ export default class Line extends Element {
 	// 	};
 	// }
 
-	// static bound(line): { x: number; y: number; width: number; height: number } {
-	// 	const x = Math.min(line.points[0].x, line.points[1].x);
-	// 	const y = Math.min(line.points[0].y, line.points[1].y);
-	// 	return {
-	// 		x: x,
-	// 		y: y,
-	// 		width: Math.max(line.points[0].x, line.points[1].x) - x,
-	// 		height: Math.max(line.points[0].y, line.points[1].y) - y,
-	// 	};
-	// }
+	static bound(line): { x: number; y: number; width: number; height: number } {
+		const x = Math.min(line.points[0].x, line.points[1].x);
+		const y = Math.min(line.points[0].y, line.points[1].y);
+		return {
+			x: x,
+			y: y,
+			width: Math.max(line.points[0].x, line.points[1].x) - x,
+			height: Math.max(line.points[0].y, line.points[1].y) - y,
+		};
+	}
 
 	// static move(element, position, last_position) {
 	// 	const delta_x = position.x - last_position.x;
@@ -100,38 +100,40 @@ export default class Line extends Element {
 	// 	element.y2 += delta_y;
 	// }
 
-	// static resize(line, position, last_position): void {
-	// 	if (closestPoint(line, last_position)) {
-	// 		line.points[0].x = Math.round(position.x);
-	// 		line.points[0].y = Math.round(position.y);
-	// 	} else {
-	// 		line.points[1].x = Math.round(position.x);
-	// 		line.points[1].y = Math.round(position.y);
-	// 	}
+	static resize(line, position, last_position): void {
+		if (closestPoint(line, last_position)) {
+			line.points[0].x = Math.round(position.x);
+			line.points[0].y = Math.round(position.y);
+		} else {
+			line.points[1].x = Math.round(position.x);
+			line.points[1].y = Math.round(position.y);
+		}
+	}
+
+	// static points(line) {
+	// 	return [
+	// 		{
+	// 			x: line.points[0].x,
+	// 			y: line.points[0].y,
+	// 			controls: [],
+	// 		},
+	// 		{
+	// 			x: line.points[1].x,
+	// 			y: line.points[1].y,
+	// 			controls: [],
+	// 		},
+	// 	];
 	// }
 
-	static points(line) {
-		return [
-			{
-				x: line.points[0].x,
-				y: line.points[0].y,
-			},
-			{
-				x: line.points[1].x,
-				y: line.points[1].y,
-			},
-		];
-	}
-
-	static boxes(line, box_size) {
-		return line.points.map((point) => ({
-			id: line.id,
-			x: point.x,
-			y: point.y,
-			width: box_size,
-			height: box_size,
-		}));
-	}
+	// static boxes(line, box_size) {
+	// 	return line.points.map((point) => ({
+	// 		id: line.id,
+	// 		x: point.x,
+	// 		y: point.y,
+	// 		width: box_size,
+	// 		height: box_size,
+	// 	}));
+	// }
 }
 
 function closestPoint(line, position) {

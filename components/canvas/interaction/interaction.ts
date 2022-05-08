@@ -1,12 +1,10 @@
 import Settings from '../../settings';
 import Elements from '../../canvas/elements/elements';
 import move from './move';
-import resize from './resize';
 import select from './select';
-import { DOMToCanvas, generateID } from '../../../utils/utils';
+import { DOMToCanvas, generateID, split } from '../../../utils/utils';
 import { roundPoint } from './round-point';
 import actions from '../../../redux/slice';
-import rotate from './rotate';
 import edit from './edit';
 
 export function hover(event: PointerEvent, canvas, store, id, active) {
@@ -20,21 +18,22 @@ export function hover(event: PointerEvent, canvas, store, id, active) {
 
 	const target = active.altering[0]?.element;
 	const action = active.altering[0]?.action ?? (event.buttons ? undefined : 'select');
-	const rotation = cursorRotation(target, action, position);
-	store.dispatch(actions.cursor({ user_id: Settings.user_id, ...position, rotation, type: action, visible: true }));
+
+	const rotation = cursorRotation(target, position, cursor);
+
+	store.dispatch(actions.cursor({ user_id: Settings.user_id, ...position, rotation, type: cursor.pressed ? cursor.type : action, visible: true }));
 	store.dispatch(actions.hoverOnly({ id: active.hovering[0]?.id }));
 }
 
-function cursorRotation(target, action, position) {
-	if (!target) return 0;
-	const center = Elements[target.type].center(target);
-	const rotation = Math.atan2(center.y - position.y, center.x - position.x);
-	if (action === 'resize' || action === 'rotate') return rotation;
-	if (action === 'stretch') {
-		const sign = Math.abs(rotation) < Math.PI / 4 || Math.abs(rotation) > (3 * Math.PI) / 4 ? 1 : -1;
-		return target.rotation + (Math.PI / 4) * sign - Math.PI / 4;
+function cursorRotation(target, position, cursor) {
+	if (!target) return cursor.rotation;
+	if (cursor.type === 'spread') return target.rotation;
+	if (cursor.type === 'stretch') return target.rotation - Math.PI / 2;
+	if (cursor.type === 'resize' || cursor.type === 'rotate') {
+		const center = Elements[target.type].center(target);
+		return Math.atan2(center.y - position.y, center.x - position.x);
 	}
-	return 0;
+	return cursor.rotation;
 }
 
 // Needs refactor to use strategy design pattern
@@ -63,10 +62,24 @@ function applyAction(down_event, last_position, canvas, store, active, view) {
 	if (active.altering.length > 0) {
 		const action = active.altering[0].action;
 		const target = active.altering[0].element;
-		if (action === 'resize') {
-			resize(canvas, store, view, target, last_position, down_event);
-		} else if (action === 'rotate') {
-			rotate(canvas, store, view, target, last_position, down_event);
+		if (action === 'resize' || action === 'stretch' || action === 'spread' || action === 'rotate') {
+			const move = (move_event) => {
+				let position = DOMToCanvas(move_event, canvas, view);
+
+				const state = store.getState().present;
+				let [, points] = split(state.elements, (element) => element.selected).map((elements) => elements.map((element) => Elements[element.type].points(element)).flat());
+				position = roundPoint(position, [] /*[position]*/, points, view);
+
+				const selected_ids = state.elements.filter((element) => element.selected).map((element) => element.id);
+
+				store.dispatch(actions[action]({ user_id: Settings.user_id, id: target.id, position, last_position, selected_ids }));
+
+				last_position = position;
+			};
+			down_event.target.addEventListener('pointermove', move);
+
+			const release = () => down_event.target.removeEventListener('pointermove', move);
+			down_event.target.addEventListener('pointerup', release, { once: true });
 		} else if (action === 'edit') {
 			edit(canvas, store, view, target, last_position, down_event, active.altering[0].point);
 		}

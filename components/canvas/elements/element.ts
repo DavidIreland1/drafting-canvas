@@ -159,17 +159,7 @@ export default class Element {
 		const normal_last_position = rotatePoint(last_position, center, -sin, cos);
 		const normal_position = rotatePoint(position, center, -sin, cos);
 
-		Elements[element.type].getPoints(element).forEach((point) => {
-			const rotated = rotatePoint(point, center, -sin, cos);
-			point.x = rotated.x;
-			point.y = rotated.y;
-
-			point.controls.forEach((control) => {
-				const rotated = rotatePoint(control, center, -sin, cos);
-				control.x = rotated.x;
-				control.y = rotated.y;
-			});
-		});
+		rotatePoints(element, center, -sin, cos);
 
 		const delta_x = (normal_last_position.x - normal_position.x) * (normal_last_position.x < center.x ? 1 : -1);
 		const delta_y = (normal_last_position.y - normal_position.y) * (normal_last_position.y < center.y ? 1 : -1);
@@ -178,41 +168,73 @@ export default class Element {
 		const width_ratio = (bounds.width + delta_x) / bounds.width;
 		const height_ratio = (bounds.height + delta_y) / bounds.height;
 
-		// Top left of bounding box
-		const x_min_old = Math.min(...Elements[element.type].getPoints(element).map((point) => point.x));
-		const y_min_old = Math.min(...Elements[element.type].getPoints(element).map((point) => point.y));
+		// Top left of old bounding box
+		const old_x_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point.x));
+		const old_y_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point.y));
 
-		// Top left of resize box
-		const x_min = normal_last_position.x < center.x ? x_min_old - delta_x : x_min_old;
-		const y_min = normal_last_position.y < center.y ? y_min_old - delta_y : y_min_old;
+		// Top left of new bounding box
+		const new_x_min = normal_last_position.x < center.x ? old_x_min - delta_x : old_x_min;
+		const new_y_min = normal_last_position.y < center.y ? old_y_min - delta_y : old_y_min;
 
-		// Scale point positions
-		Elements[element.type].getPoints(element).forEach((point) => {
-			point.x = (point.x - x_min_old) * width_ratio + x_min;
-			point.y = (point.y - y_min_old) * height_ratio + y_min;
-
-			point.controls.forEach((control) => {
-				control.x = (control.x - x_min_old) * width_ratio + x_min;
-				control.y = (control.y - y_min_old) * height_ratio + y_min;
-			});
-		});
+		scalePoints(element, 'x', old_x_min, width_ratio, new_x_min);
+		scalePoints(element, 'y', old_y_min, height_ratio, new_y_min);
 
 		// Rotate points back
-		Elements[element.type].getPoints(element).forEach((point) => {
-			const rotated = rotatePoint(point, center, sin, cos);
-			point.x = rotated.x;
-			point.y = rotated.y;
-
-			point.controls.forEach((control) => {
-				const rotated = rotatePoint(control, center, sin, cos);
-				control.x = rotated.x;
-				control.y = rotated.y;
-			});
-		});
+		rotatePoints(element, center, sin, cos);
 	}
 
 	static stretch(element, position, last_position): void {
-		return;
+		const center = this.center(element);
+		const bounds = this.bound(element);
+
+		if (bounds.height === 0) return; // This might be an issue
+
+		const sin = Math.sin(element.rotation);
+		const cos = Math.cos(element.rotation);
+
+		// Rotate all points to 0 deg
+		const normal_last_position = rotatePoint(last_position, center, -sin, cos);
+		const normal_position = rotatePoint(position, center, -sin, cos);
+		rotatePoints(element, center, -sin, cos);
+
+		const delta_y = (normal_last_position.y - normal_position.y) * (normal_last_position.y < center.y ? 1 : -1);
+		const height_ratio = (bounds.height + delta_y) / bounds.height;
+
+		// Top left of resize box
+		const old_y_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point.y));
+		const new_y_min = normal_last_position.y < center.y ? old_y_min - delta_y : old_y_min;
+
+		scalePoints(element, 'y', old_y_min, height_ratio, new_y_min);
+
+		// Rotate points back
+		rotatePoints(element, center, sin, cos);
+	}
+
+	static spread(element, position, last_position): void {
+		const center = this.center(element);
+		const bounds = this.bound(element);
+
+		if (bounds.width === 0) return; // This might be an issue
+
+		const sin = Math.sin(element.rotation);
+		const cos = Math.cos(element.rotation);
+
+		// Rotate all points to 0 deg
+		const normal_last_position = rotatePoint(last_position, center, -sin, cos);
+		const normal_position = rotatePoint(position, center, -sin, cos);
+		rotatePoints(element, center, -sin, cos);
+
+		const delta_x = (normal_last_position.x - normal_position.x) * (normal_last_position.x < center.x ? 1 : -1);
+		const width_ratio = (bounds.width + delta_x) / bounds.width;
+
+		// Top left of resize box
+		const old_x_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point.x));
+		const new_x_min = normal_last_position.x < center.x ? old_x_min - delta_x : old_x_min;
+
+		scalePoints(element, 'x', old_x_min, width_ratio, new_x_min);
+
+		// Rotate points back
+		rotatePoints(element, center, sin, cos);
 	}
 
 	static outline(element, context: CanvasRenderingContext2D, color: string, line_width: number): void {
@@ -229,14 +251,23 @@ export default class Element {
 
 	static highlight(element, context, cursor, highlight, line, box) {
 		let action = undefined;
+
+		const center = this.center(element);
+		context.save();
+		context.translate(center.x, center.y);
+		context.rotate(element.rotation);
+
 		if (this.drawStretch(element, context, cursor, highlight, line)) action = 'stretch';
-		// if (this.drawSpread(element, context, cursor, highlight, line)) action = 'spread';
+		if (this.drawSpread(element, context, cursor, highlight, line)) action = 'spread';
 		if (this.drawRotate(element, context, cursor, box)) action = 'rotate';
 		if (this.drawResize(element, context, cursor, highlight, line, box)) action = 'resize';
+
+		context.rotate(-element.rotation);
+		context.translate(-center.x, -center.y);
+
 		return action ? { action, element } : undefined;
 	}
 
-	// Maybe this can be removed
 	static insideBound(element, context: CanvasRenderingContext2D, cursor): boolean {
 		const bounds = this.bound(element);
 		const center = this.center(element);
@@ -246,35 +277,44 @@ export default class Element {
 		context.rotate(element.rotation);
 		context.beginPath();
 		context.rect(-bounds.width / 2, -bounds.height / 2, bounds.width, bounds.height);
-		context.restore();
+		context.rotate(-element.rotation);
+		context.translate(-center.x, -center.y);
 
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
 
 	static drawStretch(element, context: CanvasRenderingContext2D, cursor, color: string, line: number): boolean {
 		const bounds = this.bound(element);
-		const center = this.center(element);
-		context.save();
-		context.translate(center.x, center.y);
-		context.rotate(element.rotation);
+
 		context.strokeStyle = color;
-		context.beginPath();
-		context.rect(-bounds.width / 2, -bounds.height / 2, bounds.width, bounds.height);
-		context.lineWidth = line * 2;
-		const hov = context.isPointInStroke(cursor.x, cursor.y);
 		context.lineWidth = line;
-		context.stroke();
-		context.restore();
-		return hov;
+
+		const path = new Path2D();
+		path.moveTo(-bounds.width / 2, -bounds.height / 2);
+		path.lineTo(bounds.width / 2, -bounds.height / 2);
+		path.moveTo(-bounds.width / 2, bounds.height / 2);
+		path.lineTo(bounds.width / 2, bounds.height / 2);
+		context.stroke(path);
+		context.lineWidth = line * 4;
+		return context.isPointInStroke(path, cursor.x, cursor.y);
+	}
+
+	static drawSpread(element, context: CanvasRenderingContext2D, cursor, color: string, line: number): boolean {
+		const bounds = this.bound(element);
+		context.strokeStyle = color;
+		context.lineWidth = line;
+		const path = new Path2D();
+		path.moveTo(bounds.width / 2, -bounds.height / 2);
+		path.lineTo(bounds.width / 2, bounds.height / 2);
+		path.moveTo(-bounds.width / 2, bounds.height / 2);
+		path.lineTo(-bounds.width / 2, -bounds.height / 2);
+		context.stroke(path);
+		context.lineWidth = line * 4;
+		return context.isPointInStroke(path, cursor.x, cursor.y);
 	}
 
 	static drawResize(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number): boolean {
 		const bounds = this.bound(element);
-		const center = this.center(element);
-
-		context.save();
-		context.translate(center.x, center.y);
-		context.rotate(element.rotation);
 
 		bounds.x = -bounds.width / 2;
 		bounds.y = -bounds.height / 2;
@@ -289,18 +329,11 @@ export default class Element {
 			context.fill();
 			context.stroke();
 		}
-		context.restore();
-
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
 
 	static drawRotate(element, context: CanvasRenderingContext2D, cursor, box_size: number): boolean {
 		const bounds = this.bound(element);
-		const center = this.center(element);
-
-		context.save();
-		context.translate(center.x, center.y);
-		context.rotate(element.rotation);
 
 		bounds.x = -bounds.width / 2 - Math.sign(bounds.width) * box_size;
 		bounds.y = -bounds.height / 2 - Math.sign(bounds.height) * box_size;
@@ -309,7 +342,6 @@ export default class Element {
 
 		context.beginPath();
 		this.boxes(element.id, bounds, box_size * 2).forEach((square) => context.rect(square.x, square.y, square.width, square.height));
-		context.restore();
 
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
@@ -510,8 +542,6 @@ export default class Element {
 				control.y += delta_y;
 			});
 		});
-
-		// if (Array.isArray(element.elements)) element.elements.forEach((element) => Elements[element.type].move(element, position, last_position));
 	}
 
 	static rotate(element, position, last_position) {
@@ -521,17 +551,7 @@ export default class Element {
 		const sin = Math.sin(rotation);
 		const cos = Math.cos(rotation);
 
-		Elements[element.type].getPoints(element).forEach((point) => {
-			const rotated = rotatePoint(point, center, sin, cos);
-			point.x = rotated.x;
-			point.y = rotated.y;
-
-			point.controls.forEach((control) => {
-				const rotated = rotatePoint(control, center, sin, cos);
-				control.x = rotated.x;
-				control.y = rotated.y;
-			});
-		});
+		rotatePoints(element, center, sin, cos);
 		this.addRotation(element, rotation);
 	}
 
@@ -572,4 +592,28 @@ export default class Element {
 			},
 		];
 	}
+}
+
+function rotatePoints(element, center, sin, cos) {
+	Elements[element.type].getPoints(element).forEach((point) => {
+		const rotated = rotatePoint(point, center, sin, cos);
+		point.x = rotated.x;
+		point.y = rotated.y;
+
+		point.controls.forEach((control) => {
+			const rotated = rotatePoint(control, center, sin, cos);
+			control.x = rotated.x;
+			control.y = rotated.y;
+		});
+	});
+}
+
+function scalePoints(element, dimension, old_min, ratio, new_min) {
+	Elements[element.type].getPoints(element).forEach((point) => {
+		point[dimension] = (point[dimension] - old_min) * ratio + new_min;
+
+		point.controls.forEach((control) => {
+			control[dimension] = (control[dimension] - old_min) * ratio + new_min;
+		});
+	});
 }
