@@ -135,7 +135,6 @@ export default class Line extends Element {
 	// 	}));
 	// }
 }
-
 function closestPoint(line, position) {
 	return (line.points[0].x - position.x) ** 2 + (line.points[0].y - position.y) ** 2 < (line.points[1].x - position.x) ** 2 + (line.points[1].y - position.y) ** 2;
 }
