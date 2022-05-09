@@ -62,7 +62,7 @@ function Canvas({ user_id, store }, ref) {
 	return (
 		<div id="container">
 			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} />
-			<canvas className="checkers" ref={canvas_ref} tabIndex={1} style={{ background: background, cursor: cursor }} />
+			<canvas className="checkers" ref={canvas_ref} style={{ background: background, cursor: cursor }} />
 
 			<style jsx>{`
 				#container {

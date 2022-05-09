@@ -74,8 +74,8 @@ export default function Navbar({ store }) {
 
 				<Theme />
 
-				<a target="_blank" rel="noreferrer" href="https://github.com/DavidIreland1/drafting-canvas">
-					<svg id="github" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+				<a id="github" target="_blank" rel="noreferrer" href="https://github.com/DavidIreland1/drafting-canvas" aria-label="Github">
+					<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
 						<path
 							fillRule="evenodd"
 							clipRule="evenodd"
@@ -159,7 +159,7 @@ export default function Navbar({ store }) {
 					border-radius: 20px;
 					height: 40px;
 				}
-				#github {
+				#github > svg {
 					padding: 4px;
 					margin: 4px;
 					height: 32px;
@@ -170,7 +170,7 @@ export default function Navbar({ store }) {
 					fill: var(--icon);
 					opacity: 0.8;
 				}
-				#github:hover {
+				#github > svg:hover {
 					opacity: 1;
 				}
 			`}</style>
@@ -181,7 +181,6 @@ export default function Navbar({ store }) {
 function Share() {
 	function copyLink() {
 		navigator.clipboard.writeText(location.href);
-
 		setDisplay('block');
 		setTimeout(() => setDisplay('none'), 3000);
 	}
@@ -202,6 +201,7 @@ function Share() {
 					border-radius: 5px;
 					opacity: 0.8;
 					height: 30px;
+					color: var(--text);
 				}
 				button:hover {
 					opacity: 1;

@@ -28,11 +28,15 @@ export default function Theme() {
 
 	return (
 		<div onClick={toggleTheme}>
-			<input type="checkbox" checked={theme === 'light'} onChange={() => null} />
+			<label htmlFor="theme">Theme Toggle</label>
+			<input id="theme" type="checkbox" checked={theme === 'light'} onChange={() => null} />
 
 			<style jsx>{`
 				div {
 					margin: 8px 3px auto 3px;
+				}
+				label {
+					display: none;
 				}
 				input {
 					margin: auto;
