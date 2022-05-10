@@ -1,14 +1,12 @@
-import { useRef } from 'react';
-
-// const click_position = { x: 0, y: 0 };
+import { useRef, useState } from 'react';
 
 export default function Input({ id, label, value, type = 'number', step = 1, min = NaN, unit = '', onChange, width = undefined }) {
 	const input = useRef(null);
+	const [pointer, setPointer] = useState({ x: 0, y: 0 });
 
 	if (value === undefined) return null;
 
 	const updateValue = (event) => {
-		// event.target.style.width = `max(calc(${width} / 6), ${Math.max(event.target.value.length + 2, 5)}ch)`;
 		event.target.id = id;
 		event.target.last = value;
 		onChange(event);
@@ -16,44 +14,47 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 
 	const dragProperty = (down_event) => {
 		down_event.preventDefault();
-		down_event.target.setPointerCapture(down_event.pointerId);
+		down_event.target.requestPointerLock();
+
+		const scrub_cursor = document.getElementById('scrub-cursor');
+		scrub_cursor.style.display = 'block';
+		scrub_cursor.style.top = down_event.clientY + 'px';
+		scrub_cursor.style.left = down_event.clientX + 'px';
 
 		input.current.focus();
-		let last_event = down_event;
 		const move = (move_event) => {
 			move_event.preventDefault();
-			const delta = Math.sign(move_event.clientX - last_event.clientX) * step;
+
+			const bounds = scrub_cursor.getBoundingClientRect();
+			const y = (bounds.y + move_event.movementY) % window.innerHeight;
+			const x = (bounds.x + move_event.movementX) % window.innerWidth;
+			scrub_cursor.style.top = (y > 0 ? y : window.innerHeight) + 'px';
+			scrub_cursor.style.left = (x > 0 ? x : window.innerWidth) + 'px';
+
+			const delta = move_event.movementX * step;
+			setPointer({ x: pointer.x + move_event.movementX, y: pointer.y + move_event.movementY });
 			value = Number(value);
 			if (isNaN(value)) value = 0;
 			value = (delta + value).toPrecision(12); // Stops floating point errors
 			move_event.target.value = isNaN(min) ? value : Math.max(value, min);
 			move_event.target.id = id;
 			onChange(move_event);
-			last_event = move_event;
 			if (move_event.stopPropagation) move_event.stopPropagation();
 			if (move_event.preventDefault) move_event.preventDefault();
 			move_event.cancelBubble = true;
 			move_event.returnValue = false;
 			return false;
 		};
-		down_event.target.addEventListener('pointermove', move);
+		down_event.target.addEventListener('mousemove', move);
 		const end = () => {
-			down_event.target.releasePointerCapture(down_event.pointerId);
-			down_event.target.removeEventListener('pointermove', move);
+			document.exitPointerLock();
+			down_event.target.removeEventListener('mousemove', move);
+			scrub_cursor.style.display = 'none';
 		};
-		down_event.target.addEventListener('pointerup', end, { once: true });
+		down_event.target.addEventListener('mouseup', end, { once: true });
 	};
 
-	// function mouseDown(event) {
-	// 	click_position.x = event.clientX;
-	// 	click_position.y = event.clientY;
-	// }
-	// function mouseUp(event) {
-	// 	if (event.clientX == click_position.x && event.clientY === click_position.y) {
-	// 		event.target.select();
-	// 	}
-	// }
-
+	// Round to min(user set precision, 2dp)
 	if (!isNaN(value)) {
 		const length = Math.min(('.' + Math.abs(value).toPrecision(12).split('.')[1]).replaceAll('0', ' ').trim().length - 1, 2);
 		value = value.toFixed(length);
@@ -62,7 +63,7 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 	return (
 		<>
 			<div id={id} className="dimension">
-				<label onPointerDown={dragProperty}>{label}</label>
+				<label onMouseDown={dragProperty}>{label}</label>
 				<input
 					ref={input}
 					type={isNaN(value) ? '' : type}
@@ -74,8 +75,6 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 						width: `max(calc(${width} / 6), 5ch)`,
 					}}
 					onChange={updateValue}
-					// onMouseDown={mouseDown}
-					// onMouseUp={mouseUp}
 				/>
 			</div>
 

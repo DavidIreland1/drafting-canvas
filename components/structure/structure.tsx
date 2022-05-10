@@ -87,7 +87,7 @@ export default function Structure({ store, onResize }) {
 					background: transparent;
 					right: -5px;
 					cursor: ew-resize;
-					z-index: 5;
+					z-index: 3;
 				}
 			`}</style>
 		</div>

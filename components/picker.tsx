@@ -141,7 +141,7 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 
 				#container {
 					position: absolute;
-					z-index: 7;
+					z-index: 4;
 					padding: 10px 0 20px 0;
 					background: var(--panel);
 					box-shadow: 0 0 10px black;
