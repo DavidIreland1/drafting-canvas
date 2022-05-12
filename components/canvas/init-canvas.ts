@@ -55,28 +55,27 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 		drop(event, canvas, store, user_id);
 	};
 
-	canvas.onpointermove = (event) => {
+	canvas.onmousemove = (event) => {
 		hover(event, canvas, store, user_id, active);
 	};
 
-	canvas.onpointerout = () => {
+	canvas.onmouseout = () => {
 		store.dispatch(actions.cursor({ user_id: user_id, visible: false }));
 	};
 
-	canvas.onpointerover = () => {
+	canvas.onmouseover = () => {
 		canvas.focus(); // Needed for react?
 		store.dispatch(actions.cursor({ user_id: user_id, visible: true }));
 	};
 
-	canvas.onpointerdown = (event) => {
+	canvas.onmousedown = (event) => {
 		if (event.button !== 0) return;
 		if (active.selected.length) store.dispatch(actions.cursor({ user_id: user_id, pressed: true }));
 		event.preventDefault();
-		(event.target as any).setPointerCapture(event.pointerId);
 		singleClick(event, canvas, user_id, store, active);
 	};
 
-	canvas.onpointerup = () => {
+	canvas.onmouseup = () => {
 		store.dispatch(actions.cursor({ user_id: user_id, pressed: false }));
 	};
 }

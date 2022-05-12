@@ -1,0 +1,19 @@
+#menu > ul {
+	padding: 5px 0;
+	margin: 0;
+	list-style-type: none;
+	font-size: 14px;
+}
+
+#menu > ul > li {
+	padding: 5px 10px 5px 20px;
+	cursor: default;
+}
+
+#menu > ul > li:hover {
+	background: var(--hover);
+}
+
+#menu > ul > li > span {
+	float: right;
+}

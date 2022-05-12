@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 
 export default function Input({ id, label, value, type = 'number', step = 1, min = NaN, unit = '', onChange, width = undefined }) {
 	const input = useRef(null);
-	const [pointer, setPointer] = useState({ x: 0, y: 0 });
+	const [cursor, setCursor] = useState({ x: 0, y: 0 });
 
 	if (value === undefined) return null;
 
@@ -32,7 +32,7 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 			scrub_cursor.style.left = (x > 0 ? x : window.innerWidth) + 'px';
 
 			const delta = move_event.movementX * step;
-			setPointer({ x: pointer.x + move_event.movementX, y: pointer.y + move_event.movementY });
+			setCursor({ x: cursor.x + move_event.movementX, y: cursor.y + move_event.movementY });
 			value = Number(value);
 			if (isNaN(value)) value = 0;
 			value = (delta + value).toPrecision(12); // Stops floating point errors

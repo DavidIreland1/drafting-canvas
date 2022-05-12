@@ -7,7 +7,7 @@ import { roundPoint } from './round-point';
 import actions from '../../../redux/slice';
 import edit from './edit';
 
-export function hover(event: PointerEvent, canvas, store, id, active) {
+export function hover(event: MouseEvent, canvas, store, id, active) {
 	const view = store.getState().present.views.find((view) => view.id === id);
 	const cursor = store.getState().present.cursors.find((view) => view.id === id);
 
@@ -76,10 +76,10 @@ function applyAction(down_event, last_position, canvas, store, active, view) {
 
 				last_position = position;
 			};
-			down_event.target.addEventListener('pointermove', move);
+			down_event.target.addEventListener('mousemove', move);
 
-			const release = () => down_event.target.removeEventListener('pointermove', move);
-			down_event.target.addEventListener('pointerup', release, { once: true });
+			const release = () => down_event.target.removeEventListener('mousemove', move);
+			down_event.target.addEventListener('mouseup', release, { once: true });
 		} else if (action === 'edit') {
 			edit(canvas, store, view, target, last_position, down_event, active.altering[0].point);
 		}
@@ -105,7 +105,7 @@ function create(last_position, canvas, store, view, cursor, points) {
 		store.dispatch(actions.resize({ user_id: Settings.user_id, id: id, position, last_position, selected_ids: [id] }));
 		last_position = position;
 	};
-	window.addEventListener('pointermove', move);
+	window.addEventListener('mousemove', move);
 
 	const release = () => {
 		if (expanded === false) {
@@ -119,10 +119,10 @@ function create(last_position, canvas, store, view, cursor, points) {
 				})
 			);
 		}
-		window.removeEventListener('pointermove', move);
+		window.removeEventListener('mousemove', move);
 	};
 
-	window.addEventListener('pointerup', release, { once: true });
+	window.addEventListener('mouseup', release, { once: true });
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

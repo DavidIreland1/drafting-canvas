@@ -1,16 +1,14 @@
-import type { AppProps } from 'next/app';
+import './../public/global.css';
+import './../public/menu.css';
 
 import Navbar from '../components/navbar/navbar';
-
 import store from './../redux/store';
-
-import './../public/global.css';
 
 import { Provider } from 'react-redux';
 import Head from 'next/head';
 import Script from 'next/script';
 
-export default function DraftingCanvas({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }) {
 	return (
 		<>
 			<Head>
@@ -25,6 +23,8 @@ export default function DraftingCanvas({ Component, pageProps }: AppProps) {
 					<path d="M16.6439 7.50057H16.644H19.5384V9.58657V10.5842L20.3377 9.98714L25.1378 6.40114L25.6741 6.00052L25.1378 5.59997L20.3376 2.01497L19.5384 1.4181V2.41557V4.52057H16.644H7.49642V2.41357V1.41926L6.69825 2.01221L1.8698 5.59921L1.32945 6.00063L1.86985 6.40198L6.69831 9.98798L7.49642 10.5807V9.58657V7.49963L16.6439 7.50057Z" fill="black" stroke="white" />
 				</svg>
 			</div>
+			<div id="portal" />
+
 			<Provider store={store as any}>
 				<div id="grid">
 					<Navbar store={store} />

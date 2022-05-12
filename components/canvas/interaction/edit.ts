@@ -20,8 +20,8 @@ export default function edit(canvas, store, view, target, last_position, down_ev
 
 		last_position = position;
 	};
-	down_event.target.addEventListener('pointermove', move);
+	down_event.target.addEventListener('mousemove', move);
 
-	const release = () => down_event.target.removeEventListener('pointermove', move);
-	down_event.target.addEventListener('pointerup', release, { once: true });
+	const release = () => down_event.target.removeEventListener('mousemove', move);
+	down_event.target.addEventListener('mouseup', release, { once: true });
 }

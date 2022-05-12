@@ -4,6 +4,7 @@ import draw from './draw';
 import TextLayer from './text-layer';
 import Colors from '../properties/colors';
 import actions from '../../redux/slice';
+import Menu from '../menu/menu';
 
 export default forwardRef(Canvas);
 
@@ -63,6 +64,17 @@ function Canvas({ user_id, store }, ref) {
 		<div id="container">
 			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} />
 			<canvas className="checkers" ref={canvas_ref} style={{ background: background, cursor: cursor }} />
+
+			<Menu element={canvas_ref}>
+				<ul>
+					<li onMouseDown={() => console.log('hello')}>
+						Copy <span>⌘C</span>
+					</li>
+					<li onClick={() => console.log('hello')}>Hello</li>
+					<li>Hello</li>
+					<li>Hello</li>
+				</ul>
+			</Menu>
 
 			<style jsx>{`
 				#container {
