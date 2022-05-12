@@ -14,6 +14,12 @@
 	background: var(--hover);
 }
 
+#menu > ul > .divider {
+	height: 1px;
+	background: var(--border);
+	margin: 5px 0;
+}
+
 #menu > ul > li > span {
 	float: right;
 }

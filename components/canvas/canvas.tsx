@@ -8,6 +8,13 @@ import Menu from '../menu/menu';
 
 export default forwardRef(Canvas);
 
+// const active = {
+// 	editing: [],
+// 	hovering: [],
+// 	selected: [],
+// 	altering: [],
+// };
+
 function Canvas({ user_id, store }, ref) {
 	const canvas_ref = useRef(null);
 
@@ -18,6 +25,13 @@ function Canvas({ user_id, store }, ref) {
 	}));
 
 	const [background, setBackground] = useState(Colors.toString(store.getState().present.page.color));
+
+	const active = {
+		editing: [],
+		hovering: [],
+		selected: [],
+		altering: [],
+	};
 
 	useEffect(() => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
@@ -35,20 +49,15 @@ function Canvas({ user_id, store }, ref) {
 		window.addEventListener('resize', () => onResize(canvas, store, user_id));
 		window.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
 
-		let active = {
-			editing: [],
-			hovering: [],
-			selected: [],
-			altering: [],
-		};
-
 		initCanvas(canvas, user_id, store, active);
 
 		draw(context, store.getState().present, active, user_id);
 
 		(window as any).redraw = () => draw(context, store.getState().present, active, user_id);
 
-		store.subscribe(() => draw(context, store.getState().present, active, user_id));
+		store.subscribe(() => {
+			draw(context, store.getState().present, active, user_id);
+		});
 
 		setTimeout(() => setBackground(''), 0);
 	}, [canvas_ref, store, user_id]);
@@ -65,16 +74,7 @@ function Canvas({ user_id, store }, ref) {
 			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} />
 			<canvas className="checkers" ref={canvas_ref} style={{ background: background, cursor: cursor }} />
 
-			<Menu element={canvas_ref}>
-				<ul>
-					<li onMouseDown={() => console.log('hello')}>
-						Copy <span>⌘C</span>
-					</li>
-					<li onClick={() => console.log('hello')}>Hello</li>
-					<li>Hello</li>
-					<li>Hello</li>
-				</ul>
-			</Menu>
+			<Menu element={canvas_ref} getContents={getContextMenu} props={active}></Menu>
 
 			<style jsx>{`
 				#container {
@@ -132,5 +132,25 @@ function onResize(canvas, store, user_id) {
 			user_id: user_id,
 			delta_x: delta_x * 2,
 		})
+	);
+}
+
+function getContextMenu(active, position) {
+	const element = active.hovering[0];
+	return (
+		<ul>
+			{element && (
+				<li onClick={() => console.log(element)}>
+					Copy <span>⌘C</span>
+				</li>
+			)}
+
+			<li onClick={() => console.log(position)}>
+				Paste <span>⌘V</span>
+			</li>
+			<div className="divider" />
+			<li>Hello</li>
+			<li>Hello</li>
+		</ul>
 	);
 }

@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-export default function Menu({ element, children }) {
+export default function Menu({ element, getContents, props }) {
 	const [position, setPosition] = useState({ x: 0, y: 0 });
+	const [contents, setContents] = useState(null);
 
 	useEffect(() => {
 		element.current.addEventListener('contextmenu', (event) => {
 			event.preventDefault();
 			setPosition({ x: event.clientX, y: event.clientY });
+			setContents(getContents(props, { x: event.clientX, y: event.clientY }));
 
 			document.addEventListener(
 				'mouseup',
@@ -21,20 +23,20 @@ export default function Menu({ element, children }) {
 
 	function close(event) {
 		event.preventDefault();
-		setPosition({ x: 0, y: 0 });
+		requestAnimationFrame(() => setPosition({ x: 0, y: 0 }));
 	}
 
 	if (position.x === 0) return <></>;
 
 	return createPortal(
 		<div id="menu" style={{ top: position.y, left: position.x }} onContextMenu={close}>
-			{children}
+			{contents}
 			<style jsx>{`
 				#menu {
 					position: absolute;
 					top: 0;
 					left: 0;
-					width: 150px;
+					width: 200px;
 					height: max-content;
 					background: red;
 					z-index: 6;
