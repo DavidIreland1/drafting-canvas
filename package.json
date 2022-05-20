@@ -4,8 +4,12 @@
 	"private": true,
 	"scripts": {
 		"dev": "ts-node server/server",
-		"build": "next build && next export",
-		"start": "ts-node server/server",
+		"dev-build": "next build && next export",
+		"dev-start": "ts-node server/server",
+
+		"build": "tsc server/server.ts ",
+		"start": "node server/server.js",
+
 		"serve": "next serve",
 		"lint": "next lint",
 		"prod": "NODE_ENV=production node server/server.js",
