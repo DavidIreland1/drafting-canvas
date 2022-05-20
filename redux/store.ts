@@ -28,7 +28,7 @@ export default function makeStore(room) {
 		typeof Primus !== 'undefined'
 			? (scuttlebutt({
 					primus: Primus,
-					uri: 'http://localhost:3001',
+					uri: 'http://localhost:3000',
 					room: room,
 			  }) as any)
 			: undefined

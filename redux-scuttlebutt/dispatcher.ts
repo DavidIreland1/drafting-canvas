@@ -1,4 +1,4 @@
-import Scuttlebutt from 'scuttlebutt-vector';
+import * as Scuttlebutt from 'scuttlebutt-vector';
 
 import orderedHistory from './ordered-history';
 
@@ -19,7 +19,9 @@ const defaultOptions = {
 	signAsync: undefined,
 };
 
-export default class Dispatcher extends Scuttlebutt {
+const ScuttlebuttClass = Scuttlebutt.default ?? Scuttlebutt;
+
+export default class Dispatcher extends ScuttlebuttClass {
 	options;
 	_customDispatch;
 	_isGossipType;

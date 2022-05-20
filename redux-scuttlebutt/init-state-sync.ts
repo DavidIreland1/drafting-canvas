@@ -1,7 +1,7 @@
-import Primus from 'primus';
+import * as Primus from 'primus';
 import Dispatcher from './dispatcher';
 
-import Rooms from 'primus-rooms';
+import * as Rooms from 'primus-rooms';
 
 const defaultOptions = {
 	getStatistics: getStatistics,
@@ -19,7 +19,9 @@ let rooms = {};
 export default function initStateSync(server, options = { primusOptions: {} }) {
 	options = Object.assign(defaultOptions, options);
 
-	const primus = new Primus(server, options.primusOptions);
+	const PrimusClass = Primus.default ?? Primus;
+
+	const primus = new PrimusClass(server, options.primusOptions);
 	primus.plugin('rooms', Rooms);
 
 	// const onStatistic = options.getStatistics();
