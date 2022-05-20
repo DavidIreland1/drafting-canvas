@@ -2,13 +2,23 @@ import './../public/global.css';
 import './../public/menu.css';
 
 import Navbar from '../components/navbar/navbar';
-import store from './../redux/store';
+import makeStore from './../redux/store';
 
 import { Provider } from 'react-redux';
 import Head from 'next/head';
 import Script from 'next/script';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function App({ Component, pageProps }) {
+	const router = useRouter();
+
+	const [store, setStore] = useState(makeStore(null));
+
+	useEffect(() => {
+		setStore(makeStore(router.query.page));
+	}, [router.query.page]);
+
 	return (
 		<>
 			<Head>

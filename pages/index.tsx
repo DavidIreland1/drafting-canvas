@@ -24,7 +24,7 @@ export default function Home(): JSX.Element {
 					<div key={i}>
 						<Link href={`file/${file.id}`}>
 							<a className="card">
-								<Image alt={file.label} src="/favicon.svg" height="100" width="100" />
+								<Image alt={file.label} src="/favicon.svg" priority={true} height="100" width="100" />
 								<label>{file.label}</label>
 							</a>
 						</Link>

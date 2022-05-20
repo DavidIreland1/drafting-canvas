@@ -27,7 +27,7 @@ export default function Tab({ tab, url, leavePage, closeTab }) {
 
 	return (
 		<div ref={tab_ref}>
-			<Link href={'/' + tab.id}>
+			<Link href={'/file/' + tab.id}>
 				<a onClick={leavePage} className={'tab' + (tab.id === url ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
 					<div>{tab.label}</div>
 					<Cross onClick={() => closeTab(tab.id)} />
