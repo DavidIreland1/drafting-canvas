@@ -30,7 +30,7 @@ export default function Text({ selected, store, width, fonts }) {
 		if (!font) return;
 		setWeights(font.variants);
 
-		document.fonts.onloadingdone = () => {
+		(document as any).fonts.onloadingdone = () => {
 			updateText({ target: { id: 'style', value: 'normal' } });
 			updateText({ target: { id: 'family', value: font_family } });
 		};

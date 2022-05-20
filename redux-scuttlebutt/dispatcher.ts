@@ -6,12 +6,10 @@ import getDelayedDispatch from './get-delayed-dispatch';
 
 import { UPDATE_ACTION, META_TIMESTAMP, META_SOURCE } from './constants';
 
-const filter = Scuttlebutt.filter;
-
-// ignore actiontypes beginning with @
+// ignore action types beginning with @
 // by default just pass through missing types (redux will blow up later)
 export function isGossipType(type = '') {
-	return type.substr(0, 1) !== '@';
+	return type.slice(0, 1) !== '@';
 }
 
 const defaultOptions = {
@@ -136,7 +134,7 @@ export default class Dispatcher extends Scuttlebutt {
 	history(sources) {
 		// our state (updates[]) has a similar shape to scuttlebutt's own updates.
 		return this._reduxGetState().reduce((arr, update) => {
-			if (update[UPDATE_ACTION] && this._isGossipType(update[UPDATE_ACTION].type) && filter(update, sources)) {
+			if (update[UPDATE_ACTION] && this._isGossipType(update[UPDATE_ACTION].type) && Scuttlebutt.filter(update, sources)) {
 				// scuttlebutt only wants ACTION, TIMESTAMP, SOURCE, and not: SNAPSHOT
 				arr.push(update.slice(0, 3));
 			}
