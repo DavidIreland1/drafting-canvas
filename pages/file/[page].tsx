@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import Sheet from './../components/sheet';
+import Sheet from './../../components/sheet';
 
 export default function Page({ store }): JSX.Element {
 	return (
