@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "ts-node server/server",
 		"build": "next build && next export",
-		"start": "next start",
+		"start": "ts-node server/server",
 		"serve": "next serve",
 		"lint": "next lint",
 		"prod": "NODE_ENV=production node server/server.js",

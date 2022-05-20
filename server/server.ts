@@ -11,7 +11,7 @@ import next from 'next';
 
 // import Primus from './node_modules/redux-scuttlebutt/lib/primus.js';
 
-const port = 3001;
+const port = 3000;
 const app = next({ dev: process.env.NODE_ENV !== 'production' });
 const handle = app.getRequestHandler();
 
