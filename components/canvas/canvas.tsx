@@ -8,12 +8,12 @@ import Menu from '../menu/menu';
 
 export default forwardRef(Canvas);
 
-// const active = {
-// 	editing: [],
-// 	hovering: [],
-// 	selected: [],
-// 	altering: [],
-// };
+const active = {
+	editing: [],
+	hovering: [],
+	selected: [],
+	altering: [],
+};
 
 function Canvas({ user_id, store }, ref) {
 	const canvas_ref = useRef(null);
@@ -25,13 +25,6 @@ function Canvas({ user_id, store }, ref) {
 	}));
 
 	const [background, setBackground] = useState(Colors.toString(store.getState().present.page.color));
-
-	const active = {
-		editing: [],
-		hovering: [],
-		selected: [],
-		altering: [],
-	};
 
 	useEffect(() => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;

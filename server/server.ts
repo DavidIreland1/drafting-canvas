@@ -11,7 +11,7 @@ import next from 'next';
 
 // import Primus from './node_modules/redux-scuttlebutt/lib/primus.js';
 
-const port = 3000;
+const port = process.env.PORT || 8080;
 const app = next({ dev: process.env.NODE_ENV !== 'production' });
 const handle = app.getRequestHandler();
 
@@ -21,7 +21,7 @@ app.prepare().then(() => {
 		const url = parse(req.url, true);
 		handle(req, res, url);
 	}).listen(port, () => {
-		console.log('> Ready on http://localhost:' + port);
+		console.log('> Ready on this http://localhost:' + port);
 	});
 
 	initStateSync(server);

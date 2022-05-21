@@ -1,4 +1,6 @@
-runtime: nodejs16
+env: standard
+runtime: nodejs14
+service: default
 # env: flex
 
 # This sample incurs costs to run on the App Engine flexible environment.
@@ -6,8 +8,10 @@ runtime: nodejs16
 # for production use. For more information, see:
 # https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-with-app-yaml
 
-env_variables:
-    NODE_ENV: 'production'
+handlers:
+    - url: /.*
+      secure: always
+      script: auto
 
 manual_scaling:
     instances: 1

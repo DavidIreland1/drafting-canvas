@@ -10,7 +10,7 @@ export default function Text({ id = undefined, placeholder = undefined, highligh
 
 	useEffect(() => {
 		if (highlight) input.current.select();
-	}, []);
+	}, [highlight]);
 
 	return (
 		<>

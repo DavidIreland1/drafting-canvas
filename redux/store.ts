@@ -25,10 +25,10 @@ export default function makeStore(room) {
 			present: initial_state,
 			future: [],
 		},
-		typeof Primus !== 'undefined'
+		typeof Primus !== 'undefined' && typeof room !== 'undefined'
 			? (scuttlebutt({
 					primus: Primus,
-					uri: 'http://localhost:3000',
+					uri: window.location.origin,
 					room: room,
 			  }) as any)
 			: undefined

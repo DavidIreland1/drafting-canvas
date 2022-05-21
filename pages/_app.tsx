@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 export default function App({ Component, pageProps }) {
 	const router = useRouter();
 
-	const [store, setStore] = useState(makeStore(null));
+	const [store, setStore] = useState(makeStore(undefined));
 
 	useEffect(() => {
 		setStore(makeStore(router.query.page));

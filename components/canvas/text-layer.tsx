@@ -122,6 +122,8 @@ function Editable({ id, element_id, value, style, align, placeholder = '', onCha
 		window.getSelection().selectAllChildren(div.current);
 	}, []);
 
+	const style_string = JSON.stringify(style);
+
 	return (
 		<>
 			{useMemo(
@@ -132,7 +134,7 @@ function Editable({ id, element_id, value, style, align, placeholder = '', onCha
 						</div>
 					</div>
 				),
-				[element_id, JSON.stringify(style), align]
+				[element_id, style_string, align]
 			)}
 			<style jsx>{`
 				#wrapper {

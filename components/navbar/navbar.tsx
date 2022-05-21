@@ -22,7 +22,7 @@ export default function Navbar({ store }) {
 		if (page && !tabs.find((tab) => tab.id === page)) {
 			setTabs(tabs.concat([{ id: String(page), label: 'New Page' }]));
 		}
-	}, [page]);
+	}, [page, tabs]);
 
 	function newTab() {
 		const id = `${tabs.length + 1}${tabs.length + 1}${tabs.length + 1}`;

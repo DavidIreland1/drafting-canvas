@@ -9,6 +9,7 @@ import Select from '../inputs/select';
 import Text from '../inputs/text';
 import { useEffect, useState } from 'react';
 import actions from '../../redux/slice';
+import Image from 'next/image';
 
 export default function Fill({ selected, store, setPicker }) {
 	const selected_ids = selected.map((element) => element.id);
@@ -132,7 +133,7 @@ function FillInput({ fill, setPicker, selected_ids, store }) {
 					<div className="property-color" onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store)} style={{ background: Colors.toString(fill.color) }} />
 				) : (
 					// Image
-					<img alt="" className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store)} />
+					<Image height="1.5em" width="1.5em" alt="" className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store)} />
 				)}
 			</div>
 

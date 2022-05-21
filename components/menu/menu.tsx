@@ -19,7 +19,7 @@ export default function Menu({ element, getContents, props }) {
 				{ once: true }
 			);
 		});
-	}, [element]);
+	}, [element, getContents, props]);
 
 	function close(event) {
 		event.preventDefault();
