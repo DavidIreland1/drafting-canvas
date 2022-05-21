@@ -32,6 +32,9 @@ yarn-error.log*
 # database
 /server/database/data
 
-
-#rust
+# rust
 /target
+
+# Compiled TS
+*.js
+*.jsx
