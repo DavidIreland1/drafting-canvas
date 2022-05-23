@@ -108,16 +108,16 @@ export default class Dispatcher extends ScuttlebuttClass {
 			};
 
 		// add our metadata to the action as non-enumerable properties. This is so
-		// they won't be serialised into JSON when sent over the network to peers in
+		// they won't be serialized into JSON when sent over the network to peers in
 		// this.history(), and can be added back by other peers as they receive
 		// them
 		Object.defineProperty(localAction.meta, META_TIMESTAMP, {
-			enumerable: true, // false - David
+			enumerable: false, // false - David
 			value: timestamp,
 		});
 
 		Object.defineProperty(localAction.meta, META_SOURCE, {
-			enumerable: true, // false - David
+			enumerable: false, // false - David
 			value: source,
 		});
 
@@ -127,7 +127,7 @@ export default class Dispatcher extends ScuttlebuttClass {
 			dispatch(true);
 		}
 
-		// recieved message succesfully. if false, peers may retry the message.
+		// received message successfully. if false, peers may retry the message.
 		return true;
 	}
 
