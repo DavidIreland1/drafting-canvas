@@ -44,6 +44,9 @@ const interactions = {
 		const { position, last_position, selected_ids, point } = props.payload;
 		selected(state.elements, selected_ids).forEach((element) => Elements[element.type].edit(element, position, last_position, point));
 	},
+	label: (state, props) => {
+		state.page.label = props.payload;
+	},
 
 	createElements: (state, props) => {
 		flatten(state.elements).forEach((element) => {

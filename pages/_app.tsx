@@ -15,6 +15,11 @@ export default function App({ Component, pageProps }) {
 
 	const [store, setStore] = useState(makeStore(undefined));
 
+	// For console debugging
+	if (typeof window !== 'undefined') {
+		(window as any).store = store;
+	}
+
 	useEffect(() => {
 		setStore(makeStore(router.query.page));
 	}, [router.query.page]);

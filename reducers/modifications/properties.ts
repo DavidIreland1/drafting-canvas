@@ -89,7 +89,7 @@ const properties = {
 					const sin = Math.sin(delta);
 					const cos = Math.cos(delta);
 
-					element.rotation = Number(value);
+					element.rotation = Number(value) % (Math.PI * 2);
 					Elements[element.type].getPoints(element).forEach((point) => {
 						const rotated = rotatePoint(point, center, sin, cos);
 						point.x = rotated.x;

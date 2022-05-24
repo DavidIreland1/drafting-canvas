@@ -1,9 +1,12 @@
+import { useRef, useState } from 'react';
 import Link from 'next/link';
-import { useRef } from 'react';
 import Cross from '../icons/cross';
+import Text from '../inputs/text';
+import actions from '../../redux/slice';
 
-export default function Tab({ tab, url, leavePage, closeTab }) {
+export default function Tab({ id, label, selected, store, leavePage, closeTab }) {
 	const tab_ref = useRef(null);
+	const [editing, setEditing] = useState(false);
 
 	const drag = (event) => {
 		const tab = tab_ref.current;
@@ -12,10 +15,10 @@ export default function Tab({ tab, url, leavePage, closeTab }) {
 		const move = (move_event) => {
 			const hover = document.elementFromPoint(move_event.clientX, move_event.clientY);
 			if (hover === tab || hover === tab.nextSibling) return;
-			if (hover.tagName === 'A') return hover.parentElement.parentElement.insertBefore(tab, hover.parentElement);
+			if (hover.tagName === 'A' && hover.classList.contains('tab')) return hover.parentElement.parentElement.insertBefore(tab, hover.parentElement);
 			if (hover.tagName === 'SVG') return hover.parentElement.parentElement.parentElement.insertBefore(tab, hover.parentElement.parentElement.parentElement);
 			if (hover.id === 'plus') return hover.previousElementSibling.append(tab);
-			if (hover.id === 'nav') return hover.children[2].append(tab);
+			if (hover.id === 'nav') return hover.children[1].append(tab);
 		};
 		event.target.addEventListener('drag', move);
 		const end = () => {
@@ -27,10 +30,17 @@ export default function Tab({ tab, url, leavePage, closeTab }) {
 
 	return (
 		<div ref={tab_ref}>
-			<Link href={'/file/' + tab.id}>
-				<a onClick={leavePage} className={'tab' + (tab.id === url ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
-					<div>{tab.label}</div>
-					<Cross onClick={() => closeTab(tab.id)} />
+			<Link href={'/file/' + id}>
+				<a onClick={leavePage} className={'tab' + (selected ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
+					{editing ? (
+						<Text id="props" highlight={true} onBlur={() => setEditing(false)} onChange={(event) => store.dispatch(actions.label(event.target.value))}>
+							{label}
+						</Text>
+					) : (
+						<div onDoubleClick={() => setEditing(true)}>{label}</div>
+					)}
+
+					<Cross onClick={() => closeTab(id)} />
 				</a>
 			</Link>
 
@@ -52,6 +62,7 @@ export default function Tab({ tab, url, leavePage, closeTab }) {
 					grid-gap: 5px;
 					grid-template-columns: max-content 23px;
 					height: 100%;
+					opacity: 0.999; /* for circular nodes with html draggable */
 				}
 				.tab:-webkit-any-link {
 					cursor: default;

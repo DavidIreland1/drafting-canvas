@@ -18,7 +18,7 @@ if (typeof window !== 'undefined') {
 }
 
 export default function makeStore(room) {
-	const store = createStore(
+	return createStore(
 		undoable(slice.reducer, { filter: filterActions, groupBy: groupActions }),
 		{
 			past: [],
@@ -33,12 +33,6 @@ export default function makeStore(room) {
 			  }) as any)
 			: undefined
 	);
-
-	if (typeof window !== 'undefined') {
-		(window as any).store = store;
-	}
-
-	return store;
 }
 
 // export type RootState = ReturnType<typeof store.getState>;

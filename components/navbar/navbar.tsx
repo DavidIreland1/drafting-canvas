@@ -5,12 +5,14 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import Tab from './tab';
-import User from './user';
+import Users from './users';
 import Plus from '../icons/plus';
 
 import Settings from './../settings';
 import Theme from '../icons/theme';
 import actions from '../../redux/slice';
+import { generateID } from '../../utils/utils';
+import { RootState } from '../../redux/store';
 
 export default function Navbar({ store }) {
 	const router = useRouter();
@@ -20,13 +22,13 @@ export default function Navbar({ store }) {
 
 	useEffect(() => {
 		if (page && !tabs.find((tab) => tab.id === page)) {
-			setTabs(tabs.concat([{ id: String(page), label: 'New Page' }]));
+			setTabs(tabs.concat([{ id: String(page), label: 'New File' }]));
 		}
 	}, [page, tabs]);
 
 	function newTab() {
-		const id = `${tabs.length + 1}${tabs.length + 1}${tabs.length + 1}`;
-		setTabs(tabs.concat([{ id: id, label: `page ${tabs.length + 1}` }]));
+		const id = generateID();
+		setTabs(tabs.concat([{ id: id, label: 'New File' }]));
 		leavePage();
 		router.push(id);
 	}
@@ -43,8 +45,8 @@ export default function Navbar({ store }) {
 		setTabs(tabs.filter((tab) => tab.id !== id));
 	}
 
-	const users = useSelector(
-		(state) => (state as any).present.cursors,
+	const page_label = useSelector(
+		(state) => (state as RootState).present.page.label,
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)
 	);
 
@@ -52,28 +54,19 @@ export default function Navbar({ store }) {
 		<>
 			<div id="nav" onDragOver={droppable}>
 				<img alt="DC" src="/images/draft.svg" />
-				{/* <h1 id="title">DRAFTING CANVAS</h1> */}
 
 				<div id="tabs" onDragOver={droppable}>
 					{tabs.map((tab, i) => (
-						<Tab key={i} tab={tab} url={page} leavePage={leavePage} closeTab={closeTab} />
+						<Tab key={i} id={tab.id} label={page === tab.id ? page_label : tab.label} selected={page === tab.id} store={store} leavePage={leavePage} closeTab={closeTab} />
 					))}
 				</div>
 
 				<div id="plus" onDragOver={droppable}>
 					<Plus onClick={newTab} />
 				</div>
-
-				<div id="users">
-					{users.map((user, i) => (
-						<User key={i} user={user} />
-					))}
-				</div>
-
+				<Users />
 				<Share />
-
 				<Theme />
-
 				<a id="github" target="_blank" rel="noreferrer" href="https://github.com/DavidIreland1/drafting-canvas" aria-label="Github">
 					<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
 						<path
@@ -126,7 +119,6 @@ export default function Navbar({ store }) {
 					font-size: calc(var(--nav-height) / 2);
 					margin: 0;
 				}
-
 				#tabs {
 					display: grid;
 					grid-gap: 5px;
@@ -139,7 +131,6 @@ export default function Navbar({ store }) {
 					overflow-x: overlay;
 					overflow-y: hidden;
 				}
-
 				#plus {
 					width: 30px;
 					height: 30px;
@@ -148,11 +139,6 @@ export default function Navbar({ store }) {
 				line {
 					stroke: white;
 					stroke-width: 6;
-				}
-
-				#users {
-					display: grid;
-					grid-auto-flow: column;
 				}
 				a {
 					cursor: default;

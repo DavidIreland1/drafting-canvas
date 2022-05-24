@@ -40,7 +40,7 @@ export default function Dimensions({ selected, store, width }) {
 						</svg>
 					}
 					unit="°"
-					value={(selected[0].rotation * 57.29577951308232) % 360}
+					value={selected[0].rotation * 57.29577951308232}
 					onChange={(event) => updateDimension(event, (rotation) => Number(rotation) / 57.29577951308232)}
 					width={width}
 				/>

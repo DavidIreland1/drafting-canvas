@@ -394,18 +394,19 @@ export default class Element {
 		const delta_x = position.x - last_position.x;
 		const delta_y = position.y - last_position.y;
 
+		const point2 = Elements[element.type].getPoints(element).find((p) => p.id === point.id);
 		if (point.control !== undefined) {
-			Elements[element.type].getPoints(element).find((p) => p.id === point.id).controls[point.control].x += delta_x;
-			Elements[element.type].getPoints(element).find((p) => p.id === point.id).controls[point.control].y += delta_y;
+			point2.controls[point.control].x += delta_x;
+			point2.controls[point.control].y += delta_y;
 
-			if (true || Elements[element.type].getPoints(element).find((p) => p.id === point.id).mirror === 'mirror') {
+			if (true || point2.mirror === 'mirror') {
 				const opposite = point.control === 0 ? 1 : 0;
-				Elements[element.type].getPoints(element).find((p) => p.id === point.id).controls[opposite].x -= delta_x;
-				Elements[element.type].getPoints(element).find((p) => p.id === point.id).controls[opposite].y -= delta_y;
+				point2.controls[opposite].x -= delta_x;
+				point2.controls[opposite].y -= delta_y;
 			}
 		} else {
-			Elements[element.type].getPoints(element).find((p) => p.id === point.id).x += delta_x;
-			Elements[element.type].getPoints(element).find((p) => p.id === point.id).y += delta_y;
+			point2.x += delta_x;
+			point2.y += delta_y;
 
 			Elements[element.type]
 				.getPoints(element)
@@ -557,7 +558,7 @@ export default class Element {
 	}
 
 	static addRotation(element, rotation) {
-		element.rotation += rotation;
+		element.rotation = (element.rotation + rotation) % (Math.PI * 2);
 		if (Array.isArray(element.elements)) element.elements.forEach((element) => Elements[element.type].addRotation(element, rotation));
 	}
 

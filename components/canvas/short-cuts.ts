@@ -26,6 +26,7 @@ export default function shortCuts(event, store): boolean {
 					element.fill.forEach((fill) => (fill.id = generateID()));
 					element.stroke.forEach((stroke) => (stroke.id = generateID()));
 					element.effect.forEach((effect) => (effect.id = generateID()));
+					element.points.forEach((point) => (point.id = generateID()));
 				});
 				store.dispatch(actions.createElements({ elements: new_elements }));
 			});
