@@ -20,20 +20,20 @@ export default class Element {
 			fill: [{ id: id + '2123', type: 'Solid', color: [0, 0, 0.8, 1], format: 'hex4', visible: true }],
 			stroke: [],
 			effect: [],
-			points: [],
+			points: this.makePoints(id, position.x, position.y, 1, 1, 0),
 			rotation: 0,
 			visible: true,
 			locked: false,
 		};
 	}
 
-	static makePoints(x, y, width, height, radius) {
+	static makePoints(id, x, y, width, height, radius) {
 		return [
 			{ x: x, y: y },
 			{ x: x + width, y: y },
 			{ x: x + width, y: y + height },
 			{ x: x, y: y + height },
-		].map((point, i) => ({ ...point, i, radius, controls: [] }));
+		].map((point, i) => ({ ...point, id: id + i, radius, mirror: 'mirror', controls: [] }));
 	}
 
 	static path(element): Path2D {
@@ -150,8 +150,6 @@ export default class Element {
 		const center = this.center(element);
 		const bounds = this.bound(element);
 
-		if (bounds.width === 0 || bounds.height === 0) return; // This might be an issue
-
 		const sin = Math.sin(element.rotation);
 		const cos = Math.cos(element.rotation);
 
@@ -165,8 +163,8 @@ export default class Element {
 		const delta_y = (normal_last_position.y - normal_position.y) * (normal_last_position.y < center.y ? 1 : -1);
 
 		// Get change ratio in width and height
-		const width_ratio = (bounds.width + delta_x) / bounds.width;
-		const height_ratio = (bounds.height + delta_y) / bounds.height;
+		const width_ratio = (bounds.width + delta_x) / (bounds.width || 0.01);
+		const height_ratio = (bounds.height + delta_y) / (bounds.height || 0.01);
 
 		// Top left of old bounding box
 		const old_x_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point.x));
@@ -187,7 +185,7 @@ export default class Element {
 		const center = this.center(element);
 		const bounds = this.bound(element);
 
-		if (bounds.height === 0) return; // This might be an issue
+		// if (bounds.height === 0) return; // This might be an issue
 
 		const sin = Math.sin(element.rotation);
 		const cos = Math.cos(element.rotation);
@@ -198,7 +196,7 @@ export default class Element {
 		rotatePoints(element, center, -sin, cos);
 
 		const delta_y = (normal_last_position.y - normal_position.y) * (normal_last_position.y < center.y ? 1 : -1);
-		const height_ratio = (bounds.height + delta_y) / bounds.height;
+		const height_ratio = (bounds.height + delta_y) / (bounds.height || 0.01);
 
 		// Top left of resize box
 		const old_y_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point.y));
@@ -214,7 +212,7 @@ export default class Element {
 		const center = this.center(element);
 		const bounds = this.bound(element);
 
-		if (bounds.width === 0) return; // This might be an issue
+		// if (bounds.width === 0) return; // This might be an issue
 
 		const sin = Math.sin(element.rotation);
 		const cos = Math.cos(element.rotation);
@@ -225,7 +223,7 @@ export default class Element {
 		rotatePoints(element, center, -sin, cos);
 
 		const delta_x = (normal_last_position.x - normal_position.x) * (normal_last_position.x < center.x ? 1 : -1);
-		const width_ratio = (bounds.width + delta_x) / bounds.width;
+		const width_ratio = (bounds.width + delta_x) / (bounds.width || 0.01);
 
 		// Top left of resize box
 		const old_x_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point.x));
@@ -397,22 +395,25 @@ export default class Element {
 		const delta_y = position.y - last_position.y;
 
 		if (point.control !== undefined) {
-			Elements[element.type].getPoints(element)[point.i].controls[point.control].x += delta_x;
-			Elements[element.type].getPoints(element)[point.i].controls[point.control].y += delta_y;
+			Elements[element.type].getPoints(element).find((p) => p.id === point.id).controls[point.control].x += delta_x;
+			Elements[element.type].getPoints(element).find((p) => p.id === point.id).controls[point.control].y += delta_y;
 
-			if (true || Elements[element.type].getPoints(element)[point.i].mirror === '') {
+			if (true || Elements[element.type].getPoints(element).find((p) => p.id === point.id).mirror === 'mirror') {
 				const opposite = point.control === 0 ? 1 : 0;
-				Elements[element.type].getPoints(element)[point.i].controls[opposite].x -= delta_x;
-				Elements[element.type].getPoints(element)[point.i].controls[opposite].y -= delta_y;
+				Elements[element.type].getPoints(element).find((p) => p.id === point.id).controls[opposite].x -= delta_x;
+				Elements[element.type].getPoints(element).find((p) => p.id === point.id).controls[opposite].y -= delta_y;
 			}
 		} else {
-			Elements[element.type].getPoints(element)[point.i].x += delta_x;
-			Elements[element.type].getPoints(element)[point.i].y += delta_y;
+			Elements[element.type].getPoints(element).find((p) => p.id === point.id).x += delta_x;
+			Elements[element.type].getPoints(element).find((p) => p.id === point.id).y += delta_y;
 
-			Elements[element.type].getPoints(element)[point.i].controls.forEach((control) => {
-				control.x += delta_x;
-				control.y += delta_y;
-			});
+			Elements[element.type]
+				.getPoints(element)
+				.find((p) => p.id === point.id)
+				.controls.forEach((control) => {
+					control.x += delta_x;
+					control.y += delta_y;
+				});
 		}
 	}
 

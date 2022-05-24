@@ -4,7 +4,6 @@ import { generateID } from './../../utils/utils';
 
 export default function shortCuts(event, store): boolean {
 	if (event.metaKey === false && event.ctrlKey === false) return;
-
 	switch (event.key) {
 		case 'c':
 			const selected = JSON.stringify(store.getState().present.elements.filter((element) => element.selected));

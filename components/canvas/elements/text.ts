@@ -16,7 +16,6 @@ export default class Text extends Element {
 			size: 10,
 			rotation: 0,
 			line_height: 1,
-			points: this.makePoints(position.x, position.y, 1, 1, 0),
 			fill: [{ id: id + '123321', type: 'Text', color: [0, 0, 0, 1], format: 'hex4', visible: true }],
 		});
 	}

@@ -10,11 +10,10 @@ export default class Ellipse extends Element {
 			rotation: 0,
 			// start_angle: 0,
 			// end_angle: 6.283185307179586,
-			points: this.makePoints(position.x, position.y, 1, 1, 0),
 		});
 	}
 
-	static makePoints(x, y, width, height, radius) {
+	static makePoints(id, x, y, width, height, radius) {
 		const kappa = 0.5522848; // Constant to define a ellipse with bezier curves
 
 		const middle_y = y + height / 2;
@@ -58,7 +57,7 @@ export default class Ellipse extends Element {
 					{ x: middle_x - control_x, y: y },
 				],
 			},
-		].map((point, i) => ({ ...point, i }));
+		].map((point, i) => ({ ...point, id: id + i, mirror: 'mirror' }));
 	}
 
 	// TODO: See if we can merge this with rounded poly

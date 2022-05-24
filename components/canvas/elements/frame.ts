@@ -8,7 +8,6 @@ export default class Frame extends Element {
 			type: 'frame',
 			rotation: 0,
 			elements: [],
-			points: this.makePoints(position.x, position.y, 1, 1, 0),
 			fill: [{ id: id + '2123', type: 'Solid', color: [0, 0, 1, 1], format: 'hex4', visible: true }],
 		});
 	}

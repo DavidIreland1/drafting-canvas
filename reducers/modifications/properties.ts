@@ -103,7 +103,8 @@ const properties = {
 				} else if (key === 'width' || key === 'height') {
 					const bound = Elements[element.type].bound(element);
 					const center = Elements[element.type].center(element);
-					const ratio = Number(value) / bound[key];
+
+					const ratio = Number(value) || 0.01 / bound[key];
 
 					const axis = key === 'width' ? 'x' : 'y';
 

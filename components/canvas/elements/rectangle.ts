@@ -7,7 +7,6 @@ export default class Rectangle extends Element {
 			type: 'rectangle',
 			selected: true,
 			rotation: 0,
-			points: this.makePoints(position.x, position.y, 1, 1, 0),
 		});
 	}
 }

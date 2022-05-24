@@ -11,7 +11,8 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 	};
 
 	canvas.focus(); // Needed for react?
-	canvas.onkeydown = (event: KeyboardEvent) => {
+	document.body.addEventListener('keydown', (event: KeyboardEvent) => {
+		if (document.activeElement !== document.body) return;
 		if (event.key === 'Delete' || event.key === 'Backspace') {
 			event.preventDefault();
 			store.dispatch(
@@ -27,7 +28,7 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 		if (shortCuts(event, store)) {
 			event.preventDefault();
 		}
-	};
+	});
 
 	canvas.ondblclick = () => {
 		if (active.hovering.length) {

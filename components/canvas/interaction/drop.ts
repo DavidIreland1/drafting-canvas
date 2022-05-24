@@ -18,12 +18,13 @@ export default function drop(event: DragEvent, canvas, store, user_id) {
 				const image = new DOMParser().parseFromString(data, 'text/html').querySelector('img');
 				if (!image) return;
 				document.head.append(image);
+				const id = generateID();
 				image.onload = () => {
 					store.dispatch(
 						actions.createElements({
 							elements: [
 								{
-									id: generateID(),
+									id: id,
 									type: 'rectangle',
 									label: 'Image',
 									editing: false,
@@ -32,7 +33,7 @@ export default function drop(event: DragEvent, canvas, store, user_id) {
 									fill: [{ id: generateID(), type: 'Image', x: 0, y: 0, src: image.src, visible: true, format: 'hex4', color: [0, 0, 0, 0] }],
 									stroke: [],
 									effect: [],
-									points: Rectangle.makePoints(position.x - image.naturalWidth / 2, position.y - image.naturalHeight / 2, image.naturalWidth, image.naturalHeight, 0),
+									points: Rectangle.makePoints(id, position.x - image.naturalWidth / 2, position.y - image.naturalHeight / 2, image.naturalWidth, image.naturalHeight, 0),
 									rotation: 0,
 									visible: true,
 									locked: false,

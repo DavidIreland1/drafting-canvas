@@ -31,9 +31,9 @@ export type Effect = {
 };
 
 export type Point = {
+	id: string;
 	x: number;
 	y: number;
-	i: number;
 	mirror: string;
 	controls: Array<{ x: number; y: number }>;
 };
