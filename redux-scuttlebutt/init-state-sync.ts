@@ -37,8 +37,6 @@ export default function initStateSync(server, options = { primusOptions: {} }) {
 			} else if (data.action === 'leave') {
 				removeUser(spark, rooms[spark.id]);
 			} else {
-				// console.log('data', rooms[spark.id])
-				// console.log(data)
 				documents[rooms[spark.id]].streams[spark.id].write(data);
 			}
 		});
@@ -55,17 +53,18 @@ function openDocument(room) {
 
 	console.log('Loading Room: ', room);
 
-	const document_state = load(room);
 	const { store, dispatch, getState } = connectRedux(gossip, undefined);
 
-	if (document_state) {
-		dispatch({
-			type: 'action/overwrite',
-			payload: {
-				state: document_state,
-			},
-		});
-	}
+	load(room).then((document_state) => {
+		if (document_state) {
+			dispatch({
+				type: 'action/overwrite',
+				payload: {
+					state: document_state,
+				},
+			});
+		}
+	});
 
 	return {
 		gossip,

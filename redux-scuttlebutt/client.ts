@@ -35,6 +35,10 @@ export default function scuttlebutt(options) {
 				enhancer
 			);
 
+			if (typeof window !== 'undefined') {
+				(window as any).syncStore = store;
+			}
+
 			return {
 				...store,
 				scuttlebutt,

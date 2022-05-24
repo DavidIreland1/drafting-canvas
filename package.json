@@ -9,7 +9,7 @@
 		"export": "next export",
 		"dev-start": "ts-node server/server",
 		"start": "node server/server.js",
-		"compile": "tsc server/server",
+		"compile": "tsc server/server --skipLibCheck",
 		"deploy": "gcloud app deploy --quiet",
 		"lint": "next lint",
 		"prod": "NODE_ENV=production node server/server.js"
@@ -17,6 +17,7 @@
 	"dependencies": {
 		"@reduxjs/toolkit": "^1.6.0",
 		"@types/node": "^14.14.7",
+		"dotenv": "^16.0.1",
 		"firebase": "^9.8.1",
 		"fs": "0.0.1-security",
 		"next": "^12.1.4",

@@ -61,7 +61,6 @@ export default class Dispatcher extends ScuttlebuttClass {
 		return (action) => {
 			// apply this action to our scuttlebutt model (and send to peers). It
 			// will dispatch, taking care of the the appropriate time ordering
-
 			if (this._isGossipType(action.type)) {
 				this.localUpdate(action);
 			} else {
@@ -94,35 +93,36 @@ export default class Dispatcher extends ScuttlebuttClass {
 	// Apply update (action) to our store
 	// implemented for scuttlebutt class
 	applyUpdate(update) {
-		const [action, timestamp, source] = update,
-			// copy the object so we can modify its properties later
-			localAction = { meta: {}, ...action },
-			dispatch = (shouldApply) => {
-				if (!shouldApply) {
-					return;
-				} else if (this._customDispatch) {
-					this._customDispatch(localAction);
-				} else {
-					this._reduxDispatch(localAction);
-				}
-			};
+		const [action, timestamp, source] = update;
+		// copy the object so we can modify its properties later
+		const local_action = { meta: {}, ...action };
+
+		const dispatch = (shouldApply) => {
+			if (!shouldApply) {
+				return;
+			} else if (this._customDispatch) {
+				this._customDispatch(local_action);
+			} else {
+				this._reduxDispatch(local_action);
+			}
+		};
 
 		// add our metadata to the action as non-enumerable properties. This is so
 		// they won't be serialized into JSON when sent over the network to peers in
 		// this.history(), and can be added back by other peers as they receive
 		// them
-		Object.defineProperty(localAction.meta, META_TIMESTAMP, {
+		Object.defineProperty(local_action.meta, META_TIMESTAMP, {
 			enumerable: false, // false - David
 			value: timestamp,
 		});
 
-		Object.defineProperty(localAction.meta, META_SOURCE, {
+		Object.defineProperty(local_action.meta, META_SOURCE, {
 			enumerable: false, // false - David
 			value: source,
 		});
 
 		if (this._verifyAsync) {
-			this._verifyAsync(dispatch, localAction, this._reduxGetState);
+			this._verifyAsync(dispatch, local_action, this._reduxGetState);
 		} else {
 			dispatch(true);
 		}
@@ -135,14 +135,9 @@ export default class Dispatcher extends ScuttlebuttClass {
 	// implemented for scuttlebutt class
 	history(sources) {
 		// our state (updates[]) has a similar shape to scuttlebutt's own updates.
-		return this._reduxGetState().reduce((arr, update) => {
-			if (update[UPDATE_ACTION] && this._isGossipType(update[UPDATE_ACTION].type) && Scuttlebutt.filter(update, sources)) {
-				// scuttlebutt only wants ACTION, TIMESTAMP, SOURCE, and not: SNAPSHOT
-				arr.push(update.slice(0, 3));
-			}
-
-			return arr;
-		}, []);
+		return this._reduxGetState()
+			.filter((update) => update[UPDATE_ACTION] && this._isGossipType(update[UPDATE_ACTION].type) && Scuttlebutt.filter(update, sources)) // scuttlebutt only wants ACTION, TIMESTAMP, SOURCE, and not: SNAPSHOT
+			.map((update) => update.slice(0, 3));
 	}
 
 	// apply an update locally
