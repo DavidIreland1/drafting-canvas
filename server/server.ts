@@ -20,7 +20,7 @@ app.prepare().then(() => {
 	}).listen(port, async () => {
 		console.log('> Ready on this http://localhost:' + port);
 
-		// const initStateSync = (await import('../redux-scuttlebutt/init-state-sync')).default;
-		// initStateSync(server);
+		const initStateSync = (await import('../redux-scuttlebutt/init-state-sync')).default;
+		initStateSync(server);
 	});
 });

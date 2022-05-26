@@ -36,5 +36,5 @@ yarn-error.log*
 /target
 
 # Compiled TS
-*.js
-*.jsx
+# *.js
+# *.jsx

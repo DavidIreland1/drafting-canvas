@@ -7,39 +7,39 @@
 		"build": "next build",
 		"gcp-build": "next build",
 		"export": "next export",
-		"dev-start": "ts-node server/server",
-		"start": "node server/server.js",
+		"start": "ts-node server/server",
+		"dev-start": "node server/server.js",
 		"compile": "tsc server/server --skipLibCheck",
 		"deploy": "gcloud app deploy --quiet",
 		"lint": "next lint",
 		"prod": "NODE_ENV=production node server/server.js"
 	},
 	"dependencies": {
-		"@reduxjs/toolkit": "^1.6.0",
-		"@types/node": "^14.14.7",
-		"dotenv": "^16.0.1",
-		"firebase": "^9.8.1",
-		"fs": "0.0.1-security",
-		"next": "^12.1.4",
-		"primus": "^8.0.4",
-		"primus-rooms": "^3.4.1",
 		"react": "17.0.1",
 		"react-dom": "17.0.1",
 		"react-redux": "^7.2.4",
 		"redux": "^3.7.2",
-		"redux-scuttlebutt": "^0.3.5",
 		"redux-undo": "^1.0.1",
-		"typescript": "^4.6.4"
+		"redux-scuttlebutt": "^0.3.5",
+		"@reduxjs/toolkit": "^1.6.0",
+		"next": "^12.1.4",
+		"primus": "^8.0.4",
+		"primus-rooms": "^3.4.1",
+		"fs": "0.0.1-security",
+		"dotenv": "^16.0.1",
+		"firebase": "^9.8.1"
 	},
 	"devDependencies": {
+		"@types/node": "^14.14.7",
 		"@types/react": "^17.0.13",
 		"eslint": "8.10.0",
 		"eslint-config-next": "12.1.0",
-		"ts-loader": "^9.2.3",
 		"ts-node": "^10.1.0",
+		"ts-loader": "^9.2.3",
 		"typescript": "^4.6.4",
 		"webpack": "^5.46.0",
-		"webpack-cli": "^4.7.2"
+		"webpack-cli": "^4.7.2",
+		"typescript": "^4.6.4"
 	},
 	"engines": {
 		"node": "14.x.x"
