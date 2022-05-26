@@ -18,7 +18,7 @@ export default function Text({ id = undefined, placeholder = undefined, highligh
 
 			<style jsx>{`
 				input {
-					background-color: transparent;
+					background: transparent;
 					border: none;
 					color: var(--text);
 					font-size: 16px;
@@ -31,15 +31,15 @@ export default function Text({ id = undefined, placeholder = undefined, highligh
 				}
 
 				input:hover {
-					background-color: var(--hover);
+					background: var(--hover);
 				}
 				input:focus-within {
-					background-color: var(--hover);
+					background: var(--hover);
 					border-bottom: 1px solid white;
 				}
 
 				input.invalid {
-					background-color: var(--invalid);
+					background: var(--invalid);
 				}
 			`}</style>
 		</>

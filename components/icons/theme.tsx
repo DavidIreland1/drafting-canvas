@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
+import { theme_default } from '../../utils/initial-theme';
+import actions from '../../redux/slice';
 
-export default function Theme() {
-	const [theme, setTheme] = useState('light');
+export default function Theme({ store }) {
+	const [theme, setTheme] = useState(theme_default);
 	const [transition_duration, setTransitionDuration] = useState('');
 
 	useEffect(() => {
 		const theme_media = window.matchMedia('(prefers-color-scheme: dark)');
-		const theme_default = localStorage.getItem('drafting-canvas-theme') ?? (theme_media.matches ? 'dark' : 'light');
 		setTheme(theme_default);
 		if (theme_default === 'light') document.getElementsByTagName('html')[0].classList.add(theme_default);
 		setTimeout(() => {
@@ -21,9 +22,18 @@ export default function Theme() {
 	}, []);
 
 	function toggleTheme() {
-		const theme_toggled = document.getElementsByTagName('html')[0].classList.toggle('light') ? 'light' : 'dark';
-		localStorage.setItem('drafting-canvas-theme', theme_toggled);
-		setTheme(theme_toggled);
+		const new_theme = document.getElementsByTagName('html')[0].classList.toggle('light') ? 'light' : 'dark';
+		localStorage.setItem('theme', new_theme);
+		setTheme(new_theme);
+		const page = store.getState().present.page;
+		if (page.format === 'hex4' && (JSON.stringify(page.color) === JSON.stringify([0.7, 0, 0.2, 1]) || JSON.stringify(page.color) === JSON.stringify([1, 0, 0.9, 1]))) {
+			store.dispatch(
+				actions.setBackground({
+					color: new_theme === 'dark' ? [0.7, 0, 0.2, 1] : [1, 0, 0.9, 1],
+					format: 'hex4',
+				})
+			);
+		}
 	}
 
 	return (

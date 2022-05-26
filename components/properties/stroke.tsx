@@ -100,7 +100,7 @@ function StrokeInput({ stroke, setPicker, selected_ids, store }) {
 			<div className="property-row">
 				<div>::</div>
 				<div className="checker-background">
-					<div className="property-color" onClick={(event) => openPicker(event, stroke, setPicker, selected_ids, store)} style={{ backgroundColor: Colors.toString(stroke.color) }} />
+					<div className="property-color" onClick={(event) => openPicker(event, stroke, setPicker, selected_ids, store)} style={{ background: Colors.toString(stroke.color) }} />
 				</div>
 
 				<Text placeholder="Color" className={Colors.isValid(color) || 'invalid'} onChange={changeColor}>

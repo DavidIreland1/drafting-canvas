@@ -6,10 +6,10 @@ export default function Menu({ element, getContents, props }) {
 	const [contents, setContents] = useState(null);
 
 	useEffect(() => {
-		element.current.addEventListener('contextmenu', (event) => {
+		element.current?.addEventListener('contextmenu', (event) => {
 			event.preventDefault();
 			setPosition({ x: event.clientX, y: event.clientY });
-			setContents(getContents(props, { x: event.clientX, y: event.clientY }));
+			setContents(getContents(event, props));
 
 			document.addEventListener(
 				'mouseup',
@@ -23,6 +23,7 @@ export default function Menu({ element, getContents, props }) {
 
 	function close(event) {
 		event.preventDefault();
+		event.stopPropagation();
 		requestAnimationFrame(() => setPosition({ x: 0, y: 0 }));
 	}
 
@@ -38,10 +39,10 @@ export default function Menu({ element, getContents, props }) {
 					left: 0;
 					width: 200px;
 					height: max-content;
-					background-color: red;
+					background: red;
 					z-index: 6;
 					color: var(--text);
-					background-color: var(--panel);
+					background: var(--panel);
 					box-shadow: 0 0 10px -5px var(--text);
 				}
 			`}</style>

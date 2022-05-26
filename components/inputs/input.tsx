@@ -76,10 +76,10 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 					border-bottom: 1px solid transparent;
 				}
 				.dimension:hover {
-					background-color: var(--hover);
+					background: var(--hover);
 				}
 				.dimension:focus-within {
-					background-color: var(--hover);
+					background: var(--hover);
 					border-bottom: 1px solid white;
 				}
 				label {
@@ -87,7 +87,7 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 					cursor: ew-resize;
 				}
 				input {
-					background-color: transparent;
+					background: transparent;
 					border: none;
 					font-weight: inherit;
 					font-family: inherit;

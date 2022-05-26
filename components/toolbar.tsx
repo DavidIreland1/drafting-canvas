@@ -80,7 +80,7 @@ export default function Navbar({ store }) {
 
 			<style jsx>{`
 				#container {
-					background-color: var(--nav);
+					background: var(--nav);
 					z-index: 2;
 					width: var(--nav-height);
 					box-sizing: border-box;
@@ -109,10 +109,10 @@ export default function Navbar({ store }) {
 				}
 				svg.selected {
 					fill: var(--text);
-					background-color: var(--hover);
+					background: var(--hover);
 				}
 				svg:hover {
-					background-color: var(--hover);
+					background: var(--hover);
 				}
 			`}</style>
 		</div>

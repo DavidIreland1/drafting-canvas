@@ -15,7 +15,7 @@ export function generateID(length: number = 10): string {
 }
 
 export function pastelColor(): string {
-	return 'hsl(' + Math.round(360 * Math.random()) + ',' + Math.round(25 + 70 * Math.random()) + '%,' + Math.round(75 + 10 * Math.random()) + '%)';
+	return 'hsl(' + Math.round(360 * Math.random()) + ',' + Math.round(25 + 70 * Math.random()) + '%,' + Math.round(35 + 10 * Math.random()) + '%)';
 }
 
 export function clone(data: object): object {

@@ -23,13 +23,18 @@ export default function Navbar({ store }) {
 
 	useEffect(() => {
 		if (page && !tabs.find((tab) => tab.id === page)) {
-			setTabs(tabs.concat([{ id: String(page), label: 'New Canvas' }]));
+			const canvas = JSON.parse(localStorage.getItem('canvases') ?? '[]').find((canvas) => canvas.id === page);
+			const label = canvas?.label ?? 'Untitled';
+
+			console.log(label);
+			store.dispatch(actions.page({ label }));
+			setTabs(tabs.concat(canvas ?? { id: String(page), label: label }));
 		}
 	}, [page, tabs]);
 
 	function newTab() {
 		const id = generateID();
-		setTabs([...tabs, { id: id, label: `New Canvas ${tabs.length}` }]);
+		setTabs([...tabs, { id: id, label: 'Untitled' }]);
 		removeUser();
 		router.push('/canvas/' + id);
 	}
@@ -39,7 +44,7 @@ export default function Navbar({ store }) {
 	}
 
 	function removeUser() {
-		store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
+		// store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
 	}
 
 	function closeTab(event, id) {
@@ -75,7 +80,7 @@ export default function Navbar({ store }) {
 				</div>
 				<Users />
 				<Share />
-				<Theme />
+				<Theme store={store} />
 				<a id="github" target="_blank" rel="noreferrer" href="https://github.com/DavidIreland1/drafting-canvas" aria-label="Github">
 					<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
 						<path
@@ -105,7 +110,7 @@ export default function Navbar({ store }) {
 					grid-auto-flow: column;
 					grid-template-columns: min-content min-content 1fr min-content min-content min-content;
 					height: var(--nav-height);
-					background-color: var(--nav);
+					background: var(--nav);
 					color: var(--text);
 					max-width: 100vw;
 				}
@@ -113,7 +118,7 @@ export default function Navbar({ store }) {
 					height: calc(var(--nav-height) - 12px);
 					width: calc(var(--nav-height) - 12px);
 					box-sizing: border-box;
-					background-color: white;
+					background: white;
 					padding: 2px;
 					margin: 6px;
 					border-radius: var(--radius);
@@ -159,7 +164,7 @@ export default function Navbar({ store }) {
 					margin: 4px;
 					height: 32px;
 					width: 32px;
-					background-color: none;
+					background: none;
 					border-radius: 20px;
 					box-sizing: border-box;
 					fill: var(--icon);
@@ -183,7 +188,7 @@ function Share() {
 	const [display, setDisplay] = useState('none');
 	return (
 		<>
-			<button onClick={copyLink}>Share</button>
+			<button onClick={copyLink}>SHARE</button>
 
 			<div id="notice" style={{ display, opacity: display ? 1 : 0 }}>
 				Link copied to clipboard
@@ -191,12 +196,11 @@ function Share() {
 			<style jsx>{`
 				button {
 					margin: 5px;
-					background-color: var(--accent);
+					background: var(--accent);
 					border: 0;
 					border-radius: 5px;
 					opacity: 0.8;
 					height: 30px;
-					color: var(--text);
 				}
 				button:hover {
 					opacity: 1;
@@ -207,7 +211,7 @@ function Share() {
 					left: 50%;
 					width: max-content;
 					padding: 4px 10px;
-					background-color: var(--panel);
+					background: var(--panel);
 					z-index: 4;
 					transform: translateX(-50%);
 					border-radius: var(--radius);

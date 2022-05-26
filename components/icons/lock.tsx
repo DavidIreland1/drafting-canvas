@@ -35,7 +35,7 @@ export default function Lock({ locked = true, onClick = undefined }) {
 					box-sizing: border-box;
 				}
 				div:hover {
-					background-color: var(--nav);
+					background: var(--nav);
 				}
 			`}</style>
 		</div>

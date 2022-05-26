@@ -54,7 +54,7 @@ export default function App({ Component, pageProps }) {
 					grid-template-rows: var(--nav-height) 1fr;
 					gap: var(--gap);
 					overflow: hidden;
-					background-color: var(--background);
+					background: var(--background);
 				}
 				#scrub-cursor {
 					position: absolute;
@@ -68,6 +68,8 @@ export default function App({ Component, pageProps }) {
 					transform: translateX(-50%) translateY(-75%);
 				}
 			`}</style>
+
+			<Script src="/primus/primus.js" />
 
 			<Script strategy="lazyOnload" src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`} />
 

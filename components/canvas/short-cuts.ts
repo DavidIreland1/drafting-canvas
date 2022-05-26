@@ -1,6 +1,7 @@
 import { ActionCreators } from 'redux-undo';
 import actions from '../../redux/slice';
 import { generateID } from './../../utils/utils';
+import Elements from './elements/elements';
 
 export default function shortCuts(event, store): boolean {
 	if (event.metaKey === false && event.ctrlKey === false) return;
@@ -23,10 +24,10 @@ export default function shortCuts(event, store): boolean {
 				const new_elements = JSON.parse(data);
 				new_elements.forEach((element) => {
 					element.id = generateID();
-					element.fill.forEach((fill) => (fill.id = generateID()));
-					element.stroke.forEach((stroke) => (stroke.id = generateID()));
-					element.effect.forEach((effect) => (effect.id = generateID()));
-					element.points.forEach((point) => (point.id = generateID()));
+					Elements[element.type].getFill(element).forEach((fill) => (fill.id = generateID()));
+					Elements[element.type].getStroke(element).forEach((stroke) => (stroke.id = generateID()));
+					Elements[element.type].getEffect(element).forEach((effect) => (effect.id = generateID()));
+					Elements[element.type].getPoints(element).forEach((point) => (point.id = generateID()));
 				});
 				store.dispatch(actions.createElements({ elements: new_elements }));
 			});

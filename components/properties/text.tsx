@@ -144,14 +144,14 @@ export default function Text({ selected, store, fonts }) {
 					pointer-events: none;
 				}
 				svg:hover {
-					background-color: var(--hover);
+					background: var(--hover);
 				}
 				svg.selected {
-					background-color: var(--selected);
+					background: var(--selected);
 				}
 				.divider {
 					height: 1px;
-					background-color: var(--border);
+					background: var(--border);
 					margin: 10px 0;
 				}
 			`}</style>

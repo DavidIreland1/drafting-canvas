@@ -46,45 +46,42 @@ function Canvas({ user_id, store }, ref) {
 		store.subscribe(() => draw(context, store.getState().present, active, user_id));
 		(window as any).redraw = () => draw(context, store.getState().present, active, user_id);
 
-		setTimeout(() => setBackground(''), 0);
+		setTimeout(() => setBackground(''), 100);
 
 		return initCanvas(canvas, user_id, store, active);
 	}, [canvas_ref, store, user_id]);
 
 	const svg = `
-		<svg xmlns="http://www.w3.org/2000/svg"  width='24' height='24' version="1.1" viewBox="0 0 100 100" stroke="white" stroke-width="4" >
+		<svg xmlns="http://www.w3.org/2000/svg" width='24' height='24' version="1.1" viewBox="0 0 100 100" stroke="white" stroke-width="4" >
 			<path d="M 2 0 l 0 70 l 23 -15 l 32 -3 L 2 0" style="filter: drop-shadow( 2px 3px 2px)" />
-		</svg>
-	`;
+		</svg>`;
 	const cursor = `url("data:image/svg+xml,${encodeURIComponent(svg)}") 0 0, auto`;
 
 	return (
 		<div id="container">
 			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} />
-			<canvas className="checkers" ref={canvas_ref} style={{ backgroundColor: background, cursor: cursor }} />
+			<canvas className="checkers" ref={canvas_ref} style={{ background: background }} />
 
-			<Menu element={canvas_ref} getContents={getContextMenu} props={active}></Menu>
-
+			<Menu element={canvas_ref} getContents={getContextMenu} props={active} />
 			<style jsx>{`
 				#container {
 					position: relative;
 					height: calc(100vh - var(--nav-height) - var(--gap));
-					border-radius: var(--radius);
 				}
 				canvas {
 					width: 100%;
 					outline: none;
 					cursor: ${cursor};
 					--checker-size: 8px;
-					border-radius: var(--radius);
 					height: 100%;
+					border-radius: var(--radius);
 				}
 				.checkers {
 					--checker-color-1: white;
 					--checker-color-2: lightgrey;
 					--checker-size: 8px;
 					--checker-gradient: linear-gradient(45deg, var(--checker-color-1) 25%, transparent 0%, transparent 75%, var(--checker-color-1) 75%);
-					background-color: var(--checker-color-2);
+					background: var(--checker-color-2);
 					background-image: var(--checker-gradient), var(--checker-gradient);
 					background-position: 0 0, var(--checker-size) var(--checker-size);
 					background-size: calc(var(--checker-size) * 2) calc(var(--checker-size) * 2);
@@ -92,11 +89,11 @@ function Canvas({ user_id, store }, ref) {
 				canvas::after {
 					content: 'Drop Here';
 					position: absolute;
-					background-color: red;
+					background: red;
 					display: block;
 					width: 100px;
 					height: 100px;
-					background-color: #ff0000;
+					background: #ff0000;
 					margin-left: 5px;
 				}
 			`}</style>
@@ -125,7 +122,7 @@ function onResize(canvas, store, user_id) {
 	);
 }
 
-function getContextMenu(active, position) {
+function getContextMenu(event, active) {
 	const element = active.hovering[0];
 	return (
 		<ul>
@@ -135,7 +132,7 @@ function getContextMenu(active, position) {
 				</li>
 			)}
 
-			<li onClick={() => console.log(position)}>
+			<li onClick={() => console.log({ x: event.clientX, y: event.clientY })}>
 				Paste <span>⌘V</span>
 			</li>
 			<div className="divider" />

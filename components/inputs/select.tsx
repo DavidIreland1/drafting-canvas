@@ -28,10 +28,10 @@ export default function Select({ id, value, onChange, children }) {
 					box-sizing: border-box;
 				}
 				.container:hover {
-					background-color: var(--hover);
+					background: var(--hover);
 				}
 				.container:focus-within {
-					background-color: var(--hover);
+					background: var(--hover);
 					border-bottom: 1px solid white;
 				}
 				select {
@@ -41,8 +41,7 @@ export default function Select({ id, value, onChange, children }) {
 					font-size: inherit;
 					font-weight: inherit;
 					font-family: inherit;
-					background-color: transparent;
-					width: 100%;
+					background: transparent;
 				}
 				select:focus {
 					outline: none;

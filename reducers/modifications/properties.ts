@@ -1,6 +1,7 @@
 import Elements, { flatten, forEachElement, selected } from '../../components/canvas/elements/elements';
 import { rotatePoint } from '../../utils/utils';
 
+let last_value = 0;
 const properties = {
 	addFill: (state, props) => {
 		const { selected_ids } = props.payload;
@@ -107,9 +108,10 @@ const properties = {
 
 					const axis = key === 'width' ? 'x' : 'y';
 					const ratio = Math.abs((value || 0.00001) / bound[key]);
-					const sign = Math.sign(value);
-					const delta = sign < 0 ? (value || 0.00001) + bound[key] : 0;
 
+					console.log(value, last_value);
+					const delta = value < 0 && last_value < 0 ? (value || 0.00001) + bound[key] : 0;
+					last_value = value;
 					const sin = Math.sin(element.rotation);
 					const cos = Math.cos(element.rotation);
 
@@ -122,7 +124,6 @@ const properties = {
 							control.x = rotated.x;
 							control.y = rotated.y;
 						});
-						// console.log(ratio, sign);
 						point[axis] = (point[axis] - bound[axis]) * ratio + bound[axis] + delta;
 
 						point.controls.forEach((control) => {
@@ -150,8 +151,8 @@ const properties = {
 			if (selected_ids.includes(element.id)) elements.splice(i, 1);
 		});
 	},
-	setBackground: (state, props) => {
-		state.page = props.payload;
+	page: (state, props) => {
+		Object.entries(props.payload).forEach(([key, value]) => (state.page[key] = value));
 	},
 };
 

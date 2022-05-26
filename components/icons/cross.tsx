@@ -21,7 +21,7 @@ export default function Cross({ onClick = undefined }) {
 					box-sizing: border-box;
 				}
 				div:hover {
-					background-color: var(--nav);
+					background: var(--nav);
 				}
 			`}</style>
 		</div>

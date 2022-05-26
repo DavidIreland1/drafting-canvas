@@ -46,7 +46,7 @@ export default function Structure({ store }) {
 
 			<style jsx>{`
 				#container {
-					background-color: var(--panel);
+					background: var(--panel);
 					height: calc(100vh - var(--nav-height) - var(--gap));
 					z-index: 2;
 					border-radius: var(--radius);
@@ -54,6 +54,7 @@ export default function Structure({ store }) {
 				}
 				#structure {
 					height: 100%;
+					overflow-y: auto;
 					overflow-y: overlay;
 				}
 			`}</style>

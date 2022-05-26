@@ -83,19 +83,19 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 
 	const dragAlpha = (down_event) => {
 		drag(down_event, 'checkers', (move_event, bounds) => {
-			const new_aplha = clamp(0, move_event.clientX - bounds.x - 8, bounds.width - 14);
-			setColor(hsba[0] * slider_width, hsba[1] * fade_width, (1 - hsba[2]) * fade_width, new_aplha);
+			const new_alpha = clamp(0, move_event.clientX - bounds.x - 8, bounds.width - 14);
+			setColor(hsba[0] * slider_width, hsba[1] * fade_width, (1 - hsba[2]) * fade_width, new_alpha);
 		});
 	};
 
 	const fade_width = 286;
 	const slider_width = 266;
 
-	function setColor(hue, saturation, brightness, aplha) {
+	function setColor(hue, saturation, brightness, alpha) {
 		const h = hue / slider_width;
 		const s = saturation / fade_width;
 		const b = 1 - brightness / fade_width;
-		const a = aplha / slider_width;
+		const a = alpha / slider_width;
 		setProperty({ ...(property as any), color: [h, s, b, a] });
 	}
 
@@ -114,8 +114,8 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 			</div>
 
 			<div id="checkers" className="slider" onPointerDown={dragAlpha}>
-				<div id="aplha" className="slider" style={{ backgroundColor: ` -webkit-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${hsba[0] * 360}, 100%, 50%) 100%)` }} />
-				<div id="aplha-handle" className="handle" style={{ left: hsba[3] * slider_width + 'px', backgroundColor: `hsl(${hsba[0] * 360}, 100%, ${100 - (hsba[3] * 100) / 2}%)` }} />
+				<div id="alpha" className="slider" style={{ background: ` -webkit-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${hsba[0] * 360}, 100%, 50%) 100%)` }} />
+				<div id="alpha-handle" className="handle" style={{ left: hsba[3] * slider_width + 'px', backgroundColor: `hsl(${hsba[0] * 360}, 100%, ${100 - (hsba[3] * 100) / 2}%)` }} />
 			</div>
 
 			<div id="input">
@@ -143,7 +143,7 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 					position: absolute;
 					z-index: 4;
 					padding: 10px 0 20px 0;
-					background-color: var(--panel);
+					background: var(--panel);
 					box-shadow: 0 0 10px black;
 					display: grid;
 					gap: 10px;
@@ -153,10 +153,10 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 					position: relative;
 					width: 300px;
 					height: 300px;
-					background-color: -webkit-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -webkit-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
-					background-color: -moz-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -moz-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
-					background-color: -ms-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -ms-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
-					background-color: -o-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -o-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
+					background: -webkit-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -webkit-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
+					background: -moz-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -moz-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
+					background: -ms-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -ms-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
+					background: -o-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -o-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
 				}
 				#fade-handle {
 				}
@@ -187,15 +187,15 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 					border-radius: 14px;
 				}
 				#hue {
-					background-color: -moz-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
-					background-color: -webkit-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
-					background-color: -ms-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
-					background-color: -o-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
+					background: -moz-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
+					background: -webkit-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
+					background: -ms-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
+					background: -o-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
 				}
 				#hue-handle {
 					top: 0;
 				}
-				#aplha {
+				#alpha {
 					margin: 0;
 				}
 				#checkers {
@@ -203,12 +203,12 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 					--checker-color-2: grey;
 					--checker-size: 3.5px;
 					--checker-gradient: linear-gradient(45deg, var(--checker-color-1) 25%, transparent 0%, transparent 75%, var(--checker-color-1) 75%);
-					background-color: var(--checker-color-2);
+					background: var(--checker-color-2);
 					background-image: var(--checker-gradient), var(--checker-gradient);
 					background-position: 0 0, var(--checker-size) var(--checker-size);
 					background-size: calc(var(--checker-size) * 2) calc(var(--checker-size) * 2);
 				}
-				#aplha-handle {
+				#alpha-handle {
 					top: 0;
 				}
 				.color {
@@ -243,12 +243,12 @@ function values(hsba, format) {
 							display: grid;
 							grid-auto-flow: column;
 							gap: 1px;
-							background-color: white;
+							background: white;
 							border: 1px solid white;
 						}
 						.boxes > div {
 							line-height: 28px;
-							background-color: var(--panel);
+							background: var(--panel);
 						}
 					`}</style>
 				</div>
@@ -266,12 +266,12 @@ function values(hsba, format) {
 							display: grid;
 							grid-auto-flow: column;
 							gap: 1px;
-							background-color: white;
+							background: white;
 							border: 1px solid white;
 						}
 						.boxes > div {
 							line-height: 28px;
-							background-color: var(--panel);
+							background: var(--panel);
 						}
 					`}</style>
 				</div>
@@ -289,12 +289,12 @@ function values(hsba, format) {
 							display: grid;
 							grid-auto-flow: column;
 							gap: 1px;
-							background-color: white;
+							background: white;
 							border: 1px solid white;
 						}
 						.boxes > div {
 							line-height: 28px;
-							background-color: var(--panel);
+							background: var(--panel);
 						}
 					`}</style>
 				</div>

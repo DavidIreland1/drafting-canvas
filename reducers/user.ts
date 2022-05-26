@@ -34,9 +34,7 @@ const user = {
 		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
 		if (!cursor) return; // Not great
 		cursor.id = user_id;
-		Object.entries(props.payload).forEach(([key, value]) => {
-			if (value !== undefined) cursor[key] = value;
-		});
+		Object.entries(props.payload).forEach(([key, value]) => value !== undefined && (cursor[key] = value));
 	},
 };
 

@@ -65,8 +65,8 @@ export default function Element({ store, element, indentation, restructure }) {
 	const has_children = Array.isArray(element.elements);
 
 	return (
-		<div id="element" element-id={element.id} onClick={select} draggable={!editing} onDragStart={drag} className={element.type === 'group' || element.type === 'frame' ? 'group' : ''} onKeyDown={(event) => shortCuts(event, store) && event.preventDefault()}>
-			<div id="label" className={(element.selected ? 'selected' : '') + (element.hover ? ' hover' : '')} style={{ marginLeft: has_children ? 5 : indentation, gridTemplateColumns: `${has_children ? '18px' : ''} 30px auto 28px 28px` }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+		<div id="element" element-id={element.id} draggable={!editing} onDragStart={drag} className={element.type === 'group' || element.type === 'frame' ? 'group' : ''} onKeyDown={(event) => shortCuts(event, store) && event.preventDefault()}>
+			<div id="label" onClick={select} className={(element.selected ? 'selected' : '') + (element.hover ? ' hover' : '')} style={{ marginLeft: has_children ? 5 : indentation, gridTemplateColumns: `${has_children ? '18px' : ''} 30px auto 28px 28px` }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
 				<div style={{ display: has_children ? 'block' : 'none' }}>
 					<Chevron onClick={() => setOpen(!open)} rotated={open} />
 				</div>
@@ -141,13 +141,13 @@ export default function Element({ store, element, indentation, restructure }) {
 				}
 				#label:hover,
 				#label.hover {
-					background-color: var(--hover);
+					background: var(--hover);
 				}
 				#label.selected {
-					background-color: var(--selected);
+					background: var(--selected);
 				}
 				.highlighted > div > #label {
-					background-color: var(--hover);
+					background: var(--hover);
 				}
 				.icon {
 					fill: var(--icon);

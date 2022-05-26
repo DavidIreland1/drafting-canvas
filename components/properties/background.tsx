@@ -15,13 +15,11 @@ export default function Background({ store, setPicker }) {
 	);
 
 	function openPicker(event) {
-		const setBackground = (page) => {
-			store.dispatch(actions.setBackground(page));
-		};
+		const setBackground = (page) => store.dispatch(actions.page(page));
 		const selector = (state) => state.present.page;
 		setPicker(
 			<Picker setProperty={setBackground} selector={selector} event={event} setPicker={setPicker}>
-				<h4 style={{ color: 'var(--font)', lineHeight: '30px', width: 'max-content' }}>Background</h4>
+				<h4 style={{ lineHeight: '30px', width: 'max-content' }}>Background Color</h4>
 			</Picker>
 		);
 	}
@@ -29,15 +27,23 @@ export default function Background({ store, setPicker }) {
 	const color_string = Colors.toString(page.color, page.format);
 
 	const [color, setColor] = useState(color_string);
-	useEffect(() => setColor(color_string), [color_string]);
+	useEffect(() => setColor(color_string), [color_string]); // Hack to allow update from two inputs
+
+	// useEffect(() => {
+	// 	if (typeof window !== 'undefined') {
+	// 		setTimeout(() => {
+	// 			console.log(Colors.toString(page.color, page.format));
+	// 			setColor(Colors.toString(page.color, page.format));
+	// 		}, 100);
+	// 	}
+	// }, []);
 
 	function updateColor(event) {
 		const new_color = event.target.value;
 		setColor(new_color);
 		if (Colors.isValid(new_color)) {
 			store.dispatch(
-				actions.setBackground({
-					...page,
+				actions.page({
 					color: Colors.hslaToHsba(Colors.rgbaToHsla(Colors.stringToRgba(new_color))),
 					format: Colors.getFormat(new_color),
 				})
@@ -47,8 +53,7 @@ export default function Background({ store, setPicker }) {
 
 	function toggleVisible() {
 		store.dispatch(
-			actions.setBackground({
-				...page,
+			actions.page({
 				visible: !page.visible,
 			})
 		);
@@ -58,12 +63,12 @@ export default function Background({ store, setPicker }) {
 		<div>
 			<div id="property-container">
 				<div className="property-heading">
-					<h4>Background</h4>
+					<h4>BACKGROUND</h4>
 				</div>
 
 				<div className="property-row">
 					<div className="checker-background">
-						<div className="property-color" onClick={(event) => openPicker(event)} style={{ backgroundColor: Colors.toString(page.color) }} />
+						<div className="property-color" onClick={(event) => openPicker(event)} style={{ background: Colors.toString(page.color) }} />
 					</div>
 					<Text id="color" placeholder="Color" className={Colors.isValid(color) || 'invalid'} onChange={updateColor}>
 						{color}

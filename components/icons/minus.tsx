@@ -19,7 +19,7 @@ export default function Minus({ onClick = undefined }) {
 					box-sizing: border-box;
 				}
 				div:hover {
-					background-color: var(--hover);
+					background: var(--hover);
 				}
 			`}</style>
 		</div>

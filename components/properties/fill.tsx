@@ -130,7 +130,7 @@ function FillInput({ fill, setPicker, selected_ids, store }) {
 			<div className="checker-background">
 				{fill.type === 'Solid' || fill.type === 'Text' ? (
 					// Color Picker
-					<div className="property-color" onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store)} style={{ backgroundColor: Colors.toString(fill.color) }} />
+					<div className="property-color" onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store)} style={{ background: Colors.toString(fill.color) }} />
 				) : (
 					// Image
 					<Image height="1.5em" width="1.5em" alt="" className="property-color" src={fill.src} onClick={(event) => openPicker(event, fill, setPicker, selected_ids, store)} />
@@ -159,7 +159,7 @@ function FillInput({ fill, setPicker, selected_ids, store }) {
 
 					}
 					#handle:hover {
-						background-color: var(--hover)
+						background: var(--hover)
 					}
 				`}</style>
 		</div>

@@ -130,7 +130,7 @@ function Editable({ id, canvas, element_id, value, style, align, placeholder = '
 							}
 							#editable {
 								box-sizing: border-box;
-								background-color: transparent;
+								background: transparent;
 								overflow: visible;
 								word-break: break-word;
 								white-space: pre-wrap;

@@ -35,10 +35,10 @@ export default function DataList({ id, label, value, onChange, children }) {
 					box-sizing: border-box;
 				}
 				.container:hover {
-					background-color: var(--hover);
+					background: var(--hover);
 				}
 				.container:focus-within {
-					background-color: var(--hover);
+					background: var(--hover);
 					border-bottom: 1px solid white;
 				}
 				input {
@@ -48,7 +48,7 @@ export default function DataList({ id, label, value, onChange, children }) {
 					font-size: inherit;
 					font-weight: inherit;
 					font-family: inherit;
-					background-color: transparent;
+					background: transparent;
 					margin-bottom: 2px;
 				}
 				input:focus {
