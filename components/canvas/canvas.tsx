@@ -41,13 +41,10 @@ function Canvas({ user_id, store }, ref) {
 		(window as any).context = context;
 
 		window.addEventListener('resize', () => onResize(canvas, store, user_id));
-		// window.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
 
 		draw(context, store.getState().present, active, user_id);
-
-		(window as any).redraw = () => draw(context, store.getState().present, active, user_id);
-
 		store.subscribe(() => draw(context, store.getState().present, active, user_id));
+		(window as any).redraw = () => draw(context, store.getState().present, active, user_id);
 
 		setTimeout(() => setBackground(''), 0);
 

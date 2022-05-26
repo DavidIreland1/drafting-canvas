@@ -26,9 +26,10 @@ export default function Sheet({ store }) {
 			store.dispatch(actions.addUser({ user_id: Settings.user_id, label: Settings.user_name, color: Settings.user_color }));
 		}, time_delay);
 
-		window.addEventListener('beforeunload', () => {
-			store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
-		});
+		const removeUser = () => store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
+
+		window.addEventListener('beforeunload', removeUser);
+		return () => window.removeEventListener('beforeunload', removeUser);
 	}, [router.query, store]);
 
 	useEffect(() => {
