@@ -8,8 +8,8 @@ export default class Line extends Element {
 			fill: [],
 			stroke: [{ id: id + '564', type: 'Center', width: 2, color: [0.2, 0.2, 0.2, 1], format: 'hex4', visible: true }],
 			points: [
-				{ x: position.x, y: position.y, i: 0, controls: [] },
-				{ x: position.x, y: position.y, i: 1, controls: [] },
+				{ x: position.x, y: position.y, id: id + '0', controls: [] },
+				{ x: position.x, y: position.y, i: id + '1', controls: [] },
 			],
 		});
 	}
@@ -23,7 +23,7 @@ export default class Line extends Element {
 	static draw(line, context: CanvasRenderingContext2D, cursor, view) {
 		const path = this.path(line);
 		context.lineWidth = this.stroke(line, context, path);
-		return context.isPointInStroke(path, cursor.x, cursor.y);
+		return context.isPointInStroke(path, cursor.x, cursor.y) ? line : undefined;
 	}
 
 	// static highlight(line, context, cursor, highlight, line_width, box_size) {

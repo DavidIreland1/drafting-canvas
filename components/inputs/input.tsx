@@ -33,6 +33,7 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 
 			const delta = move_event.movementX * step;
 			setCursor({ x: cursor.x + move_event.movementX, y: cursor.y + move_event.movementY });
+
 			value = Number(value);
 			if (isNaN(value)) value = 0;
 			value = (delta + value).toPrecision(12); // Stops floating point errors

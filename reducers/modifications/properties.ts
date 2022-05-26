@@ -104,9 +104,11 @@ const properties = {
 					const bound = Elements[element.type].bound(element);
 					const center = Elements[element.type].center(element);
 
-					const ratio = Number(value) || 0.01 / bound[key];
-
 					const axis = key === 'width' ? 'x' : 'y';
+					const ratio = Math.abs((Number(value) || 0.01) / bound[key]);
+					const sign = Math.sign(Number(value));
+					const delta = sign < 0 ? (Number(value) || 0.01) + bound[key] : 0;
+					console.log(bound.x);
 
 					const sin = Math.sin(element.rotation);
 					const cos = Math.cos(element.rotation);
@@ -120,10 +122,11 @@ const properties = {
 							control.x = rotated.x;
 							control.y = rotated.y;
 						});
-						point[axis] = (point[axis] - bound[axis]) * ratio + bound[axis];
+						// console.log(ratio, sign);
+						point[axis] = (point[axis] - bound[axis]) * ratio + bound[axis] + delta;
 
 						point.controls.forEach((control) => {
-							control[axis] = (control[axis] - bound[axis]) * ratio + bound[axis];
+							control[axis] = (control[axis] - bound[axis]) * ratio + bound[axis] + delta;
 						});
 
 						const un_rotated = rotatePoint(point, center, sin, cos);

@@ -23,12 +23,6 @@ export default function Dimensions({ selected, store, width }) {
 				<Input id="x" label="X" value={bounds.x} onChange={updateDimension} width={width} />
 				<Input id="y" label="Y" value={bounds.y} onChange={updateDimension} width={width} />
 
-				{/* <Input id="x1" label="X1" value={selected[0].x1} onChange={updateDimension} width={width} />
-				<Input id="y1" label="Y1" value={selected[0].y1} onChange={updateDimension} width={width} />
-
-				<Input id="x2" label="X2" value={selected[0].x2} onChange={updateDimension} width={width} />
-				<Input id="y2" label="Y2" value={selected[0].y2} onChange={updateDimension} width={width} /> */}
-
 				<Input id="width" label="W" value={bounds.width} onChange={updateDimension} width={width} />
 				<Input id="height" label="H" value={bounds.height} onChange={updateDimension} width={width} />
 

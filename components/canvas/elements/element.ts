@@ -135,7 +135,7 @@ export default class Element {
 			});
 	}
 
-	static draw(element, context: CanvasRenderingContext2D, cursor, view): boolean {
+	static draw(element, context: CanvasRenderingContext2D, cursor, view): any {
 		const path = this.path(element);
 		this.underEffect(element, context, path, view);
 		this.fill(element, context, path);
@@ -143,7 +143,7 @@ export default class Element {
 		const fill = element.fill.length && context.isPointInPath(path, cursor.x, cursor.y);
 		context.lineWidth = this.stroke(element, context, path);
 		const stroke = element.stroke.length && context.isPointInStroke(path, cursor.x, cursor.y);
-		return fill || stroke;
+		return fill || stroke ? element : undefined;
 	}
 
 	static resize(element, position, last_position): void {

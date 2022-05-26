@@ -41,8 +41,8 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 	if (active.editing.length === 0) {
 		active.hovering = on_screen
 			.reverse()
-			.filter((element) => Elements[element.type].draw(element, context, cursor, user_view))
-			.filter((element) => !element.locked)
+			.map((element) => Elements[element.type].draw(element, context, cursor, user_view))
+			.filter((element) => element && !element.locked)
 			.sort((element1) => (element1.selected ? 1 : -1))
 			.reverse();
 	} else {

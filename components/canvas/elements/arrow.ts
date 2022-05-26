@@ -21,7 +21,7 @@ export default class Arrow extends Line {
 		path.lineTo(arrow.x2 - arrow.head_length * Math.cos(theta + arrow.head_angle), arrow.y2 - arrow.head_length * Math.sin(theta + arrow.head_angle));
 		context.fill(path);
 
-		return context.isPointInPath(path, cursor.x, cursor.y);
+		return context.isPointInPath(path, cursor.x, cursor.y) ? arrow : undefined;
 	}
 
 	static outarrow(arrow, context, color, arrow_width): void {

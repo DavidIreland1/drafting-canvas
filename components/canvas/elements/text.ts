@@ -94,7 +94,7 @@ export default class Text extends Element {
 		this.stroke(text, context, path);
 		this.fill(text, context, path);
 		context.restore();
-		return context.isPointInPath(path, cursor.x, cursor.y);
+		return context.isPointInPath(path, cursor.x, cursor.y) ? text : undefined;
 	}
 
 	static drawPoints(element, context, cursor, color, line, box_size) {

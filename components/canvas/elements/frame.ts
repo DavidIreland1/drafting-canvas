@@ -14,12 +14,9 @@ export default class Frame extends Element {
 
 	static draw(frame, context, cursor, view) {
 		const hover = Element.draw(frame, context, cursor, view);
-		const center = this.center(frame);
 		const path = this.path(frame);
 		context.save();
 		context.clip(path);
-		// context.translate(center.x, center.y);
-		// context.rotate(frame.rotation);
 		frame.elements
 			.filter((element) => element.visible)
 			.reverse()
@@ -27,36 +24,12 @@ export default class Frame extends Element {
 			.filter((element) => !element.locked);
 
 		context.restore();
-
-		return hover;
+		return hover ? frame : undefined;
 	}
 
-	// static draw(frame, context: CanvasRenderingContext2D, cursor, draw) {
-	// 	const center = this.center(frame);
-
-	// 	context.fillStyle = frame.color;
-	// 	context.translate(center.x, center.y);
-	// 	context.rotate(frame.rotation);
-
-	// 	const path = this.path(frame);
-
-	// 	this.fill(frame, context, path);
-	// 	this.stroke(frame, context, path);
-
-	// 	const hover = context.isPointInPath(path, cursor.x, cursor.y);
-
-	// 	context.rotate(-frame.rotation);
-	// 	context.translate(-center.x, -center.y);
-
-	// 	const hover_child = frame.elements
-	// 		.filter((element) => element.visible)
-	// 		.reverse()
-	// 		.filter((element) => Elements[element.type].draw(element, context, cursor, draw))
-	// 		.filter((element) => !element.locked);
-
-	// 	if (hover_child.length > 0) return hover_child.length > 0;
-	// 	return hover;
-	// }
+	static getPoints(frame) {
+		return frame.points.concat(frame.elements.map((element) => Elements[element.type].getPoints(element)).flat());
+	}
 
 	static getEffect(frame) {
 		return frame.elements.map((element) => Elements[element.type].getEffect(element)).flat();
@@ -64,9 +37,5 @@ export default class Frame extends Element {
 
 	static setEffect(frame, colors) {
 		frame.elements.forEach((element) => Elements[element.type].setEffect(element, colors));
-	}
-
-	static getPoints(frame) {
-		return frame.points;
 	}
 }

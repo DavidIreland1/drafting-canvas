@@ -12,10 +12,15 @@ export default class Group extends Element {
 		const hovering = group.elements
 			.filter((element) => element.visible)
 			.reverse()
-			.filter((element) => Elements[element.type].draw(element, context, cursor, view))
-			.filter((element) => !element.locked);
+			.map((element) => Elements[element.type].draw(element, context, cursor, view))
+			.filter((element) => element && !element.locked)
+			.reverse();
 
-		return hovering.length > 0;
+		if (group.editing) {
+			return hovering[0];
+		} else {
+			return hovering.length > 0 ? group : undefined;
+		}
 	}
 
 	static outline(group, context, color, line_width): void {
