@@ -46,6 +46,11 @@ body {
 	font-weight: 200;
 }
 
+a {
+	color: var(--text);
+	text-decoration: none;
+}
+
 ::-webkit-scrollbar {
 	width: 6px;
 	height: 5px;

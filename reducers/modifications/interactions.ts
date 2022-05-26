@@ -113,13 +113,7 @@ const interactions = {
 		});
 
 		// Remove selected elements, aside from in new group
-		forEachElementUntil(
-			state.elements,
-			(element, i, elements) => {
-				if (selected_ids.includes(element.id)) elements.splice(i, 1);
-			},
-			id
-		);
+		forEachElementUntil(state.elements, (element, i, elements) => selected_ids.includes(element.id) && elements.splice(i, 1), id);
 	},
 };
 

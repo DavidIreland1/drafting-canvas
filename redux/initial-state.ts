@@ -6,7 +6,7 @@ const initial_state = {
 		color: [1, 0, 0.9, 1],
 		format: 'hex4',
 		visible: true,
-		label: 'New Page',
+		label: 'New Canvas',
 	},
 };
 

@@ -43,10 +43,13 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 			.reverse()
 			.map((element) => Elements[element.type].draw(element, context, cursor, user_view))
 			.filter((element) => element && !element.locked)
-			.sort((element1) => (element1.selected ? 1 : -1))
-			.reverse();
+			.reverse()
+			.sort((element1) => (element1.selected ? -1 : 1));
 	} else {
-		active.hovering = on_screen.reverse().filter((element) => Elements[element.type].draw(element, context, cursor, user_view) && element.editing);
+		active.hovering = on_screen
+			.reverse()
+			.map((element) => Elements[element.type].draw(element, context, cursor, user_view))
+			.filter((element) => element && element.editing);
 	}
 	// Outline hovering
 	// if (!user_cursor.pressed)

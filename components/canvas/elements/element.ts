@@ -163,8 +163,8 @@ export default class Element {
 		const delta_y = (normal_last_position.y - normal_position.y) * (normal_last_position.y < center.y ? 1 : -1);
 
 		// Get change ratio in width and height
-		const width_ratio = (bounds.width + delta_x) / (bounds.width || 0.01);
-		const height_ratio = (bounds.height + delta_y) / (bounds.height || 0.01);
+		const width_ratio = (bounds.width + delta_x) / bounds.width || 0.0000001; // avoid ratio of zero
+		const height_ratio = (bounds.height + delta_y) / bounds.height || 0.0000001; // avoid ratio of zero
 
 		// Top left of old bounding box
 		const old_x_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point.x));
@@ -196,7 +196,7 @@ export default class Element {
 		rotatePoints(element, center, -sin, cos);
 
 		const delta_y = (normal_last_position.y - normal_position.y) * (normal_last_position.y < center.y ? 1 : -1);
-		const height_ratio = (bounds.height + delta_y) / (bounds.height || 0.01);
+		const height_ratio = (bounds.height + delta_y) / bounds.height || 0.0000001; // avoid ratio of zero
 
 		// Top left of resize box
 		const old_y_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point.y));
@@ -223,7 +223,7 @@ export default class Element {
 		rotatePoints(element, center, -sin, cos);
 
 		const delta_x = (normal_last_position.x - normal_position.x) * (normal_last_position.x < center.x ? 1 : -1);
-		const width_ratio = (bounds.width + delta_x) / (bounds.width || 0.01);
+		const width_ratio = (bounds.width + delta_x) / bounds.width || 0.0000001; // avoid ratio of zero
 
 		// Top left of resize box
 		const old_x_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point.x));

@@ -4,7 +4,7 @@ import Cross from '../icons/cross';
 import Text from '../inputs/text';
 import actions from '../../redux/slice';
 
-export default function Tab({ id, label, selected, store, leavePage, closeTab }) {
+export default function Tab({ id, label, selected, store, onClick, closeTab }) {
 	const tab_ref = useRef(null);
 	const [editing, setEditing] = useState(false);
 
@@ -30,8 +30,8 @@ export default function Tab({ id, label, selected, store, leavePage, closeTab })
 
 	return (
 		<div ref={tab_ref}>
-			<Link href={'/file/' + id}>
-				<a onClick={leavePage} className={'tab' + (selected ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
+			<Link href={'/canvas/' + id}>
+				<a onClick={onClick} className={'tab' + (selected ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
 					{editing ? (
 						<Text id="props" highlight={true} onBlur={() => setEditing(false)} onChange={(event) => store.dispatch(actions.label(event.target.value))}>
 							{label}
@@ -40,7 +40,7 @@ export default function Tab({ id, label, selected, store, leavePage, closeTab })
 						<div onDoubleClick={() => setEditing(true)}>{label}</div>
 					)}
 
-					<Cross onClick={() => closeTab(id)} />
+					<Cross onClick={(event) => closeTab(event, id)} />
 				</a>
 			</Link>
 
@@ -50,11 +50,9 @@ export default function Tab({ id, label, selected, store, leavePage, closeTab })
 					stroke-width: 6;
 				}
 				.tab {
-					color: var(--text);
 					padding: 2px 5px 2px 20px;
 					width: max(max-content, 10%);
 					border-radius: var(--radius);
-					text-decoration: none;
 					box-sizing: border-box;
 					display: flex;
 					align-items: center;

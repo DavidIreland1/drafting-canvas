@@ -5,8 +5,8 @@ export default function crosses(context, elements, selected, view) {
 
 	const selected_points = selected.map((element) => Elements[element.type].points(element)).flat();
 
-	const size = 4 / view.scale;
-	context.strokeStyle = 'red';
+	const size = 3 / view.scale;
+	context.strokeStyle = '#F55';
 	context.lineWidth = 1 / view.scale;
 
 	elements

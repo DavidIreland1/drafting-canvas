@@ -13,7 +13,7 @@ export default class Text extends Element {
 			family: 'Arial',
 			justify: 'left',
 			align: 'start',
-			size: 10,
+			size: 20,
 			rotation: 0,
 			line_height: 1,
 			fill: [{ id: id + '123321', type: 'Text', color: [0, 0, 0, 1], format: 'hex4', visible: true }],

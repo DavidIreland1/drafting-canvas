@@ -13,6 +13,7 @@ import Theme from '../icons/theme';
 import actions from '../../redux/slice';
 import { generateID } from '../../utils/utils';
 import { RootState } from '../../redux/store';
+import Link from 'next/link';
 
 export default function Navbar({ store }) {
 	const router = useRouter();
@@ -22,27 +23,31 @@ export default function Navbar({ store }) {
 
 	useEffect(() => {
 		if (page && !tabs.find((tab) => tab.id === page)) {
-			setTabs(tabs.concat([{ id: String(page), label: 'New File' }]));
+			setTabs(tabs.concat([{ id: String(page), label: 'New Canvas' }]));
 		}
 	}, [page, tabs]);
 
 	function newTab() {
 		const id = generateID();
-		setTabs(tabs.concat([{ id: id, label: 'New File' }]));
-		leavePage();
-		router.push(id);
+		setTabs([...tabs, { id: id, label: `New Canvas ${tabs.length}` }]);
+		removeUser();
+		router.push('/canvas/' + id);
 	}
 
 	function droppable(event) {
 		event.preventDefault();
 	}
 
-	function leavePage() {
+	function removeUser() {
 		store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
 	}
 
-	function closeTab(id) {
-		setTabs(tabs.filter((tab) => tab.id !== id));
+	function closeTab(event, id) {
+		event.preventDefault();
+		event.stopPropagation();
+		const open_tabs = tabs.filter((tab) => tab.id !== id);
+		setTabs(open_tabs);
+		if (page === id) router.push(open_tabs.length ? '/canvas/' + tabs[0].id : '/');
 	}
 
 	const page_label = useSelector(
@@ -52,12 +57,16 @@ export default function Navbar({ store }) {
 
 	return (
 		<>
-			<div id="nav" onDragOver={droppable}>
-				<img alt="DC" src="/images/draft.svg" />
+			<nav id="nav" onDragOver={droppable}>
+				<Link href="/">
+					<a>
+						<img alt="DC" src="/images/draft.svg" />
+					</a>
+				</Link>
 
 				<div id="tabs" onDragOver={droppable}>
 					{tabs.map((tab, i) => (
-						<Tab key={i} id={tab.id} label={page === tab.id ? page_label : tab.label} selected={page === tab.id} store={store} leavePage={leavePage} closeTab={closeTab} />
+						<Tab key={i} id={tab.id} label={page === tab.id ? page_label : tab.label} selected={page === tab.id} store={store} onClick={removeUser} closeTab={closeTab} />
 					))}
 				</div>
 
@@ -77,10 +86,10 @@ export default function Navbar({ store }) {
 						/>
 					</svg>
 				</a>
-			</div>
+			</nav>
 
 			<style jsx>{`
-				#nav {
+				nav {
 					--nav: #202021;
 					--panel: #262628;
 					--title: #ffffff;

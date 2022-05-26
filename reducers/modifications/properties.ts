@@ -70,10 +70,11 @@ const properties = {
 
 		const entry = Object.entries(props.payload.props);
 		selected(state.elements, selected_ids).forEach((element) => {
-			entry.forEach(([key, value]) => {
+			entry.forEach(([key, _value]) => {
+				const value = Number(_value);
 				if (key === 'x' || key === 'y') {
 					const bound = Elements[element.type].bound(element);
-					const delta = Number(value) - bound[key];
+					const delta = value - bound[key];
 					Elements[element.type].getPoints(element).forEach((point) => {
 						point[key] += delta;
 						point.controls.forEach((control) => {
@@ -84,12 +85,12 @@ const properties = {
 					Elements[element.type].getPoints(element).forEach((point) => (point[key] = value));
 				} else if (key === 'rotation') {
 					const center = Elements[element.type].center(element);
-					const delta = Number(value) - element.rotation;
+					const delta = value - element.rotation;
 
 					const sin = Math.sin(delta);
 					const cos = Math.cos(delta);
 
-					element.rotation = Number(value) % (Math.PI * 2);
+					element.rotation = value % (Math.PI * 2);
 					Elements[element.type].getPoints(element).forEach((point) => {
 						const rotated = rotatePoint(point, center, sin, cos);
 						point.x = rotated.x;
@@ -105,10 +106,9 @@ const properties = {
 					const center = Elements[element.type].center(element);
 
 					const axis = key === 'width' ? 'x' : 'y';
-					const ratio = Math.abs((Number(value) || 0.01) / bound[key]);
-					const sign = Math.sign(Number(value));
-					const delta = sign < 0 ? (Number(value) || 0.01) + bound[key] : 0;
-					console.log(bound.x);
+					const ratio = Math.abs((value || 0.00001) / bound[key]);
+					const sign = Math.sign(value);
+					const delta = sign < 0 ? (value || 0.00001) + bound[key] : 0;
 
 					const sin = Math.sin(element.rotation);
 					const cos = Math.cos(element.rotation);
@@ -139,7 +139,7 @@ const properties = {
 						});
 					});
 				} else {
-					element[key] = value;
+					element[key] = _value;
 				}
 			});
 		});

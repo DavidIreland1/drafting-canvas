@@ -35,5 +35,7 @@ export default function makeStore(room) {
 	);
 }
 
+// Just for state type
+// const store = createStore(undoable(slice.reducer), { past: [], present: initial_state, future: [] });
 // export type RootState = ReturnType<typeof store.getState>;
 export type RootState = any;
