@@ -20,7 +20,7 @@ export default function Plus({ onClick = undefined }) {
 					box-sizing: border-box;
 				}
 				div:hover {
-					background: var(--hover);
+					background-color: var(--hover);
 				}
 			`}</style>
 		</div>

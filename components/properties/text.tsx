@@ -17,7 +17,7 @@ async function importFont(fontFamily, variants = 'regular') {
 	});
 }
 
-export default function Text({ selected, store, width, fonts }) {
+export default function Text({ selected, store, fonts }) {
 	const selected_ids = selected.map((element) => element.id);
 
 	function updateText(event, alter = (value) => value) {
@@ -55,7 +55,7 @@ export default function Text({ selected, store, width, fonts }) {
 			<div className="property-heading">
 				<h4>TEXT</h4>
 			</div>
-			<div id="properties" style={{ gap: `8px calc(${width} / 20)` }}>
+			<div id="properties">
 				<DataList id="family" label="Font Family" value={selected[0].family} onChange={updateFont}>
 					{fonts.map((font, i) => (
 						<option key={i} value={font.family} />
@@ -69,9 +69,9 @@ export default function Text({ selected, store, width, fonts }) {
 					))}
 				</Select>
 
-				<Input id="size" label="Size" value={selected[0].size} onChange={(event) => updateText(event, (value) => Math.max(value, 0))} width={width} />
+				<Input id="size" label="Size" value={selected[0].size} onChange={(event) => updateText(event, (value) => Math.max(value, 0))} />
 
-				<Input id="line_height" label="Line Height" step={0.01} value={selected[0].line_height} onChange={(event) => updateText(event, (value) => Math.max(value, 0))} width={width} />
+				<Input id="line_height" label="Line Height" step={0.01} value={selected[0].line_height} onChange={(event) => updateText(event, (value) => Math.max(value, 0))} />
 
 				<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', height: '28px' }} onClick={(event) => updateText({ target: { id: 'justify', value: (event.target as SVGElement).id } })}>
 					<svg id="left" className={selected[0].justify === 'left' ? 'selected' : ''} viewBox="0 0 10 10">
@@ -123,6 +123,7 @@ export default function Text({ selected, store, width, fonts }) {
 			<style jsx>{`
 				#properties {
 					display: grid;
+					gap: 8px;
 					height: min-content;
 					width: fit-content;
 					width: 100%;
@@ -143,14 +144,14 @@ export default function Text({ selected, store, width, fonts }) {
 					pointer-events: none;
 				}
 				svg:hover {
-					background: var(--hover);
+					background-color: var(--hover);
 				}
 				svg.selected {
-					background: var(--selected);
+					background-color: var(--selected);
 				}
 				.divider {
 					height: 1px;
-					background: var(--border);
+					background-color: var(--border);
 					margin: 10px 0;
 				}
 			`}</style>

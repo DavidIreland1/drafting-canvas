@@ -30,29 +30,28 @@ function Canvas({ user_id, store }, ref) {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
 		const context: CanvasRenderingContext2D = canvas.getContext('2d'); //, { alpha: false } makes it flash black but is more efficient?
 
-		const { width, height, left } = canvas.getBoundingClientRect();
+		const { width, height, top, left } = canvas.getBoundingClientRect();
 		canvas.width = width * window.devicePixelRatio;
 		canvas.height = height * window.devicePixelRatio;
-		last_x = left;
+		last_left = left;
+		last_left = top;
 
 		// Just for console debugging
 		(window as any).canvas = canvas;
 		(window as any).context = context;
 
 		window.addEventListener('resize', () => onResize(canvas, store, user_id));
-		window.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
-
-		initCanvas(canvas, user_id, store, active);
+		// window.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
 
 		draw(context, store.getState().present, active, user_id);
 
 		(window as any).redraw = () => draw(context, store.getState().present, active, user_id);
 
-		store.subscribe(() => {
-			draw(context, store.getState().present, active, user_id);
-		});
+		store.subscribe(() => draw(context, store.getState().present, active, user_id));
 
 		setTimeout(() => setBackground(''), 0);
+
+		return initCanvas(canvas, user_id, store, active);
 	}, [canvas_ref, store, user_id]);
 
 	const svg = `
@@ -65,14 +64,14 @@ function Canvas({ user_id, store }, ref) {
 	return (
 		<div id="container">
 			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} />
-			<canvas className="checkers" ref={canvas_ref} style={{ background: background, cursor: cursor }} />
+			<canvas className="checkers" ref={canvas_ref} style={{ backgroundColor: background, cursor: cursor }} />
 
 			<Menu element={canvas_ref} getContents={getContextMenu} props={active}></Menu>
 
 			<style jsx>{`
 				#container {
 					position: relative;
-					height: calc(100vh - var(--nav-height) - var(--grid-gap));
+					height: calc(100vh - var(--nav-height) - var(--gap));
 					border-radius: var(--radius);
 				}
 				canvas {
@@ -93,17 +92,14 @@ function Canvas({ user_id, store }, ref) {
 					background-position: 0 0, var(--checker-size) var(--checker-size);
 					background-size: calc(var(--checker-size) * 2) calc(var(--checker-size) * 2);
 				}
-				canvas.dragging: {
-					background: red;
-				}
 				canvas::after {
 					content: 'Drop Here';
 					position: absolute;
-					background: red;
+					background-color: red;
 					display: block;
 					width: 100px;
 					height: 100px;
-					background: #ff0000;
+					background-color: #ff0000;
 					margin-left: 5px;
 				}
 			`}</style>
@@ -111,19 +107,23 @@ function Canvas({ user_id, store }, ref) {
 	);
 }
 
-let last_x = 0;
+let last_left = 0;
+let last_top = 0;
 function onResize(canvas, store, user_id) {
-	const { width, height, left } = canvas.getBoundingClientRect();
+	const { width, height, top, left } = canvas.getBoundingClientRect();
 
 	canvas.width = width * window.devicePixelRatio;
 	canvas.height = height * window.devicePixelRatio;
 
-	const delta_x = last_x - left;
-	last_x -= delta_x;
+	const delta_x = last_left - left;
+	const delta_y = last_top - top;
+	last_left = left;
+	last_top = top;
 	store.dispatch(
 		actions.view({
-			user_id: user_id,
-			delta_x: delta_x * 2,
+			user_id,
+			delta_x,
+			delta_y,
 		})
 	);
 }

@@ -63,7 +63,7 @@ export default function Background({ store, setPicker }) {
 
 				<div className="property-row">
 					<div className="checker-background">
-						<div className="property-color" onClick={(event) => openPicker(event)} style={{ background: Colors.toString(page.color) }} />
+						<div className="property-color" onClick={(event) => openPicker(event)} style={{ backgroundColor: Colors.toString(page.color) }} />
 					</div>
 					<Text id="color" placeholder="Color" className={Colors.isValid(color) || 'invalid'} onChange={updateColor}>
 						{color}

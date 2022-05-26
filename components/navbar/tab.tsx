@@ -57,7 +57,7 @@ export default function Tab({ id, label, selected, store, onClick, closeTab }) {
 					display: flex;
 					align-items: center;
 					display: grid;
-					grid-gap: 5px;
+					gap: 5px;
 					grid-template-columns: max-content 23px;
 					height: 100%;
 					opacity: 0.999; /* for circular nodes with html draggable */
@@ -67,14 +67,14 @@ export default function Tab({ id, label, selected, store, onClick, closeTab }) {
 				}
 				.tab:hover,
 				#plus:hover {
-					background: var(--hover);
+					background-color: var(--hover);
 				}
 				.tab.selected {
-					background: var(--selected);
+					background-color: var(--selected);
 				}
 				.blank {
 					color: transparent;
-					background: transparent;
+					background-color: transparent;
 				}
 				.blank > * {
 					visibility: collapse;

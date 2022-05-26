@@ -11,12 +11,12 @@
 }
 
 #menu > ul > li:hover {
-	background: var(--hover);
+	background-color: var(--hover);
 }
 
 #menu > ul > .divider {
 	height: 1px;
-	background: var(--border);
+	background-color: var(--border);
 	margin: 5px 0;
 }
 

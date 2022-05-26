@@ -1,7 +1,7 @@
 /* Dark theme */
 :root {
 	--radius: 6px;
-	--grid-gap: 4px;
+	--gap: 4px;
 	--nav-height: 40px;
 
 	--nav: #1b1b1d;
@@ -35,13 +35,17 @@
 	scrollbar-width: thin;
 }
 
+* {
+	transition: background-color 500ms;
+}
+
 html,
 body {
 	padding: 0;
 	margin: 0;
 	height: 100vh;
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-	background: var(--background);
+	background-color: var(--background);
 	overflow: hidden;
 	font-weight: 200;
 }
@@ -56,7 +60,7 @@ button {
 	border-radius: var(--radius);
 }
 button:hover {
-	background: var(--hover);
+	background-color: var(--hover);
 }
 ::-webkit-scrollbar {
 	width: 6px;
@@ -64,10 +68,10 @@ button:hover {
 }
 ::-webkit-scrollbar-thumb {
 	border-radius: 7px;
-	background: grey;
+	background-color: grey;
 }
 ::-webkit-scrollbar-track {
-	background: var(--panel);
+	background-color: var(--panel);
 }
 
 .checkers {

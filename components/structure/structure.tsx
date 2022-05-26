@@ -1,37 +1,17 @@
 import { useRef, useState } from 'react';
 import Element from './element';
 import { useSelector } from 'react-redux';
-import shortCuts from '../canvas/short-cuts';
 import { clone } from '../../utils/utils';
 import actions from '../../redux/slice';
 import { flatten } from '../canvas/elements/elements';
 
-export default function Structure({ store, onResize }) {
+export default function Structure({ store }) {
 	const elements = useSelector(
 		(state) => (state as any).present.elements,
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)
 	);
 	const [key, setKey] = useState(Math.random());
 	const structure_ref = useRef(null);
-	const [width, setWidth] = useState('max(15vw, 150px)');
-
-	const resize = (event) => {
-		event.preventDefault();
-		event.target.setPointerCapture(event.pointerId);
-		const structure = structure_ref.current;
-		const offset = structure.parentElement.getBoundingClientRect().left;
-
-		const move = (move_event) => {
-			setWidth(`max(${((move_event.clientX - offset) / window.innerWidth) * 100}vw, 3px)`);
-			onResize();
-		};
-		event.target.addEventListener('pointermove', move);
-		const end = () => {
-			event.target.releasePointerCapture(event.pointerId);
-			event.target.removeEventListener('pointermove', move);
-		};
-		event.target.addEventListener('pointerup', end, { once: true });
-	};
 
 	const restructure = () => {
 		const structure = structure_ref.current;
@@ -57,37 +37,24 @@ export default function Structure({ store, onResize }) {
 	};
 
 	return (
-		<div id="container" key={key} style={{ width: width }}>
+		<div id="container" key={key}>
 			<div id="structure" ref={structure_ref} onDragOver={(event) => event.preventDefault()}>
 				{elements.map((element) => (
 					<Element key={element.id} element={element} indentation={5} store={store} restructure={restructure} />
 				))}
 			</div>
 
-			<div id="handle" onPointerDown={resize} />
-
 			<style jsx>{`
 				#container {
-					position: relative;
-					background: var(--panel);
-					display: grid;
-					height: calc(100vh - var(--nav-height) - var(--grid-gap));
+					background-color: var(--panel);
+					height: calc(100vh - var(--nav-height) - var(--gap));
 					z-index: 2;
-					padding: 4px;
 					border-radius: var(--radius);
+					overflow-x: hidden;
 				}
 				#structure {
 					height: 100%;
 					overflow-y: overlay;
-				}
-				#handle {
-					position: absolute;
-					height: 100%;
-					width: 6px;
-					background: transparent;
-					right: -5px;
-					cursor: ew-resize;
-					z-index: 3;
 				}
 			`}</style>
 		</div>

@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
-
 import { RootState } from '../../redux/store';
 import Background from './background';
 import Dimensions from './dimensions';
@@ -9,41 +7,21 @@ import Stroke from './stroke';
 import Effects from './effects';
 import Text from './text';
 
-export default function Properties({ store, setPicker, fonts, onResize }) {
-	const [width, setWidth] = useState('max(20vw, 150px)');
+export default function Properties({ store, setPicker, fonts }) {
 	const selected = useSelector(
 		(state: RootState) => state.present.elements.filter((element) => element.selected),
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)
 	);
-	// const selected = [];
-
-	function resize(event) {
-		event.preventDefault();
-		event.target.setPointerCapture(event.pointerId);
-		// const move = (move_event) => setWidth(Math.max(window.innerWidth - move_event.clientX, 3) + 'px');
-		const move = (move_event) => {
-			setWidth(`max(${((window.innerWidth - move_event.clientX) / window.innerWidth) * 100}vw, 3px)`);
-			onResize();
-		};
-		event.target.addEventListener('pointermove', move);
-		const end = () => {
-			event.target.releasePointerCapture(event.pointerId);
-			event.target.removeEventListener('pointermove', move);
-		};
-		event.target.addEventListener('pointerup', end, { once: true });
-	}
 
 	return (
-		<div id="container" style={{ width: width }}>
-			<div id="handle" onPointerDown={resize}></div>
-
+		<div id="container">
 			{selected.length === 0 ? (
 				<Background store={store} setPicker={setPicker}></Background>
 			) : (
 				<div>
-					<Dimensions selected={selected} store={store} width={width} />
+					<Dimensions selected={selected} store={store} />
 					<div className="divider" />
-					<Text selected={selected} store={store} width={width} fonts={fonts} />
+					<Text selected={selected} store={store} fonts={fonts} />
 					<Fill selected={selected} store={store} setPicker={setPicker} />
 					<div className="divider" />
 					<Stroke selected={selected} store={store} setPicker={setPicker} />
@@ -71,7 +49,6 @@ export default function Properties({ store, setPicker, fonts, onResize }) {
 			`}</style>
 
 			<style>{`
-
 				.checker-background {
 					margin: auto;
 					width: 1.5em;
@@ -107,33 +84,33 @@ export default function Properties({ store, setPicker, fonts, onResize }) {
 					width: 100%;
 				}
 				.property-minus:hover {
-					background: var(--hover);
+					background-color: var(--hover);
 				}
 			`}</style>
 
 			<style jsx>{`
 				#container {
 					color: var(--text);
-					background: var(--panel);
+					background-color: var(--panel);
 					position: relative;
 					display: grid;
 					right: 0;
 					padding: 10px 0;
 					border-radius: var(--radius);
-					height: calc(100vh - var(--nav-height) - var(--grid-gap));
+					height: calc(100vh - var(--nav-height) - var(--gap));
 					overflow-y: overlay;
 				}
 				#handle {
 					position: absolute;
 					height: 100%;
 					width: 6px;
-					background: transparent;
+					background-color: transparent;
 					left: -5px;
 					cursor: ew-resize;
 				}
 				.divider {
 					height: 1px;
-					background: var(--border);
+					background-color: var(--border);
 					margin: 10px 0;
 				}
 			`}</style>

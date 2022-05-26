@@ -4,7 +4,8 @@ import Settings from '../../settings';
 
 const { max_zoom, min_zoom, pan_sensitivity, zoom_sensitivity } = Settings;
 
-export default function onWheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, store) {
+export default function wheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, store) {
+	event.preventDefault();
 	const state = store.getState().present;
 	const view = state.views.find((view) => view.id === user_id);
 

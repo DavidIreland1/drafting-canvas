@@ -105,7 +105,7 @@ export default function Navbar({ store }) {
 					grid-auto-flow: column;
 					grid-template-columns: min-content min-content 1fr min-content min-content min-content;
 					height: var(--nav-height);
-					background: var(--nav);
+					background-color: var(--nav);
 					color: var(--text);
 					max-width: 100vw;
 				}
@@ -113,7 +113,7 @@ export default function Navbar({ store }) {
 					height: calc(var(--nav-height) - 12px);
 					width: calc(var(--nav-height) - 12px);
 					box-sizing: border-box;
-					background: white;
+					background-color: white;
 					padding: 2px;
 					margin: 6px;
 					border-radius: var(--radius);
@@ -130,7 +130,7 @@ export default function Navbar({ store }) {
 				}
 				#tabs {
 					display: grid;
-					grid-gap: 5px;
+					gap: 5px;
 					grid-auto-flow: column;
 					width: fit-content;
 					height: var(--nav-height);
@@ -159,7 +159,7 @@ export default function Navbar({ store }) {
 					margin: 4px;
 					height: 32px;
 					width: 32px;
-					background: none;
+					background-color: none;
 					border-radius: 20px;
 					box-sizing: border-box;
 					fill: var(--icon);
@@ -191,7 +191,7 @@ function Share() {
 			<style jsx>{`
 				button {
 					margin: 5px;
-					background: var(--accent);
+					background-color: var(--accent);
 					border: 0;
 					border-radius: 5px;
 					opacity: 0.8;
@@ -207,7 +207,7 @@ function Share() {
 					left: 50%;
 					width: max-content;
 					padding: 4px 10px;
-					background: var(--panel);
+					background-color: var(--panel);
 					z-index: 4;
 					transform: translateX(-50%);
 					border-radius: var(--radius);

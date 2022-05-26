@@ -145,7 +145,7 @@ function Editable({ id, element_id, value, style, align, placeholder = '', onCha
 				}
 				#editable {
 					box-sizing: border-box;
-					background: transparent;
+					background-color: transparent;
 					overflow: visible;
 					word-break: break-word;
 					white-space: pre-wrap;

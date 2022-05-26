@@ -38,10 +38,10 @@ export default function Menu({ element, getContents, props }) {
 					left: 0;
 					width: 200px;
 					height: max-content;
-					background: red;
+					background-color: red;
 					z-index: 6;
 					color: var(--text);
-					background: var(--panel);
+					background-color: var(--panel);
 					box-shadow: 0 0 10px -5px var(--text);
 				}
 			`}</style>

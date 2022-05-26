@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-export default function Input({ id, label, value, type = 'number', step = 1, min = NaN, unit = '', onChange, width = undefined }) {
+export default function Input({ id, label, value, type = 'number', step = 1, min = NaN, unit = '', onChange }) {
 	const input = useRef(null);
 	const [cursor, setCursor] = useState({ x: 0, y: 0 });
 
@@ -65,18 +65,7 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 		<>
 			<div id={id} className="dimension">
 				<label onMouseDown={dragProperty}>{label}</label>
-				<input
-					ref={input}
-					type={isNaN(value) ? '' : type}
-					step={step}
-					value={value}
-					min={isNaN(min) ? undefined : min}
-					style={{
-						maxWidth: `calc(${width} / 2 - 20px)`,
-						width: `max(calc(${width} / 6), 5ch)`,
-					}}
-					onChange={updateValue}
-				/>
+				<input ref={input} type={isNaN(value) ? '' : type} step={step} value={value} min={isNaN(min) ? undefined : min} onChange={updateValue} />
 			</div>
 
 			<style jsx>{`
@@ -87,10 +76,10 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 					border-bottom: 1px solid transparent;
 				}
 				.dimension:hover {
-					background: var(--hover);
+					background-color: var(--hover);
 				}
 				.dimension:focus-within {
-					background: var(--hover);
+					background-color: var(--hover);
 					border-bottom: 1px solid white;
 				}
 				label {
@@ -98,7 +87,7 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 					cursor: ew-resize;
 				}
 				input {
-					background: transparent;
+					background-color: transparent;
 					border: none;
 					font-weight: inherit;
 					font-family: inherit;

@@ -141,13 +141,13 @@ export default function Element({ store, element, indentation, restructure }) {
 				}
 				#label:hover,
 				#label.hover {
-					background: var(--hover);
+					background-color: var(--hover);
 				}
 				#label.selected {
-					background: var(--selected);
+					background-color: var(--selected);
 				}
 				.highlighted > div > #label {
-					background: var(--hover);
+					background-color: var(--hover);
 				}
 				.icon {
 					fill: var(--icon);

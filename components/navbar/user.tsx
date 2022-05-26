@@ -19,7 +19,7 @@ export default function User({ user }) {
 						width: calc(var(--nav-height) - var(--margin));
 						height: calc(var(--nav-height) - var(--margin));
 						margin: calc(var(--margin) / 2) 5px;
-						background: ${user.color};
+						background-color: ${user.color};
 						box-sizing: border-box;
 						border-radius: var(--nav-height);
 						line-height: calc(var(--nav-height) / 2 + var(--margin) / 2);

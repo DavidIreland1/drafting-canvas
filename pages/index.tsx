@@ -25,7 +25,7 @@ export default function Index(): JSX.Element {
 				{files.map((file, i) => (
 					<Link key={i} href={`/canvas/${file.id}`}>
 						<a className="canvas">
-							<div style={{ background: 'grey' }}></div>
+							<div style={{ backgroundColor: 'grey' }}></div>
 							<label>{file.label}</label>
 							<text>Edited {toReadableDuration(Date.now() - file.time)} ago</text>
 						</a>
@@ -45,7 +45,7 @@ export default function Index(): JSX.Element {
 					color: var(--text);
 				}
 				button {
-					background: var(--panel);
+					background-color: var(--panel);
 					margin: 10px;
 				}
 
@@ -65,7 +65,7 @@ export default function Index(): JSX.Element {
 					display: grid;
 					grid-template-rows: 180px 3ch 2ch;
 					text-align: center;
-					background: var(--panel);
+					background-color: var(--panel);
 					border-radius: var(--radius);
 					cursor: default;
 					box-shadow: var(--shadow);

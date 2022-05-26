@@ -107,15 +107,15 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 			</div>
 
 			<div id="fade" onPointerDown={dragFade} style={{ backgroundColor: `hsl(${hsba[0] * 360}, 100%, 50%)` }}>
-				<div id="fade-handle" className="handle" style={{ background: `hsb(${hsba[0] * 360}, ${hsba[1] * 100}%, ${hsba[2] * 100}%)`, top: fade_width - hsba[2] * fade_width + 'px', left: hsba[1] * fade_width + 'px' }} />
+				<div id="fade-handle" className="handle" style={{ backgroundColor: `hsb(${hsba[0] * 360}, ${hsba[1] * 100}%, ${hsba[2] * 100}%)`, top: fade_width - hsba[2] * fade_width + 'px', left: hsba[1] * fade_width + 'px' }} />
 			</div>
 			<div id="hue" className="slider" onPointerDown={dragHue}>
-				<div id="hue-handle" className="handle" style={{ left: hsba[0] * slider_width + 'px', background: `hsl(${hsba[0] * 360}, 100%, 50%)` }} />
+				<div id="hue-handle" className="handle" style={{ left: hsba[0] * slider_width + 'px', backgroundColor: `hsl(${hsba[0] * 360}, 100%, 50%)` }} />
 			</div>
 
 			<div id="checkers" className="slider" onPointerDown={dragAlpha}>
-				<div id="aplha" className="slider" style={{ background: ` -webkit-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${hsba[0] * 360}, 100%, 50%) 100%)` }} />
-				<div id="aplha-handle" className="handle" style={{ left: hsba[3] * slider_width + 'px', background: `hsl(${hsba[0] * 360}, 100%, ${100 - (hsba[3] * 100) / 2}%)` }} />
+				<div id="aplha" className="slider" style={{ backgroundColor: ` -webkit-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsl(${hsba[0] * 360}, 100%, 50%) 100%)` }} />
+				<div id="aplha-handle" className="handle" style={{ left: hsba[3] * slider_width + 'px', backgroundColor: `hsl(${hsba[0] * 360}, 100%, ${100 - (hsba[3] * 100) / 2}%)` }} />
 			</div>
 
 			<div id="input">
@@ -143,20 +143,20 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 					position: absolute;
 					z-index: 4;
 					padding: 10px 0 20px 0;
-					background: var(--panel);
+					background-color: var(--panel);
 					box-shadow: 0 0 10px black;
 					display: grid;
-					grid-gap: 10px;
+					gap: 10px;
 				}
 
 				#fade {
 					position: relative;
 					width: 300px;
 					height: 300px;
-					background: -webkit-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -webkit-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
-					background: -moz-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -moz-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
-					background: -ms-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -ms-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
-					background: -o-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -o-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
+					background-color: -webkit-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -webkit-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
+					background-color: -moz-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -moz-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
+					background-color: -ms-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -ms-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
+					background-color: -o-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsl(0, 0%, 0%) 100%), -o-linear-gradient(left, hsl(0, 0%, 100%) 0%, hsla(0, 0%, 0%, 0) 100%);
 				}
 				#fade-handle {
 				}
@@ -187,10 +187,10 @@ export default function Picker({ setProperty, selector, event, setPicker, childr
 					border-radius: 14px;
 				}
 				#hue {
-					background: -moz-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
-					background: -webkit-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
-					background: -ms-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
-					background: -o-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
+					background-color: -moz-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
+					background-color: -webkit-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
+					background-color: -ms-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
+					background-color: -o-linear-gradient(left, #f00 0%, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, #f00 100%);
 				}
 				#hue-handle {
 					top: 0;
@@ -243,12 +243,12 @@ function values(hsba, format) {
 							display: grid;
 							grid-auto-flow: column;
 							gap: 1px;
-							background: white;
+							background-color: white;
 							border: 1px solid white;
 						}
 						.boxes > div {
 							line-height: 28px;
-							background: var(--panel);
+							background-color: var(--panel);
 						}
 					`}</style>
 				</div>
@@ -266,12 +266,12 @@ function values(hsba, format) {
 							display: grid;
 							grid-auto-flow: column;
 							gap: 1px;
-							background: white;
+							background-color: white;
 							border: 1px solid white;
 						}
 						.boxes > div {
 							line-height: 28px;
-							background: var(--panel);
+							background-color: var(--panel);
 						}
 					`}</style>
 				</div>
@@ -289,12 +289,12 @@ function values(hsba, format) {
 							display: grid;
 							grid-auto-flow: column;
 							gap: 1px;
-							background: white;
+							background-color: white;
 							border: 1px solid white;
 						}
 						.boxes > div {
 							line-height: 28px;
-							background: var(--panel);
+							background-color: var(--panel);
 						}
 					`}</style>
 				</div>

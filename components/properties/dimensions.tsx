@@ -2,7 +2,7 @@ import actions from '../../redux/slice';
 import Elements from '../canvas/elements/elements';
 import Input from '../inputs/input';
 
-export default function Dimensions({ selected, store, width }) {
+export default function Dimensions({ selected, store }) {
 	function updateDimension(event, formatter: Function = Number) {
 		if (Number.isNaN(event.target.value) || event.target.value === '') return;
 		store.dispatch(actions.property({ selected_ids: selected.map((element) => element.id), props: { [event.target.id]: formatter(event.target.value), last: formatter(event.target.last) } }));
@@ -19,12 +19,12 @@ export default function Dimensions({ selected, store, width }) {
 			<div className="property-heading">
 				<h4>DIMENSIONS</h4>
 			</div>
-			<div id="properties" style={{ gap: `8px calc(${width} / 20)` }}>
-				<Input id="x" label="X" value={bounds.x} onChange={updateDimension} width={width} />
-				<Input id="y" label="Y" value={bounds.y} onChange={updateDimension} width={width} />
+			<div id="properties">
+				<Input id="x" label="X" value={bounds.x} onChange={updateDimension} />
+				<Input id="y" label="Y" value={bounds.y} onChange={updateDimension} />
 
-				<Input id="width" label="W" value={bounds.width} onChange={updateDimension} width={width} />
-				<Input id="height" label="H" value={bounds.height} onChange={updateDimension} width={width} />
+				<Input id="width" label="W" value={bounds.width} onChange={updateDimension} />
+				<Input id="height" label="H" value={bounds.height} onChange={updateDimension} />
 
 				<Input
 					id="rotation"
@@ -36,7 +36,6 @@ export default function Dimensions({ selected, store, width }) {
 					unit="°"
 					value={selected[0].rotation * 57.29577951308232}
 					onChange={(event) => updateDimension(event, (rotation) => Number(rotation) / 57.29577951308232)}
-					width={width}
 				/>
 
 				<Input
@@ -50,12 +49,12 @@ export default function Dimensions({ selected, store, width }) {
 					step={0.1}
 					value={radius}
 					onChange={updateDimension}
-					width={width}
 				/>
 			</div>
 			<style jsx>{`
 				#properties {
 					display: grid;
+					gap: 8px;
 					grid-template-columns: auto auto;
 					height: min-content;
 					width: 100%;

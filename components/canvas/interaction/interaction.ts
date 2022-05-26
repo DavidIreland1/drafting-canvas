@@ -37,10 +37,16 @@ function cursorRotation(target, position, cursor) {
 }
 
 // Needs refactor to use strategy design pattern
-export function singleClick(down_event, canvas, id, store, active) {
+export function singleClick(down_event, canvas, user_id, store, active) {
+	if (down_event.button !== 0) return;
+	if (active.selected.length) store.dispatch(actions.cursor({ user_id: user_id, pressed: true }));
+	down_event.preventDefault();
+
 	const state = store.getState().present;
-	const view = state.views.find((view) => view.id === id);
-	const cursor = state.cursors.find((cursor) => cursor.id === id);
+	const view = state.views.find((view) => view.id === user_id);
+	const cursor = state.cursors.find((cursor) => cursor.id === user_id);
+
+	console.log(state.views);
 
 	const points = state.elements
 		.filter((element) => !element.selected)
@@ -65,21 +71,17 @@ function applyAction(down_event, last_position, canvas, store, active, view) {
 		if (action === 'resize' || action === 'stretch' || action === 'spread' || action === 'rotate') {
 			const move = (move_event) => {
 				let position = DOMToCanvas(move_event, canvas, view);
-
 				const state = store.getState().present;
 				let [, points] = split(state.elements, (element) => element.selected).map((elements) => elements.map((element) => Elements[element.type].points(element)).flat());
 				position = roundPoint(position, [] /*[position]*/, points, view);
-
 				const selected_ids = state.elements.filter((element) => element.selected).map((element) => element.id);
-
 				store.dispatch(actions[action]({ user_id: Settings.user_id, id: target.id, position, last_position, selected_ids }));
-
 				last_position = position;
 			};
-			down_event.target.addEventListener('mousemove', move);
+			window.addEventListener('mousemove', move);
 
-			const release = () => down_event.target.removeEventListener('mousemove', move);
-			down_event.target.addEventListener('mouseup', release, { once: true });
+			const release = () => window.removeEventListener('mousemove', move);
+			window.addEventListener('mouseup', release, { once: true });
 		} else if (action === 'edit') {
 			edit(canvas, store, view, target, last_position, down_event, active.altering[0].point);
 		}

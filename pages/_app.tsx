@@ -52,9 +52,9 @@ export default function App({ Component, pageProps }) {
 					display: grid;
 					height: 100vh;
 					grid-template-rows: var(--nav-height) 1fr;
-					grid-gap: var(--grid-gap);
+					gap: var(--gap);
 					overflow: hidden;
-					background: var(--background);
+					background-color: var(--background);
 				}
 				#scrub-cursor {
 					position: absolute;

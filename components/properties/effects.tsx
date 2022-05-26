@@ -115,7 +115,7 @@ function EffectInput({ effect, setPicker, selected_ids, store }) {
 			<div className="property-row">
 				<div>::</div>
 				<div className="checker-background">
-					<div className="property-color" onClick={(event) => openPicker(event, effect, setPicker, selected_ids, store)} style={{ background: Colors.toString(effect.color) }} />
+					<div className="property-color" onClick={(event) => openPicker(event, effect, setPicker, selected_ids, store)} style={{ backgroundColor: Colors.toString(effect.color) }} />
 				</div>
 				<Text placeholder="Color" className={Colors.isValid(color) || 'invalid'} onChange={changeColor}>
 					{color}

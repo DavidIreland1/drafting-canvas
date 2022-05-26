@@ -80,7 +80,7 @@ export default function Navbar({ store }) {
 
 			<style jsx>{`
 				#container {
-					background: var(--nav);
+					background-color: var(--nav);
 					z-index: 2;
 					width: var(--nav-height);
 					box-sizing: border-box;
@@ -92,7 +92,7 @@ export default function Navbar({ store }) {
 					padding: 7px 5px;
 					box-sizing: border-box;
 					display: grid;
-					grid-gap: 4px;
+					gap: 4px;
 					height: fit-content;
 				}
 				svg {
@@ -109,10 +109,10 @@ export default function Navbar({ store }) {
 				}
 				svg.selected {
 					fill: var(--text);
-					background: var(--hover);
+					background-color: var(--hover);
 				}
 				svg:hover {
-					background: var(--hover);
+					background-color: var(--hover);
 				}
 			`}</style>
 		</div>
