@@ -47,6 +47,13 @@ export function rotatePoint(point, center, sin, cos) {
 	};
 }
 
+export function reflectPoint(point, center) {
+	return {
+		x: center.x - (point.x - center.x),
+		y: center.y - (point.y - center.y),
+	};
+}
+
 // Splits array into two arrays
 export function split(array: Array<any>, comparison: Function): [Array<any>, Array<any>] {
 	return array.reduce(([pass, fail], element) => (comparison(element) ? [[...pass, element], fail] : [pass, [...fail, element]]), [[], []]);
@@ -68,9 +75,23 @@ export function CanvasToDOM(position, canvas, view) {
 	};
 }
 
-// export function reflectPoint(point, reflect) {
-// 	return {
-// 		x: reflect.x - (point.x - reflect.x),
-// 		y: reflect.y - (point.y - reflect.y),
-// 	};
-// }
+export function toReadableDuration(milliseconds, decimal_places = 0) {
+	const seconds = Number(Math.round(milliseconds / 1000).toFixed(decimal_places));
+
+	if (seconds < 60) return seconds + (seconds === 1 ? ' second' : ' seconds');
+
+	const minutes = Number((seconds / 60).toFixed(decimal_places));
+	if (minutes < 60) return minutes + (minutes === 1 ? ' min' : ' mins');
+
+	const hours = Number((minutes / 60).toFixed(decimal_places));
+	if (hours < 24) return hours + (hours === 1 ? ' hour' : ' hours');
+
+	const days = Number((hours / 24).toFixed(decimal_places));
+	if (days < 7) return days + (days === 1 ? ' day' : ' days');
+
+	const months = Number((days / 31).toFixed(decimal_places));
+	if (months < 12) return months + (months === 1 ? ' month' : ' months');
+
+	const years = Number((days / 365).toFixed(decimal_places));
+	return years + (years === 1 ? ' year' : ' years');
+}

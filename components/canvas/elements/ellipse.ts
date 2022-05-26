@@ -57,7 +57,7 @@ export default class Ellipse extends Element {
 					{ x: middle_x - control_x, y: y },
 				],
 			},
-		].map((point, i) => ({ ...point, id: id + i, mirror: 'mirror' }));
+		].map((point, i) => ({ ...point, id: id + i, relation: 'Mirror angle and length' }));
 	}
 
 	// TODO: See if we can merge this with rounded poly

@@ -1,6 +1,6 @@
 import { Bound, Position } from '../../../types/box-types';
 import { Effect, ElementType, Fill, Stroke } from '../../../types/element-types';
-import { rotatePoint } from '../../../utils/utils';
+import { reflectPoint, rotatePoint } from '../../../utils/utils';
 import boundBezier from '../bound-bezier';
 import roundedPoly from '../rounded-poly';
 import Colors from './../../properties/colors';
@@ -33,7 +33,7 @@ export default class Element {
 			{ x: x + width, y: y },
 			{ x: x + width, y: y + height },
 			{ x: x, y: y + height },
-		].map((point, i) => ({ ...point, id: id + i, radius, mirror: 'mirror', controls: [] }));
+		].map((point, i) => ({ ...point, id: id + i, radius, relation: 'Mirror angle and length', controls: [] }));
 	}
 
 	static path(element): Path2D {
@@ -396,13 +396,20 @@ export default class Element {
 
 		const point2 = Elements[element.type].getPoints(element).find((p) => p.id === point.id);
 		if (point.control !== undefined) {
-			point2.controls[point.control].x += delta_x;
-			point2.controls[point.control].y += delta_y;
+			const control = point2.controls[point.control];
+			const opposite = point2.controls[point.control === 0 ? 1 : 0];
+			control.x += delta_x;
+			control.y += delta_y;
 
-			if (true || point2.mirror === 'mirror') {
-				const opposite = point.control === 0 ? 1 : 0;
-				point2.controls[opposite].x -= delta_x;
-				point2.controls[opposite].y -= delta_y;
+			if (point2.relation === 'Mirror angle and length') {
+				const reflected = reflectPoint(point2.controls[point.control], point2);
+				opposite.x = reflected.x;
+				opposite.y = reflected.y;
+			} else if (point2.relation === 'Mirror angle') {
+				const distance = Math.sqrt((opposite.x - point2.x) ** 2 + (opposite.y - point2.y) ** 2);
+				const new_angle = Math.PI / 2 - Math.atan2(point2.x - control.x, point2.y - control.y);
+				opposite.x = point2.x + distance * Math.cos(new_angle);
+				opposite.y = point2.y + distance * Math.sin(new_angle);
 			}
 		} else {
 			point2.x += delta_x;

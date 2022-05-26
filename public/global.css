@@ -51,6 +51,13 @@ a {
 	text-decoration: none;
 }
 
+button {
+	border: none;
+	border-radius: var(--radius);
+}
+button:hover {
+	background: var(--hover);
+}
 ::-webkit-scrollbar {
 	width: 6px;
 	height: 5px;
