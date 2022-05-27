@@ -1,10 +1,12 @@
 import Settings from '../settings';
 
+const { grid } = Settings;
+
 export default class Grid {
 	static draw(context: CanvasRenderingContext2D, view) {
-		if (view.scale < Settings.grid_min_scale) return;
+		if (view.scale < grid.min_scale) return;
 
-		const step = Settings.grid_step * view.scale;
+		const step = grid.step * view.scale;
 
 		const top = Math.floor(view.y % step) - step;
 		const left = Math.floor(view.x % step) - step;
@@ -26,8 +28,8 @@ export default class Grid {
 
 		context.fillStyle = 'transparent';
 		context.shadowColor = 'transparent';
-		context.strokeStyle = `rgba(0, 0, 0, ${0.1 * (view.scale - Settings.grid_min_scale)})`;
-		context.lineWidth = Math.max(Settings.grid_line_width / view.scale, 0.1);
+		context.strokeStyle = `rgba(0, 0, 0, ${0.1 * (view.scale - grid.min_scale)})`;
+		context.lineWidth = Math.max(grid.line_width / view.scale, 0.1);
 		context.stroke();
 	}
 }

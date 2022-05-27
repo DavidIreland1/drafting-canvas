@@ -15,6 +15,12 @@ export default function Sheet({ store }) {
 
 	const [picker, setPicker] = useState(null);
 	const [fonts, setFonts] = useState(null);
+	const [ui_visible, setUIVisible] = useState(true);
+
+	function toggleUI() {
+		setUIVisible(!ui_visible);
+		requestAnimationFrame(() => canvas.current.onResize());
+	}
 
 	useEffect(() => {
 		const { page } = router.query;
@@ -23,10 +29,10 @@ export default function Sheet({ store }) {
 		// Hack fix as adding user before state sync causes error in other users
 		const time_delay = window.hasOwnProperty('Primus') ? 1000 : 0;
 		setTimeout(() => {
-			store.dispatch(actions.addUser({ user_id: Settings.user_id, label: Settings.user_name, color: Settings.user_color }));
+			store.dispatch(actions.addUser({ user_id: Settings.user.id, label: Settings.user.name, color: Settings.user.color }));
 		}, time_delay);
 
-		const removeUser = () => store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
+		const removeUser = () => store.dispatch(actions.removeUser({ user_id: Settings.user.id }));
 
 		window.addEventListener('beforeunload', removeUser);
 		return () => window.removeEventListener('beforeunload', removeUser);
@@ -63,6 +69,8 @@ export default function Sheet({ store }) {
 		event.target.addEventListener('pointerup', stop, { once: true });
 	}
 
+	if (!ui_visible) return <Canvas ref={canvas} user_id={Settings.user.id} store={store} toggleUI={toggleUI} />;
+
 	return (
 		<div id="sheet">
 			{picker}
@@ -70,7 +78,7 @@ export default function Sheet({ store }) {
 			<div id="grid" ref={grid} style={{ gridTemplateColumns: `${columns[0]}fr var(--gap) ${columns[1]}fr var(--gap) ${columns[2]}fr` }}>
 				<Structure store={store} />
 				<div id="divider-1" className="divider" onPointerDown={(event) => resize(event, true)} />
-				<Canvas ref={canvas} user_id={Settings.user_id} store={store} />
+				<Canvas ref={canvas} user_id={Settings.user.id} store={store} toggleUI={toggleUI} />
 				<div id="divider-2" className="divider" onPointerDown={(event) => resize(event, false)} />
 				<Properties store={store} setPicker={setPicker} fonts={fonts} />
 			</div>
@@ -91,6 +99,12 @@ export default function Sheet({ store }) {
 				}
 				.divider {
 					cursor: ew-resize;
+				}
+
+				@media (max-aspect-ratio: 1/1) {
+					#grid {
+						grid-template-columns: 0 0 1fr 0 0 !important;
+					}
 				}
 			`}</style>
 		</div>

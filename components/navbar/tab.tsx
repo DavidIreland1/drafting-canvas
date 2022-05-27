@@ -39,18 +39,18 @@ export default function Tab({ id, label, selected, store, onClick, closeTab }) {
 
 	return (
 		<div ref={tab_ref}>
-			<Link href={'/canvas/' + id}>
-				<a onClick={onClick} className={'tab' + (selected ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
-					{editing ? (
-						<Text id="props" highlight={true} onBlur={() => setEditing(false)} onChange={updateLabel}>
-							{label}
-						</Text>
-					) : (
-						<div onDoubleClick={() => setEditing(true)}>{label}</div>
-					)}
-					<Cross onClick={(event) => closeTab(event, id)} />
-				</a>
-			</Link>
+			{/* <Link href={'/canvas/' + id}> */}
+			<a onClick={onClick} className={'tab' + (selected ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
+				{editing ? (
+					<Text id="props" highlight={true} onBlur={() => setEditing(false)} onChange={updateLabel}>
+						{label}
+					</Text>
+				) : (
+					<div onDoubleClick={() => setEditing(true)}>{label}</div>
+				)}
+				<Cross onClick={(event) => closeTab(event, id)} />
+			</a>
+			{/* </Link> */}
 
 			<style jsx>{`
 				line {

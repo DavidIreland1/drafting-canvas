@@ -185,8 +185,6 @@ export default class Element {
 		const center = this.center(element);
 		const bounds = this.bound(element);
 
-		// if (bounds.height === 0) return; // This might be an issue
-
 		const sin = Math.sin(element.rotation);
 		const cos = Math.cos(element.rotation);
 
@@ -211,8 +209,6 @@ export default class Element {
 	static spread(element, position, last_position): void {
 		const center = this.center(element);
 		const bounds = this.bound(element);
-
-		// if (bounds.width === 0) return; // This might be an issue
 
 		const sin = Math.sin(element.rotation);
 		const cos = Math.cos(element.rotation);
@@ -247,7 +243,7 @@ export default class Element {
 		return !(bounds.x > screen.x2 || bounds.y > screen.y2 || bounds.x + bounds.width < screen.x1 || bounds.y + bounds.height < screen.y1);
 	}
 
-	static highlight(element, context, cursor, highlight, line, box) {
+	static highlight(element, context, cursor, highlight, line, box_size, box_color) {
 		let action = undefined;
 
 		const center = this.center(element);
@@ -257,8 +253,8 @@ export default class Element {
 
 		if (this.drawStretch(element, context, cursor, highlight, line)) action = 'stretch';
 		if (this.drawSpread(element, context, cursor, highlight, line)) action = 'spread';
-		if (this.drawRotate(element, context, cursor, box)) action = 'rotate';
-		if (this.drawResize(element, context, cursor, highlight, line, box)) action = 'resize';
+		if (this.drawRotate(element, context, cursor, box_size)) action = 'rotate';
+		if (this.drawResize(element, context, cursor, highlight, line, box_size, box_color)) action = 'resize';
 
 		context.rotate(-element.rotation);
 		context.translate(-center.x, -center.y);
@@ -311,12 +307,12 @@ export default class Element {
 		return context.isPointInStroke(path, cursor.x, cursor.y);
 	}
 
-	static drawResize(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number): boolean {
+	static drawResize(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number, box_color: string): boolean {
 		const bounds = this.bound(element);
 
 		bounds.x = -bounds.width / 2;
 		bounds.y = -bounds.height / 2;
-		context.fillStyle = 'white';
+		context.fillStyle = box_color;
 		context.strokeStyle = color;
 		context.lineWidth = line;
 
@@ -344,7 +340,7 @@ export default class Element {
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
 
-	static drawPoints(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number) {
+	static drawPoints(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number, box_color: string) {
 		context.strokeStyle = color;
 		context.lineWidth = line;
 		const diamond_size = box_size * 0.7;
@@ -352,7 +348,7 @@ export default class Element {
 		const hovering = Elements[element.type]
 			.getPoints(element)
 			.map((point) => {
-				context.fillStyle = 'white';
+				context.fillStyle = box_color;
 				const control = point.controls
 					.map((control, i) => {
 						const angle = Math.atan2(control.y - point.y, control.x - point.x) - Math.PI / 4;
@@ -367,7 +363,7 @@ export default class Element {
 						context.rotate(-angle);
 						context.translate(-control.x, -control.y);
 						const hovering = context.isPointInPath(cursor.x, cursor.y);
-						context.fillStyle = hovering ? color : 'white';
+						context.fillStyle = hovering ? color : box_color;
 						context.fill();
 						context.stroke();
 						if (hovering) return i;
@@ -379,7 +375,7 @@ export default class Element {
 				context.moveTo(point.x + box_size, point.y);
 				context.arc(point.x, point.y, box_size, 0, 2 * Math.PI);
 				const hovering = context.isPointInPath(cursor.x, cursor.y);
-				context.fillStyle = hovering ? color : 'white';
+				context.fillStyle = hovering ? color : box_color;
 				context.fill();
 				context.stroke();
 
@@ -603,7 +599,7 @@ export default class Element {
 	}
 }
 
-function rotatePoints(element, center, sin, cos) {
+export function rotatePoints(element, center, sin, cos) {
 	Elements[element.type].getPoints(element).forEach((point) => {
 		const rotated = rotatePoint(point, center, sin, cos);
 		point.x = rotated.x;
@@ -617,7 +613,7 @@ function rotatePoints(element, center, sin, cos) {
 	});
 }
 
-function scalePoints(element, dimension, old_min, ratio, new_min) {
+export function scalePoints(element, dimension, old_min, ratio, new_min) {
 	Elements[element.type].getPoints(element).forEach((point) => {
 		point[dimension] = (point[dimension] - old_min) * ratio + new_min;
 

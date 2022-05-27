@@ -152,6 +152,7 @@ function Editable({ id, canvas, element_id, value, style, align, placeholder = '
 						`}</style>
 					</div>
 				),
+				// eslint-disable-next-line react-hooks/exhaustive-deps
 				[element_id, style_string, align]
 			)}
 		</>

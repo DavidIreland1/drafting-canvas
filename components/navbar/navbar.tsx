@@ -8,7 +8,6 @@ import Tab from './tab';
 import Users from './users';
 import Plus from '../icons/plus';
 
-import Settings from './../settings';
 import Theme from '../icons/theme';
 import actions from '../../redux/slice';
 import { generateID } from '../../utils/utils';
@@ -30,7 +29,7 @@ export default function Navbar({ store }) {
 			store.dispatch(actions.page({ label }));
 			setTabs(tabs.concat(canvas ?? { id: String(page), label: label }));
 		}
-	}, [page, tabs]);
+	}, [store, page, tabs]);
 
 	function newTab() {
 		const id = generateID();
@@ -44,7 +43,7 @@ export default function Navbar({ store }) {
 	}
 
 	function removeUser() {
-		// store.dispatch(actions.removeUser({ user_id: Settings.user_id }));
+		// store.dispatch(actions.removeUser({ user_id: Settings.user.id }));
 	}
 
 	function closeTab(event, id) {

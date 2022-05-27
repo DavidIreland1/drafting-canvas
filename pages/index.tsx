@@ -91,10 +91,15 @@ export default function Index(): JSX.Element {
 				}
 				#grid {
 					display: grid;
-					grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+					grid-template-columns: repeat(auto-fit, minmax(300px, 0.333fr));
 					gap: 20px;
 					padding: 0 20px;
 					border-radius: var(--radius);
+				}
+				@media (max-aspect-ratio: 1/1) {
+					#grid {
+						grid-template-columns: 1fr;
+					}
 				}
 			`}</style>
 		</main>

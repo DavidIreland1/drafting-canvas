@@ -15,14 +15,16 @@ const active = {
 	altering: [],
 };
 
-function Canvas({ user_id, store }, ref) {
+function Canvas({ user_id, store, toggleUI }, ref) {
 	const canvas_ref = useRef(null);
 
-	useImperativeHandle(ref, () => ({
-		onResize() {
-			onResize(canvas_ref.current, store, user_id);
-		},
-	}));
+	useImperativeHandle(
+		ref,
+		() => ({
+			onResize: () => onResize(canvas_ref.current, store, user_id),
+		}),
+		[canvas_ref, store, user_id]
+	);
 
 	const [background, setBackground] = useState(Colors.toString(store.getState().present.page.color));
 
@@ -30,11 +32,9 @@ function Canvas({ user_id, store }, ref) {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
 		const context: CanvasRenderingContext2D = canvas.getContext('2d'); //, { alpha: false } makes it flash black but is more efficient?
 
-		const { width, height, top, left } = canvas.getBoundingClientRect();
+		const { width, height } = canvas.getBoundingClientRect();
 		canvas.width = width * window.devicePixelRatio;
 		canvas.height = height * window.devicePixelRatio;
-		last_left = left;
-		last_left = top;
 
 		// Just for console debugging
 		(window as any).canvas = canvas;
@@ -62,7 +62,7 @@ function Canvas({ user_id, store }, ref) {
 			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} />
 			<canvas className="checkers" ref={canvas_ref} style={{ background: background }} />
 
-			<Menu element={canvas_ref} getContents={getContextMenu} props={active} />
+			<Menu element={canvas_ref} getContents={getContextMenu} props={{ active, toggleUI }} />
 			<style jsx>{`
 				#container {
 					position: relative;
@@ -101,28 +101,21 @@ function Canvas({ user_id, store }, ref) {
 	);
 }
 
-let last_left = 0;
-let last_top = 0;
+let left = null;
 function onResize(canvas, store, user_id) {
-	const { width, height, top, left } = canvas.getBoundingClientRect();
-
-	canvas.width = width * window.devicePixelRatio;
-	canvas.height = height * window.devicePixelRatio;
-
-	const delta_x = last_left - left;
-	const delta_y = last_top - top;
-	last_left = left;
-	last_top = top;
-	store.dispatch(
-		actions.view({
-			user_id,
-			delta_x,
-			delta_y,
-		})
-	);
+	const bounds = canvas.getBoundingClientRect();
+	if (bounds.left === 0) return;
+	if (left === null) {
+		left = bounds.left;
+		return setTimeout(() => onResize(canvas, store, user_id), 100);
+	}
+	canvas.width = bounds.width * window.devicePixelRatio;
+	canvas.height = bounds.height * window.devicePixelRatio;
+	store.dispatch(actions.view({ user_id, delta_x: (left - bounds.left) * 2 }));
+	left = bounds.left;
 }
 
-function getContextMenu(event, active) {
+function getContextMenu(event, { active, toggleUI }) {
 	const element = active.hovering[0];
 	return (
 		<ul>
@@ -136,7 +129,7 @@ function getContextMenu(event, active) {
 				Paste <span>⌘V</span>
 			</li>
 			<div className="divider" />
-			<li>Hello</li>
+			<li onClick={toggleUI}>Show / Hide UI</li>
 			<li>Hello</li>
 		</ul>
 	);

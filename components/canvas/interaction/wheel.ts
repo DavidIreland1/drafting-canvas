@@ -2,7 +2,7 @@ import actions from '../../../redux/slice';
 import { clamp, DOMToCanvas } from '../../../utils/utils';
 import Settings from '../../settings';
 
-const { max_zoom, min_zoom, pan_sensitivity, zoom_sensitivity } = Settings;
+const { zoom, pan } = Settings;
 
 export default function wheel(event: WheelEvent, canvas: HTMLCanvasElement, user_id, store) {
 	event.preventDefault();
@@ -13,8 +13,8 @@ export default function wheel(event: WheelEvent, canvas: HTMLCanvasElement, user
 		// Pan
 		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
 
-		const delta_x = event.deltaX * pan_sensitivity;
-		const delta_y = event.deltaY * pan_sensitivity;
+		const delta_x = event.deltaX * pan.sensitivity;
+		const delta_y = event.deltaY * pan.sensitivity;
 
 		store.dispatch(
 			actions.view({
@@ -27,7 +27,7 @@ export default function wheel(event: WheelEvent, canvas: HTMLCanvasElement, user
 		);
 	} else {
 		// Zoom
-		const delta_scale = clamp(view.scale - max_zoom, event.deltaY * zoom_sensitivity * view.scale * (event.metaKey ? 0.1 : 1), view.scale - min_zoom);
+		const delta_scale = clamp(view.scale - zoom.max, event.deltaY * zoom.sensitivity * view.scale * (event.metaKey ? 0.1 : 1), view.scale - zoom.min);
 
 		const position = DOMToCanvas(event, canvas, view);
 		store.dispatch(

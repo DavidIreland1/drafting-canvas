@@ -29,7 +29,7 @@ const Cursors = {
 export default class Cursor {
 	static draw(cursor, context, view) {
 		const scale = (view.scale / window.devicePixelRatio) * 2;
-		if (cursor.id === Settings.user_id) {
+		if (cursor.id === Settings.user.id) {
 			if (cursor.type === 'select') {
 				context.canvas.style.cursor = '';
 			} else {

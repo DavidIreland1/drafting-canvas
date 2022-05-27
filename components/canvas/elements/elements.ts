@@ -5,8 +5,9 @@ import Frame from './frame';
 import Line from './line';
 import Arrow from './arrow';
 import Text from './text';
+import Element from './element';
 
-const Elements = {
+const Elements: { [key: string]: typeof Element } = {
 	ellipse: Ellipse,
 	group: Group,
 	rectangle: Rectangle,

@@ -60,7 +60,7 @@ const interactions = {
 		});
 		// console.log(props.payload); // Sync error created here from bad payload
 
-		const selected = Settings.user_id === user_id;
+		const selected = Settings.user.id === user_id;
 		state.elements.unshift(Elements[type].create(id, position, selected));
 
 		const cursor = state.cursors.find((cursor) => user_id === cursor.id);

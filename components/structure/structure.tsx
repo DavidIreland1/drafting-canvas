@@ -40,7 +40,7 @@ export default function Structure({ store }) {
 		<div id="container" key={key}>
 			<div id="structure" ref={structure_ref} onDragOver={(event) => event.preventDefault()}>
 				{elements.map((element) => (
-					<Element key={element.id} element={element} indentation={5} store={store} restructure={restructure} />
+					<Element key={element.id} element={element} indentation={0} store={store} restructure={restructure} />
 				))}
 			</div>
 

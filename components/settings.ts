@@ -6,28 +6,38 @@ const id = generateID();
 
 console.log(Adjective + ' ' + Animal, id);
 
-const devicePixelRatio = typeof window === 'undefined' ? 1 : window.devicePixelRatio;
+const device_pixel_ratio = typeof window === 'undefined' ? 1 : window.devicePixelRatio;
 
 const Settings = {
-	user_id: id,
-	user_name: Adjective + ' ' + Animal,
-	user_color: pastelColor(),
-
-	line_width: 1 * devicePixelRatio,
-
-	box_size: 4 * devicePixelRatio,
+	user: {
+		id: id,
+		name: Adjective + ' ' + Animal,
+		color: pastelColor(),
+	},
+	line: {
+		width: 1 * device_pixel_ratio,
+	},
+	box: {
+		size: 4 * device_pixel_ratio,
+		color: '#fff',
+	},
 	// highlight: '#1a83ee',
-	highlight: '#449ef2',
+	highlight: '#0084ff',
 
-	max_zoom: 500,
-	min_zoom: 0.0001,
-	pan_sensitivity: 1.5,
-	zoom_sensitivity: 0.01,
-
-	grid_enabled: true,
-	grid_step: 1,
-	grid_line_width: 2,
-	grid_min_scale: 5,
+	zoom: {
+		max: 500,
+		min: 0.0001,
+		sensitivity: 0.01,
+	},
+	pan: {
+		sensitivity: 1.5,
+	},
+	grid: {
+		enabled: true,
+		step: 1,
+		line_width: 2,
+		min_scale: 5,
+	},
 };
 
 export default Settings;

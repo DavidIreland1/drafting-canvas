@@ -1,7 +1,7 @@
+import { rotatePoints, scalePoints } from '../../components/canvas/elements/element';
 import Elements, { flatten, forEachElement, selected } from '../../components/canvas/elements/elements';
 import { rotatePoint } from '../../utils/utils';
 
-let last_value = 0;
 const properties = {
 	addFill: (state, props) => {
 		const { selected_ids } = props.payload;
@@ -71,27 +71,21 @@ const properties = {
 
 		const entry = Object.entries(props.payload.props);
 		selected(state.elements, selected_ids).forEach((element) => {
-			entry.forEach(([key, _value]) => {
-				const value = Number(_value);
+			entry.forEach(([key, value]) => {
+				const delta = Number(value);
 				if (key === 'x' || key === 'y') {
-					const bound = Elements[element.type].bound(element);
-					const delta = value - bound[key];
 					Elements[element.type].getPoints(element).forEach((point) => {
 						point[key] += delta;
-						point.controls.forEach((control) => {
-							control[key] += delta;
-						});
+						point.controls.forEach((control) => (control[key] += delta));
 					});
 				} else if (key === 'radius') {
-					Elements[element.type].getPoints(element).forEach((point) => (point[key] = value));
+					Elements[element.type].getPoints(element).forEach((point) => (point[key] = delta));
 				} else if (key === 'rotation') {
 					const center = Elements[element.type].center(element);
-					const delta = value - element.rotation;
-
 					const sin = Math.sin(delta);
 					const cos = Math.cos(delta);
 
-					element.rotation = value % (Math.PI * 2);
+					element.rotation = (element.rotation + delta) % (Math.PI * 2);
 					Elements[element.type].getPoints(element).forEach((point) => {
 						const rotated = rotatePoint(point, center, sin, cos);
 						point.x = rotated.x;
@@ -103,44 +97,60 @@ const properties = {
 						});
 					});
 				} else if (key === 'width' || key === 'height') {
-					const bound = Elements[element.type].bound(element);
+					const bounds = Elements[element.type].bound(element);
 					const center = Elements[element.type].center(element);
 
 					const axis = key === 'width' ? 'x' : 'y';
-					const ratio = Math.abs((value || 0.00001) / bound[key]);
 
-					console.log(value, last_value);
-					const delta = value < 0 && last_value < 0 ? (value || 0.00001) + bound[key] : 0;
-					last_value = value;
+					// const ratio = (delta + bound[key] || 0.00001) / bound[key];
+					// const sin = Math.sin(element.rotation);
+					// const cos = Math.cos(element.rotation);
+
+					// Elements[element.type].getPoints(element).forEach((point) => {
+					// 	const rotated = rotatePoint(point, center, -sin, cos);
+					// 	point.x = rotated.x;
+					// 	point.y = rotated.y;
+					// 	point.controls.forEach((control) => {
+					// 		const rotated = rotatePoint(control, center, -sin, cos);
+					// 		control.x = rotated.x;
+					// 		control.y = rotated.y;
+					// 	});
+					// 	point[axis] = (point[axis] - bound[axis]) * ratio + bound[axis] + extra;
+
+					// 	point.controls.forEach((control) => {
+					// 		control[axis] = (control[axis] - bound[axis]) * ratio + bound[axis] + extra;
+					// 	});
+
+					// 	const un_rotated = rotatePoint(point, center, sin, cos);
+					// 	point.x = un_rotated.x;
+					// 	point.y = un_rotated.y;
+					// 	point.controls.forEach((control) => {
+					// 		const rotated = rotatePoint(control, center, sin, cos);
+					// 		control.x = rotated.x;
+					// 		control.y = rotated.y;
+					// 	});
+					// });
+
 					const sin = Math.sin(element.rotation);
 					const cos = Math.cos(element.rotation);
+					rotatePoints(element, center, -sin, cos);
 
-					Elements[element.type].getPoints(element).forEach((point) => {
-						const rotated = rotatePoint(point, center, -sin, cos);
-						point.x = rotated.x;
-						point.y = rotated.y;
-						point.controls.forEach((control) => {
-							const rotated = rotatePoint(control, center, -sin, cos);
-							control.x = rotated.x;
-							control.y = rotated.y;
-						});
-						point[axis] = (point[axis] - bound[axis]) * ratio + bound[axis] + delta;
+					const ratio = (bounds[key] + delta) / (bounds[key] || 0.0000001); // avoid ratio of zero
 
-						point.controls.forEach((control) => {
-							control[axis] = (control[axis] - bound[axis]) * ratio + bound[axis] + delta;
-						});
+					// Top left of resize box
+					const old_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point[axis]));
 
-						const un_rotated = rotatePoint(point, center, sin, cos);
-						point.x = un_rotated.x;
-						point.y = un_rotated.y;
-						point.controls.forEach((control) => {
-							const rotated = rotatePoint(control, center, sin, cos);
-							control.x = rotated.x;
-							control.y = rotated.y;
-						});
-					});
+					console.log();
+
+					const new_min = bounds[key] + delta < 0 ? old_min - delta / 2 : old_min;
+					// const new_min = Math.min(bounds[axis] + delta, bounds[axis]);
+
+					scalePoints(element, axis, old_min, ratio, new_min);
+
+					// Rotate points back
+					rotatePoints(element, center, sin, cos);
 				} else {
-					element[key] = _value;
+					element[key] = value;
 				}
 			});
 		});

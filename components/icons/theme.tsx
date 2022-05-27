@@ -28,7 +28,7 @@ export default function Theme({ store }) {
 		const page = store.getState().present.page;
 		if (page.format === 'hex4' && (JSON.stringify(page.color) === JSON.stringify([0.7, 0, 0.2, 1]) || JSON.stringify(page.color) === JSON.stringify([1, 0, 0.9, 1]))) {
 			store.dispatch(
-				actions.setBackground({
+				actions.page({
 					color: new_theme === 'dark' ? [0.7, 0, 0.2, 1] : [1, 0, 0.9, 1],
 					format: 'hex4',
 				})

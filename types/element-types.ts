@@ -51,4 +51,5 @@ export type ElementType = {
 	rotation: 0;
 	visible: boolean;
 	locked: boolean;
+	elements?: Array<ElementType>;
 };

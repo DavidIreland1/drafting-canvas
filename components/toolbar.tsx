@@ -4,7 +4,7 @@ import Settings from './settings';
 
 export default function Navbar({ store }) {
 	let cursor = useSelector(
-		(state) => (state as any).present.cursors.find((cursor) => cursor.id === Settings.user_id),
+		(state) => (state as any).present.cursors.find((cursor) => cursor.id === Settings.user.id),
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)
 	);
 
@@ -18,7 +18,7 @@ export default function Navbar({ store }) {
 		if (tool) {
 			store.dispatch(
 				actions.cursor({
-					user_id: Settings.user_id,
+					user_id: Settings.user.id,
 					type: tool.id,
 					mode: tool.id === 'select' ? 'edit' : 'create',
 				})
@@ -89,7 +89,7 @@ export default function Navbar({ store }) {
 				#bar {
 					width: 100%;
 					color: var(--text);
-					padding: 7px 5px;
+					padding: 5px;
 					box-sizing: border-box;
 					display: grid;
 					gap: 4px;
@@ -97,7 +97,6 @@ export default function Navbar({ store }) {
 				}
 				svg {
 					width: 100%;
-					cursor: pointer;
 					fill: none;
 					stroke: var(--text);
 					padding: 2px;
@@ -105,7 +104,7 @@ export default function Navbar({ store }) {
 					stroke-width: 5;
 					margin: auto;
 					border-radius: var(--radius);
-					height: 35px;
+					height: 30px;
 				}
 				svg.selected {
 					fill: var(--text);

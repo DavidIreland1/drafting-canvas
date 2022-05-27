@@ -11,13 +11,9 @@ export default function Menu({ element, getContents, props }) {
 			setPosition({ x: event.clientX, y: event.clientY });
 			setContents(getContents(event, props));
 
-			document.addEventListener(
-				'mouseup',
-				() => {
-					document.addEventListener('mouseup', (up_event) => up_event.button !== 2 && close(up_event), { once: true });
-				},
-				{ once: true }
-			);
+			const remove = () => document.addEventListener('mouseup', (up_event) => up_event.button !== 2 && close(up_event), { once: true });
+			document.addEventListener('mouseup', remove, { once: true });
+			return () => document.removeEventListener('mouseup', remove);
 		});
 	}, [element, getContents, props]);
 

@@ -15,7 +15,7 @@ export default function move(canvas, store, view, target, last_position, down_ev
 
 		const selected_ids = state.elements.filter((element) => element.selected).map((element) => element.id);
 
-		store.dispatch(actions.move({ user_id: Settings.user_id, id: target.id, position, last_position, selected_ids }));
+		store.dispatch(actions.move({ user_id: Settings.user.id, id: target.id, position, last_position, selected_ids }));
 
 		last_position = position;
 	};

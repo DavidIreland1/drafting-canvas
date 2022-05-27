@@ -106,6 +106,7 @@ export default function Element({ store, element, indentation, restructure }) {
 					color: var(--text);
 					box-sizing: border-box;
 					border-radius: var(--radius);
+					opacity: 0.999;
 				}
 				#element.group,
 				#element.frame {

@@ -1,18 +1,32 @@
 import actions from '../../redux/slice';
-import Elements from '../canvas/elements/elements';
+import { ElementType } from '../../types/element-types';
+import Group from '../canvas/elements/group';
 import Input from '../inputs/input';
 
 export default function Dimensions({ selected, store }) {
 	function updateDimension(event, formatter: Function = Number) {
 		if (Number.isNaN(event.target.value) || event.target.value === '') return;
-		store.dispatch(actions.property({ selected_ids: selected.map((element) => element.id), props: { [event.target.id]: formatter(event.target.value), last: formatter(event.target.last) } }));
+
+		const selected = store.getState().present.elements.filter((element) => element.selected);
+		const group = { elements: selected, type: 'group', rotation: selected[0].rotation } as ElementType;
+		const bounds = Group.bound(group);
+		(bounds as any).rotation = selected[0].rotation;
+
+		const delta = formatter(event.target.value) - bounds[event.target.id];
+		store.dispatch(
+			actions.property({
+				selected_ids: selected.map((element) => element.id),
+				props: { [event.target.id]: delta },
+			})
+		);
 	}
 
-	const bounds = Elements[selected[0].type].bound(selected[0]);
+	const group = { elements: selected, type: 'group', rotation: selected[0].rotation } as ElementType;
+	const bounds = Group.bound(group);
+	const points = Group.getPoints(group);
 
-	const points = Elements[selected[0].type].getPoints(selected[0]);
 	const radii = points.map((point) => point.radius);
-	const radius = radii.every((v) => v === radii[0]) ? radii[0] : 'Mixed';
+	const radius = radii.every((radius) => radius === radii[0]) ? radii[0] : 'Mixed';
 
 	return (
 		<div id="property-container">
