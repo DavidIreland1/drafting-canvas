@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { theme_default } from '../../utils/initial-theme';
+import { dark_canvas, light_canvas, theme_default } from '../../utils/initial-theme';
 import actions from '../../redux/slice';
 import Persistent from '../../utils/persistent';
 
@@ -28,10 +28,10 @@ export default function Theme({ store }) {
 
 		setTheme(new_theme);
 		const page = store.getState().present.page;
-		if (page.format === 'hex4' && (JSON.stringify(page.color) === JSON.stringify([0.7, 0, 0.2, 1]) || JSON.stringify(page.color) === JSON.stringify([1, 0, 0.9, 1]))) {
+		if (page.format === 'hex4' && (JSON.stringify(page.color) === JSON.stringify(dark_canvas) || JSON.stringify(page.color) === JSON.stringify(light_canvas))) {
 			store.dispatch(
 				actions.page({
-					color: new_theme === 'dark' ? [0.7, 0, 0.2, 1] : [1, 0, 0.9, 1],
+					color: new_theme === 'dark' ? dark_canvas : light_canvas,
 					format: 'hex4',
 				})
 			);

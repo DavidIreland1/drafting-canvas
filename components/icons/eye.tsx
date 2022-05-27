@@ -39,7 +39,7 @@ export default function Eye({ open = true, onClick = undefined }) {
 					box-sizing: border-box;
 				}
 				div:hover {
-					background: var(--nav);
+					background: var(--toolbar);
 				}
 			`}</style>
 		</div>

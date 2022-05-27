@@ -3,12 +3,8 @@ export default function User({ user }) {
 
 	const abbreviation = names[0][0] + names.pop()[0];
 	return (
-		<>
-			<div id="profile" title={user.label}>
-				{abbreviation}
-				{/* {user.label.replace(/[^A-Z]/g, '')} */}
-			</div>
-
+		<div id="profile" title={user.label}>
+			{abbreviation}
 			<style jsx>
 				{`
 					#profile {
@@ -34,6 +30,6 @@ export default function User({ user }) {
 					}
 				`}
 			</style>
-		</>
+		</div>
 	);
 }

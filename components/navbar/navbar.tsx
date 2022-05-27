@@ -47,8 +47,8 @@ export default function Navbar({ store }) {
 		event.preventDefault();
 		event.stopPropagation();
 		const open_tabs = tabs.filter((tab) => tab.id !== id);
-		setTabs(open_tabs);
 		if (canvas_id === id) router.push(open_tabs.length ? `/editor/${tabs[0].id}` : '/');
+		setTabs(open_tabs);
 	}
 
 	const page_label = useSelector(
@@ -89,7 +89,6 @@ export default function Navbar({ store }) {
 
 			<style jsx>{`
 				nav {
-					--nav: #202021;
 					--panel: #262628;
 					--title: #ffffff;
 					--text: #ffffff;
@@ -116,6 +115,7 @@ export default function Navbar({ store }) {
 					padding: 2px;
 					margin: 6px;
 					border-radius: var(--radius);
+					box-shadow: var(--shadow);
 				}
 				#title {
 					min-width: max-content;

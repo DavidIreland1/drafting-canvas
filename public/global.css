@@ -4,7 +4,8 @@
 	--gap: 4px;
 	--nav-height: 40px;
 
-	--nav: #1b1b1d;
+	--nav: #202021;
+	--toolbar: #1b1b1d;
 	--panel: #222222;
 	--title: #ffffff;
 	--text: #ffffff;
@@ -16,11 +17,22 @@
 	--invalid: #6f3939;
 	--shadow: none;
 	--background: #181717;
+
+	--panel: #262628;
+	--title: #ffffff;
+	--text: #ffffff;
+	--icon: #f1f1f1;
+	--border: #42414d;
+	--accent: #1a83ee;
+	--hover: #34343a;
+	--selected: #3a3943;
+	--invalid: #6f3939;
 }
 
 /* Light Theme */
 :root.light {
-	--nav: #e7e7e7;
+	--nav: #202021;
+	--toolbar: #e7e7e7;
 	--panel: #f4f4f4;
 	--title: #000000;
 	--text: #070707;
@@ -34,10 +46,10 @@
 	--background: rgb(255, 255, 255);
 	scrollbar-width: thin;
 }
-
+/* 
 * {
 	transition: background-color 500ms;
-}
+} */
 
 html,
 body {

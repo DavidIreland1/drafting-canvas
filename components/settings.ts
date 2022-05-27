@@ -21,7 +21,6 @@ const Settings = {
 		size: 4 * device_pixel_ratio,
 		color: '#fff',
 	},
-	// highlight: '#1a83ee',
 	highlight: '#0084ff',
 
 	zoom: {

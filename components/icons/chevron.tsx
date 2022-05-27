@@ -23,7 +23,7 @@ export default function Chevron({ onClick = undefined, rotated = false }) {
 					box-sizing: border-box;
 				}
 				div:hover {
-					background: var(--nav);
+					background: var(--toolbar);
 				}
 			`}</style>
 		</div>

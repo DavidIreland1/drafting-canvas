@@ -80,7 +80,7 @@ export default function Navbar({ store }) {
 
 			<style jsx>{`
 				#container {
-					background: var(--nav);
+					background: var(--toolbar);
 					z-index: 2;
 					width: var(--nav-height);
 					box-sizing: border-box;

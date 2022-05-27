@@ -1,5 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
-// import Image from 'next/image';
 import { generateID, toReadableDuration } from '../utils/utils';
 import Plus from '../components/icons/plus';
 import { useEffect, useRef, useState } from 'react';
@@ -53,12 +53,19 @@ export default function Index(): JSX.Element {
 						))}
 				</div>
 			</div>
+			<div id="logo-cover">
+				<div id="background">
+					<img alt="DC" src="/images/draft.svg" />
+				</div>
+				<div className="concave" />
+				<div className="gap" />
+				<div className="involute" />
+			</div>
 
 			<style jsx>{`
 				main {
 					height: calc(100vh - var(--nav-height));
-					background: var(--nav);
-					border-radius: var(--radius);
+					background: var(--toolbar);
 				}
 				header {
 					display: flex;
@@ -83,6 +90,7 @@ export default function Index(): JSX.Element {
 				#new-button {
 					display: grid;
 					grid-template-columns: 30px auto;
+					cursor: default;
 				}
 				#new-button > div {
 					margin: auto 10px;
@@ -103,6 +111,69 @@ export default function Index(): JSX.Element {
 					#grid {
 						grid-template-columns: 1fr;
 					}
+				}
+				#logo-cover {
+					position: absolute;
+					top: 0;
+					left: 0;
+					display: grid;
+					grid-auto-flow: column;
+				}
+				#background {
+					box-sizing: border-box;
+					width: calc(var(--nav-height) + var(--gap));
+					height: calc(var(--nav-height) + var(--gap));
+					background: var(--toolbar);
+					border-radius: 0 calc(var(--radius) * 2) 0 0;
+				}
+				.concave {
+					position: absolute;
+					box-sizing: border-box;
+					top: calc(var(--gap) * -1);
+					top: 0;
+					left: 0;
+					width: calc(var(--nav-height) + var(--gap));
+					height: var(--nav-height);
+					border-radius: 0 calc(var(--radius) * 2) 0 0;
+					border-style: solid;
+					border-width: var(--gap) var(--gap) 0 0;
+					border-color: var(--background);
+				}
+				.gap {
+					position: absolute;
+					box-sizing: border-box;
+					border-style: solid;
+					top: calc(var(--nav-height) / 2 + var(--gap));
+					left: calc(var(--nav-height) - var(--gap));
+					width: calc(var(--nav-height) / 2);
+					height: calc(var(--nav-height) / 2 + var(--gap));
+					border-width: 0 0 calc(var(--gap) * 2) calc(var(--gap) * 2);
+					border-radius: 0 0 0 calc(var(--radius) * 2);
+					border-color: var(--toolbar);
+				}
+				.involute {
+					position: absolute;
+					box-sizing: border-box;
+					border-style: solid;
+					top: calc(var(--nav-height) / 2 + var(--gap));
+					left: var(--nav-height);
+					width: calc(var(--nav-height) / 2);
+					height: calc(var(--nav-height) / 2);
+					border-width: 0 0 var(--gap) var(--gap);
+					border-radius: 0 0 0 calc(var(--radius) * 2);
+					border-color: var(--background);
+					left: calc(var(--nav-height));
+					z-index: 1;
+				}
+				img {
+					height: calc(var(--nav-height) - 12px);
+					width: calc(var(--nav-height) - 12px);
+					box-sizing: border-box;
+					background: white;
+					padding: 2px;
+					margin: 6px;
+					border-radius: var(--radius);
+					box-shadow: var(--shadow);
 				}
 			`}</style>
 		</main>
