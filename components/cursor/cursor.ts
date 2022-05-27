@@ -13,8 +13,9 @@ const Cursors = {
 
 	pen: Select,
 
-	stretch: Stretch,
-	spread: Stretch,
+	stretchX: Stretch,
+	stretchY: Stretch,
+
 	resize: Resize,
 	rotate: Rotate,
 

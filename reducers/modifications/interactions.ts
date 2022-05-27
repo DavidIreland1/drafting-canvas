@@ -20,20 +20,20 @@ const interactions = {
 			Group.rotate({ elements: selected(state.elements, selected_ids), type: 'group', rotation: 0 }, position, last_position);
 		}
 	},
-	stretch: (state, props) => {
+	stretchY: (state, props) => {
 		const { position, last_position, selected_ids } = props.payload;
 		if (selected_ids.length === 1) {
-			selected(state.elements, selected_ids).forEach((element) => Elements[element.type].stretch(element, position, last_position));
+			selected(state.elements, selected_ids).forEach((element) => Elements[element.type].stretch(element, position, last_position, 'y', 'height'));
 		} else {
-			Group.stretch({ elements: selected(state.elements, selected_ids), type: 'group', rotation: 0 }, position, last_position);
+			Group.stretch({ elements: selected(state.elements, selected_ids), type: 'group', rotation: 0 }, position, last_position, 'y', 'height');
 		}
 	},
-	spread: (state, props) => {
+	stretchX: (state, props) => {
 		const { position, last_position, selected_ids } = props.payload;
 		if (selected_ids.length === 1) {
-			selected(state.elements, selected_ids).forEach((element) => Elements[element.type].spread(element, position, last_position));
+			selected(state.elements, selected_ids).forEach((element) => Elements[element.type].stretch(element, position, last_position, 'x', 'width'));
 		} else {
-			Group.spread({ elements: selected(state.elements, selected_ids), type: 'group', rotation: 0 }, position, last_position);
+			Group.stretch({ elements: selected(state.elements, selected_ids), type: 'group', rotation: 0 }, position, last_position, 'x', 'width');
 		}
 	},
 	move: (state, props) => {
@@ -60,7 +60,7 @@ const interactions = {
 		});
 		// console.log(props.payload); // Sync error created here from bad payload
 
-		const selected = Settings.user.id === user_id;
+		const selected = Settings.user_id === user_id;
 		state.elements.unshift(Elements[type].create(id, position, selected));
 
 		const cursor = state.cursors.find((cursor) => user_id === cursor.id);

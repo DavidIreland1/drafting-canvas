@@ -181,7 +181,7 @@ export default class Element {
 		rotatePoints(element, center, sin, cos);
 	}
 
-	static stretch(element, position, last_position): void {
+	static stretch(element, position, last_position, axis, dimension) {
 		const center = this.center(element);
 		const bounds = this.bound(element);
 
@@ -193,39 +193,14 @@ export default class Element {
 		const normal_position = rotatePoint(position, center, -sin, cos);
 		rotatePoints(element, center, -sin, cos);
 
-		const delta_y = (normal_last_position.y - normal_position.y) * (normal_last_position.y < center.y ? 1 : -1);
-		const height_ratio = (bounds.height + delta_y) / bounds.height || 0.0000001; // avoid ratio of zero
+		const delta = (normal_last_position[axis] - normal_position[axis]) * (normal_last_position[axis] < center[axis] ? 1 : -1);
+		const ratio = (bounds[dimension] + delta) / bounds[dimension] || 0.0000001; // avoid ratio of zero
 
 		// Top left of resize box
-		const old_y_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point.y));
-		const new_y_min = normal_last_position.y < center.y ? old_y_min - delta_y : old_y_min;
+		const old_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point[axis]));
+		const new_min = normal_last_position[axis] < center[axis] ? old_min - delta : old_min;
 
-		scalePoints(element, 'y', old_y_min, height_ratio, new_y_min);
-
-		// Rotate points back
-		rotatePoints(element, center, sin, cos);
-	}
-
-	static spread(element, position, last_position): void {
-		const center = this.center(element);
-		const bounds = this.bound(element);
-
-		const sin = Math.sin(element.rotation);
-		const cos = Math.cos(element.rotation);
-
-		// Rotate all points to 0 deg
-		const normal_last_position = rotatePoint(last_position, center, -sin, cos);
-		const normal_position = rotatePoint(position, center, -sin, cos);
-		rotatePoints(element, center, -sin, cos);
-
-		const delta_x = (normal_last_position.x - normal_position.x) * (normal_last_position.x < center.x ? 1 : -1);
-		const width_ratio = (bounds.width + delta_x) / bounds.width || 0.0000001; // avoid ratio of zero
-
-		// Top left of resize box
-		const old_x_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point.x));
-		const new_x_min = normal_last_position.x < center.x ? old_x_min - delta_x : old_x_min;
-
-		scalePoints(element, 'x', old_x_min, width_ratio, new_x_min);
+		scalePoints(element, axis, old_min, ratio, new_min);
 
 		// Rotate points back
 		rotatePoints(element, center, sin, cos);
@@ -251,8 +226,8 @@ export default class Element {
 		context.translate(center.x, center.y);
 		context.rotate(element.rotation);
 
-		if (this.drawStretch(element, context, cursor, highlight, line)) action = 'stretch';
-		if (this.drawSpread(element, context, cursor, highlight, line)) action = 'spread';
+		if (this.drawStretchX(element, context, cursor, highlight, line)) action = 'stretchX';
+		if (this.drawStretchY(element, context, cursor, highlight, line)) action = 'stretchY';
 		if (this.drawRotate(element, context, cursor, box_size)) action = 'rotate';
 		if (this.drawResize(element, context, cursor, highlight, line, box_size, box_color)) action = 'resize';
 
@@ -277,7 +252,7 @@ export default class Element {
 		return context.isPointInPath(cursor.x, cursor.y);
 	}
 
-	static drawStretch(element, context: CanvasRenderingContext2D, cursor, color: string, line: number): boolean {
+	static drawStretchY(element, context: CanvasRenderingContext2D, cursor, color: string, line: number): boolean {
 		const bounds = this.bound(element);
 
 		context.strokeStyle = color;
@@ -293,7 +268,7 @@ export default class Element {
 		return context.isPointInStroke(path, cursor.x, cursor.y);
 	}
 
-	static drawSpread(element, context: CanvasRenderingContext2D, cursor, color: string, line: number): boolean {
+	static drawStretchX(element, context: CanvasRenderingContext2D, cursor, color: string, line: number): boolean {
 		const bounds = this.bound(element);
 		context.strokeStyle = color;
 		context.lineWidth = line;
@@ -613,12 +588,12 @@ export function rotatePoints(element, center, sin, cos) {
 	});
 }
 
-export function scalePoints(element, dimension, old_min, ratio, new_min) {
+export function scalePoints(element, axis, old_min, ratio, new_min) {
 	Elements[element.type].getPoints(element).forEach((point) => {
-		point[dimension] = (point[dimension] - old_min) * ratio + new_min;
+		point[axis] = (point[axis] - old_min) * ratio + new_min;
 
 		point.controls.forEach((control) => {
-			control[dimension] = (control[dimension] - old_min) * ratio + new_min;
+			control[axis] = (control[axis] - old_min) * ratio + new_min;
 		});
 	});
 }

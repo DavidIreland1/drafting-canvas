@@ -27,8 +27,8 @@ export function hover(event: MouseEvent, canvas, store, id, active) {
 
 function cursorRotation(target, position, cursor) {
 	if (!target) return cursor.rotation;
-	if (cursor.type === 'spread') return target.rotation;
-	if (cursor.type === 'stretch') return target.rotation - Math.PI / 2;
+	if (cursor.type === 'stretchX') return target.rotation;
+	if (cursor.type === 'stretchY') return target.rotation - Math.PI / 2;
 	if (cursor.type === 'resize' || cursor.type === 'rotate') {
 		const center = Elements[target.type].center(target);
 		return Math.atan2(center.y - position.y, center.x - position.x);
@@ -67,7 +67,7 @@ function applyAction(down_event, last_position, canvas, store, active, view) {
 	if (active.altering.length > 0) {
 		const action = active.altering[0].action;
 		const target = active.altering[0].element;
-		if (action === 'resize' || action === 'stretch' || action === 'spread' || action === 'rotate') {
+		if (action === 'resize' || action === 'stretchX' || action === 'stretchY' || action === 'rotate') {
 			const move = (move_event) => {
 				let position = DOMToCanvas(move_event, canvas, view);
 				const state = store.getState().present;
