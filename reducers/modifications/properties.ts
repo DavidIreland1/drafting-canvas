@@ -71,7 +71,8 @@ const properties = {
 
 		const entry = Object.entries(props.payload.props);
 		selected(state.elements, selected_ids).forEach((element) => {
-			entry.forEach(([key, value]) => {
+			entry.forEach(([key, props]) => {
+				const [value, sign] = props as any;
 				const delta = Number(value);
 				if (key === 'x' || key === 'y') {
 					Elements[element.type].getPoints(element).forEach((point) => {
@@ -102,48 +103,15 @@ const properties = {
 
 					const axis = key === 'width' ? 'x' : 'y';
 
-					// const ratio = (delta + bound[key] || 0.00001) / bound[key];
-					// const sin = Math.sin(element.rotation);
-					// const cos = Math.cos(element.rotation);
-
-					// Elements[element.type].getPoints(element).forEach((point) => {
-					// 	const rotated = rotatePoint(point, center, -sin, cos);
-					// 	point.x = rotated.x;
-					// 	point.y = rotated.y;
-					// 	point.controls.forEach((control) => {
-					// 		const rotated = rotatePoint(control, center, -sin, cos);
-					// 		control.x = rotated.x;
-					// 		control.y = rotated.y;
-					// 	});
-					// 	point[axis] = (point[axis] - bound[axis]) * ratio + bound[axis] + extra;
-
-					// 	point.controls.forEach((control) => {
-					// 		control[axis] = (control[axis] - bound[axis]) * ratio + bound[axis] + extra;
-					// 	});
-
-					// 	const un_rotated = rotatePoint(point, center, sin, cos);
-					// 	point.x = un_rotated.x;
-					// 	point.y = un_rotated.y;
-					// 	point.controls.forEach((control) => {
-					// 		const rotated = rotatePoint(control, center, sin, cos);
-					// 		control.x = rotated.x;
-					// 		control.y = rotated.y;
-					// 	});
-					// });
-
 					const sin = Math.sin(element.rotation);
 					const cos = Math.cos(element.rotation);
 					rotatePoints(element, center, -sin, cos);
 
-					const ratio = (bounds[key] + delta) / (bounds[key] || 0.0000001); // avoid ratio of zero
+					const ratio = (bounds[key] + delta || 0.0000001) / bounds[key]; // avoid ratio of zero
 
 					// Top left of resize box
 					const old_min = Math.min(...Elements[element.type].getPoints(element).map((point) => point[axis]));
-
-					console.log();
-
-					const new_min = bounds[key] + delta < 0 ? old_min - delta / 2 : old_min;
-					// const new_min = Math.min(bounds[axis] + delta, bounds[axis]);
+					const new_min = sign < 0 ? old_min - delta : old_min;
 
 					scalePoints(element, axis, old_min, ratio, new_min);
 

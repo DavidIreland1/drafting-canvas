@@ -12,11 +12,12 @@ export default function Dimensions({ selected, store }) {
 		const bounds = Group.bound(group);
 		(bounds as any).rotation = selected[0].rotation;
 
+		const sign = Math.sign(event.target.value);
 		const delta = formatter(event.target.value) - bounds[event.target.id];
 		store.dispatch(
 			actions.property({
 				selected_ids: selected.map((element) => element.id),
-				props: { [event.target.id]: delta },
+				props: { [event.target.id]: [delta, sign] },
 			})
 		);
 	}
@@ -37,7 +38,7 @@ export default function Dimensions({ selected, store }) {
 				<Input id="x" label="X" value={bounds.x} onChange={updateDimension} />
 				<Input id="y" label="Y" value={bounds.y} onChange={updateDimension} />
 
-				<Input id="width" label="W" value={bounds.width} onChange={updateDimension} />
+				<Input id="width" label="W" value={bounds.width} onChange={(event) => updateDimension(event, Math.abs)} />
 				<Input id="height" label="H" value={bounds.height} onChange={updateDimension} />
 
 				<Input

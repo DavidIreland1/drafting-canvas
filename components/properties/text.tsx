@@ -21,7 +21,7 @@ export default function Text({ selected, store, fonts }) {
 	const selected_ids = selected.map((element) => element.id);
 
 	function updateText(event, alter = (value) => value) {
-		store.dispatch(actions.property({ selected_ids, props: { [event.target.id]: alter(event.target.value) } }));
+		store.dispatch(actions.property({ selected_ids, props: { [event.target.id]: [alter(event.target.value), 0] } }));
 	}
 
 	async function updateFont(event) {

@@ -76,7 +76,7 @@ export default function Element({ store, element, indentation, restructure }) {
 				</svg>
 
 				{editing ? (
-					<Text id="props" highlight={true} onBlur={() => setEditing(false)} onChange={(event) => store.dispatch(actions.property({ selected_ids: [element.id], props: { label: event.target.value } }))}>
+					<Text id="props" highlight={true} onBlur={() => setEditing(false)} onChange={(event) => store.dispatch(actions.property({ selected_ids: [element.id], props: { label: [event.target.value, 0] } }))}>
 						{element.label}
 					</Text>
 				) : (

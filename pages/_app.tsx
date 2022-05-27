@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 
 export default function App({ Component, pageProps }) {
 	const router = useRouter();
+	const { canvas_id } = router.query;
 
 	const [store, setStore] = useState(makeStore(undefined));
 
@@ -21,8 +22,8 @@ export default function App({ Component, pageProps }) {
 	}
 
 	useEffect(() => {
-		setStore(makeStore(router.query.page));
-	}, [router.query.page]);
+		setStore(makeStore(canvas_id));
+	}, [canvas_id]);
 
 	return (
 		<>

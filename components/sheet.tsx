@@ -23,8 +23,8 @@ export default function Sheet({ store }) {
 	}
 
 	useEffect(() => {
-		const { page } = router.query;
-		if (!page) return;
+		const { canvas_id } = router.query;
+		if (!canvas_id) return;
 
 		// Hack fix as adding user before state sync causes error in other users
 		const time_delay = window.hasOwnProperty('Primus') ? 1000 : 0;

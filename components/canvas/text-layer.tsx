@@ -20,7 +20,7 @@ export default function TextLayer({ canvas, user_id, store }) {
 	const text = editing[0];
 
 	function updateText(event, alter = (value) => value) {
-		store.dispatch(actions.property({ selected_ids: [text.id], props: { [event.target.id]: alter(event.target.value) } }));
+		store.dispatch(actions.property({ selected_ids: [text.id], props: { [event.target.id]: [alter(event.target.value), 0] } }));
 	}
 
 	const bounds = Text.bound(text);

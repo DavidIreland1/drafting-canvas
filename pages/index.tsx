@@ -5,7 +5,7 @@ import Plus from '../components/icons/plus';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import Menu from '../components/menu/menu';
-import canvas from '../components/canvas/canvas';
+import Persistent from '../utils/persistent';
 
 export default function Index(): JSX.Element {
 	const router = useRouter();
@@ -13,21 +13,21 @@ export default function Index(): JSX.Element {
 	const [id, setId] = useState('');
 
 	useEffect(() => {
-		const _canvases = JSON.parse(localStorage.getItem('canvases') ?? '[]');
+		const _canvases = Persistent.load('canvases');
 		if (_canvases.length === 0) {
-			router.push('/canvas/' + generateID());
+			router.push('/editor/' + generateID());
 			return;
 		}
 		setCanvases(_canvases);
 		setId(generateID());
 
-		const updateCanvases = (event) => event.key === 'canvases' && setCanvases(JSON.parse(localStorage.getItem('canvases') ?? '[]'));
+		const updateCanvases = (event) => event.key === 'canvases' && setCanvases(Persistent.load('canvases'));
 		window.addEventListener('storage', updateCanvases);
 		return () => window.removeEventListener('storage', updateCanvases);
 	}, [router]);
 
 	useEffect(() => {
-		if (canvases.length > 0) localStorage.setItem('canvases', JSON.stringify(canvases));
+		if (canvases.length > 0) Persistent.save('canvases', canvases);
 	}, [canvases]);
 
 	return (
@@ -35,7 +35,7 @@ export default function Index(): JSX.Element {
 			<header>
 				<h1>DRAFTING CANVAS</h1>
 				<button>
-					<Link href={`/canvas/${id}`}>
+					<Link href={`/editor/${id}`}>
 						<a id="new-button">
 							<Plus />
 							<div>New Canvas</div>
@@ -45,9 +45,12 @@ export default function Index(): JSX.Element {
 			</header>
 			<div id="grid-container">
 				<div id="grid">
-					{canvases.map((canvas, i) => (
-						<Card key={i} canvas={canvas} setCanvases={setCanvases} router={router} />
-					))}
+					{canvases
+						.slice(0)
+						.sort((a, b) => b.time - a.time)
+						.map((canvas, i) => (
+							<Card key={i} canvas={canvas} setCanvases={setCanvases} router={router} />
+						))}
 				</div>
 			</div>
 
@@ -109,7 +112,7 @@ export default function Index(): JSX.Element {
 function Card({ canvas, setCanvases, router }) {
 	const link = useRef(null);
 	return (
-		<Link href={`/canvas/${canvas.id}`}>
+		<Link href={`/editor/${canvas.id}`}>
 			<a ref={link} className="canvas">
 				<div style={{ background: 'var(--hover)' }}></div>
 				<label>{canvas.label}</label>
@@ -151,8 +154,8 @@ function Card({ canvas, setCanvases, router }) {
 function getContextMenu(_event, { canvas, setCanvases, router }) {
 	return (
 		<ul>
-			<li onClick={(event) => router.push('canvas/' + canvas.id) && event.preventDefault()}>Open</li>
-			<li onClick={(event) => open('/canvas/' + canvas.id) && event.preventDefault()}>Open in new tab</li>
+			<li onClick={(event) => router.push(`/editor/${canvas.id}`) && event.preventDefault()}>Open</li>
+			<li onClick={(event) => open(`/editor/${canvas.id}`) && event.preventDefault()}>Open in new tab</li>
 			<div className="divider" />
 			<li onClick={(event) => deleteCanvas(event, canvas.id, setCanvases)}>Delete</li>
 		</ul>
@@ -161,5 +164,5 @@ function getContextMenu(_event, { canvas, setCanvases, router }) {
 
 function deleteCanvas(event, id, setCanvases) {
 	event.preventDefault();
-	setCanvases(JSON.parse(localStorage.getItem('canvases') ?? '[]').filter((canvas) => canvas.id !== id));
+	setCanvases(Persistent.load('canvases').filter((canvas) => canvas.id !== id));
 }

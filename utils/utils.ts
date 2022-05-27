@@ -76,22 +76,26 @@ export function CanvasToDOM(position, canvas, view) {
 }
 
 export function toReadableDuration(milliseconds, decimal_places = 0) {
-	const seconds = Number(Math.round(milliseconds / 1000).toFixed(decimal_places));
+	const seconds = Math.round(milliseconds / 1000);
 
-	if (seconds < 60) return seconds + (seconds === 1 ? ' second' : ' seconds');
+	const magnitude = calcMagnitude(seconds, decimal_places);
+	return magnitude + (magnitude.startsWith('1 ') ? 's' : '');
+}
 
-	const minutes = Number((seconds / 60).toFixed(decimal_places));
-	if (minutes < 60) return minutes + (minutes === 1 ? ' min' : ' mins');
+function calcMagnitude(seconds, decimal_places) {
+	if (seconds < 60) return Number(seconds).toFixed(decimal_places) + ' second';
 
-	const hours = Number((minutes / 60).toFixed(decimal_places));
-	if (hours < 24) return hours + (hours === 1 ? ' hour' : ' hours');
+	const minutes = seconds / 60;
+	if (minutes < 60) return Number(minutes).toFixed(decimal_places) + ' minute';
 
-	const days = Number((hours / 24).toFixed(decimal_places));
-	if (days < 7) return days + (days === 1 ? ' day' : ' days');
+	const hours = minutes / 60;
+	if (hours < 24) return Number(hours).toFixed(decimal_places) + ' hour';
 
-	const months = Number((days / 31).toFixed(decimal_places));
-	if (months < 12) return months + (months === 1 ? ' month' : ' months');
+	const days = hours / 24;
+	if (days < 7) return Number(days).toFixed(decimal_places) + ' day';
 
-	const years = Number((days / 365).toFixed(decimal_places));
-	return years + (years === 1 ? ' year' : ' years');
+	const months = days / 31;
+	if (months < 12) return Number(months).toFixed(decimal_places) + ' month';
+
+	return Number(days / 365).toFixed(decimal_places) + ' year';
 }

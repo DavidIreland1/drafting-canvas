@@ -8,7 +8,6 @@ const initial_state = {
 		color: initial_page_color,
 		format: 'hex4',
 		visible: true,
-		label: '',
 	},
 };
 

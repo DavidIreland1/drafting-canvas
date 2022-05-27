@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { theme_default } from '../../utils/initial-theme';
 import actions from '../../redux/slice';
+import Persistent from '../../utils/persistent';
 
 export default function Theme({ store }) {
 	const [theme, setTheme] = useState(theme_default);
@@ -23,7 +24,8 @@ export default function Theme({ store }) {
 
 	function toggleTheme() {
 		const new_theme = document.getElementsByTagName('html')[0].classList.toggle('light') ? 'light' : 'dark';
-		localStorage.setItem('theme', new_theme);
+		Persistent.save('theme', new_theme);
+
 		setTheme(new_theme);
 		const page = store.getState().present.page;
 		if (page.format === 'hex4' && (JSON.stringify(page.color) === JSON.stringify([0.7, 0, 0.2, 1]) || JSON.stringify(page.color) === JSON.stringify([1, 0, 0.9, 1]))) {

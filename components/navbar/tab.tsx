@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Cross from '../icons/cross';
 import Text from '../inputs/text';
 import actions from '../../redux/slice';
+import Persistent from '../../utils/persistent';
 
 export default function Tab({ id, label, selected, store, onClick, closeTab }) {
 	const tab_ref = useRef(null);
@@ -29,28 +30,27 @@ export default function Tab({ id, label, selected, store, onClick, closeTab }) {
 	};
 
 	function updateLabel(event) {
-		const canvases = JSON.parse(localStorage.getItem('canvases') ?? '[]');
+		const canvases = Persistent.load('canvases');
 		const canvas = canvases.find((canvas) => canvas.id === id);
 		canvas.label = event.target.value;
-		localStorage.setItem('canvases', JSON.stringify([...new Map(canvases.map((canvas) => [canvas.id, canvas])).values()]));
-
+		Persistent.save('canvases', [...new Map(canvases.map((canvas) => [canvas.id, canvas])).values()]);
 		store.dispatch(actions.page({ label: event.target.value }));
 	}
 
 	return (
 		<div ref={tab_ref}>
-			{/* <Link href={'/canvas/' + id}> */}
-			<a onClick={onClick} className={'tab' + (selected ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
-				{editing ? (
-					<Text id="props" highlight={true} onBlur={() => setEditing(false)} onChange={updateLabel}>
-						{label}
-					</Text>
-				) : (
-					<div onDoubleClick={() => setEditing(true)}>{label}</div>
-				)}
-				<Cross onClick={(event) => closeTab(event, id)} />
-			</a>
-			{/* </Link> */}
+			<Link href={`/editor/${id}`}>
+				<a onClick={onClick} className={'tab' + (selected ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
+					{editing ? (
+						<Text id="props" highlight={true} onBlur={() => setEditing(false)} onChange={updateLabel}>
+							{label}
+						</Text>
+					) : (
+						<div onDoubleClick={() => setEditing(true)}>{label}</div>
+					)}
+					<Cross onClick={(event) => closeTab(event, id)} />
+				</a>
+			</Link>
 
 			<style jsx>{`
 				line {
