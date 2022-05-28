@@ -51,7 +51,7 @@ export default function Text({ selected, store, fonts }) {
 	if (typeof selected[0].text !== 'string') return null;
 
 	return (
-		<div id="property-container">
+		<div className="property-container">
 			<div className="property-heading">
 				<h4>TEXT</h4>
 			</div>

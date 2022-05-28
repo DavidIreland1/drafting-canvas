@@ -47,6 +47,8 @@ export function singleClick(down_event, canvas, user_id, store, active) {
 	const view = state.views.find((view) => view.id === user_id);
 	const cursor = state.cursors.find((cursor) => cursor.id === user_id);
 
+	if (!view || !cursor) return;
+
 	const points = state.elements
 		.filter((element) => !element.selected)
 		.map((element) => Elements[element.type].points(element))

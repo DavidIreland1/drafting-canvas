@@ -74,6 +74,7 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 					grid-template-columns: auto 1fr;
 					padding: 5px 5px 5px 0;
 					border-bottom: 1px solid transparent;
+					color: var(--text);
 				}
 				.dimension:hover {
 					background: var(--hover);
@@ -92,11 +93,11 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 					font-weight: inherit;
 					font-family: inherit;
 					min-width: max(100%, 4ch);
-					color: var(--text);
 					font-size: 16px;
 					text-align: right;
 					font-weight: inherit;
 					-moz-appearance: textfield;
+					color: var(--text);
 				}
 				input:hover {
 					-moz-appearance: unset;

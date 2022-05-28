@@ -17,7 +17,7 @@ export default function Effect({ selected, store, setPicker }) {
 	const effects = selected.map((element) => Elements[element.type].getEffect(element)).flat();
 
 	return (
-		<div id="property-container">
+		<div className="property-container">
 			<div className="property-heading">
 				<h4>EFFECTS</h4>
 				<Plus onClick={() => addEffect(selected_ids, store)} />

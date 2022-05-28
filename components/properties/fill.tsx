@@ -16,7 +16,7 @@ export default function Fill({ selected, store, setPicker }) {
 
 	const fills = selected.map((element) => Elements[element.type].getFill(element)).flat();
 	return (
-		<div id="property-container">
+		<div className="property-container">
 			<div className="property-heading">
 				<h4>FILL</h4>
 				<Plus onClick={() => addFill(selected_ids, store)} />
@@ -156,10 +156,7 @@ function FillInput({ fill, setPicker, selected_ids, store }) {
 						cursor: default;
 						border-radius: 4px;
 						padding: 0 5px;
-
-					}
-					#handle:hover {
-						background: var(--hover)
+						color: var(--text);
 					}
 				`}</style>
 		</div>

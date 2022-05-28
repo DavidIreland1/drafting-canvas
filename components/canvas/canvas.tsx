@@ -70,15 +70,12 @@ function Canvas({ user_id, store, toggleUI }, ref) {
 				}
 				canvas {
 					width: 100%;
+					height: calc(100vh - var(--nav-height) - var(--gap));
 					outline: none;
 					cursor: ${cursor};
-					--checker-size: 8px;
-					height: 100%;
 					border-radius: var(--radius);
 				}
 				.checkers {
-					--checker-color-1: white;
-					--checker-color-2: lightgrey;
 					--checker-size: 8px;
 					--checker-gradient: linear-gradient(45deg, var(--checker-color-1) 25%, transparent 0%, transparent 75%, var(--checker-color-1) 75%);
 					background: var(--checker-color-2);

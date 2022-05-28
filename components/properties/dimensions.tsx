@@ -1,5 +1,6 @@
 import actions from '../../redux/slice';
 import { ElementType } from '../../types/element-types';
+import Elements from '../canvas/elements/elements';
 import Group from '../canvas/elements/group';
 import Input from '../inputs/input';
 
@@ -11,6 +12,7 @@ export default function Dimensions({ selected, store }) {
 		const group = { elements: selected, type: 'group', rotation: selected[0].rotation } as ElementType;
 		const bounds = Group.bound(group);
 		(bounds as any).rotation = selected[0].rotation;
+		(bounds as any).radius = Elements[selected[0].type].getPoints(selected[0])[0].radius;
 
 		const sign = Math.sign(event.target.value);
 		const delta = formatter(event.target.value) - bounds[event.target.id];
@@ -30,7 +32,7 @@ export default function Dimensions({ selected, store }) {
 	const radius = radii.every((radius) => radius === radii[0]) ? radii[0] : 'Mixed';
 
 	return (
-		<div id="property-container">
+		<div className="property-container">
 			<div className="property-heading">
 				<h4>DIMENSIONS</h4>
 			</div>
@@ -49,6 +51,7 @@ export default function Dimensions({ selected, store }) {
 						</svg>
 					}
 					unit="°"
+					step={0.1}
 					value={selected[0].rotation * 57.29577951308232}
 					onChange={(event) => updateDimension(event, (rotation) => Number(rotation) / 57.29577951308232)}
 				/>
@@ -61,7 +64,6 @@ export default function Dimensions({ selected, store }) {
 						</svg>
 					}
 					min={0}
-					step={0.1}
 					value={radius}
 					onChange={updateDimension}
 				/>

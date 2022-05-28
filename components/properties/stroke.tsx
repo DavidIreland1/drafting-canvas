@@ -17,7 +17,7 @@ export default function Stroke({ selected, store, setPicker }) {
 	const strokes = selected.map((element) => Elements[element.type].getStroke(element)).flat();
 
 	return (
-		<div id="property-container">
+		<div className="property-container">
 			<div className="property-heading">
 				<h4>STROKE</h4>
 				<Plus onClick={() => addStroke(selected_ids, store)} />
@@ -98,7 +98,7 @@ function StrokeInput({ stroke, setPicker, selected_ids, store }) {
 	return (
 		<div key={stroke.id}>
 			<div className="property-row">
-				<div>::</div>
+				<div id="handle">::</div>
 				<div className="checker-background">
 					<div className="property-color" onClick={(event) => openPicker(event, stroke, setPicker, selected_ids, store)} style={{ background: Colors.toString(stroke.color) }} />
 				</div>
@@ -125,6 +125,12 @@ function StrokeInput({ stroke, setPicker, selected_ids, store }) {
 					grid-template-columns: 1fr 1fr;
 					gap: 10px;
 					padding: 0 10px;
+				}
+				#handle {
+					cursor: default;
+					border-radius: 4px;
+					padding: 0 5px;
+					color: var(--text);
 				}
 			`}</style>
 		</div>

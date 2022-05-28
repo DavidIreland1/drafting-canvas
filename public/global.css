@@ -17,7 +17,8 @@
 	--invalid: #6f3939;
 	--shadow: none;
 	--background: #181717;
-	scrollbar-width: thin;
+	--checker-color-1: #2d2d2d;
+	--checker-color-2: #1a1a1a;
 }
 
 /* Light Theme */
@@ -33,6 +34,8 @@
 	--invalid: #ce7676;
 	--shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.5);
 	--background: rgb(255, 255, 255);
+	--checker-color-1: white;
+	--checker-color-2: lightgrey;
 }
 /* 
 * {
@@ -73,8 +76,6 @@ button {
 }
 
 .checkers {
-	--checker-color-1: white;
-	--checker-color-2: lightgrey;
 	--checker-size: 8px;
 	--checker-gradient: linear-gradient(45deg, var(--checker-color-1) 25%, transparent 0%, transparent 75%, var(--checker-color-1) 75%);
 	background: var(--checker-color-2);
@@ -85,6 +86,8 @@ button {
 
 .property-container {
 	padding: 10px 0;
+	background: var(--panel);
+	border-radius: var(--radius);
 }
 .property-heading {
 	display: grid;

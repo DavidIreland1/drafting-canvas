@@ -61,7 +61,7 @@ export default function Background({ store, setPicker }) {
 
 	return (
 		<div>
-			<div id="property-container">
+			<div className="property-container">
 				<div className="property-heading">
 					<h4>BACKGROUND</h4>
 				</div>

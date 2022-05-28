@@ -18,43 +18,39 @@ export default function Properties({ store, setPicker, fonts }) {
 			{selected.length === 0 ? (
 				<Background store={store} setPicker={setPicker}></Background>
 			) : (
-				<div>
+				<>
 					<Dimensions selected={selected} store={store} />
-					<div className="divider" />
 					<Text selected={selected} store={store} fonts={fonts} />
 					<Fill selected={selected} store={store} setPicker={setPicker} />
-					<div className="divider" />
 					<Stroke selected={selected} store={store} setPicker={setPicker} />
-					<div className="divider" />
 					<Effects selected={selected} store={store} setPicker={setPicker} />
-				</div>
+				</>
 			)}
+			<div id="spacer" className="property-container" />
 
 			<style jsx>{`
 				#container {
-					color: var(--text);
-					background: var(--panel);
-					position: relative;
-					display: grid;
-					right: 0;
-					padding: 10px 0;
+					display: flex;
+					flex-direction: column;
+					gap: var(--gap);
+					grid-template-rows: repeat(auto-fit, min-content) 1fr;
 					border-radius: var(--radius);
 					height: calc(100vh - var(--nav-height) - var(--gap));
 					overflow-y: auto;
 					overflow-y: overlay;
 				}
-				#handle {
-					position: absolute;
-					height: 100%;
-					width: 6px;
-					background: transparent;
-					left: -5px;
-					cursor: ew-resize;
+				.grid {
+					display: grid;
+					gap: var(--gap);
 				}
 				.divider {
-					height: 1px;
-					background: var(--border);
+					height: 4px;
+					background: var(--background);
 					margin: 10px 0;
+				}
+				#spacer {
+					height: 100%;
+					width: 100%;
 				}
 			`}</style>
 		</div>
