@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -20,3 +20,17 @@ const app = initializeApp(firebase_config);
 
 // Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(app);
+
+export async function load(name) {
+	const docRef = doc(db, 'cities', name);
+	const docSnap = await getDoc(docRef);
+
+	if (!docSnap.exists()) return undefined;
+
+	return docSnap.data();
+}
+
+export async function save(name, data) {
+	// Add a new document in collection "files"
+	await setDoc(doc(db, 'files', name), data);
+}

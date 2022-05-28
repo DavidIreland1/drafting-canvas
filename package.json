@@ -12,14 +12,15 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
-		"react": "17.0.1",
-		"react-dom": "17.0.1",
+		"react": "17.0.2",
+		"react-dom": "17.0.2",
 		"react-redux": "^7.2.4",
 		"redux": "^3.7.2",
 		"redux-undo": "^1.0.1",
 		"redux-scuttlebutt": "^0.3.5",
 		"@reduxjs/toolkit": "^1.6.0",
-		"next": "^12.1.4",
+		"next": "latest",
+		"next-pwa": "^5.4.1",
 		"primus": "^8.0.4",
 		"primus-rooms": "^3.4.1",
 		"fs": "0.0.1-security",
@@ -38,6 +39,6 @@
 		"webpack-cli": "^4.7.2"
 	},
 	"engines": {
-		"node": "14.x.x"
+		"node": "16.x.x"
 	}
 }

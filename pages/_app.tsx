@@ -28,10 +28,19 @@ export default function App({ Component, pageProps }) {
 	return (
 		<>
 			<Head>
-				<title>Drafting Canvas</title>
-				<link rel="icon" href="/favicon.svg" />
+				<meta charSet="utf-8" />
+				<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+				<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 				<meta name="description" content="Drafting Canvas is a free real time collaborative design tool created as open source project" />
 				<meta name="keywords" content="Design, Vector, Collaborate, Editor, Whiteboard, Draw, Sketch, Create, Draft, Canvas, Board, Pen, Pencil, Ink, Realtime" />
+				<title>Drafting Canvas</title>
+
+				<link rel="manifest" href="/manifest.json" />
+				<link href="/favicon.svg" rel="icon" type="image/svg" />
+				<link rel="apple-touch-icon" href="/images/icon-512x512.png"></link>
+				<meta name="theme-color" content="#1b1b1d" />
+				{/* eslint-disable-next-line @next/next/no-sync-scripts */}
+				<script src="/primus/primus.js"></script>
 			</Head>
 
 			<div id="scrub-cursor">
@@ -69,8 +78,6 @@ export default function App({ Component, pageProps }) {
 					transform: translateX(-50%) translateY(-75%);
 				}
 			`}</style>
-
-			<Script src="/primus/primus.js" />
 
 			<Script strategy="lazyOnload" src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`} />
 

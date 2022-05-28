@@ -32,7 +32,6 @@ export default function Tab({ id, label, selected, store, onClick, closeTab }) {
 	function updateLabel(event) {
 		const canvases = Persistent.load('canvases');
 		const canvas = canvases.find((canvas) => canvas.id === id);
-		console.log(event);
 		if (event.key === 'enter') return setEditing(false);
 		canvas.label = event.target.value;
 		Persistent.save('canvases', [...new Map(canvases.map((canvas) => [canvas.id, canvas])).values()]);
@@ -41,18 +40,18 @@ export default function Tab({ id, label, selected, store, onClick, closeTab }) {
 
 	return (
 		<div ref={tab_ref}>
-			<Link href={`/editor/${id}`}>
-				<a onClick={onClick} className={'tab' + (selected ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
-					{editing ? (
-						<Text id="props" highlight={true} onBlur={() => setEditing(true)} onChange={updateLabel} onEnter={() => setEditing(false)}>
-							{label}
-						</Text>
-					) : (
-						<div onDoubleClick={() => setEditing(true)}>{label}</div>
-					)}
-					<Cross onClick={(event) => closeTab(event, id)} />
-				</a>
-			</Link>
+			{/* <Link href={`/editor/${id}`}> */}
+			<a onClick={onClick} href={`/editor/${id}`} className={'tab' + (selected ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
+				{editing ? (
+					<Text id="props" highlight={true} onBlur={() => setEditing(true)} onChange={updateLabel} onEnter={() => setEditing(false)}>
+						{label}
+					</Text>
+				) : (
+					<div onDoubleClick={() => setEditing(true)}>{label}</div>
+				)}
+				<Cross onClick={(event) => closeTab(event, id)} />
+			</a>
+			{/* </Link> */}
 
 			<style jsx>{`
 				line {

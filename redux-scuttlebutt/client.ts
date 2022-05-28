@@ -39,6 +39,10 @@ export default function scuttlebutt(options) {
 				(window as any).syncStore = store;
 			}
 
+			if (typeof window !== 'undefined') {
+				(window as any).dispatcher = dispatcher;
+			}
+
 			return {
 				...store,
 				scuttlebutt,

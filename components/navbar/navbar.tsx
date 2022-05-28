@@ -41,6 +41,7 @@ export default function Navbar({ store }) {
 
 	function removeUser() {
 		store.dispatch(actions.removeUser({ user_id: Settings.user.id }));
+		// dispatcher.primus.socket.close();
 	}
 
 	function closeTab(event, id) {

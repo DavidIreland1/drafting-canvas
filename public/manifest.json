@@ -1,0 +1,32 @@
+{
+	"theme_color": "#181717",
+	"background_color": "#181717",
+	"display": "fullscreen",
+	"scope": "/",
+	"start_url": "/",
+	"name": "Drafting Canvas",
+	"short_name": "Drafting Canvas",
+	"description": "Free online collaborative design tool",
+	"icons": [
+		{
+			"src": "/images/icon/icon-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/images/icon/icon-256x256.png",
+			"sizes": "256x256",
+			"type": "image/png"
+		},
+		{
+			"src": "/images/icon/icon-384x384.png",
+			"sizes": "384x384",
+			"type": "image/png"
+		},
+		{
+			"src": "/images/icon/icon-512x512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	]
+}

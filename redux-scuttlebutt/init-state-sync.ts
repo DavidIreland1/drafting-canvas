@@ -8,8 +8,9 @@ const defaultOptions = {
 	primusOptions: {},
 };
 
-import save from '../server/database/save';
-import load from '../server/database/load';
+import { save, load } from '../server/database/local';
+// import { save, load } from '../server/database/firestore';
+
 import snapshot from './snapshot';
 import { createStore } from 'redux';
 
@@ -32,8 +33,6 @@ export default function initStateSync(server, options = { primusOptions: {} }) {
 				rooms[spark.id] = data.room;
 				if (!documents[rooms[spark.id]]) documents[rooms[spark.id]] = openDocument(rooms[spark.id]);
 				addUser(spark, rooms[spark.id]);
-
-				console.log('added user: ', spark.id);
 			} else if (data.action === 'leave') {
 				removeUser(spark, rooms[spark.id]);
 			} else {
@@ -57,6 +56,7 @@ function openDocument(room) {
 
 	load(room).then((document_state) => {
 		if (document_state) {
+			console.log('Adding State to doc: ', room);
 			dispatch({
 				type: 'action/overwrite',
 				payload: {
@@ -104,9 +104,8 @@ function removeUser(spark, room) {
 	if (num_streams === 0) {
 		const snap = snapshot(documents[room].getState());
 
-		console.log('Saving Room: ', room, snap);
-		save(room, snapshot(documents[room].getState()));
-		// save(room, documents[room].getState());
+		console.log('Saving Room: ', room);
+		save(room, snap);
 		delete documents[room];
 	}
 }
