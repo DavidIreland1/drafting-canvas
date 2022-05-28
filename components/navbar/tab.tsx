@@ -32,6 +32,8 @@ export default function Tab({ id, label, selected, store, onClick, closeTab }) {
 	function updateLabel(event) {
 		const canvases = Persistent.load('canvases');
 		const canvas = canvases.find((canvas) => canvas.id === id);
+		console.log(event);
+		if (event.key === 'enter') return setEditing(false);
 		canvas.label = event.target.value;
 		Persistent.save('canvases', [...new Map(canvases.map((canvas) => [canvas.id, canvas])).values()]);
 		store.dispatch(actions.page({ label: event.target.value }));
@@ -42,7 +44,7 @@ export default function Tab({ id, label, selected, store, onClick, closeTab }) {
 			<Link href={`/editor/${id}`}>
 				<a onClick={onClick} className={'tab' + (selected ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
 					{editing ? (
-						<Text id="props" highlight={true} onBlur={() => setEditing(false)} onChange={updateLabel}>
+						<Text id="props" highlight={true} onBlur={() => setEditing(true)} onChange={updateLabel} onEnter={() => setEditing(false)}>
 							{label}
 						</Text>
 					) : (

@@ -74,7 +74,7 @@ export default function Navbar({ store }) {
 				<Plus onClick={newTab} />
 			</div>
 			<Users />
-			<Share />
+			{router.route === '/editor/[canvas_id]' && <Share />}
 			<Theme store={store} />
 			<a id="github" target="_blank" rel="noreferrer" href="https://github.com/DavidIreland1/drafting-canvas" aria-label="Github">
 				<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
@@ -94,7 +94,6 @@ export default function Navbar({ store }) {
 					--text: #ffffff;
 					--icon: #f1f1f1;
 					--border: #42414d;
-					--accent: #1a83ee;
 					--hover: #34343a;
 					--selected: #3a3943;
 					--invalid: #6f3939;

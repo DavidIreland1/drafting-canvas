@@ -48,7 +48,10 @@ export default function Theme({ store }) {
 					margin: 8px 3px auto 3px;
 				}
 				label {
-					display: none;
+					display: block;
+					height: 0;
+					width: 0;
+					overflow: hidden;
 				}
 				input {
 					margin: auto;

@@ -5,14 +5,11 @@
 	"scripts": {
 		"dev": "ts-node server/server",
 		"build": "next build",
-		"gcp-build": "next build",
 		"export": "next export",
 		"start": "ts-node server/server",
-		"dev-start": "node server/server.js",
 		"compile": "tsc server/server --skipLibCheck",
-		"deploy": "gcloud app deploy --quiet",
-		"lint": "next lint",
-		"prod": "NODE_ENV=production node server/server.js"
+		"deploy": "next build && gcloud app deploy --quiet",
+		"lint": "next lint"
 	},
 	"dependencies": {
 		"react": "17.0.1",

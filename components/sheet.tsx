@@ -29,7 +29,7 @@ export default function Sheet({ store }) {
 		// Hack fix as adding user before state sync causes error in other users
 		const time_delay = window.hasOwnProperty('Primus') ? 1000 : 0;
 		setTimeout(() => {
-			store.dispatch(actions.addUser({ user_id: Settings.user.id, label: Settings.user.name, color: Settings.user.color }));
+			store.dispatch(actions.addUser({ user_id: Settings.user.id, label: Settings.user.label, color: Settings.user.color }));
 		}, time_delay);
 
 		const removeUser = () => store.dispatch(actions.removeUser({ user_id: Settings.user.id }));

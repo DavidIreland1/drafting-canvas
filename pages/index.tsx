@@ -80,7 +80,7 @@ export default function Index(): JSX.Element {
 				}
 				button {
 					background: var(--panel);
-					margin: 10px 0;
+					margin: auto 0;
 					box-shadow: var(--shadow);
 				}
 				button:hover {

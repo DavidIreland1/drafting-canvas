@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import Settings from '../settings';
 import User from './user';
 
 export default function Users() {
@@ -11,9 +12,13 @@ export default function Users() {
 	return (
 		<>
 			<div id="users">
-				{users.map((user, i) => (
-					<User key={i} user={user} />
-				))}
+				{users
+					.filter((user) => user.id !== Settings.user.id)
+					.map((user, i) => (
+						<User key={i} user={user} />
+					))}
+
+				<User user={Settings.user} />
 			</div>
 
 			<style jsx>{`

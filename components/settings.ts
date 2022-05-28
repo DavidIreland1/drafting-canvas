@@ -11,7 +11,7 @@ const device_pixel_ratio = typeof window === 'undefined' ? 1 : window.devicePixe
 const Settings = {
 	user: {
 		id: id,
-		name: Adjective + ' ' + Animal,
+		label: Adjective + ' ' + Animal,
 		color: pastelColor(),
 	},
 	line: {
