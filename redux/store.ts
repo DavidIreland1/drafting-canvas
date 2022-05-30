@@ -10,6 +10,7 @@ import undoable from 'redux-undo';
 
 import { filterActions, groupActions } from './undo';
 import initial_state from './initial-state';
+import Settings from '../components/settings';
 
 let Primus;
 
@@ -30,6 +31,7 @@ export default function makeStore(room) {
 					primus: Primus,
 					uri: window.location.origin,
 					room: room,
+					user: Settings.user,
 			  }) as any)
 			: undefined
 	);

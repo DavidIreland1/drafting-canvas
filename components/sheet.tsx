@@ -26,14 +26,10 @@ export default function Sheet({ store }) {
 		const { canvas_id } = router.query;
 		if (!canvas_id) return;
 
-		// Hack fix as adding user before state sync causes error in other users
-		const time_delay = window.hasOwnProperty('Primus') ? 1000 : 0;
-		setTimeout(() => {
-			store.dispatch(actions.addUser({ user_id: Settings.user.id, label: Settings.user.label, color: Settings.user.color }));
-		}, time_delay);
+		// User should be added by server when connecting, but if no connection then add user
+		if (!window.hasOwnProperty('Primus')) store.dispatch(actions.addUser(Settings.user));
 
-		const removeUser = () => store.dispatch(actions.removeUser({ user_id: Settings.user.id }));
-
+		const removeUser = () => store.dispatch(actions.removeUser({ id: Settings.user.id }));
 		window.addEventListener('beforeunload', removeUser);
 		return () => window.removeEventListener('beforeunload', removeUser);
 	}, [router.query, store]);

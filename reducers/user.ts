@@ -1,8 +1,8 @@
 const user = {
 	addUser: (state, props) => {
-		const { user_id, label, color } = props.payload;
-		state.views.push({ id: user_id, label: label, x: 0, y: 0, scale: 1 });
-		state.cursors.push({ id: user_id, label: label, color: color, x: 0, y: 0, rotation: 0, type: 'select', mode: 'edit', visible: false, pressed: false });
+		const { id, label, color } = props.payload;
+		state.views.push({ id: id, label: label, x: 0, y: 0, scale: 3 });
+		state.cursors.push({ id: id, label: label, color: color, x: 0, y: 0, rotation: 0, type: 'select', mode: 'edit', visible: false, pressed: false });
 	},
 	centerView: (state, props) => {
 		const { user_id, x, y } = props.payload;
@@ -13,9 +13,9 @@ const user = {
 		view.centered = true;
 	},
 	removeUser: (state, props) => {
-		const { user_id } = props.payload;
-		state.views = state.views.filter((view) => view.id !== user_id);
-		state.cursors = state.cursors.filter((view) => view.id !== user_id);
+		const { id } = props.payload;
+		state.views = state.views.filter((view) => view.id !== id);
+		state.cursors = state.cursors.filter((view) => view.id !== id);
 	},
 	view: (state, props) => {
 		const { user_id, delta_x, delta_y, delta_scale, cursor_x, cursor_y } = props.payload;

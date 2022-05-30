@@ -14,7 +14,6 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 	// const active = { editing: [], hovering: [], selected: [], altering: [] };
 	const user_view = state.views.find((view) => view.id === user_id);
 	const user_cursor = state.cursors.find((cursor) => cursor.id === user_id);
-	if (!user_view || !user_cursor) return active;
 
 	context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
@@ -22,6 +21,8 @@ export default function draw(context: CanvasRenderingContext2D, state, active, u
 		context.fillStyle = Colors.toString(state.page.color);
 		context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 	}
+
+	if (!user_view || !user_cursor) return active;
 
 	context.translate(user_view.x, user_view.y);
 	context.scale(user_view.scale, user_view.scale);

@@ -1,8 +1,7 @@
-import { useRef, useEffect, useImperativeHandle, forwardRef, useState } from 'react';
+import { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import initCanvas from './init-canvas';
 import draw from './draw';
 import TextLayer from './text-layer';
-import Colors from '../properties/colors';
 import actions from '../../redux/slice';
 import Menu from '../menu/menu';
 
@@ -26,8 +25,6 @@ function Canvas({ user_id, store, toggleUI }, ref) {
 		[canvas_ref, store, user_id]
 	);
 
-	const [background, setBackground] = useState(Colors.toString(store.getState().present.page.color));
-
 	useEffect(() => {
 		const canvas: HTMLCanvasElement = canvas_ref.current;
 		const context: CanvasRenderingContext2D = canvas.getContext('2d'); //, { alpha: false } makes it flash black but is more efficient?
@@ -46,8 +43,6 @@ function Canvas({ user_id, store, toggleUI }, ref) {
 		store.subscribe(() => draw(context, store.getState().present, active, user_id));
 		(window as any).redraw = () => draw(context, store.getState().present, active, user_id);
 
-		setTimeout(() => setBackground(''), 100);
-
 		return initCanvas(canvas, user_id, store, active);
 	}, [canvas_ref, store, user_id]);
 
@@ -60,7 +55,7 @@ function Canvas({ user_id, store, toggleUI }, ref) {
 	return (
 		<div id="container">
 			<TextLayer canvas={canvas_ref} user_id={user_id} store={store} />
-			<canvas className="checkers" ref={canvas_ref} style={{ background: background }} />
+			<canvas className="checkers" ref={canvas_ref} />
 
 			<Menu element={canvas_ref} getContents={getContextMenu} props={{ active, toggleUI }} />
 			<style jsx>{`

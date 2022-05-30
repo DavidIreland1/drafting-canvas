@@ -8,8 +8,8 @@ const defaultOptions = {
 	primusOptions: {},
 };
 
-import { save, load } from '../server/database/local';
-// import { save, load } from '../server/database/firestore';
+// import { save, load } from '../server/database/local';
+import { save, load } from '../server/database/firestore';
 
 import snapshot from './snapshot';
 import { createStore } from 'redux';
@@ -32,6 +32,9 @@ export default function initStateSync(server, options = { primusOptions: {} }) {
 			if (data.action === 'join') {
 				rooms[spark.id] = data.room;
 				if (!documents[rooms[spark.id]]) documents[rooms[spark.id]] = openDocument(rooms[spark.id]);
+
+				console.log('add user: ', JSON.stringify(data.user), ' to: ', rooms[spark.id]);
+				documents[rooms[spark.id]].dispatch({ type: 'action/addUser', payload: data.user });
 				addUser(spark, rooms[spark.id]);
 			} else if (data.action === 'leave') {
 				removeUser(spark, rooms[spark.id]);
@@ -76,7 +79,6 @@ function openDocument(room) {
 }
 
 function addUser(spark, room) {
-	console.log('add user: ', spark.id, ' to: ', room);
 	spark.join(room, () => spark.room(room).write({ action: 'info', room: spark.id + ' joined room ' + room }));
 
 	// Each connection needs it's own stream
@@ -103,9 +105,8 @@ function removeUser(spark, room) {
 	const num_streams = Object.keys(documents[room].streams).length;
 	if (num_streams === 0) {
 		const snap = snapshot(documents[room].getState());
-
 		console.log('Saving Room: ', room);
-		save(room, snap);
+		save(room, { elements: snap.elements, page: snap.page });
 		delete documents[room];
 	}
 }

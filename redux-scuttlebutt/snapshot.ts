@@ -15,7 +15,12 @@ export default function snapshot(actions) {
 	actions.forEach((action) => {
 		if (!action.type.startsWith('action')) return;
 		const type = action.type.split('/').pop();
-		clone.dispatch(slice.actions[type](action.payload));
+
+		try {
+			clone.dispatch(slice.actions[type](action.payload));
+		} catch (error) {
+			console.error(error, type);
+		}
 	});
 
 	return clone.getState();

@@ -22,7 +22,7 @@ const app = initializeApp(firebase_config);
 export const db = getFirestore(app);
 
 export async function load(name) {
-	const docRef = doc(db, 'cities', name);
+	const docRef = doc(db, 'files', name);
 	const docSnap = await getDoc(docRef);
 
 	if (!docSnap.exists()) return undefined;
@@ -30,7 +30,7 @@ export async function load(name) {
 	return docSnap.data();
 }
 
-export async function save(name, data) {
+export function save(name, data) {
 	// Add a new document in collection "files"
-	await setDoc(doc(db, 'files', name), data);
+	return setDoc(doc(db, 'files', name), data);
 }
