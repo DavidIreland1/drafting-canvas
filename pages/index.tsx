@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 import { generateID, toReadableDuration } from '../utils/utils';
 import Plus from '../components/icons/plus';

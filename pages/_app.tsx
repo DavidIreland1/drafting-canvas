@@ -55,7 +55,7 @@ export default function App({ Component, pageProps }) {
 			</div>
 			<div id="portal" />
 
-			<Provider store={store as any}>
+			<Provider store={store}>
 				<div id="grid">
 					<Navbar store={store} />
 					<Component {...pageProps} store={store} />
