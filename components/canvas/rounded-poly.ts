@@ -25,7 +25,7 @@ export default function roundedPoly(points): Path2D {
 		}
 		const x = point.x + vector_2.x * length_out - vector_2.y * radius * radius_sign;
 		const y = point.y + vector_2.y * length_out + vector_2.x * radius * radius_sign;
-		path.arc(x, y, radius, vector_1.angle + (Math.PI / 2) * radius_sign, vector_2.angle - (Math.PI / 2) * radius_sign, counter_clockwise);
+		path.arc(x, y, Math.max(radius, 0), vector_1.angle + (Math.PI / 2) * radius_sign, vector_2.angle - (Math.PI / 2) * radius_sign, counter_clockwise);
 	});
 	path.closePath();
 	return path;

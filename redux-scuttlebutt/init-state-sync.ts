@@ -14,8 +14,9 @@ import { save, load } from '../server/database/firestore';
 import snapshot from './snapshot';
 import { createStore } from 'redux';
 
-let documents = {};
-let rooms = {};
+const documents = {};
+const rooms = {}; // { spark_id: room_id/canvas_id }
+const users = {}; // { spark_id: user }
 
 export default function initStateSync(server, options = { primusOptions: {} }) {
 	options = Object.assign(defaultOptions, options);
@@ -31,13 +32,14 @@ export default function initStateSync(server, options = { primusOptions: {} }) {
 		spark.on('data', (data) => {
 			if (data.action === 'join') {
 				rooms[spark.id] = data.room;
+				users[spark.id] = data.user;
 				if (!documents[rooms[spark.id]]) documents[rooms[spark.id]] = openDocument(rooms[spark.id]);
 
-				console.log('add user: ', JSON.stringify(data.user), ' to: ', rooms[spark.id]);
-				documents[rooms[spark.id]].dispatch({ type: 'action/addUser', payload: data.user });
-				addUser(spark, rooms[spark.id]);
+				console.log('add user: ', JSON.stringify(users[spark.id]), ' to: ', rooms[spark.id]);
+
+				addUser(spark, rooms[spark.id], users[spark.id]);
 			} else if (data.action === 'leave') {
-				removeUser(spark, rooms[spark.id]);
+				removeUser(spark, rooms[spark.id], users[spark.id]);
 			} else {
 				documents[rooms[spark.id]].streams[spark.id].write(data);
 			}
@@ -46,7 +48,7 @@ export default function initStateSync(server, options = { primusOptions: {} }) {
 
 	// Seems to be deleting / saving too often
 	primus.on('disconnection', (spark) => {
-		removeUser(spark, rooms[spark.id]);
+		removeUser(spark, rooms[spark.id], users[spark.id]);
 	});
 }
 
@@ -78,7 +80,9 @@ function openDocument(room) {
 	};
 }
 
-function addUser(spark, room) {
+function addUser(spark, room, user) {
+	documents[rooms[spark.id]].dispatch({ type: 'action/addUser', payload: user });
+
 	spark.join(room, () => spark.room(room).write({ action: 'info', room: spark.id + ' joined room ' + room }));
 
 	// Each connection needs it's own stream
@@ -95,12 +99,15 @@ function addUser(spark, room) {
 	});
 }
 
-function removeUser(spark, room) {
+function removeUser(spark, room, user) {
 	console.log('remove user: ', spark.id, ' from: ', room);
 	if (!documents[room]) return;
 
+	documents[room].dispatch({ type: 'action/removeUser', payload: user });
+
 	delete documents[room].streams[spark.id];
 	delete rooms[spark.id];
+	delete users[spark.id];
 
 	const num_streams = Object.keys(documents[room].streams).length;
 	if (num_streams === 0) {

@@ -11,7 +11,6 @@ import { generateID } from '../../utils/utils';
 import { RootState } from '../../redux/store';
 import Link from 'next/link';
 import Persistent from '../../utils/persistent';
-import Settings from '../settings';
 
 export default function Navbar({ store }) {
 	const router = useRouter();
@@ -31,17 +30,11 @@ export default function Navbar({ store }) {
 	function newTab() {
 		const id = generateID();
 		setTabs([...tabs, { id: id, label: 'Untitled' }]);
-		removeUser();
 		router.push(`/editor/${id}`);
 	}
 
 	function droppable(event) {
 		event.preventDefault();
-	}
-
-	function removeUser() {
-		store.dispatch(actions.removeUser({ user_id: Settings.user.id }));
-		// dispatcher.primus.socket.close();
 	}
 
 	function closeTab(event, id) {
@@ -67,7 +60,7 @@ export default function Navbar({ store }) {
 
 			<div id="tabs" onDragOver={droppable}>
 				{tabs.map((tab, i) => (
-					<Tab key={i} id={tab.id} label={canvas_id === tab.id && typeof page_label === 'string' ? page_label : tab.label} selected={canvas_id === tab.id} store={store} onClick={removeUser} closeTab={closeTab} />
+					<Tab key={i} id={tab.id} label={canvas_id === tab.id && typeof page_label === 'string' ? page_label : tab.label} selected={canvas_id === tab.id} store={store} closeTab={closeTab} />
 				))}
 			</div>
 

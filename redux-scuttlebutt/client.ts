@@ -7,11 +7,11 @@ export { META_SOURCE, META_TIMESTAMP, UPDATE_ACTION, UPDATE_TIMESTAMP, UPDATE_SO
 import { tool_actions } from '../reducers/tools';
 
 // Applies default options.
-const defaultOptions = {
+const default_options = {
 	uri: typeof window === 'object' && `${window.location.protocol}//${window.location.host}`,
-	primusOptions: {},
+	primus_options: {},
 	primus: typeof window === 'object' && (window as any).Primus,
-	dispatcherOptions: {},
+	dispatcher_options: {},
 };
 
 // Store enhancer
@@ -19,40 +19,34 @@ const defaultOptions = {
 // receive actions from peers, and FIX-ME: getState to apparently break everything
 //
 export default function scuttlebutt(options) {
-	options = { ...defaultOptions, ...options };
+	options = { ...default_options, ...options };
 
-	return (createStore) => {
-		// is it more efficient to store previous states, or replay a bunch of
-		// previous actions? (until we have COMMIT check pointing, the former)
-		const dispatcher = new Dispatcher(options.dispatcherOptions);
+	// is it more efficient to store previous states, or replay a bunch of
+	// previous actions? (until we have COMMIT check pointing, the former)
+	const dispatcher = new Dispatcher(options.dispatcher_options);
+	if (typeof window !== 'undefined') (window as any).dispatcher = dispatcher;
 
-		dispatcher.primus = options.primus.connect(options.uri, options.primusOptions);
-		console.log('[io] connecting...');
-		connectStreams(dispatcher.primus, () => dispatcher.createStream(), options.room, options.user);
+	return [
+		(createStore) => {
+			dispatcher.primus = options.primus.connect(options.uri, options.primus_options);
+			console.log('[io] connecting...');
+			connectStreams(dispatcher.primus, () => dispatcher.createStream(), options.room, options.user);
 
-		return (reducer, initialState, enhancer) => {
-			const store = createStore(
-				dispatcher.wrapReducer(reducer),
-				dispatcher.wrapInitialState(initialState), // preloaded state is the earliest snapshot
-				enhancer
-			);
+			return (reducer, initialState, enhancer) => {
+				const store = createStore(dispatcher.wrapReducer(reducer), dispatcher.wrapInitialState(initialState), enhancer);
 
-			if (typeof window !== 'undefined') {
-				(window as any).syncStore = store;
-			}
+				if (typeof window !== 'undefined') (window as any).syncStore = store;
 
-			if (typeof window !== 'undefined') {
-				(window as any).dispatcher = dispatcher;
-			}
-
-			return {
-				...store,
-				scuttlebutt,
-				dispatch: dispatcher.wrapDispatch(store.dispatch),
-				getState: dispatcher.wrapGetState(store.getState),
+				return {
+					...store,
+					scuttlebutt,
+					dispatch: dispatcher.wrapDispatch(store.dispatch),
+					getState: dispatcher.wrapGetState(store.getState),
+				};
 			};
-		};
-	};
+		},
+		dispatcher,
+	];
 }
 
 // the internet is a series of tubes

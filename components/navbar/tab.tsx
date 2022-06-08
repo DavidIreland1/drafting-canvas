@@ -5,7 +5,7 @@ import Text from '../inputs/text';
 import actions from '../../redux/slice';
 import Persistent from '../../utils/persistent';
 
-export default function Tab({ id, label, selected, store, onClick, closeTab }) {
+export default function Tab({ id, label, selected, store, closeTab }) {
 	const tab_ref = useRef(null);
 	const [editing, setEditing] = useState(false);
 
@@ -41,7 +41,7 @@ export default function Tab({ id, label, selected, store, onClick, closeTab }) {
 	return (
 		<div ref={tab_ref}>
 			<Link href={`/editor/${id}`}>
-				<a onClick={onClick} className={'tab' + (selected ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
+				<a className={'tab' + (selected ? ' selected' : '')} draggable="true" onDragStart={drag} onDragOver={(event) => event.preventDefault()}>
 					{editing ? (
 						<Text id="props" highlight={true} onBlur={() => setEditing(true)} onChange={updateLabel} onEnter={() => setEditing(false)}>
 							{label}

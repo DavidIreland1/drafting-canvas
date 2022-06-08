@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-export default function Input({ id, label, value, type = 'number', step = 1, min = NaN, unit = '', onChange }) {
+export default function Input({ id, label, value, type = 'number', step = 1, min = undefined, unit = '', onChange }) {
 	const input = useRef(null);
 	const [cursor, setCursor] = useState({ x: 0, y: 0 });
 
@@ -55,8 +55,8 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 		down_event.target.addEventListener('mouseup', end, { once: true });
 	};
 
-	// Round to min(user set precision, 2dp)
 	if (!isNaN(value)) {
+		// Round to min(user set precision, 2dp)
 		const length = Math.min(('.' + Math.abs(value).toPrecision(12).split('.')[1]).replaceAll('0', ' ').trim().length - 1, 2);
 		value = value.toFixed(length);
 	}
@@ -65,7 +65,7 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 		<>
 			<div id={id} className="dimension">
 				<label onMouseDown={dragProperty}>{label}</label>
-				<input ref={input} type={isNaN(value) ? '' : type} step={step} value={value} min={isNaN(min) ? undefined : min} onChange={updateValue} />
+				<input ref={input} type={isNaN(value) ? '' : type} step={step} value={value} min={min} onChange={updateValue} />
 			</div>
 
 			<style jsx>{`

@@ -28,10 +28,6 @@ export default function Sheet({ store }) {
 
 		// User should be added by server when connecting, but if no connection then add user
 		if (!window.hasOwnProperty('Primus')) store.dispatch(actions.addUser(Settings.user));
-
-		const removeUser = () => store.dispatch(actions.removeUser({ id: Settings.user.id }));
-		window.addEventListener('beforeunload', removeUser);
-		return () => window.removeEventListener('beforeunload', removeUser);
 	}, [router.query, store]);
 
 	useEffect(() => {

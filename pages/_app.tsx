@@ -14,7 +14,7 @@ export default function App({ Component, pageProps }) {
 	const router = useRouter();
 	const { canvas_id } = router.query;
 
-	const [store, setStore] = useState(makeStore(undefined));
+	const [store, setStore] = useState(makeStore(undefined)[0]);
 
 	// For console debugging
 	if (typeof window !== 'undefined') {
@@ -22,7 +22,12 @@ export default function App({ Component, pageProps }) {
 	}
 
 	useEffect(() => {
-		setStore(makeStore(canvas_id));
+		const [new_store, cleanUp] = makeStore(canvas_id);
+		setStore(new_store);
+
+		return () => {
+			cleanUp();
+		};
 	}, [canvas_id]);
 
 	return (
@@ -40,7 +45,7 @@ export default function App({ Component, pageProps }) {
 				<link rel="apple-touch-icon" href="/images/icon-512x512.png"></link>
 				<meta name="theme-color" content="#1b1b1d" />
 				{/* eslint-disable-next-line @next/next/no-sync-scripts */}
-				<script src="/primus/primus.js"></script>
+				<script src="https://drafting-canvas.uc.r.appspot.com/primus/primus.js"></script>
 			</Head>
 
 			<div id="scrub-cursor">
