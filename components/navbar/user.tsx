@@ -17,7 +17,7 @@ export default function User({ user }) {
 						cursor: default;
 						--margin: 10px;
 						font-size: 14px;
-						font-weight: 300;
+						font-weight: 500;
 						width: calc(var(--nav-height) - var(--margin));
 						height: calc(var(--nav-height) - var(--margin));
 						margin: calc(var(--margin) / 2) 5px;

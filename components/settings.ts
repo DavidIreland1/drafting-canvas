@@ -31,6 +31,9 @@ const Settings = {
 	pan: {
 		sensitivity: 1.5,
 	},
+	scroll: {
+		sensitivity: 0.1,
+	},
 	grid: {
 		enabled: true,
 		step: 1,
