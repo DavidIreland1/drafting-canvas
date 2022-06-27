@@ -1,5 +1,11 @@
+import { useEffect, useState } from 'react';
+
 export default function User({ user }) {
-	const names = user.label.split(' ');
+	const [_user, setUser] = useState({ label: '', color: '' });
+
+	useEffect(() => typeof window !== 'undefined' && setUser(user), [user]);
+
+	const names = _user.label.split(' ');
 
 	const abbreviation = names[0][0] + names.pop()[0];
 	return (
@@ -23,10 +29,11 @@ export default function User({ user }) {
 						border: 2px solid var(--nav);
 						overflow: hidden;
 						color: black;
+						opacity: 0.8;
 					}
 
 					#profile:hover {
-						border: 2px solid ${user.color};
+						opacity: 1;
 					}
 				`}
 			</style>
