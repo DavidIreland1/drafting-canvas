@@ -67,7 +67,7 @@ export function DOMToCanvas(position, canvas, view) {
 	};
 }
 
-export function CanvasToDOM(position, canvas, view) {
+export function canvasToDOM(position, canvas, view) {
 	const bounds = canvas.getBoundingClientRect();
 	return {
 		x: ((position.x + view.x) * view.scale) / window.devicePixelRatio + bounds.x,

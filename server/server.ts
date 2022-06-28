@@ -10,10 +10,16 @@ import next from 'next';
 
 // import Primus from './node_modules/redux-scuttlebutt/lib/primus.js';p
 const port = 8080;
-const app = next({ dev: process.env.NODE_ENV !== 'production' });
-const handle = app.getRequestHandler();
 
 async function server() {
+	let app;
+	try {
+		app = next({ dev: process.env.NODE_ENV !== 'production' });
+	} catch (error) {
+		console.log('next init error: ', error);
+	}
+	const handle = app.getRequestHandler();
+
 	try {
 		await app.prepare();
 	} catch (error) {

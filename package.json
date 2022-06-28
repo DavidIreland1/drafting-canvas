@@ -4,13 +4,14 @@
 	"private": true,
 	"scripts": {
 		"dev": "ts-node server/server",
-		"build": "next build",
+		"build": "next build && next export",
 		"gcp-build": "next build",
 		"export": "next export",
 		"start": "ts-node server/server",
 		"compile": "tsc server/server --skipLibCheck",
 		"deploy": "next build && gcloud app deploy --quiet",
 		"firebase": "firebase",
+		"logs": "gcloud app logs tail -s default",
 		"lint": "next lint"
 	},
 	"dependencies": {

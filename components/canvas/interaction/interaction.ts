@@ -37,7 +37,7 @@ function cursorRotation(target, position, cursor) {
 }
 
 // Needs refactor to use strategy design pattern
-export function singleClick(down_event, canvas, user_id, store, active) {
+export function mousedown(down_event, canvas, user_id, store, active) {
 	canvas.focus();
 	if (down_event.button !== 0) return;
 	if (active.selected.length) store.dispatch(actions.cursor({ user_id: user_id, pressed: true }));
@@ -127,65 +127,3 @@ function create(last_position, canvas, store, view, cursor, points) {
 
 	window.addEventListener('mouseup', release, { once: true });
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
-
-// // Gets the relevant location from a pointer or single touch event
-// function getEventLocation(event) {
-// 	if (event.touches && event.touches.length == 1) {
-// 		return { x: event.touches[0].clientX, y: event.touches[0].clientY };
-// 	} else if (event.clientX && event.clientY) {
-// 		return { x: event.clientX, y: event.clientY };
-// 	}
-// }
-
-// let isDragging = false;
-// let dragStart = { x: 0, y: 0 };
-
-// export function touch(event, view) {
-// 	isDragging = true;
-// 	dragStart.x = getEventLocation(event).x / view.scale - view.x;
-// 	dragStart.y = getEventLocation(event).y / view.scale - view.y;
-// }
-
-// export function release(event, view) {
-// 	isDragging = false;
-// 	initialPinchDistance = null;
-// 	// lastZoom = view.scale;
-// }
-
-// export function touchMove(event, view) {
-// 	if (isDragging) {
-// 		view.x = getEventLocation(event).x / view.scale - dragStart.x;
-// 		view.y = getEventLocation(event).y / view.scale - dragStart.y;
-// 	}
-// }
-
-// export function handleTouch(event, singleTouchHandler) {
-// 	if (event.touches.length == 1) {
-// 		singleTouchHandler(event);
-// 	} else if (event.type == 'touchmove' && event.touches.length == 2) {
-// 		isDragging = false;
-// 		handlePinch(event);
-// 	}
-// }
-
-// let initialPinchDistance = null;
-// // let lastZoom = view.scale;
-
-// export function handlePinch(event) {
-// 	let touch1 = { x: event.touches[0].clientX, y: event.touches[0].clientY };
-// 	let touch2 = { x: event.touches[1].clientX, y: event.touches[1].clientY };
-
-// 	// This is distance squared, but no need for an expensive sqrt as it's only used in ratio
-// 	let currentDistance = (touch1.x - touch2.x) ** 2 + (touch1.y - touch2.y) ** 2;
-
-// 	if (initialPinchDistance == null) {
-// 		initialPinchDistance = currentDistance;
-// 	} else {
-// 		// adjustZoom(null, currentDistance / initialPinchDistance);
-// 	}
-// }
