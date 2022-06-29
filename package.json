@@ -4,10 +4,10 @@
 	"private": true,
 	"scripts": {
 		"dev": "ts-node server/server",
-		"build": "next build && next export",
+		"build": "rm -rf ./build && NODE_ENV=production next build",
 		"gcp-build": "next build",
 		"export": "next export",
-		"start": "ts-node server/server",
+		"start": "next build && ts-node server/server",
 		"compile": "tsc server/server --skipLibCheck",
 		"deploy": "next build && gcloud app deploy --quiet",
 		"firebase": "firebase",
