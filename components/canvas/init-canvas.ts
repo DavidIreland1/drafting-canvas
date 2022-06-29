@@ -1,9 +1,11 @@
 import actions from '../../redux/slice';
-import { clamp, DOMToCanvas } from '../../utils/utils';
 import drop from './interaction/drop';
-import { hover, mousedown } from './interaction/interaction';
+import mousedown from './interaction/mousedown';
+import hover from './interaction/hover';
 import wheel from './interaction/wheel';
 import shortCuts from './short-cuts';
+
+import { touchstart, touchmove, touchend } from './touch/touch';
 
 export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, active) {
 	canvas.focus(); // Needed for react?
@@ -56,68 +58,3 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 // 		delta_scale: 1 - view.scale,
 // 	})
 // );
-
-let last_position = { x: 0, y: 0 };
-let last_distance = null;
-
-export function touchstart(event, canvas, store, user_id) {
-	event.preventDefault();
-	canvas.style.cursor = 'none';
-
-	const view = store.getState().present.views.find((view) => view.id === user_id);
-	const points = Array.from(event.touches).map((touch: Touch) => DOMToCanvas({ x: touch.clientX, y: touch.clientY }, canvas, view));
-	if (points.length === 1) {
-		last_position = points[0];
-	} else if (points.length > 1) {
-		last_distance = (points[0].x - points[1].x) ** 2 + (points[0].y - points[1].y) ** 2;
-	}
-}
-
-export function touchend(event, canvas, store, user_id) {
-	event.preventDefault();
-	canvas.style.cursor = undefined;
-}
-
-export function touchmove(event: TouchEvent, canvas, store, user_id) {
-	event.preventDefault();
-	const view = store.getState().present.views.find((view) => view.id === user_id);
-	const points = Array.from(event.touches).map((touch: Touch) => DOMToCanvas({ x: touch.clientX, y: touch.clientY }, canvas, view));
-
-	if (points.length === 1) {
-		store.dispatch(
-			actions.view({
-				user_id,
-				delta_x: points[0].x - last_position.x,
-				delta_y: points[0].y - last_position.y,
-			})
-		);
-		// last_position.x = point.x;
-		// last_position.y = point.y;
-	} else if (points.length > 1) {
-		const distance = (points[0].x - points[1].x) ** 2 + (points[0].y - points[1].y) ** 2;
-
-		const center = DOMToCanvas(
-			{
-				x: (points[0].x + points[1].x) / 2,
-				y: (points[0].y + points[1].y) / 2,
-			},
-			canvas,
-			view
-		);
-
-		const delta_scale = clamp(-0.1, 0.00003 * (distance - last_distance) * view.scale, 0.1);
-
-		console.log(delta_scale, view.scale);
-		if (last_distance !== null) {
-			store.dispatch(
-				actions.view({
-					user_id,
-					// delta_x: (center.x - view.x) * delta_scale,
-					// delta_y: (center.y - view.y) * delta_scale,
-					delta_scale: delta_scale,
-				})
-			);
-		}
-		last_distance = distance;
-	}
-}

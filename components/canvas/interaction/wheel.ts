@@ -44,6 +44,7 @@ export default function wheel(event: WheelEvent, canvas: HTMLCanvasElement, user
 		const delta_scale = clamp(view.scale - zoom.max, event.deltaY * zoom.sensitivity * view.scale * (event.metaKey || event.ctrlKey ? scroll.sensitivity * 0.1 : 1), view.scale - zoom.min);
 
 		const position = DOMToCanvas(event, canvas, view);
+
 		store.dispatch(
 			actions.view({
 				user_id: user_id,
