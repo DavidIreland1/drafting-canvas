@@ -35,7 +35,7 @@ export default function initStateSync(server, options = { primusOptions: {} }) {
 				users[spark.id] = data.user;
 				if (!documents[rooms[spark.id]]) documents[rooms[spark.id]] = openDocument(rooms[spark.id]);
 
-				console.log('add user: ', JSON.stringify(users[spark.id]), ' to: ', rooms[spark.id]);
+				console.log('adding user: ', JSON.stringify(users[spark.id]), ' to room: ', rooms[spark.id]);
 
 				addUser(spark, rooms[spark.id], users[spark.id]);
 			} else if (data.action === 'leave') {
@@ -55,13 +55,13 @@ export default function initStateSync(server, options = { primusOptions: {} }) {
 function openDocument(room) {
 	const gossip = new Dispatcher({});
 
-	console.log('Loading Room: ', room);
+	console.log('Loading room: ', room);
 
 	const { store, dispatch, getState } = connectRedux(gossip, undefined);
 
 	load(room).then((document_state) => {
 		if (document_state) {
-			console.log('Adding State to doc: ', room);
+			console.log('Loaded last state for room: ', room);
 			dispatch({
 				type: 'action/overwrite',
 				payload: {

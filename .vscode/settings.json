@@ -11,5 +11,5 @@
 	"prettier.jsxBracketSameLine": true,
 	"prettier.useEditorConfig": false,
 	"editor.formatOnSave": true,
-	"cSpell.words": ["appspot", "firebaseapp"]
+	"cSpell.words": ["appspot", "firebaseapp", "firestore"]
 }

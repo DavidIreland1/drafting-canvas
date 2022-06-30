@@ -11,31 +11,30 @@ import next from 'next';
 // import Primus from './node_modules/redux-scuttlebutt/lib/primus.js';p
 const port = 8080;
 
-async function server() {
-	let app;
-	try {
-		app = next({ dev: process.env.NODE_ENV !== 'production' });
-	} catch (error) {
-		console.log('next init error: ', error);
-	}
-	const handle = app.getRequestHandler();
+const is_dev = process.env.NODE_ENV !== 'production';
 
-	try {
+async function initServer() {
+	console.log('Initializing server in mode: ', is_dev ? 'development' : 'production');
+	if (is_dev) {
+		const app = next({ dev: process.env.NODE_ENV !== 'production' });
+		const handle = app.getRequestHandler();
 		await app.prepare();
-	} catch (error) {
-		console.log('prepare error: ', error);
-	}
 
-	let server;
-
-	try {
-		server = createServer((req, res) => {
+		return createServer((req, res) => {
 			const url = parse(req.url, true);
 			handle(req, res, url);
 		});
-	} catch (error) {
-		console.log('create server error: ', error);
+	} else {
+		return createServer((req, res) => {
+			res.writeHead(200, { 'Content-Type': 'text/plain' });
+			res.write('Drafting Canvas State Sync Production Server Can Only Be Used For Web Socket Connections');
+			res.end();
+		});
 	}
+}
+
+async function serve() {
+	const server = await initServer();
 
 	server.listen(port, async () => {
 		console.log('> Ready on this http://localhost:' + port);
@@ -44,4 +43,4 @@ async function server() {
 	});
 }
 
-server();
+serve();
