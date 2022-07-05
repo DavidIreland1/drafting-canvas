@@ -13,12 +13,14 @@ export default function wheel(event: WheelEvent, canvas: HTMLCanvasElement, user
 
 	const is_pan = String(event.deltaY).length < 5;
 
-	if ((is_pan || is_mouse_wheel) && !(event.metaKey || event.ctrlKey)) {
+	const zoom_key = event.metaKey || event.ctrlKey;
+
+	if (zoom_key === false && (is_pan || is_mouse_wheel)) {
 		// Pan
 		const cursor = state.cursors.find((cursor) => user_id === cursor.id);
 
-		let delta_x = event.shiftKey ? event.deltaY : event.deltaX;
-		let delta_y = event.shiftKey ? event.deltaX : event.deltaY;
+		let delta_x = is_mouse_wheel && event.shiftKey ? event.deltaY : event.deltaX;
+		let delta_y = is_mouse_wheel && event.shiftKey ? event.deltaX : event.deltaY;
 
 		if (is_mouse_wheel) {
 			// Mouse Wheel
@@ -41,7 +43,9 @@ export default function wheel(event: WheelEvent, canvas: HTMLCanvasElement, user
 		);
 	} else {
 		// Zoom
-		const delta_scale = clamp(view.scale - zoom.max, event.deltaY * zoom.sensitivity * view.scale * (event.metaKey || event.ctrlKey ? scroll.sensitivity * 0.1 : 1), view.scale - zoom.min);
+		const sensitivity = is_mouse_wheel ? scroll.sensitivity * 0.1 : 1;
+
+		const delta_scale = clamp(view.scale - zoom.max, event.deltaY * zoom.sensitivity * view.scale * sensitivity, view.scale - zoom.min);
 
 		const position = DOMToCanvas(event, canvas, view);
 
