@@ -1,3 +1,4 @@
+import { View } from '../../../types/user-types';
 import Element from './element';
 import Elements from './elements';
 
@@ -12,7 +13,7 @@ export default class Frame extends Element {
 		});
 	}
 
-	static draw(frame, context, cursor, view) {
+	static draw(frame, context, cursor, view: View) {
 		const hover = Element.draw(frame, context, cursor, view);
 		const path = this.path(frame);
 		context.save();

@@ -1,12 +1,14 @@
 import Elements from './elements/elements';
+import { View } from './../../types/user-types';
+import Settings from '../settings';
 
-export default function crosses(context, elements, selected, view) {
+export default function crosses(context, elements, selected, view: View) {
 	context.beginPath();
 
 	const selected_points = selected.map((element) => Elements[element.type].points(element)).flat();
 
 	const size = 3 / view.scale;
-	context.strokeStyle = '#F55';
+	context.strokeStyle = Settings.cross.color;
 	context.lineWidth = 1 / view.scale;
 
 	elements

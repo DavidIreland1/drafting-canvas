@@ -1,3 +1,4 @@
+import { View } from '../../../types/user-types';
 import Element from './element';
 
 export default class Line extends Element {
@@ -20,7 +21,7 @@ export default class Line extends Element {
 		return path;
 	}
 
-	static draw(line, context: CanvasRenderingContext2D, cursor, view) {
+	static draw(line, context: CanvasRenderingContext2D, cursor, view: View) {
 		const path = this.path(line);
 		context.lineWidth = this.stroke(line, context, path);
 		return context.isPointInStroke(path, cursor.x, cursor.y) ? line : undefined;

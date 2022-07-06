@@ -55,7 +55,12 @@ export default function shortCuts(event, store): boolean {
 			return true;
 
 		case 'd':
-			download('store', store.getState().present);
+			const state = store.getState().present;
+			const content = {
+				elements: state.elements,
+				page: state.page,
+			};
+			download(state.page.label || 'Untitled', content);
 			return true;
 
 		default:

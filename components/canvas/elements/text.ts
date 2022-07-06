@@ -1,5 +1,6 @@
 import Element from './element';
 import Colors from './../../properties/colors';
+import { View } from '../../../types/user-types';
 
 export default class Text extends Element {
 	static create(id, position, selected) {
@@ -61,7 +62,7 @@ export default class Text extends Element {
 		);
 	}
 
-	static effect(element, context: CanvasRenderingContext2D, path: Path2D, before, view) {
+	static effect(element, context: CanvasRenderingContext2D, path: Path2D, before, view: View) {
 		const bounds = this.bound(element);
 		const lines = breakText(element, context, bounds.width);
 		const offsets = calculateOffsets(element, context, bounds.width, bounds.height, lines);
@@ -82,7 +83,7 @@ export default class Text extends Element {
 			});
 	}
 
-	static draw(text, context: CanvasRenderingContext2D, cursor, view) {
+	static draw(text, context: CanvasRenderingContext2D, cursor, view: View) {
 		// if (text.editing) return false;
 		const center = this.center(text);
 		const path = this.path(text);

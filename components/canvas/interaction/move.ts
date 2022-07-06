@@ -3,15 +3,16 @@ import Elements from '../elements/elements';
 import actions from '../../../redux/slice';
 import { roundPoint } from './round-point';
 import { DOMToCanvas, split } from '../../../utils/utils';
+import { View } from '../../../types/user-types';
 
-export default function move(canvas, store, view, target, last_position, down_event) {
+export default function move(canvas, store, view: View, target, last_position, down_event) {
 	const move = (move_event) => {
 		let position = DOMToCanvas(move_event, canvas, view);
 
 		const state = store.getState().present;
-		let [, points] = split(state.elements, (element) => element.selected).map((elements) => elements.map((element) => Elements[element.type].points(element)).flat());
+		const [selected_points, points] = split(state.elements, (element) => element.selected).map((elements) => elements.map((element) => Elements[element.type].points(element)).flat());
 
-		position = roundPoint(position, [] /*selected_points*/, points, view);
+		position = roundPoint(position, [selected_points], points, view);
 
 		const selected_ids = state.elements.filter((element) => element.selected).map((element) => element.id);
 

@@ -1,3 +1,5 @@
+import { View } from '../types/user-types';
+
 export function round(number: number, decimals: number): number {
 	return Math.round(number * 10 ** decimals) / 10 ** decimals;
 }
@@ -29,7 +31,7 @@ export function transformPoint(point: { x: number; y: number }, transform: { a: 
 	};
 }
 
-export function screenBounds(context: CanvasRenderingContext2D, view: { x: number; y: number; scale: number }): { x1: number; y1: number; x2: number; y2: number } {
+export function screenBounds(context: CanvasRenderingContext2D, view: View): { x1: number; y1: number; x2: number; y2: number } {
 	return {
 		x1: -view.x / view.scale,
 		y1: -view.y / view.scale,
@@ -59,7 +61,7 @@ export function split(array: Array<any>, comparison: Function): [Array<any>, Arr
 	return array.reduce(([pass, fail], element) => (comparison(element) ? [[...pass, element], fail] : [pass, [...fail, element]]), [[], []]);
 }
 
-export function DOMToCanvas(position, canvas, view) {
+export function DOMToCanvas(position, canvas, view: View) {
 	const bounds = canvas.getBoundingClientRect();
 	return {
 		x: ((position.x - bounds.x) * window.devicePixelRatio - view.x) / view.scale,
@@ -67,7 +69,7 @@ export function DOMToCanvas(position, canvas, view) {
 	};
 }
 
-export function canvasToDOM(position, canvas, view) {
+export function canvasToDOM(position, canvas, view: View) {
 	const bounds = canvas.getBoundingClientRect();
 	return {
 		x: ((position.x + view.x) * view.scale) / window.devicePixelRatio + bounds.x,

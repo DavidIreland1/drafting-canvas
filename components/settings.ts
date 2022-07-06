@@ -21,8 +21,10 @@ const Settings = {
 		size: 4 * device_pixel_ratio,
 		color: '#fff',
 	},
+	cross: {
+		color: '#F55',
+	},
 	highlight: '#0084ff',
-
 	zoom: {
 		max: 500,
 		min: 0.0001,

@@ -15,7 +15,7 @@ export default function Element({ store, element, indentation, restructure }) {
 		} else if (event.shiftKey) {
 			store.dispatch(actions.select({ id: element.id }));
 		} else {
-			store.dispatch(actions.selectOnly({ select: [element.id] }));
+			store.dispatch(actions.selectOnly({ id: element.id }));
 		}
 	};
 
