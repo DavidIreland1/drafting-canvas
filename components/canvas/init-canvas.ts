@@ -1,6 +1,6 @@
 import actions from '../../redux/slice';
 import drop from './interaction/drop';
-import mousedown from './interaction/mousedown';
+import mouseDown from './interaction/mouse-down';
 import hover from './interaction/hover';
 import wheel from './interaction/wheel';
 import shortCuts from './short-cuts';
@@ -30,7 +30,7 @@ export default function initCanvas(canvas: HTMLCanvasElement, user_id, store, ac
 		wheel: (event) => wheel(event, canvas, user_id, store),
 		drop: (event) => drop(event, canvas, store, user_id),
 		mouseover: () => store.dispatch(actions.cursor({ user_id, visible: true })),
-		mousedown: (event) => mousedown(event, canvas, user_id, store, active),
+		mousedown: (event) => mouseDown(event, canvas, user_id, store, active),
 		mousemove: (event) => hover(event, canvas, store, user_id, active),
 		mouseup: () => store.dispatch(actions.cursor({ user_id, pressed: false })),
 		mouseout: () => store.dispatch(actions.cursor({ user_id, visible: false })),

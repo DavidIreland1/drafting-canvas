@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import Background from './background';
 import Dimensions from './dimensions';
+import Points from './points';
 import Fill from './fill';
 import Stroke from './stroke';
 import Effects from './effects';
@@ -13,13 +14,20 @@ export default function Properties({ store, setPicker, fonts }) {
 		(a, b) => JSON.stringify(a) === JSON.stringify(b)
 	);
 
+	const editing = selected.filter((element) => element.editing);
+
 	return (
 		<div id="container">
 			{selected.length === 0 ? (
 				<Background store={store} setPicker={setPicker}></Background>
 			) : (
 				<>
-					<Dimensions selected={selected} store={store} />
+					{editing.length === 0 ? (
+						<Dimensions selected={selected} store={store} />
+					) : (
+						// <div>Point stuff</div>
+						<Points editing={editing} store={store} />
+					)}
 					<Text selected={selected} store={store} fonts={fonts} />
 					<Fill selected={selected} store={store} setPicker={setPicker} />
 					<Stroke selected={selected} store={store} setPicker={setPicker} />

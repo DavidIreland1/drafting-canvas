@@ -55,7 +55,7 @@ export default function Text({ selected, store, fonts }) {
 			<div className="property-heading">
 				<h4>TEXT</h4>
 			</div>
-			<div id="properties">
+			<div className="properties">
 				<DataList id="family" label="Font Family" value={selected[0].family} onChange={updateFont}>
 					{fonts.map((font, i) => (
 						<option key={i} value={font.family} />
@@ -121,16 +121,6 @@ export default function Text({ selected, store, fonts }) {
 			<div className="divider" />
 
 			<style jsx>{`
-				#properties {
-					display: grid;
-					gap: 8px;
-					height: min-content;
-					width: fit-content;
-					width: 100%;
-					box-sizing: border-box;
-					padding: 0 10px;
-					overflow: hidden;
-				}
 				svg {
 					fill: none;
 					stroke: var(--text);

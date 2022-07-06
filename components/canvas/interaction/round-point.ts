@@ -1,4 +1,6 @@
-export function roundPoint(point, selected_points, points, view) {
+import { View } from '../../../types/user-types';
+
+export function roundPoint(point, selected_points, points, view: View) {
 	if (selected_points.length === 0 || points.length === 0)
 		return {
 			x: Math.round(point.x),

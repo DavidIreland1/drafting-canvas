@@ -1,3 +1,4 @@
+import { Point } from '../../../types/element-types';
 import Element from './element';
 
 export default class Ellipse extends Element {
@@ -13,7 +14,7 @@ export default class Ellipse extends Element {
 		});
 	}
 
-	static makePoints(id, x, y, width, height, radius) {
+	static makePoints(id, x, y, width, height, radius): Array<Point> {
 		const kappa = 0.5522848; // Constant to define a ellipse with bezier curves
 
 		const middle_y = y + height / 2;
@@ -26,8 +27,8 @@ export default class Ellipse extends Element {
 				y: middle_y,
 				radius,
 				controls: [
-					{ x: x + width, y: middle_y + control_y },
-					{ x: x + width, y: middle_y - control_y },
+					{ x: x + width, y: middle_y + control_y, selected: false },
+					{ x: x + width, y: middle_y - control_y, selected: false },
 				],
 			},
 			{
@@ -35,8 +36,8 @@ export default class Ellipse extends Element {
 				y: y + height,
 				radius,
 				controls: [
-					{ x: middle_x - control_x, y: y + height },
-					{ x: middle_x + control_x, y: y + height },
+					{ x: middle_x - control_x, y: y + height, selected: false },
+					{ x: middle_x + control_x, y: y + height, selected: false },
 				],
 			},
 			{
@@ -44,8 +45,8 @@ export default class Ellipse extends Element {
 				y: middle_y,
 				radius,
 				controls: [
-					{ x: x, y: middle_y - control_y },
-					{ x: x, y: middle_y + control_y },
+					{ x: x, y: middle_y - control_y, selected: false },
+					{ x: x, y: middle_y + control_y, selected: false },
 				],
 			},
 			{
@@ -53,11 +54,11 @@ export default class Ellipse extends Element {
 				y: y,
 				radius,
 				controls: [
-					{ x: middle_x + control_x, y: y },
-					{ x: middle_x - control_x, y: y },
+					{ x: middle_x + control_x, y: y, selected: false },
+					{ x: middle_x - control_x, y: y, selected: false },
 				],
 			},
-		].map((point, i) => ({ ...point, id: id + i, relation: 'Mirror angle and length' }));
+		].map((point, i) => ({ ...point, id: id + i, selected: false, relation: 'Mirror angle and length' }));
 	}
 
 	// TODO: See if we can merge this with rounded poly

@@ -5,11 +5,12 @@ import Rotate from './rotate';
 import Create from './create';
 
 import Settings from './../settings';
+import { View } from '../../types/user-types';
 
 const Cursors = {
 	select: Select,
 	move: Select,
-	edit: Select,
+	movePoints: Select,
 
 	pen: Select,
 
@@ -28,10 +29,10 @@ const Cursors = {
 };
 
 export default class Cursor {
-	static draw(cursor, context, view) {
+	static draw(cursor, context, view: View) {
 		const scale = (view.scale / window.devicePixelRatio) * 2;
 		if (cursor.id === Settings.user.id) {
-			if (cursor.type === 'select') {
+			if (Cursors[cursor.type] === Select) {
 				context.canvas.style.cursor = '';
 			} else {
 				context.canvas.style.cursor = 'none';

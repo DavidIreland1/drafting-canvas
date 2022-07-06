@@ -11,9 +11,6 @@ let last_center = null;
 export function touchstart(event, canvas, store, user_id) {
 	event.preventDefault();
 	canvas.style.cursor = 'none';
-
-	const view = store.getState().present.views.find((view) => view.id === user_id);
-	// const points = Array.from(event.touches).map((touch: Touch) => DOMToCanvas({ x: touch.clientX, y: touch.clientY }, canvas, view));
 	const points = Array.from(event.touches).map((touch: Touch) => ({ x: touch.clientX, y: touch.clientY }));
 	if (points.length === 1) {
 		last_position = points[0];

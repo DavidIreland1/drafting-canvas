@@ -1,3 +1,4 @@
+import { View } from './../../../types/user-types';
 import Line from './line';
 
 export default class Arrow extends Line {
@@ -8,7 +9,7 @@ export default class Arrow extends Line {
 		});
 	}
 
-	static draw(arrow, context: CanvasRenderingContext2D, cursor, view) {
+	static draw(arrow, context: CanvasRenderingContext2D, cursor, view: View) {
 		const theta = Math.atan2(arrow.y2 - arrow.y1, arrow.x2 - arrow.x1);
 
 		const path = new Path2D();

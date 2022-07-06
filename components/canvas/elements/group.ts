@@ -1,3 +1,4 @@
+import { View } from '../../../types/user-types';
 import Element from './element';
 import Elements from './elements';
 
@@ -8,7 +9,7 @@ export default class Group extends Element {
 		});
 	}
 
-	static draw(group, context, cursor, view) {
+	static draw(group, context, cursor, view: View) {
 		const hovering = group.elements
 			.filter((element) => element.visible)
 			.reverse()

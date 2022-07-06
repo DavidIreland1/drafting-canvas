@@ -4,7 +4,7 @@ export default function Input({ id, label, value, type = 'number', step = 1, min
 	const input = useRef(null);
 	const [cursor, setCursor] = useState({ x: 0, y: 0 });
 
-	if (value === undefined) return null;
+	// if (value === undefined) return null;
 
 	const updateValue = (event) => {
 		event.target.id = id;

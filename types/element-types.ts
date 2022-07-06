@@ -30,12 +30,19 @@ export type Effect = {
 	visible: boolean;
 };
 
-export type Point = {
-	id: string;
+export type Dot = {
 	x: number;
 	y: number;
-	relation: string;
-	controls: Array<{ x: number; y: number }>;
+	selected: boolean;
+};
+
+export type Point = {
+	id: string;
+	selected: boolean;
+	x: number;
+	y: number;
+	relation: 'Mirror angle and length' | 'Mirror angle' | 'No mirroring';
+	controls: Array<Dot>;
 };
 
 export type ElementType = {

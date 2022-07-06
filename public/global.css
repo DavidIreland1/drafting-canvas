@@ -108,6 +108,23 @@ h4 {
 	background-position: 0 0, 0.3em 0.3em;
 	background-size: calc(0.3em * 2) calc(0.3em * 2);
 }
+
+.properties {
+	display: grid;
+	gap: 8px;
+	height: min-content;
+	width: fit-content;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0 10px;
+	overflow: hidden;
+
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0 10px;
+	overflow: hidden;
+}
+
 .property-color {
 	position: absolute;
 	width: 1.5em;

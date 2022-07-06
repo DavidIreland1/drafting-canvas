@@ -36,7 +36,7 @@ export default function Dimensions({ selected, store }) {
 			<div className="property-heading">
 				<h4>DIMENSIONS</h4>
 			</div>
-			<div id="properties">
+			<div className="properties">
 				<Input id="x" label="X" value={bounds.x} onChange={updateDimension} />
 				<Input id="y" label="Y" value={bounds.y} onChange={updateDimension} />
 
@@ -69,15 +69,8 @@ export default function Dimensions({ selected, store }) {
 				/>
 			</div>
 			<style jsx>{`
-				#properties {
-					display: grid;
-					gap: 8px;
+				.properties {
 					grid-template-columns: auto auto;
-					height: min-content;
-					width: 100%;
-					box-sizing: border-box;
-					padding: 0 10px;
-					overflow: hidden;
 				}
 				svg {
 					fill: none;

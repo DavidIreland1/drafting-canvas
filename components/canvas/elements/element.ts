@@ -1,5 +1,6 @@
+import { View } from './../../../types/user-types';
 import { Bound, Position } from '../../../types/box-types';
-import { Effect, ElementType, Fill, Stroke } from '../../../types/element-types';
+import { Effect, ElementType, Fill, Point, Stroke } from '../../../types/element-types';
 import { reflectPoint, rotatePoint } from '../../../utils/utils';
 import boundBezier from '../bound-bezier';
 import roundedPoly from '../rounded-poly';
@@ -27,13 +28,13 @@ export default class Element {
 		};
 	}
 
-	static makePoints(id, x, y, width, height, radius) {
+	static makePoints(id, x, y, width, height, radius): Array<Point> {
 		return [
 			{ x: x, y: y },
 			{ x: x + width, y: y },
 			{ x: x + width, y: y + height },
 			{ x: x, y: y + height },
-		].map((point, i) => ({ ...point, id: id + i, radius, relation: 'Mirror angle and length', controls: [] }));
+		].map((point, i) => ({ ...point, id: id + i, selected: true, radius, relation: 'Mirror angle and length', controls: [] }));
 	}
 
 	static path(element): Path2D {
@@ -92,7 +93,7 @@ export default class Element {
 		);
 	}
 
-	static underEffect(element, context: CanvasRenderingContext2D, path: Path2D, view) {
+	static underEffect(element, context: CanvasRenderingContext2D, path: Path2D, view: View) {
 		const center = this.center(element);
 		element.effect
 			.filter((effect) => effect.visible)
@@ -112,7 +113,7 @@ export default class Element {
 			});
 	}
 
-	static overEffect(element, context: CanvasRenderingContext2D, path: Path2D, view) {
+	static overEffect(element, context: CanvasRenderingContext2D, path: Path2D, view: View) {
 		const center = this.center(element);
 		element.effect
 			.filter((effect) => effect.visible)
@@ -135,7 +136,7 @@ export default class Element {
 			});
 	}
 
-	static draw(element, context: CanvasRenderingContext2D, cursor, view): any {
+	static draw(element, context: CanvasRenderingContext2D, cursor, view: View): any {
 		const path = this.path(element);
 		this.underEffect(element, context, path, view);
 		this.fill(element, context, path);
@@ -316,17 +317,16 @@ export default class Element {
 	}
 
 	static drawPoints(element, context: CanvasRenderingContext2D, cursor, color: string, line: number, box_size: number, box_color: string) {
-		context.strokeStyle = color;
-		context.lineWidth = line;
 		const diamond_size = box_size * 0.7;
+		context.lineWidth = line;
 
 		const hovering = Elements[element.type]
 			.getPoints(element)
 			.map((point) => {
-				context.fillStyle = box_color;
-				const control = point.controls
+				const control_index = point.controls
 					.map((control, i) => {
 						const angle = Math.atan2(control.y - point.y, control.x - point.x) - Math.PI / 4;
+						context.strokeStyle = color;
 						context.beginPath();
 						context.moveTo(point.x, point.y);
 						context.lineTo(control.x, control.y);
@@ -338,7 +338,8 @@ export default class Element {
 						context.rotate(-angle);
 						context.translate(-control.x, -control.y);
 						const hovering = context.isPointInPath(cursor.x, cursor.y);
-						context.fillStyle = hovering ? color : box_color;
+						context.fillStyle = control.selected ? color : box_color;
+						context.strokeStyle = hovering || control.selected ? 'white' : color;
 						context.fill();
 						context.stroke();
 						if (hovering) return i;
@@ -350,50 +351,78 @@ export default class Element {
 				context.moveTo(point.x + box_size, point.y);
 				context.arc(point.x, point.y, box_size, 0, 2 * Math.PI);
 				const hovering = context.isPointInPath(cursor.x, cursor.y);
-				context.fillStyle = hovering ? color : box_color;
+				context.fillStyle = point.selected ? color : box_color;
+				context.strokeStyle = hovering || point.selected ? 'white' : color;
 				context.fill();
 				context.stroke();
-
-				if (hovering || control !== undefined) return { ...point, control }; //can replace this for index
+				if (hovering || control_index !== undefined) return { ...point, control_index }; // can replace this for index
 			})
 			.filter((point) => point)
 			.pop();
-		return hovering ? { element, action: 'edit', point: hovering } : undefined;
+
+		return hovering ? { element, action: 'movePoints', point: hovering } : undefined;
 	}
 
-	static edit(element: ElementType, position: Position, last_position: Position, point) {
+	static movePoints(element: ElementType, position: Position, last_position: Position, point_ids: Array<string>, control_indexes) {
 		const delta_x = position.x - last_position.x;
 		const delta_y = position.y - last_position.y;
 
-		const point2 = Elements[element.type].getPoints(element).find((p) => p.id === point.id);
-		if (point.control !== undefined) {
-			const control = point2.controls[point.control];
-			const opposite = point2.controls[point.control === 0 ? 1 : 0];
-			control.x += delta_x;
-			control.y += delta_y;
+		const points = Elements[element.type].getPoints(element).filter((point) => point_ids.includes(point.id));
+		console.log('points', points);
+		points.forEach((point, i) => {
+			const selected = control_indexes[i];
 
-			if (point2.relation === 'Mirror angle and length') {
-				const reflected = reflectPoint(point2.controls[point.control], point2);
-				opposite.x = reflected.x;
-				opposite.y = reflected.y;
-			} else if (point2.relation === 'Mirror angle') {
-				const distance = Math.sqrt((opposite.x - point2.x) ** 2 + (opposite.y - point2.y) ** 2);
-				const new_angle = Math.PI / 2 - Math.atan2(point2.x - control.x, point2.y - control.y);
-				opposite.x = point2.x + distance * Math.cos(new_angle);
-				opposite.y = point2.y + distance * Math.sin(new_angle);
-			}
-		} else {
-			point2.x += delta_x;
-			point2.y += delta_y;
+			console.log('selected', selected);
 
-			Elements[element.type]
-				.getPoints(element)
-				.find((p) => p.id === point.id)
-				.controls.forEach((control) => {
+			if (selected[0]) {
+				point.x += delta_x;
+				point.y += delta_y;
+
+				point.controls.forEach((control) => {
 					control.x += delta_x;
 					control.y += delta_y;
 				});
-		}
+			} else {
+				if (selected[1]) {
+					point.controls[0].x += delta_x;
+					point.controls[0].y += delta_y;
+				}
+				if (selected[2]) {
+					point.controls[1].x += delta_x;
+					point.controls[1].y += delta_y;
+				}
+			}
+		});
+		// points.forEach((point) => {
+		// if (point.control !== undefined) {
+		// 	const control = point2.controls[point.control];
+		// 	const opposite = point2.controls[point.control === 0 ? 1 : 0];
+		// 	control.x += delta_x;
+		// 	control.y += delta_y;
+
+		// 	if (point2.relation === 'Mirror angle and length') {
+		// 		const reflected = reflectPoint(point2.controls[point.control], point2);
+		// 		opposite.x = reflected.x;
+		// 		opposite.y = reflected.y;
+		// 	} else if (point2.relation === 'Mirror angle') {
+		// 		const distance = Math.sqrt((opposite.x - point2.x) ** 2 + (opposite.y - point2.y) ** 2);
+		// 		const new_angle = Math.PI / 2 - Math.atan2(point2.x - control.x, point2.y - control.y);
+		// 		opposite.x = point2.x + distance * Math.cos(new_angle);
+		// 		opposite.y = point2.y + distance * Math.sin(new_angle);
+		// 	}
+		// } else {
+		// point.x += delta_x;
+		// point.y += delta_y;
+
+		// Elements[element.type]
+		// 	.getPoints(element)
+		// 	.find((p) => p.id === point.id)
+		// 	.controls.forEach((control) => {
+		// 		control.x += delta_x;
+		// 		control.y += delta_y;
+		// 	});
+		// }
+		// });
 	}
 
 	static center(element: ElementType): Position {
