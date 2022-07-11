@@ -61,7 +61,23 @@ export default function Sheet({ store }) {
 		event.target.addEventListener('pointerup', stop, { once: true });
 	}
 
-	if (!ui_visible) return <Canvas ref={canvas} user_id={Settings.user.id} store={store} toggleUI={toggleUI} />;
+	if (!ui_visible)
+		return (
+			<div id="sheet">
+				<Canvas ref={canvas} user_id={Settings.user.id} store={store} toggleUI={toggleUI} />
+				<style jsx>{`
+					#sheet {
+						position: absolute;
+						top: 0;
+						left: 0;
+						height: 100vh;
+						width: 100vw;
+						--nav-height: 0px;
+						--gap: 0px;
+					}
+				`}</style>
+			</div>
+		);
 
 	return (
 		<div id="sheet">

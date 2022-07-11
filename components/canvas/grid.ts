@@ -29,7 +29,9 @@ export default class Grid {
 
 		context.fillStyle = 'transparent';
 		context.shadowColor = 'transparent';
-		context.strokeStyle = `rgba(0, 0, 0, ${0.1 * (view.scale - grid.min_scale)})`;
+
+		const color = true ? 255 : 0;
+		context.strokeStyle = `rgba(${color}, ${color}, ${color}, ${0.1 * (view.scale - grid.min_scale)})`;
 		context.lineWidth = Math.max(grid.line_width / view.scale, 0.1);
 		context.stroke();
 	}
