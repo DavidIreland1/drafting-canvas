@@ -113,9 +113,9 @@ function StrokeInput({ stroke, setPicker, selected_ids, store }) {
 			<div className="grid">
 				<Input id="width" label="W" value={stroke.width} min={0} step={0.1} onChange={(event) => changeWidth(event, stroke, selected_ids, store)} />
 				<Select id="type" value={stroke.type} onChange={(event) => changeType(event, stroke, selected_ids, store)}>
-					<option value="Inside">Inside</option>
-					<option value="Center">Center</option>
-					<option value="Outside">Outside</option>
+					<option>Inside</option>
+					<option>Center</option>
+					<option>Outside</option>
 				</Select>
 			</div>
 

@@ -53,7 +53,10 @@ const tools = {
 		if (element) {
 			element.selected = false;
 			element.editing = false;
-			Elements[element.type].getPoints(element).forEach((point) => (point.selected = false));
+			Elements[element.type].getPoints(element).forEach((point) => {
+				point.selected = false;
+				point.controls.forEach((control) => (control.selected = false));
+			});
 		}
 	},
 	selectAll: (state) => {
@@ -63,7 +66,18 @@ const tools = {
 		flatten(state.elements).forEach((element) => {
 			element.selected = false;
 			element.editing = false;
-			Elements[element.type].getPoints(element).forEach((point) => (point.selected = false));
+			Elements[element.type].getPoints(element).forEach((point) => {
+				point.selected = false;
+				point.controls.forEach((control) => (control.selected = false));
+			});
+		});
+	},
+	unselectAllPoints: (state) => {
+		flatten(state.elements).forEach((element) => {
+			Elements[element.type].getPoints(element).forEach((point) => {
+				point.selected = false;
+				point.controls.forEach((control) => (control.selected = false));
+			});
 		});
 	},
 	editOnly: (state, props) => {

@@ -8,8 +8,11 @@ export default function User({ user }) {
 	const names = _user.label.split(' ');
 
 	const abbreviation = names[0][0] + names.pop()[0];
+
+	if (_user.label === '') return <></>;
+
 	return (
-		<div id="profile" title={user.label}>
+		<div id="profile" title={_user.label}>
 			{abbreviation}
 			<style jsx>
 				{`

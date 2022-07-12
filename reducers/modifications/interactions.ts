@@ -44,6 +44,16 @@ const interactions = {
 		const { position, last_position, editing_ids, point_ids, control_indexes } = props.payload;
 		selected(state.elements, editing_ids).forEach((element) => Elements[element.type].movePoints(element, position, last_position, point_ids, control_indexes));
 	},
+	pointRelation: (state, props) => {
+		const { editing_ids, point_ids, relation } = props.payload;
+		const editing = selected(state.elements, editing_ids);
+		editing.forEach((element) => {
+			Elements[element.type].getPoints(element).forEach((point) => {
+				if (point_ids.includes(point.id)) point.relation = relation;
+			});
+		});
+	},
+
 	createElements: (state, props) => {
 		flatten(state.elements).forEach((element) => {
 			element.selected = false;

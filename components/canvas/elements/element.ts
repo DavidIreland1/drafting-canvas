@@ -368,13 +368,9 @@ export default class Element {
 		const delta_y = position.y - last_position.y;
 
 		const points = Elements[element.type].getPoints(element).filter((point) => point_ids.includes(point.id));
-		console.log('points', points);
+
 		points.forEach((point, i) => {
-			const selected = control_indexes[i];
-
-			console.log('selected', selected);
-
-			if (selected[0]) {
+			if (control_indexes[i][0]) {
 				point.x += delta_x;
 				point.y += delta_y;
 
@@ -382,47 +378,25 @@ export default class Element {
 					control.x += delta_x;
 					control.y += delta_y;
 				});
-			} else {
-				if (selected[1]) {
-					point.controls[0].x += delta_x;
-					point.controls[0].y += delta_y;
-				}
-				if (selected[2]) {
-					point.controls[1].x += delta_x;
-					point.controls[1].y += delta_y;
+			} else if (control_indexes[i][1] || control_indexes[i][2]) {
+				const selected_control = control_indexes[i][1] ? point.controls[0] : point.controls[1];
+				const opposite_control = control_indexes[i][1] ? point.controls[1] : point.controls[0];
+
+				selected_control.x += delta_x;
+				selected_control.y += delta_y;
+
+				if (point.relation === 'Mirror angle and length') {
+					const reflected = reflectPoint(selected_control, point);
+					opposite_control.x = reflected.x;
+					opposite_control.y = reflected.y;
+				} else if (point.relation === 'Mirror angle') {
+					const angle = Math.PI / 2 - Math.atan2(point.x - selected_control.x, point.y - selected_control.y);
+					const distance = Math.sqrt((opposite_control.x - point.x) ** 2 + (opposite_control.y - point.y) ** 2);
+					opposite_control.x = point.x + distance * Math.cos(angle);
+					opposite_control.y = point.y + distance * Math.sin(angle);
 				}
 			}
 		});
-		// points.forEach((point) => {
-		// if (point.control !== undefined) {
-		// 	const control = point2.controls[point.control];
-		// 	const opposite = point2.controls[point.control === 0 ? 1 : 0];
-		// 	control.x += delta_x;
-		// 	control.y += delta_y;
-
-		// 	if (point2.relation === 'Mirror angle and length') {
-		// 		const reflected = reflectPoint(point2.controls[point.control], point2);
-		// 		opposite.x = reflected.x;
-		// 		opposite.y = reflected.y;
-		// 	} else if (point2.relation === 'Mirror angle') {
-		// 		const distance = Math.sqrt((opposite.x - point2.x) ** 2 + (opposite.y - point2.y) ** 2);
-		// 		const new_angle = Math.PI / 2 - Math.atan2(point2.x - control.x, point2.y - control.y);
-		// 		opposite.x = point2.x + distance * Math.cos(new_angle);
-		// 		opposite.y = point2.y + distance * Math.sin(new_angle);
-		// 	}
-		// } else {
-		// point.x += delta_x;
-		// point.y += delta_y;
-
-		// Elements[element.type]
-		// 	.getPoints(element)
-		// 	.find((p) => p.id === point.id)
-		// 	.controls.forEach((control) => {
-		// 		control.x += delta_x;
-		// 		control.y += delta_y;
-		// 	});
-		// }
-		// });
 	}
 
 	static center(element: ElementType): Position {

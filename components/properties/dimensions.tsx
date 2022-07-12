@@ -6,16 +6,19 @@ import Input from '../inputs/input';
 
 export default function Dimensions({ selected, store }) {
 	function updateDimension(event, formatter: Function = Number) {
-		if (Number.isNaN(event.target.value) || event.target.value === '') return;
+		if (Number.isNaN(event.target.value) || event.target.value === '') event.target.value = 0;
 
 		const selected = store.getState().present.elements.filter((element) => element.selected);
 		const group = { elements: selected, type: 'group', rotation: selected[0].rotation } as ElementType;
-		const bounds = Group.bound(group);
-		(bounds as any).rotation = selected[0].rotation;
-		(bounds as any).radius = Elements[selected[0].type].getPoints(selected[0])[0].radius;
 
-		const sign = Math.sign(event.target.value);
-		const delta = formatter(event.target.value) - bounds[event.target.id];
+		const props = {
+			...Group.bound(group),
+			rotation: selected[0].rotation,
+			radius: Elements[selected[0].type].getPoints(selected[0])[0].radius,
+		};
+
+		const sign = Math.sign(Number(event.target.value));
+		const delta = formatter(event.target.value) - props[event.target.id];
 		store.dispatch(
 			actions.property({
 				selected_ids: selected.map((element) => element.id),

@@ -122,7 +122,6 @@ function getContextMenu(event, { active, toggleUI }) {
 			</li>
 			<div className="divider" />
 			<li onClick={toggleUI}>Show / Hide UI</li>
-			<li>Hello</li>
 		</ul>
 	);
 }
