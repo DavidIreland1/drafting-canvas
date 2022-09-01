@@ -45,7 +45,7 @@ export default function App({ Component, pageProps }) {
 				<link rel="apple-touch-icon" href="/images/icon-512x512.png"></link>
 				<meta name="theme-color" content="#1b1b1d" />
 				{/* eslint-disable-next-line @next/next/no-sync-scripts */}
-				{/* <script src="https://drafting-canvas.uc.r.appspot.com/primus/primus.js"></script> */}
+				<script src="https://drafting-canvas.uc.r.appspot.com/primus/primus.js"></script>
 			</Head>
 
 			<div id="scrub-cursor">
