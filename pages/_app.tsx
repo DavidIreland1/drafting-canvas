@@ -45,7 +45,7 @@ export default function App({ Component, pageProps }) {
 				<link rel="apple-touch-icon" href="/images/icon-512x512.png"></link>
 				<meta name="theme-color" content="#1b1b1d" />
 				{/* eslint-disable-next-line @next/next/no-sync-scripts */}
-				<script src="https://drafting-canvas.uc.r.appspot.com/primus/primus.js"></script>
+				{/* <script src="https://drafting-canvas.uc.r.appspot.com/primus/primus.js"></script> */}
 			</Head>
 
 			<div id="scrub-cursor">
@@ -84,14 +84,14 @@ export default function App({ Component, pageProps }) {
 				}
 			`}</style>
 
-			<Script strategy="lazyOnload" src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`} />
+			<Script strategy="lazyOnload" src={`https://www.googletagmanager.com/gtag/js?id=G-BFF4BH7DGZ`} />
 
 			<Script id="google-analytics" strategy="lazyOnload">
 				{`
                     window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments)}
                     gtag('js', new Date());
-                    gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
+                    gtag('config', 'G-BFF4BH7DGZ', {
                     page_path: window.location.pathname,
                     });
                 `}

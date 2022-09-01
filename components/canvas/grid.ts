@@ -4,7 +4,7 @@ import Settings from '../settings';
 const { grid } = Settings;
 
 export default class Grid {
-	static draw(context: CanvasRenderingContext2D, view: View, theme) {
+	static draw(context: CanvasRenderingContext2D, view: View) {
 		if (view.scale < grid.min_scale) return;
 
 		const step = grid.step * view.scale;
